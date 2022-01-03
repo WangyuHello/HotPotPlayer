@@ -1,0 +1,10 @@
+﻿<ResourceDictionary
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:HotPotPlayer.Styles">
+
+    <SolidColorBrush x:Key="MainNavBackground" Color="#F1F3F6" />
+    <SolidColorBrush x:Key="MainNavSelectedBackground" Color="#DEE3EE" />
+    <SolidColorBrush x:Key="MainNavForeground" Color="#A6A8B5" />
+    <SolidColorBrush x:Key="MainNavSelectedForeground" Color="#5843BE" />
+</ResourceDictionary>
