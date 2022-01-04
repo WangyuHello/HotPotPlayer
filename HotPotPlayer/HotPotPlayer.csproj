@@ -50,6 +50,8 @@
 
   <ItemGroup>
     <PackageReference Include="Microsoft.WindowsAppSDK" Version="1.0.0" />
+    <PackageReference Include="Realm" Version="10.7.1" />
+    <PackageReference Include="System.Text.Json" Version="6.0.1" />
     <PackageReference Include="TagLibSharp" Version="2.2.0" />
     <Manifest Include="$(ApplicationManifest)" />
   </ItemGroup>
