@@ -1,5 +1,7 @@
 ﻿using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
+using Microsoft.UI.Xaml.Input;
+using Microsoft.UI.Xaml.Media.Animation;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -12,54 +14,41 @@ namespace HotPotPlayer
 {
     public sealed partial class MainWindow : Window
     {
-        private void BackClick(object sender, RoutedEventArgs e)
-        {
-            if (MainFrame.CanGoBack)
-            {
-                var topName = MainFrame.BackStack.Last().SourcePageType.Name;
-                StartPopAnimation(topName);
-                SelectedPageName = topName;
-                MainFrame.GoBack();
-            }
-        }
+        public string InitPageName { get; set; }
 
-        private string _SelectedPageName;
+        private string _selectedPageName;
+
         public string SelectedPageName
         {
-            get => _SelectedPageName;
-            set => Set(ref _SelectedPageName, value);
+            get => _selectedPageName;
+            set => Set(ref _selectedPageName, value);
         }
 
-        private bool GetEnableState(string name, string selectedName)
+        private void MainSidebar_SelectedPageNameChanged(string name)
         {
-            return name != selectedName;
+            MainFrame.Navigate(Type.GetType("HotPotPlayer.Pages." + name), null, new DrillInNavigationTransitionInfo());
         }
 
-        private Visibility GetPopVisibility(string selected)
+        private void MainSidebar_OnBackClick()
         {
-            if (!string.IsNullOrEmpty(selected))
+            var topName = MainFrame.BackStack.Last().SourcePageType.Name;
+            MainFrame.GoBack();
+            SelectedPageName = topName;
+        }
+
+        public void NavigateInit()
+        {
+            if (string.IsNullOrEmpty(InitPageName))
             {
-                return Visibility.Visible;
+                return;
             }
-            return Visibility.Collapsed;
+            MainSidebar_SelectedPageNameChanged(InitPageName);
+            SelectedPageName = InitPageName;
         }
 
-        private void NavigateClick(object sender, RoutedEventArgs e)
+        private void MainWindow_Loaded(object sender, RoutedEventArgs e)
         {
-            var b = sender as Button;
-            if (b.Name != SelectedPageName)
-            {
-                StartPopAnimation(b);
-                MainFrame.Navigate(Type.GetType("HotPotPlayer.Pages." + b.Name));
-                SelectedPageName = b.Name;
-            }
-        }
-
-        public void NavigateInit(string page)
-        {
-            //StartPopAnimation(Setting);
-            MainFrame.Navigate(Type.GetType("HotPotPlayer.Pages."+page));
-            SelectedPageName = page;
+            NavigateInit();
         }
     }
 }

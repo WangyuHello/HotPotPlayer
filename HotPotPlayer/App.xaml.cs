@@ -7,16 +7,19 @@ using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Navigation;
 using Microsoft.UI.Xaml.Shapes;
+using WinRT;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.IO;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Runtime.InteropServices.WindowsRuntime;
 using Windows.ApplicationModel;
 using Windows.ApplicationModel.Activation;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
+using WinUIEx;
 
 // To learn more about WinUI, the WinUI project structure,
 // and more about our project templates, see: http://aka.ms/winui-project-info.
@@ -48,16 +51,25 @@ namespace HotPotPlayer
             {
                 ExtendsContentIntoTitleBar = true
             };
-            m_window.SetTitleBar(m_window.CustomTitleBar);
             InitMainWindow();
             m_window.Activate();
+            m_window.Closed += M_window_Closed;
         }
 
-        private void InitMainWindow()
+        private void M_window_Closed(object sender, WindowEventArgs args)
         {
             
         }
 
-        private MainWindow m_window;
+        private void InitMainWindow()
+        {
+            m_window.Title = "HotPotPlayer";
+            m_window.InitPageName = "Music";
+            m_window.SetTitleBar(m_window.CustomTitleBar);
+            m_window.SetWindowSize(1070*2, 760*2);
+        }
+
+        public MainWindow m_window;
+
     }
 }

@@ -7,7 +7,6 @@
     <ApplicationManifest>app.manifest</ApplicationManifest>
     <Platforms>x64</Platforms>
     <RuntimeIdentifiers>win10-x64</RuntimeIdentifiers>
-    <PublishProfile>win10-$(Platform).pubxml</PublishProfile>
     <UseWinUI>true</UseWinUI>
     <EnablePreviewMsixTooling>true</EnablePreviewMsixTooling>
     <GenerateAppInstallerFile>False</GenerateAppInstallerFile>
@@ -19,11 +18,15 @@
     <AppxSymbolPackageEnabled>False</AppxSymbolPackageEnabled>
     <GenerateTestArtifacts>True</GenerateTestArtifacts>
     <AppxBundle>Always</AppxBundle>
-    <HoursBetweenUpdateChecks>0</HoursBetweenUpdateChecks>
     <AppxBundlePlatforms>x64</AppxBundlePlatforms>
+    <DefaultLanguage>en-US</DefaultLanguage>
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="Assets\Background.png" />
+    <None Remove="Controls\MainSidebar.xaml" />
+    <None Remove="Controls\PlayBar.xaml" />
+    <None Remove="Controls\VolumePresenter.xaml" />
     <None Remove="Pages\Bilibili.xaml" />
     <None Remove="Pages\CloudMusic.xaml" />
     <None Remove="Pages\Music.xaml" />
@@ -31,6 +34,8 @@
     <None Remove="Pages\Video.xaml" />
     <None Remove="Styles\Buttons.xaml" />
     <None Remove="Styles\Colors.xaml" />
+    <None Remove="Styles\Images.xaml" />
+    <None Remove="Styles\Sliders.xaml" />
   </ItemGroup>
 
   <ItemGroup>
@@ -44,15 +49,28 @@
     <Content Include="Assets\Square150x150Logo.scale-200.png" />
     <Content Include="Assets\Square44x44Logo.scale-200.png" />
     <Content Include="Assets\Square44x44Logo.targetsize-24_altform-unplated.png" />
-    <Content Include="Assets\StoreLogo.png" />
     <Content Include="Assets\Wide310x150Logo.scale-200.png" />
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="CommunityToolkit.WinUI" Version="7.1.2" />
+    <PackageReference Include="CommunityToolkit.WinUI.Notifications" Version="7.1.2" />
+    <PackageReference Include="CommunityToolkit.WinUI.UI" Version="7.1.2" />
+    <PackageReference Include="CommunityToolkit.WinUI.UI.Behaviors" Version="7.1.2" />
+    <PackageReference Include="CommunityToolkit.WinUI.UI.Controls" Version="7.1.2" />
+    <PackageReference Include="CommunityToolkit.WinUI.UI.Media" Version="7.1.2" />
     <PackageReference Include="Microsoft.WindowsAppSDK" Version="1.0.0" />
+    <PackageReference Include="Microsoft.Xaml.Behaviors.WinUI.Managed" Version="2.0.8" />
+    <PackageReference Include="Mpv.NET" Version="1.2.0" />
+    <PackageReference Include="NAudio" Version="2.0.1" />
+    <PackageReference Include="NeteaseCloudMusicApi" Version="3.25.3.10000" />
+    <PackageReference Include="PInvoke.Kernel32" Version="0.7.104" />
+    <PackageReference Include="PInvoke.User32" Version="0.7.104" />
     <PackageReference Include="Realm" Version="10.7.1" />
+    <PackageReference Include="SixLabors.ImageSharp" Version="1.0.4" />
     <PackageReference Include="System.Text.Json" Version="6.0.1" />
     <PackageReference Include="TagLibSharp" Version="2.2.0" />
+    <PackageReference Include="WinUIEx" Version="1.1.0" />
     <Manifest Include="$(ApplicationManifest)" />
   </ItemGroup>
 
@@ -63,12 +81,37 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Controls\" />
-    <Folder Include="Converters\" />
+    <None Include="MainWindow.Navigation.cs" />
   </ItemGroup>
 
   <ItemGroup>
-    <None Include="MainWindow.Navigation.cs" />
+    <Page Update="Controls\VolumePresenter.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Page Update="Controls\MainSidebar.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Page Update="Styles\Sliders.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Page Update="Controls\PlayBar.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Page Update="Styles\Images.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
   </ItemGroup>
 
   <ItemGroup>

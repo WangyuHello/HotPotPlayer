@@ -1,4 +1,5 @@
-﻿using Microsoft.UI.Composition;
+﻿using HotPotPlayer.Services;
+using Microsoft.UI.Composition;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Controls.Primitives;
@@ -42,5 +43,8 @@ namespace HotPotPlayer
                 PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
             }
         }
+
+        MusicPlayer MusicPlayer => ((App)Application.Current).MusicPlayer.Value;
+
     }
 }

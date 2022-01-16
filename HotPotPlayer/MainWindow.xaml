@@ -5,48 +5,36 @@
     xmlns:local="using:HotPotPlayer"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+    xmlns:controls="using:HotPotPlayer.Controls"
+    xmlns:animations="using:CommunityToolkit.WinUI.UI.Animations"
+    xmlns:animatedvisuals="using:Microsoft.UI.Xaml.Controls.AnimatedVisuals"
     mc:Ignorable="d">
 
-    <Grid>
-        <Grid >
+    <Grid Loaded="MainWindow_Loaded">
+        <Grid>
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="60" />
                 <ColumnDefinition Width="*" />
             </Grid.ColumnDefinitions>
-            <Grid Background="{StaticResource MainNavBackground}">
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="60" />
-                    <RowDefinition Height="*" />
-                    <RowDefinition Height="60" />
-                </Grid.RowDefinitions>
-                <Border x:Name="ButtonPop" Width="36" Height="36" CornerRadius="4" HorizontalAlignment="Center" Background="{StaticResource MainNavSelectedBackground}" Visibility="{x:Bind GetPopVisibility(SelectedPageName), Mode=OneWay}"/>
-                <Button Style="{StaticResource MainNavBackButton}" Click="BackClick" IsEnabled="{x:Bind MainFrame.CanGoBack, Mode=OneWay}">
-                    <SymbolIcon Symbol="Back" />
-                </Button>
-                <StackPanel x:Name="ButtonStack" Grid.Row="1" Spacing="16" HorizontalAlignment="Center" VerticalAlignment="Center" >
-                    <Button x:Name="Music" Style="{StaticResource MainNavButton}" Click="NavigateClick" IsEnabled="{x:Bind GetEnableState('Music', SelectedPageName), Mode=OneWay}">
-                        <SymbolIcon Symbol="MusicInfo" />
-                    </Button>
-                    <Button x:Name="Video" Style="{StaticResource MainNavButton}" Click="NavigateClick" IsEnabled="{x:Bind GetEnableState('Video', SelectedPageName), Mode=OneWay}">
-                        <SymbolIcon Symbol="PreviewLink" />
-                    </Button>
-                    <Button x:Name="Bilibili" Style="{StaticResource MainNavButton}" Click="NavigateClick" IsEnabled="{x:Bind GetEnableState('Bilibili', SelectedPageName), Mode=OneWay}">
-                        <SymbolIcon Symbol="World" />
-                    </Button>
-                    <Button x:Name="CloudMusic" Style="{StaticResource MainNavButton}" Click="NavigateClick" IsEnabled="{x:Bind GetEnableState('CloudMusic', SelectedPageName), Mode=OneWay}">
-                        <SymbolIcon Symbol="Zoom" />
-                    </Button>
-                </StackPanel>
-                <Button x:Name="Setting" Grid.Row="2" Style="{StaticResource MainNavButton}" Click="NavigateClick" IsEnabled="{x:Bind GetEnableState('Setting', SelectedPageName), Mode=OneWay}">
-                    <SymbolIcon Symbol="Setting" />
-                </Button>
-            </Grid>
+            <controls:MainSidebar IsBackEnable="{x:Bind MainFrame.CanGoBack, Mode=OneWay}" SelectedPageName="{x:Bind SelectedPageName, Mode=TwoWay}" SelectedPageNameChanged="MainSidebar_SelectedPageNameChanged" OnBackClick="MainSidebar_OnBackClick"/>
+            <!--<Image Grid.Column="1" Width="200" Source="ms-appx:///Assets/Background.png" />-->
             <Frame
                 Margin="0,28,0,0"
                 Grid.Column="1" 
-                x:FieldModifier="public"
             x:Name="MainFrame" />
         </Grid>
+
+        <controls:PlayBar VerticalAlignment="Bottom" HorizontalAlignment="Stretch" Margin="80,0,24,16" Visibility="{x:Bind MusicPlayer.IsPlayBarVisible, Mode=OneWay}">
+            <animations:Implicit.ShowAnimations>
+                <animations:OpacityAnimation Duration="0:0:1" From="0.0" To="1.0" />
+                <animations:TranslationAnimation Duration="0:0:1" From="0,40,0" To="0,0,0" />
+            </animations:Implicit.ShowAnimations>
+            <animations:Implicit.HideAnimations>
+                <animations:OpacityAnimation Duration="0:0:1" From="1.0" To="0.0" />
+                <animations:TranslationAnimation Duration="0:0:1" From="0,0,0" To="0,40,0" />
+            </animations:Implicit.HideAnimations>
+        </controls:PlayBar>
+
         <Grid x:FieldModifier="public" x:Name="CustomTitleBar" 
               VerticalAlignment="Top"
               Margin="60,0,0,0"

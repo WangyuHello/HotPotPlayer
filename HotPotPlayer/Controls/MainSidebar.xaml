@@ -1,0 +1,45 @@
+﻿<UserControl
+    x:Class="HotPotPlayer.Controls.MainSidebar"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:HotPotPlayer.Controls"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d">
+
+    <UserControl.Resources>
+        
+    </UserControl.Resources>
+
+    <Grid Background="{StaticResource MainNavBackground}" >
+        <Grid.RowDefinitions>
+            <RowDefinition Height="60" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="60" />
+        </Grid.RowDefinitions>
+        <Border x:Name="ButtonPop" Width="36" Height="36" CornerRadius="4" HorizontalAlignment="Center" Background="{StaticResource MainNavSelectedBackground}" Visibility="{x:Bind GetPopVisibility(SelectedPageName), Mode=OneWay}" />
+        <Button Style="{StaticResource MainNavBackButton}" Click="BackClick" Visibility="{x:Bind IsBackEnable, Mode=OneWay}">
+            <SymbolIcon Symbol="Back" />
+        </Button>
+        <Button Grid.Row="2" Margin="0,4" x:Name="Music" Style="{StaticResource MainNavButton}" Click="NavigateClick" Tag="Music" IsEnabled="{x:Bind GetEnableState('Music', SelectedPageName), Mode=OneWay}">
+            <SymbolIcon Symbol="MusicInfo" />
+        </Button>
+        <Button Grid.Row="3" Margin="0,4" x:Name="Video" Style="{StaticResource MainNavButton}" Click="NavigateClick" Tag="Video" IsEnabled="{x:Bind GetEnableState('Video', SelectedPageName), Mode=OneWay}">
+            <SymbolIcon Symbol="PreviewLink" />
+        </Button>
+        <Button Grid.Row="4" Margin="0,4" x:Name="Bilibili" Style="{StaticResource MainNavButton}" Click="NavigateClick" Tag="Bilibili" IsEnabled="{x:Bind GetEnableState('Bilibili', SelectedPageName), Mode=OneWay}">
+            <SymbolIcon Symbol="World" />
+        </Button>
+        <Button Grid.Row="5" Margin="0,4" x:Name="CloudMusic" Style="{StaticResource MainNavButton}" Click="NavigateClick" Tag="CloudMusic" IsEnabled="{x:Bind GetEnableState('CloudMusic', SelectedPageName), Mode=OneWay}">
+            <SymbolIcon Symbol="Zoom" />
+        </Button>
+        <Button x:Name="Setting" Grid.Row="7" Style="{StaticResource MainNavButton}" Click="NavigateClick" Tag="Setting" IsEnabled="{x:Bind GetEnableState('Setting', SelectedPageName), Mode=OneWay}">
+            <SymbolIcon Symbol="Setting" />
+        </Button>
+    </Grid>
+</UserControl>

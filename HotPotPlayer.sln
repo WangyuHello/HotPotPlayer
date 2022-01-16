@@ -26,6 +26,7 @@ Global
 		{47B57F72-67B3-4686-8C36-CF2ED896C7D3}.Release|arm64.Build.0 = Release|arm64
 		{47B57F72-67B3-4686-8C36-CF2ED896C7D3}.Release|x64.ActiveCfg = Release|x64
 		{47B57F72-67B3-4686-8C36-CF2ED896C7D3}.Release|x64.Build.0 = Release|x64
+		{47B57F72-67B3-4686-8C36-CF2ED896C7D3}.Release|x64.Deploy.0 = Release|x64
 		{47B57F72-67B3-4686-8C36-CF2ED896C7D3}.Release|x86.ActiveCfg = Release|x86
 		{47B57F72-67B3-4686-8C36-CF2ED896C7D3}.Release|x86.Build.0 = Release|x86
 	EndGlobalSection
