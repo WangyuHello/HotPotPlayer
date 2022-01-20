@@ -58,11 +58,6 @@ namespace HotPotPlayer.Services
                     Year = tfile.Tag.Year,
                 };
 
-                var pics = tfile.Tag.Pictures;
-                if (pics.Length > 0)
-                {
-                    item.CoverBinary = pics[0].Data.Data;
-                }
                 return item;
             }).ToList();
 
@@ -88,7 +83,7 @@ namespace HotPotPlayer.Services
                 var music = g2.ToList();
                 music.Sort((a,b) => a.Track.CompareTo(b.Track));
 
-                var (cover, color) = WriteCoverToLocal(g2.First().CoverBinary);
+                var (cover, color) = WriteCoverToLocalCache(g2.First());
                 var i = new AlbumItem
                 {
                     Year = g2.First().Year,
@@ -100,7 +95,6 @@ namespace HotPotPlayer.Services
                 };
                 foreach (var item in i.MusicItems)
                 {
-                    item.CoverBinary = null;
                     item.Cover = i.Cover;
                     item.MainColor = i.MainColor;
                 }
@@ -135,21 +129,25 @@ namespace HotPotPlayer.Services
 
         readonly MD5 md5 = MD5.Create();
 
-        (string, Windows.UI.Color) WriteCoverToLocal(byte[] binary)
+        (string, Windows.UI.Color) WriteCoverToLocalCache(MusicItem m)
         {
-            var baseDir = AppDomain.CurrentDomain.BaseDirectory;
+            var baseDir = ((App)Application.Current).CacheFolder;
             var albumCoverDir = Path.Combine(baseDir, "Cover");
             if (!Directory.Exists(albumCoverDir))
             {
                 Directory.CreateDirectory(albumCoverDir);
             }
+
+            var tag = TagLib.File.Create(m.File.FullName);
+            Span<byte> binary = tag.Tag.Pictures?.FirstOrDefault()?.Data?.Data;
+
             if (binary != null && binary.Length != 0)
             {
                 var buffer = md5.ComputeHash(binary.ToArray());
                 var hashName = Convert.ToHexString(buffer);
                 var albumCoverName = Path.Combine(albumCoverDir, hashName);
 
-                using var image = Image.Load(binary.ToArray());
+                using var image = Image.Load<Rgba32>(binary);
                 var width = image.Width;
                 var height = image.Height;
                 image.Mutate(x => x.Resize(400, 400*height/width));
@@ -415,12 +413,6 @@ namespace HotPotPlayer.Services
         //{
             
         //}
-
-        private void LocalMusicBackgroundWorker2_DoWork(object sender, DoWorkEventArgs e)
-        {
-            using var db = Realm.GetInstance(GetDbPath());
-
-        }
 
         public void Dispose()
         {

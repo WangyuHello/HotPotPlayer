@@ -11,6 +11,7 @@
                 <ResourceDictionary Source="ms-appx:///Styles/Buttons.xaml" />
                 <ResourceDictionary Source="ms-appx:///Styles/Images.xaml" />
                 <ResourceDictionary Source="ms-appx:///Styles/Sliders.xaml" />
+                <ResourceDictionary Source="ms-appx:///Styles/VLC.xaml" />
                 <!-- Other merged dictionaries here -->
             </ResourceDictionary.MergedDictionaries>
             <!-- Other app resources here -->
@@ -19,5 +20,6 @@
             <!--<SolidColorBrush x:Key="WindowCaptionForeground">Black</SolidColorBrush>-->
             <!--<SolidColorBrush x:Key="WindowCaptionForegroundDisabled">White</SolidColorBrush>-->
         </ResourceDictionary>
+
     </Application.Resources>
 </Application>

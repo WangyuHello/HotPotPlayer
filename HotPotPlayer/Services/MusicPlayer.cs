@@ -13,6 +13,13 @@ using System.Threading.Tasks;
 
 namespace HotPotPlayer.Services
 {
+    public enum PlayMode
+    {
+        Loop,
+        SingleLoop,
+        Shuffle
+    }
+
     public class MusicPlayer : INotifyPropertyChanged, IDisposable
     {
         public event PropertyChangedEventHandler PropertyChanged;
@@ -92,6 +99,14 @@ namespace HotPotPlayer.Services
             }
         }
 
+        private PlayMode _playMode;
+
+        public PlayMode PlayMode
+        {
+            get => _playMode;
+            set => Set(ref _playMode, value);
+        }
+
         public void PlayNext(MusicItem music)
         {
             CurrentPlayList = new ObservableCollection<MusicItem>() { music };
@@ -145,16 +160,31 @@ namespace HotPotPlayer.Services
             }
         }
 
+        Random random;
+
         public void PlayNext()
         {
             if (CurrentPlayingIndex != -1)
             {
-                var index = CurrentPlayingIndex + 1;
-                if (index >= CurrentPlayList.Count)
+                if (PlayMode == PlayMode.Loop)
                 {
-                    index = 0;
+                    var index = CurrentPlayingIndex + 1;
+                    if (index >= CurrentPlayList.Count)
+                    {
+                        index = 0;
+                    }
+                    PlayNext(index);
                 }
-                PlayNext(index);
+                else if(PlayMode == PlayMode.SingleLoop)
+                {
+                    PlayNext(CurrentPlayingIndex);
+                }
+                else if (PlayMode == PlayMode.Shuffle)
+                {
+                    random ??= new Random();
+                    var index = random.Next(CurrentPlayList.Count);
+                    PlayNext(index);
+                }
             }
         }
 
@@ -203,6 +233,17 @@ namespace HotPotPlayer.Services
             _audioFile.CurrentTime = to;
         }
 
+        public void TogglePlayMode()
+        {
+            PlayMode = PlayMode switch
+            {
+                PlayMode.Loop => PlayMode.SingleLoop,
+                PlayMode.SingleLoop => PlayMode.Shuffle,
+                PlayMode.Shuffle => PlayMode.Loop,
+                _ => PlayMode.Loop,
+            };
+        }
+
         private void OnPlaybackStopped(object sender, StoppedEventArgs e)
         {
             _timer.Stop();
@@ -224,7 +265,7 @@ namespace HotPotPlayer.Services
             _playerStarter = new BackgroundWorker();
             _playerStarter.RunWorkerCompleted += Worker_RunWorkerCompleted;
             _playerStarter.DoWork += Worker_DoWork;
-            _timer = new System.Timers.Timer(200)
+            _timer = new System.Timers.Timer(500)
             {
                 AutoReset = true
             };

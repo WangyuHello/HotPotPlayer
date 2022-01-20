@@ -7,4 +7,8 @@
     <SolidColorBrush x:Key="MainNavSelectedBackground" Color="#DEE3EE" />
     <SolidColorBrush x:Key="MainNavForeground" Color="#A6A8B5" />
     <SolidColorBrush x:Key="MainNavSelectedForeground" Color="#5843BE" />
+
+    <SolidColorBrush x:Key="MainPlayBackground" Color="#6982F9" />
+    <SolidColorBrush x:Key="MainPlayBackgroundPointOver" Color="#576CCF" />
+    <SolidColorBrush x:Key="MainPlayBackgroundPressed" Color="#576CCF" />
 </ResourceDictionary>

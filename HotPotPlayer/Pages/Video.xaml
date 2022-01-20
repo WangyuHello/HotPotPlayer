@@ -4,12 +4,91 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:local="using:HotPotPlayer.Pages"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:models="using:HotPotPlayer.Models"
+    xmlns:controls="using:CommunityToolkit.WinUI.UI.Controls"
+    xmlns:muxdata="using:Microsoft.UI.Xaml.Data"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d"
     NavigationCacheMode="Enabled"
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
 
-    <Grid Background="White">
-        <TextBlock Text="Video" />
+    <Page.Resources>
+
+        <CollectionViewSource x:Name="LocalSeriesGroups" Source="{x:Bind LocalSeries}" IsSourceGrouped="True" ItemsPath="Items" />
+
+        <DataTemplate x:Key="LocalSeriesZoomedInTemplate" x:DataType="models:SeriesItem">
+            <Button Style="{StaticResource SeriesGroupButton}" Click="SeriesClick" Tag="{x:Bind }">
+                <StackPanel Spacing="8" Margin="0,0,0,12">
+                    <controls:ImageEx Source="{x:Bind Cover}" Style="{StaticResource LocalMusicImageStyle}"/>
+                    <TextBlock Margin="8,0" Text="{x:Bind Title}" FontWeight="Bold" LineStackingStrategy="BaselineToBaseline" FontSize="14" MaxLines="2" TextTrimming="CharacterEllipsis" TextWrapping="Wrap" Height="40" ToolTipService.ToolTip="{x:Bind Title}"/>
+                </StackPanel>
+            </Button>
+        </DataTemplate>
+
+        <DataTemplate x:Key="LocalSeriesZoomedInGroupHeaderTemplate" x:DataType="models:SeriesGroup">
+            <TextBlock Text="{x:Bind Year}" Foreground="{ThemeResource ApplicationForegroundThemeBrush}" Style="{StaticResource SubtitleTextBlockStyle}"/>
+        </DataTemplate>
+
+        <DataTemplate x:Key="LocalSeriesZoomedOutTemplate" x:DataType="muxdata:ICollectionViewGroup">
+            <TextBlock Margin="8" Text="{x:Bind ((models:SeriesGroup)Group).Year}" FontSize="20" TextWrapping="Wrap"/>
+        </DataTemplate>
+
+        <Style x:Key="LocalSeriesContainerStyle" TargetType="GridViewItem" >
+            <Setter Property="Margin" Value="8" />
+        </Style>
+
+        <DataTemplate x:Key="LocalVideoTemplate" x:DataType="models:VideoItem">
+            <Button Style="{StaticResource VideoButton}" Click="VideoClick" Tag="{x:Bind }">
+                <StackPanel Spacing="8" Margin="0,0,0,12">
+                    <controls:ImageEx Source="{x:Bind Cover}" Style="{StaticResource LocalVideoImageStyle}"/>
+                    <TextBlock Margin="8,0" Text="{x:Bind Title}" FontWeight="Medium" LineStackingStrategy="BaselineToBaseline" FontSize="14" MaxLines="2" TextTrimming="CharacterEllipsis" TextWrapping="Wrap" Height="40" ToolTipService.ToolTip="{x:Bind Title}"/>
+                    <TextBlock Margin="8,0" Text="{x:Bind GetDuration()}" Foreground="Gray" />
+                </StackPanel>
+            </Button>
+        </DataTemplate>
+
+        <Style x:Key="LocalVideoContainerStyle" TargetType="GridViewItem" >
+            <Setter Property="Margin" Value="8" />
+        </Style>
+    </Page.Resources>
+
+    <Grid Background="White" Padding="36,0,0,0">
+        <Pivot >
+            <PivotItem Header="番剧" Margin="0">
+                <SemanticZoom>
+                    <SemanticZoom.ZoomedInView>
+                        <GridView ItemsSource="{x:Bind LocalSeriesGroups.View}" ScrollViewer.IsHorizontalScrollChainingEnabled="False" SelectionMode="None" ItemTemplate="{StaticResource LocalSeriesZoomedInTemplate}" ItemContainerStyle="{StaticResource LocalSeriesContainerStyle}">
+                            <GridView.GroupStyle>
+                                <GroupStyle HeaderTemplate="{StaticResource LocalSeriesZoomedInGroupHeaderTemplate}" />
+                            </GridView.GroupStyle>
+                            <GridView.Footer>
+                                <Grid Height="100"/>
+                            </GridView.Footer>
+                        </GridView>
+                    </SemanticZoom.ZoomedInView>
+                    <SemanticZoom.ZoomedOutView>
+                        <GridView ItemsSource="{x:Bind LocalSeriesGroups.View.CollectionGroups}" SelectionMode="None" ItemTemplate="{StaticResource LocalSeriesZoomedOutTemplate}" Padding="24" VerticalAlignment="Center"/>
+                    </SemanticZoom.ZoomedOutView>
+                </SemanticZoom>
+            </PivotItem>
+            <PivotItem Header="视频列表" Margin="0">
+                <GridView ItemsSource="{x:Bind LocalVideo}" ScrollViewer.IsHorizontalScrollChainingEnabled="False" SelectionMode="None" ItemTemplate="{StaticResource LocalVideoTemplate}" ItemContainerStyle="{StaticResource LocalVideoContainerStyle}">
+                    <GridView.Footer>
+                        <Grid Height="100"/>
+                    </GridView.Footer>
+                </GridView>
+            </PivotItem>
+        </Pivot>
+        
+
+        <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center" Spacing="20" Visibility="{x:Bind IsFirstLoading, Mode=OneWay}" Translation="-24,0,0">
+            <ProgressRing IsActive="True" Height="60" Width="60"/>
+            <TextBlock FontSize="20">正在扫描视频库</TextBlock>
+        </StackPanel>
+
+        <StackPanel VerticalAlignment="Top" HorizontalAlignment="Right" Spacing="8" Orientation="Horizontal" Margin="0,16,24,0" Visibility="{x:Bind IsNonFirstLoading, Mode=OneWay}">
+            <ProgressRing IsActive="True" Height="20" Width="20"/>
+            <TextBlock FontSize="14">正在扫描视频库</TextBlock>
+        </StackPanel>
     </Grid>
 </Page>

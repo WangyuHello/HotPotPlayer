@@ -15,6 +15,17 @@
         <Setter Property="Height" Value="170" />
     </Style>
 
+    <Style x:Key="LocalVideoImageStyle" TargetType="controls:ImageEx">
+        <Setter Property="IsCacheEnabled" Value="False" />
+        <Setter Property="EnableLazyLoading" Value="True" />
+        <Setter Property="Stretch" Value="UniformToFill" />
+        <Setter Property="PlaceholderStretch" Value="UniformToFill" />
+        <Setter Property="HorizontalAlignment" Value="Center" />
+        <Setter Property="VerticalAlignment" Value="Center" />
+        <Setter Property="Width" Value="300" />
+        <Setter Property="Height" Value="170" />
+    </Style>
+    
     <Style x:Key="PlayBarImageStyle" TargetType="controls:ImageEx">
         <Setter Property="IsCacheEnabled" Value="False" />
         <Setter Property="EnableLazyLoading" Value="True" />

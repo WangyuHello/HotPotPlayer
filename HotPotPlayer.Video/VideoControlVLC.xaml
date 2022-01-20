@@ -1,0 +1,26 @@
+﻿<UserControl
+    x:Class="HotPotPlayer.Controls.VideoControlVLC"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:HotPotPlayer.Controls"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:lvs="using:LibVLCSharp.Platforms.UWP"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d">
+
+    <UserControl.Resources>
+        <Style x:Key="VLC" TargetType="lvs:VideoViewBase">
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="lvs:VideoViewBase">
+                        <SwapChainPanel x:Name="SwapChainPanel" />
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+    </UserControl.Resources>
+
+    <Grid>
+        <lvs:VideoView Style="{StaticResource VLC}" MediaPlayer="{x:Bind MediaPlayer}" Initialized="VideoView_Initialized"/>
+    </Grid>
+</UserControl>

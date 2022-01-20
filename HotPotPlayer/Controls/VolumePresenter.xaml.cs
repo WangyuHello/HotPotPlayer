@@ -51,5 +51,28 @@ namespace HotPotPlayer.Controls
             var x = -72 * (1 - (float)v);
             return new Vector3(x, 0, 0);
         }
+
+        /// <summary>
+        /// 静音，0格，1格，2格，3格
+        /// </summary>
+        readonly string[] volIcons = new [] { "\uE198", "\uE992", "\uE993", "\uE994", "\uE995" };
+        readonly string[] volIconsHeadPhone = new[] { "\uE198", "\uED30", "\uED31", "\uED32", "\uED33" };
+
+        string GetVolumeIcon(float? v)
+        {
+            if (v == null)
+            {
+                return volIcons[0];
+            }
+            var v2 = (int)(v * 100);
+            return v2 switch
+            {
+                0 => volIcons[0],
+                (> 0) and ( <= 25) => volIcons[1],
+                (> 25) and ( <= 50) => volIcons[2],
+                (> 50) and ( <= 75) => volIcons[3],
+                _ => volIcons[4],
+            };
+        }
     }
 }

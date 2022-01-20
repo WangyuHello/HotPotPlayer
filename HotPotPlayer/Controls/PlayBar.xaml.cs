@@ -51,6 +51,20 @@ namespace HotPotPlayer.Controls
             return 100 * current.Ticks / total.Ticks;
         }
 
+        const string Loop = "\uE1CD";
+        const string SingleLoop = "\uE1CC";
+        const string Shuffle = "\uE8B1";
+        string GetPlayModeIcon(PlayMode playMode)
+        {
+            return playMode switch
+            {
+                PlayMode.Loop => Loop,
+                PlayMode.SingleLoop => SingleLoop,
+                PlayMode.Shuffle => Shuffle,
+                _ => Loop,
+            };
+        }
+
         private void PlayButtonClick(object sender, RoutedEventArgs e)
         {
             MusicPlayer.PlayOrPause();
@@ -92,6 +106,11 @@ namespace HotPotPlayer.Controls
             var button = (Button)sender;
             var music = (MusicItem)button.Tag;
             MusicPlayer.PlayNext(music, null);
+        }
+
+        private void PlayModeButtonClick(object sender, RoutedEventArgs e)
+        {
+            MusicPlayer.TogglePlayMode();
         }
     }
 }

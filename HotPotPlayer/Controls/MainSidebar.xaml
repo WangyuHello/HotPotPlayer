@@ -30,7 +30,7 @@
             <SymbolIcon Symbol="MusicInfo" />
         </Button>
         <Button Grid.Row="3" Margin="0,4" x:Name="Video" Style="{StaticResource MainNavButton}" Click="NavigateClick" Tag="Video" IsEnabled="{x:Bind GetEnableState('Video', SelectedPageName), Mode=OneWay}">
-            <SymbolIcon Symbol="PreviewLink" />
+            <FontIcon FontFamily="Segoe Fluent Icons" Glyph="&#xE29B;" />
         </Button>
         <Button Grid.Row="4" Margin="0,4" x:Name="Bilibili" Style="{StaticResource MainNavButton}" Click="NavigateClick" Tag="Bilibili" IsEnabled="{x:Bind GetEnableState('Bilibili', SelectedPageName), Mode=OneWay}">
             <SymbolIcon Symbol="World" />

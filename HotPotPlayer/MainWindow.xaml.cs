@@ -17,6 +17,7 @@ using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices.WindowsRuntime;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
+using WinUIEx;
 
 // To learn more about WinUI, the WinUI project structure,
 // and more about our project templates, see: http://aka.ms/winui-project-info.
@@ -45,6 +46,29 @@ namespace HotPotPlayer
         }
 
         MusicPlayer MusicPlayer => ((App)Application.Current).MusicPlayer.Value;
+        //TrayIcon tray;
 
+        private void MainWindow_Loaded(object sender, RoutedEventArgs e)
+        {
+            NavigateInit();
+            MediaInit();
+            //tray = new TrayIcon(Icon.Yang());
+            //tray.TrayIconLeftMouseDown += Tray_TrayIconLeftMouseDown;
+        }
+
+        private static void MediaInit()
+        {
+            var app = (App)Application.Current;
+            var initMedia = app.InitMediaFile;
+            if (initMedia != null)
+            {
+                app.PlayVideo(initMedia);
+            }
+        }
+
+        //private void Tray_TrayIconLeftMouseDown(object sender, EventArgs e)
+        //{
+        //    this.Show();
+        //}
     }
 }

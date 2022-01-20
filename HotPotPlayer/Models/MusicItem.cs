@@ -19,7 +19,6 @@ namespace HotPotPlayer.Models
         public uint Year { get; set; }
         public TimeSpan Duration { get; set; }
         public int Track { get; set; }
-        public byte[] CoverBinary { get; set; }
         public string Cover { get; set; }
         public string Source { get; set; }
         public FileInfo File { get; set; }

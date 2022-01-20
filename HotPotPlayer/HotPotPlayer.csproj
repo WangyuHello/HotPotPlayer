@@ -20,6 +20,7 @@
     <AppxBundle>Always</AppxBundle>
     <AppxBundlePlatforms>x64</AppxBundlePlatforms>
     <DefaultLanguage>en-US</DefaultLanguage>
+    <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
   </PropertyGroup>
 
   <ItemGroup>
@@ -36,6 +37,7 @@
     <None Remove="Styles\Colors.xaml" />
     <None Remove="Styles\Images.xaml" />
     <None Remove="Styles\Sliders.xaml" />
+    <None Remove="Styles\VLC.xaml" />
   </ItemGroup>
 
   <ItemGroup>
@@ -59,18 +61,17 @@
     <PackageReference Include="CommunityToolkit.WinUI.UI.Behaviors" Version="7.1.2" />
     <PackageReference Include="CommunityToolkit.WinUI.UI.Controls" Version="7.1.2" />
     <PackageReference Include="CommunityToolkit.WinUI.UI.Media" Version="7.1.2" />
+    <PackageReference Include="FFmpeg.AutoGen" Version="4.4.1.1" />
     <PackageReference Include="Microsoft.WindowsAppSDK" Version="1.0.0" />
     <PackageReference Include="Microsoft.Xaml.Behaviors.WinUI.Managed" Version="2.0.8" />
-    <PackageReference Include="Mpv.NET" Version="1.2.0" />
     <PackageReference Include="NAudio" Version="2.0.1" />
     <PackageReference Include="NeteaseCloudMusicApi" Version="3.25.3.10000" />
     <PackageReference Include="PInvoke.Kernel32" Version="0.7.104" />
     <PackageReference Include="PInvoke.User32" Version="0.7.104" />
-    <PackageReference Include="Realm" Version="10.7.1" />
+    <PackageReference Include="Realm" Version="10.8.0" />
     <PackageReference Include="SixLabors.ImageSharp" Version="1.0.4" />
     <PackageReference Include="System.Text.Json" Version="6.0.1" />
     <PackageReference Include="TagLibSharp" Version="2.2.0" />
-    <PackageReference Include="WinUIEx" Version="1.1.0" />
     <Manifest Include="$(ApplicationManifest)" />
   </ItemGroup>
 
@@ -82,6 +83,41 @@
 
   <ItemGroup>
     <None Include="MainWindow.Navigation.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\HotPotPlayer.VideoHost\HotPotPlayer.VideoHost.csproj" />
+    <ProjectReference Include="..\WinUIEx\src\WinUIEx\WinUIEx.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="NativeLibs\avcodec-58.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="NativeLibs\avdevice-58.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="NativeLibs\avfilter-7.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="NativeLibs\avformat-58.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="NativeLibs\avutil-56.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="NativeLibs\postproc-55.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="NativeLibs\swresample-3.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="NativeLibs\swscale-5.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <Page Update="Styles\VLC.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
   </ItemGroup>
 
   <ItemGroup>

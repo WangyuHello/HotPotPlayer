@@ -88,17 +88,17 @@
             </Grid.ColumnDefinitions>
             
             <StackPanel Margin="0,0,0,-8" Grid.ColumnSpan="3" Orientation="Horizontal" HorizontalAlignment="Center" Spacing="4">
-                <Button Style="{StaticResource PlayOtherButton}">
-                    <SymbolIcon Symbol="Shuffle" />
+                <Button Style="{StaticResource PlayOtherButton}" Click="PlayModeButtonClick">
+                    <FontIcon FontFamily="Segoe Fluent Icons" Glyph="{x:Bind GetPlayModeIcon(MusicPlayer.PlayMode), Mode=OneWay}" />
                 </Button>
                 <Button Style="{StaticResource NextPreviousButton}" Click="PlayPreviousButtonClick">
-                    <FontIcon FontFamily="Segoe Fluent Icons" Glyph="&#xE622;" />
+                    <FontIcon FontFamily="Segoe Fluent Icons" Glyph="&#xF8AC;" />
                 </Button>
                 <Button Click="PlayButtonClick" Style="{StaticResource PlayButton}">
                     <SymbolIcon Symbol="{x:Bind GetPlayButtonSymbol(MusicPlayer.IsPlaying), Mode=OneWay}" />
                 </Button>
                 <Button Style="{StaticResource NextPreviousButton}" Click="PlayNextButtonClick">
-                    <FontIcon FontFamily="Segoe Fluent Icons" Glyph="&#xE623;" />
+                    <FontIcon FontFamily="Segoe Fluent Icons" Glyph="&#xF8AD;" />
                 </Button>
                 <Button Style="{StaticResource PlayOtherButton}">
                     <SymbolIcon Symbol="Refresh" />

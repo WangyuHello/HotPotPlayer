@@ -81,7 +81,6 @@ namespace HotPotPlayer.Pages
 
         bool IsFirstNavigate = true;
 
-
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
             base.OnNavigatedTo(e);

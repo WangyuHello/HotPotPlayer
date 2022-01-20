@@ -46,9 +46,6 @@ namespace HotPotPlayer
             SelectedPageName = InitPageName;
         }
 
-        private void MainWindow_Loaded(object sender, RoutedEventArgs e)
-        {
-            NavigateInit();
-        }
+
     }
 }

@@ -115,9 +115,9 @@
         </Style>
     </Page.Resources>
 
-    <Grid x:Name="Root" Background="White" Padding="40,0,0,0">
-        <Pivot >
-            <PivotItem Header="专辑">
+    <Grid x:Name="Root" Background="White" Padding="36,0,0,0">
+        <Pivot>
+            <PivotItem Header="专辑" Margin="0">
                 <SemanticZoom>
                     <SemanticZoom.ZoomedInView>
                         <GridView ItemsSource="{x:Bind LocalAlbumGroups.View}" ScrollViewer.IsHorizontalScrollChainingEnabled="False" SelectionMode="None" ItemTemplate="{StaticResource LocalAlbumZoomedInTemplate}" ItemContainerStyle="{StaticResource LocalAlbumContainerStyle}">
@@ -134,8 +134,11 @@
                     </SemanticZoom.ZoomedOutView>
                 </SemanticZoom>
             </PivotItem>
-            <PivotItem Header="播放列表">
+            <PivotItem Header="播放列表" Margin="0">
                 <GridView ItemsSource="{x:Bind LocalPlayList}" ScrollViewer.IsHorizontalScrollChainingEnabled="False" SelectionMode="None" ItemTemplate="{StaticResource LocalPlayListTemplate}" ItemContainerStyle="{StaticResource LocalAlbumContainerStyle}" >
+                    <GridView.Footer>
+                        <Grid Height="100"/>
+                    </GridView.Footer>
                 </GridView>
             </PivotItem>
         </Pivot>

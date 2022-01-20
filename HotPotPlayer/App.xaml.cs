@@ -47,29 +47,41 @@ namespace HotPotPlayer
         /// <param name="args">Details about the launch request and process.</param>
         protected override void OnLaunched(Microsoft.UI.Xaml.LaunchActivatedEventArgs args)
         {
-            m_window = new MainWindow
+            MainWindow = new MainWindow
             {
                 ExtendsContentIntoTitleBar = true
             };
-            InitMainWindow();
-            m_window.Activate();
-            m_window.Closed += M_window_Closed;
+            InitMainWindow(args);
+            MainWindow.Activate();
         }
 
-        private void M_window_Closed(object sender, WindowEventArgs args)
+        private void MainWindow_Closed(object sender, WindowEventArgs args)
         {
             
         }
 
-        private void InitMainWindow()
+        private void InitMainWindow(Microsoft.UI.Xaml.LaunchActivatedEventArgs args)
         {
-            m_window.Title = "HotPotPlayer";
-            m_window.InitPageName = "Music";
-            m_window.SetTitleBar(m_window.CustomTitleBar);
-            m_window.SetWindowSize(1070*2, 760*2);
+            MainWindow.Title = "HotPotPlayer";
+            MainWindow.SetTitleBar(MainWindow.CustomTitleBar);
+            MainWindow.SetWindowSize(1070*2, 760*2);
+            MainWindow.Closed += MainWindow_Closed;
+
+            var firstArg = args.Arguments; //尚不支持，永远为null
+            var args2 = Environment.GetCommandLineArgs();
+            var firstArg2 = args2.Length > 1 ? args2[1] : null;
+            if (!string.IsNullOrEmpty(firstArg2) && File.Exists(firstArg2))
+            {
+                //InitPageName == null
+                InitMediaFile = new FileInfo(firstArg2);
+            }
+            else
+            {
+                MainWindow.InitPageName = "Music";
+            }
         }
 
-        public MainWindow m_window;
-
+        public MainWindow MainWindow;
+        public IntPtr WindowHandle => MainWindow.GetWindowHandle();
     }
 }
