@@ -67,15 +67,22 @@ namespace HotPotPlayer.Pages
 
         private void MusicService_OnAlbumGroupChanged(List<AlbumDataGroup> g, List<AlbumItem> l)
         {
-            LocalAlbum.Clear();
-            foreach (var i in g)
+            if (g != null)
             {
-                LocalAlbum.Add(i);
+                LocalAlbum.Clear();
+                foreach (var i in g)
+                {
+                    LocalAlbum.Add(i);
+                }
             }
-            LocalPlayList.Clear();
-            foreach (var i in l)
+
+            if (l != null)
             {
-                LocalPlayList.Add(i);
+                LocalPlayList.Clear();
+                foreach (var i in l)
+                {
+                    LocalPlayList.Add(i);
+                }
             }
         }
 

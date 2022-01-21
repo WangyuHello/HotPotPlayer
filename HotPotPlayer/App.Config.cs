@@ -19,18 +19,26 @@ namespace HotPotPlayer
         readonly StorageFolder localAppDataFolder = ApplicationData.Current.LocalFolder;
 
         internal string CacheFolder => localCacheFolder.Path;
-        internal string AppDataDolder => localAppDataFolder.Path;
+        internal string LocalFolder => localAppDataFolder.Path;
 
         //https://docs.microsoft.com/zh-cn/windows/uwp/files/quickstart-managing-folders-in-the-music-pictures-and-videos-libraries
-        internal static List<string> GetMusicLibrary()
+        private static List<string> GetMusicLibrary()
         {
             var music = StorageLibrary.GetLibraryAsync(KnownLibraryId.Music).AsTask().Result;
+            if (music == null)
+            {
+                return null;
+            }
             return music.Folders.Select(f => f.Path).ToList();
         }
 
-        internal static List<string> GetVideoLibrary()
+        private static List<string> GetVideoLibrary()
         {
             var video = StorageLibrary.GetLibraryAsync(KnownLibraryId.Videos).AsTask().Result;
+            if (video == null)
+            {
+                return null;
+            }
             return video.Folders.Select(f => f.Path).ToList();
         }
 

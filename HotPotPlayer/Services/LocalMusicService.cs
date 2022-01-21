@@ -27,13 +27,15 @@ namespace HotPotPlayer.Services
             Idle,
             FirstLoading,
             NonFirstLoading,
-            InitLoadingComplete
+            InitLoadingComplete,
+            NoLibraryAccess
         }
 
         public event Action<List<AlbumDataGroup>, List<AlbumItem>> OnAlbumGroupChanged;
         public event Action OnFirstLoadingStarted;
         public event Action OnNonFirstLoadingStarted;
         public event Action OnLoadingEnded;
+        public event Action OnNoLibraryAccess;
 
         //FileSystemWatcher _fsw;
 
@@ -64,9 +66,8 @@ namespace HotPotPlayer.Services
             return r;
         }
 
-        private static List<FileInfo> GetMusicFilesFromLibrary()
+        private static List<FileInfo> GetMusicFilesFromLibrary(List<string> libs)
         {
-            var libs = GetMusicLibrary;
             List<FileInfo> files = new();
             foreach (var lib in libs)
             {
@@ -131,7 +132,7 @@ namespace HotPotPlayer.Services
 
         (string, Windows.UI.Color) WriteCoverToLocalCache(MusicItem m)
         {
-            var baseDir = ((App)Application.Current).CacheFolder;
+            var baseDir = ((App)Application.Current).LocalFolder;
             var albumCoverDir = Path.Combine(baseDir, "Cover");
             if (!Directory.Exists(albumCoverDir))
             {
@@ -242,6 +243,9 @@ namespace HotPotPlayer.Services
                     var (albumGroup, playLists) = ((List<AlbumDataGroup> a, List<AlbumItem> b))e.UserState;
                     OnAlbumGroupChanged?.Invoke(albumGroup, playLists);
                     break;
+                case LocalMusicState.NoLibraryAccess:
+                    OnNoLibraryAccess?.Invoke();
+                    break;
                 default:
                     break;
             }
@@ -260,7 +264,7 @@ namespace HotPotPlayer.Services
 
         static string GetDbPath()
         {
-            var baseDir = ((App)Application.Current).CacheFolder;
+            var baseDir = ((App)Application.Current).LocalFolder;
             var dbDir = Path.Combine(baseDir, "Db");
             if (!Directory.Exists(dbDir)) { Directory.CreateDirectory(dbDir); }
             var dbPath = Path.Combine(dbDir, "LocalMusic.db");
@@ -270,9 +274,18 @@ namespace HotPotPlayer.Services
         Realm _db;
 
         void LocalMusicBackgroundWorker_DoWork(object sender, DoWorkEventArgs e)
-        {            
+        {
             //检查是否有缓存好的数据库
             var dbPath = GetDbPath();
+            var libs = GetMusicLibrary;
+            if (libs == null)
+            {
+                localMusicBackgroundWorker.ReportProgress((int)LocalMusicState.NoLibraryAccess);
+                return;
+            }
+            var playListFiles = GetAllPlaylists();
+            bool skipScanAllMusic = false;
+
             if (File.Exists(dbPath))
             {
                 //如果有就返回数据库
@@ -287,61 +300,88 @@ namespace HotPotPlayer.Services
 
                 var groupsDb = GroupAllMusic(albumList_);
 
-                localMusicBackgroundWorker.ReportProgress(3, (groupsDb, playListList));
+                localMusicBackgroundWorker.ReportProgress((int)LocalMusicState.InitLoadingComplete, (groupsDb, playListList));
 
                 var localDbList = _db.All<MusicItemDb>().ToList().Select(m => m.File);
-                var files2 = GetMusicFilesFromLibrary().Select(f => f.FullName);
+
+                var files2 = GetMusicFilesFromLibrary(libs).Select(f => f.FullName);
 
                 var newFiles = files2.Except(localDbList);
                 var delFiles = localDbList.Except(files2);
                 if (newFiles.Any() || delFiles.Any())
                 {
                     //如果有更新，开始后台线程扫描
-                    localMusicBackgroundWorker.ReportProgress(2);
+                    localMusicBackgroundWorker.ReportProgress((int)LocalMusicState.NonFirstLoading);
+                }
+                else if (CheckPlayListHasUpdate(playListList, playListFiles))
+                {
+                    localMusicBackgroundWorker.ReportProgress((int)LocalMusicState.NonFirstLoading);
+                    skipScanAllMusic = true;
                 }
                 else
                 {
+                    _db?.Dispose();
                     return;
                 }
             }
             else
             {
                 //如果没有返回空集，并开始后台线程扫描
-                localMusicBackgroundWorker.ReportProgress(1);
+                localMusicBackgroundWorker.ReportProgress((int)LocalMusicState.FirstLoading);
             }
 
-            var files = GetMusicFilesFromLibrary();
+            _db ??= Realm.GetInstance(dbPath);
+            List<AlbumDataGroup> groups = skipScanAllMusic ? null : ScanAllMusic(libs);
+            List<AlbumItem> playLists = ScanAllPlayList(playListFiles);
+
+            e.Result = (groups, playLists);
+            _db?.Dispose();
+        }
+
+        private List<AlbumItem> ScanAllPlayList(List<FileInfo> playListsFile)
+        {
+            var playLists = GetAllPlaylists(_db, playListsFile);
+            _db.Write(() =>
+            {
+                var exist = _db.All<AlbumItemDb>().Where(d => d.IsPlayList);
+                _db.RemoveRange(exist);
+                _db.Add(playLists.Select(a => a.ToDb()));
+            });
+            return playLists;
+        }
+
+        private List<AlbumDataGroup> ScanAllMusic(List<string> libs)
+        {
+            var files = GetMusicFilesFromLibrary(libs);
             var allmusic = GetAllMusic(files);
             var albums = GroupAllMusicIntoAlbum(allmusic);
             var groups = GroupAllMusic(albums);
 
-            _db = Realm.GetInstance(dbPath);
             _db.Write(() =>
             {
-                _db.RemoveAll();
+                var exist = _db.All<AlbumItemDb>().Where(d => !d.IsPlayList);
+                _db.RemoveRange(exist);
                 _db.Add(albums.Select(a => a.ToDb()));
             });
-
-            var playLists = GetAllPlaylists(_db);
-            _db.Write(() =>
-            {
-                _db.Add(playLists.Select(a => a.ToDb()));
-            });
-
-            var albums2 = _db.All<AlbumItemDb>().Where(d => !d.IsPlayList);
-            var playLists2 = _db.All<AlbumItemDb>().Where(d => d.IsPlayList);
-
-            _albumsToken = albums2.SubscribeForNotifications(OnAlbumChange);
-            _playListToken = playLists2.SubscribeForNotifications(OnPlayListChange);
-
-            e.Result = (groups, playLists);
-
-            //InitFileSystemWatcher();
+            return groups;
         }
 
         BackgroundWorker localMusicBackgroundWorker;
 
-        private static List<AlbumItem> GetAllPlaylists(Realm db)
+        private bool CheckPlayListHasUpdate(List<AlbumItem> stored, List<FileInfo> current)
+        {
+            foreach (var s in stored)
+            {
+                var match = current.FirstOrDefault(f => Path.GetFileNameWithoutExtension(f.FullName) == s.Title);
+                if (match != null && match.LastWriteTime != s.LastWriteTime)
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        private static List<FileInfo> GetAllPlaylists()
         {
             var libs = ((App)Application.Current).MusicPlayList;
             List<FileInfo> files = new();
@@ -350,7 +390,11 @@ namespace HotPotPlayer.Services
                 var di = new DirectoryInfo(lib);
                 files.AddRange(di.GetFiles("*.zpl", SearchOption.AllDirectories));
             }
+            return files;
+        }
 
+        private static List<AlbumItem> GetAllPlaylists(Realm db, List<FileInfo> files)
+        {
             var r = files.Select(f =>
             {
                 var ost_doc = XDocument.Load(f.FullName);
@@ -374,6 +418,8 @@ namespace HotPotPlayer.Services
                     MusicItems = files,
                     Artists = Array.Empty<string>(),
                     IsPlayList = true,
+                    LastWriteTime = f.LastWriteTime,
+                    Year = (uint)f.LastWriteTime.Year
                 };
                 pl.SetPlayListCover();
                 return pl;

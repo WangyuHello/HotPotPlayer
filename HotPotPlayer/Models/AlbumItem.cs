@@ -26,6 +26,7 @@ namespace HotPotPlayer.Models
         public Color MainColor { get; set; }
 
         public bool IsPlayList { get; set; }
+        public DateTime LastWriteTime { get; set; }
 
         public string GetArtists()
         {
@@ -41,6 +42,7 @@ namespace HotPotPlayer.Models
                 Year = (int)Year,
                 Cover = Cover,
                 IsPlayList = IsPlayList,
+                LastWriteTime = LastWriteTime.ToBinary(),
                 MainColor = MainColor.ToInt(),
             };
             foreach (var item in MusicItems)
@@ -67,6 +69,7 @@ namespace HotPotPlayer.Models
         public string Cover { get; set; }
         public IList<MusicItemDb> MusicItems { get; }
         public bool IsPlayList { get; set; }
+        public long LastWriteTime { get; set; }
         public int MainColor { get; set; }
 
         public AlbumItem ToOrigin()
@@ -79,6 +82,7 @@ namespace HotPotPlayer.Models
                 Cover = Cover,
                 MusicItems = MusicItems.Select(i => i.ToOrigin()).ToList(),
                 IsPlayList = IsPlayList,
+                LastWriteTime = DateTime.FromBinary(LastWriteTime),
                 MainColor = MainColor.ToColor(),
             };
         }

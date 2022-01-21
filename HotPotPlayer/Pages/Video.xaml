@@ -54,6 +54,13 @@
 
     <Grid Background="White" Padding="36,0,0,0">
         <Pivot >
+            <PivotItem Header="视频列表" Margin="0">
+                <GridView ItemsSource="{x:Bind LocalVideo}" ScrollViewer.IsHorizontalScrollChainingEnabled="False" SelectionMode="None" ItemTemplate="{StaticResource LocalVideoTemplate}" ItemContainerStyle="{StaticResource LocalVideoContainerStyle}">
+                    <GridView.Footer>
+                        <Grid Height="100"/>
+                    </GridView.Footer>
+                </GridView>
+            </PivotItem>
             <PivotItem Header="番剧" Margin="0">
                 <SemanticZoom>
                     <SemanticZoom.ZoomedInView>
@@ -70,13 +77,6 @@
                         <GridView ItemsSource="{x:Bind LocalSeriesGroups.View.CollectionGroups}" SelectionMode="None" ItemTemplate="{StaticResource LocalSeriesZoomedOutTemplate}" Padding="24" VerticalAlignment="Center"/>
                     </SemanticZoom.ZoomedOutView>
                 </SemanticZoom>
-            </PivotItem>
-            <PivotItem Header="视频列表" Margin="0">
-                <GridView ItemsSource="{x:Bind LocalVideo}" ScrollViewer.IsHorizontalScrollChainingEnabled="False" SelectionMode="None" ItemTemplate="{StaticResource LocalVideoTemplate}" ItemContainerStyle="{StaticResource LocalVideoContainerStyle}">
-                    <GridView.Footer>
-                        <Grid Height="100"/>
-                    </GridView.Footer>
-                </GridView>
             </PivotItem>
         </Pivot>
         

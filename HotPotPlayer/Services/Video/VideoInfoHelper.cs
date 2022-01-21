@@ -79,7 +79,7 @@ namespace HotPotPlayer.Services.Video
                 var ptr = (IntPtr)convertedFrame.data[0];
                 var data = new Span<byte>((byte*)ptr, convertedFrame.linesize[0] * convertedFrame.height);
 
-                var baseDir = ((App)Application.Current).CacheFolder;
+                var baseDir = ((App)Application.Current).LocalFolder;
                 var videoCoverDir = Path.Combine(baseDir, "VideoCover");
                 if (!Directory.Exists(videoCoverDir))
                 {

@@ -19,20 +19,21 @@ namespace HotPotPlayer.Services
             Idle,
             FirstLoading,
             NonFirstLoading,
-            InitLoadingComplete
+            InitLoadingComplete,
+            NoLibraryAccess
         }
 
         public event Action<List<VideoItem>> OnVideoChanged;
         public event Action OnFirstLoadingStarted;
         public event Action OnNonFirstLoadingStarted;
         public event Action OnLoadingEnded;
+        public event Action OnNoLibraryAccess;
 
         static List<string> GetVideoLibrary => ((App)Application.Current).VideoLibrary;
         static readonly List<string> SupportedExt = new() { ".mkv", ".mp4" };
 
-        private static List<FileInfo> GetVideoFilesFromLibrary()
+        private static List<FileInfo> GetVideoFilesFromLibrary(List<string> libs)
         {
-            var libs = GetVideoLibrary;
             List<FileInfo> files = new();
             foreach (var lib in libs)
             {
@@ -65,7 +66,7 @@ namespace HotPotPlayer.Services
 
         static string GetDbPath()
         {
-            var baseDir = ((App)Application.Current).CacheFolder;
+            var baseDir = ((App)Application.Current).LocalFolder;
             var dbDir = Path.Combine(baseDir, "Db");
             if (!Directory.Exists(dbDir)) { Directory.CreateDirectory(dbDir); }
             var dbPath = Path.Combine(dbDir, "LocalVideo.db");
@@ -101,6 +102,9 @@ namespace HotPotPlayer.Services
                     var videos = (List<VideoItem>)e.UserState;
                     OnVideoChanged?.Invoke(videos);
                     break;
+                case LocalVideoState.NoLibraryAccess:
+                    OnNoLibraryAccess?.Invoke();
+                    break;
                 default:
                     break;
             }
@@ -110,22 +114,29 @@ namespace HotPotPlayer.Services
         private void LocalVideoBackgroundWorker_DoWork(object sender, DoWorkEventArgs e)
         {
             var dbPath = GetDbPath();
+            var libs = GetVideoLibrary;
+            if (libs == null)
+            {
+                localVideoBackgroundWorker.ReportProgress((int)LocalVideoState.NoLibraryAccess);
+                return;
+            }
+
             if (File.Exists(dbPath))
             {
                 using var _db = Realm.GetInstance(dbPath);
                 var videos = _db.All<VideoItemDb>().ToList().Select(d => d.ToOrigin()).ToList();
 
-                localVideoBackgroundWorker.ReportProgress(3, videos);
+                localVideoBackgroundWorker.ReportProgress((int)LocalVideoState.InitLoadingComplete, videos);
 
                 var localDbList = _db.All<VideoItemDb>().ToList().Select(m => m.File);
-                var files2 = GetVideoFilesFromLibrary().Select(f => f.FullName);
+                var files2 = GetVideoFilesFromLibrary(libs).Select(f => f.FullName);
 
                 var newFiles = files2.Except(localDbList);
                 var delFiles = localDbList.Except(files2);
                 if (newFiles.Any() || delFiles.Any())
                 {
                     //如果有更新，开始后台线程扫描
-                    localVideoBackgroundWorker.ReportProgress(2);
+                    localVideoBackgroundWorker.ReportProgress((int)LocalVideoState.NonFirstLoading);
                 }
                 else
                 {
@@ -135,10 +146,10 @@ namespace HotPotPlayer.Services
             else
             {
                 //如果没有返回空集，并开始后台线程扫描
-                localVideoBackgroundWorker.ReportProgress(1);
+                localVideoBackgroundWorker.ReportProgress((int)LocalVideoState.FirstLoading);
             }
 
-            var files = GetVideoFilesFromLibrary();
+            var files = GetVideoFilesFromLibrary(libs);
             var videos2 = GetAllVideo(files);
 
             using var _db2 = Realm.GetInstance(dbPath);

@@ -5,261 +5,94 @@
     xmlns:local="using:HotPotPlayer.Pages"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:model="using:HotPotPlayer.Models"
     mc:Ignorable="d"
     NavigationCacheMode="Enabled"
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
 
+    <Page.Resources>
+        <DataTemplate x:Key="LibraryListTemplate" x:DataType="model:LibraryItem">
+            <Grid HorizontalAlignment="Stretch">
+                <TextBlock Text="{x:Bind Path}" FontSize="14" HorizontalAlignment="Left" VerticalAlignment="Center"/>
+                <Button HorizontalAlignment="Right" Visibility="{x:Bind GetRemoveVisible}">
+                    <SymbolIcon Symbol="Clear" />
+                </Button>
+            </Grid>
+        </DataTemplate>
+
+        <Style x:Key="LibraryListContainerStyle" TargetType="ListViewItem">
+            <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+            <Setter Property="VerticalContentAlignment" Value="Stretch"/>
+            <Setter Property="Padding" Value="4" />
+            <Setter Property="Margin" Value="0" />
+        </Style>
+    </Page.Resources>
+    
     <Grid Background="White">
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="*" />
-            <ColumnDefinition Width="400" />
-        </Grid.ColumnDefinitions>
-        <Grid Padding="40,0,40,0">
-            <Grid.RowDefinitions>
-                <RowDefinition Height="Auto" />
-                <RowDefinition Height="140" />
-                <RowDefinition Height="*" />
-            </Grid.RowDefinitions>
-            <TextBlock
-                Margin="0,32,0,32"
-                FontSize="32"
-                FontWeight="Medium"
-                >总览</TextBlock>
-            <Grid Grid.Row="1">
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="1.5*" />
-                    <ColumnDefinition Width="1*" />
-                    <ColumnDefinition Width="1*" />
-                </Grid.ColumnDefinitions>
-                <Border 
-                    Margin="0,0,0,8"
-                    Background="#5843BE"
-                    CornerRadius="12"
-                    >
-                    <StackPanel Padding="16">
-                        <TextBlock 
-                            Foreground="#9A8ED8">Deadline</TextBlock>
-                        <TextBlock 
-                            Margin="0,4,0,2"
-                            FontSize="24"
-                            Foreground="#F7F6FC">我的收藏</TextBlock>
-                        <TextBlock Foreground="#9A8ED8">默认收藏夹</TextBlock>
-                    </StackPanel>
-                </Border>
-                <Border 
-                    Margin="8,0,0,0"
-                    Grid.Column="1"
-                    Background="#FFEDE6"
-                    CornerRadius="12"
-                    >
-                    <StackPanel Padding="16">
-                        <TextBlock 
-                            Foreground="#FDAF8D">Deadline</TextBlock>
-                        <TextBlock 
-                            Margin="0,4,0,2"
-                            FontSize="24"
-                            Foreground="#FB783F">稍后再看</TextBlock>
-                        <TextBlock Foreground="#FDAF8D">Spanish for beginners</TextBlock>
-                    </StackPanel>
-                </Border>
-                <Border 
-                    Margin="8,0,0,0"
-                    Grid.Column="2"
-                    Background="#F6F4FF"
-                    CornerRadius="12"
-                    >
-                    <StackPanel Padding="16">
-                        <TextBlock 
-                            Foreground="#AA9FE0">Deadline</TextBlock>
-                        <TextBlock 
-                            Margin="0,4,0,2"
-                            FontSize="24"
-                            Foreground="#6956C5">离线缓存</TextBlock>
-                        <TextBlock Foreground="#AA9FE0">Spanish for beginners</TextBlock>
-                    </StackPanel>
-                </Border>
-            </Grid>
-            </Grid>
-        <Grid Grid.Column="1" 
-              Background="#F9FAFB">
-            <Grid.RowDefinitions>
-                <RowDefinition Height="Auto" />
-                <RowDefinition Height="*" />
-            </Grid.RowDefinitions>
-            <StackPanel HorizontalAlignment="Center">
-                <Border 
-                    Margin="0,60,0,0"
-                    Background="#A7EBC1" 
-                    Width="120" 
-                    Height="120" 
-                    CornerRadius="50"/>
-                <TextBlock 
-                    Margin="0,20,0,0"
-                    FontSize="20" 
-                    FontWeight="SemiBold" 
-                    TextAlignment="Center">大鱼</TextBlock>
-                <TextBlock 
-                    Margin="0,10,0,0"
-                    FontSize="16" 
-                    TextAlignment="Center">年度大会员</TextBlock>
-            </StackPanel>
-            <StackPanel 
-                Margin="0,12,0,0"
-                Grid.Row="1" 
-                VerticalAlignment="Top">
-                <TextBlock 
-                    TextAlignment="Center"
-                    FontSize="20"
-                    Margin="0,0,0,24"
-                    >最 近 观 看</TextBlock>
-                <Border 
-                    Margin="0,8,0,0"
-                    BorderThickness="2" 
-                    BorderBrush="#EDF0F3" 
-                    Width="300" 
-                    Height="100"
-                    CornerRadius="8"
-                    >
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+        <TextBlock Margin="36,0,0,12" FontSize="24">设置</TextBlock>
+        <StackPanel Grid.Row="1">
+            <InfoBar IsOpen="{x:Bind GetLibraryWarningVisible(MusicLibrary), Mode=OneWay}" Severity="Warning" Message="无法访问音乐库，请检查系统设置" IsClosable="False">
+                <InfoBar.ActionButton>
+                    <Button Content="前往设置" Click="LaunchMusicSettingClick" HorizontalAlignment="Right"/>
+                </InfoBar.ActionButton>
+            </InfoBar>
+            <InfoBar IsOpen="{x:Bind GetLibraryWarningVisible(VideoLibrary), Mode=OneWay}" Severity="Warning" Message="无法访问视频库，请检查系统设置" IsClosable="False">
+                <InfoBar.ActionButton>
+                    <Button Content="前往设置" Click="LaunchVideoSettingClick" HorizontalAlignment="Right"/>
+                </InfoBar.ActionButton>
+            </InfoBar>
+        </StackPanel>
+        <StackPanel Grid.Row="2" Margin="36,0,36,0">
+            <TextBlock Margin="0,12" FontSize="18">库</TextBlock>
+            <Expander HorizontalAlignment="Stretch" HorizontalContentAlignment="Stretch">
+                <Expander.Header>
                     <Grid>
                         <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="60" />
+                            <ColumnDefinition Width="Auto" />
                             <ColumnDefinition Width="Auto" />
                             <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="Auto" />
                         </Grid.ColumnDefinitions>
-                        <Grid.RowDefinitions>
-                            <RowDefinition Height="1*" />
-                            <RowDefinition Height="1*" />
-                        </Grid.RowDefinitions>
-                        <TextBlock 
-                            Margin="12,0,0,0"
-                            VerticalAlignment="Center"
-                            Grid.RowSpan="2" 
-                            TextAlignment="Center"
-                            FontSize="20"
-                            Foreground="#5843BE"
-                            >63%</TextBlock>
-                        <Border
-                            Margin="8,0,0,0"
-                            Grid.RowSpan="2"
-                            Grid.Column="1"
-                            Height="60"
-                            Width="60"
-                            Background="#5843BE"
-                            VerticalAlignment="Center"
-                            CornerRadius="12"
-                            ></Border>
-                        <TextBlock 
-                            Margin="12,0,0,0"
-                            VerticalAlignment="Bottom"
-                            Grid.Column="2"
-                            FontWeight="SemiBold"
-                            >《高 级 特 工 的 消 失》</TextBlock>
-                        <TextBlock
-                            Margin="12,4,0,0"
-                            VerticalAlignment="Top"
-                            Grid.Column="2" Grid.Row="1"
-                            >UP: 地砖sir</TextBlock>
+                        <FontIcon FontFamily="Segoe Fluent Icons" Glyph="&#xE8B7;" />
+                        <TextBlock Grid.Column="1" Margin="12,0" VerticalAlignment="Center">音乐库位置</TextBlock>
+                        <Button Grid.Column="3">
+                            <SymbolIcon Symbol="NewFolder"/>
+                        </Button>
                     </Grid>
-                </Border>
-                <Border 
-                    Margin="0,8,0,0"
-                    BorderThickness="2" 
-                    BorderBrush="#EDF0F3" 
-                    Width="300" 
-                    Height="100"
-                    CornerRadius="8"
-                    >
+                </Expander.Header>
+                <Expander.Content>
+                    <ListView ItemsSource="{x:Bind MusicLibrary, Mode=OneWay}" SelectionMode="None" ItemTemplate="{StaticResource LibraryListTemplate}" ItemContainerStyle="{StaticResource LibraryListContainerStyle}"/>
+                </Expander.Content>
+            </Expander>
+            <Expander HorizontalAlignment="Stretch" Margin="0,8" HorizontalContentAlignment="Stretch">
+                <Expander.Header>
                     <Grid>
                         <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="60" />
+                            <ColumnDefinition Width="Auto" />
                             <ColumnDefinition Width="Auto" />
                             <ColumnDefinition Width="*" />
-                        </Grid.ColumnDefinitions>
-                        <Grid.RowDefinitions>
-                            <RowDefinition Height="1*" />
-                            <RowDefinition Height="1*" />
-                        </Grid.RowDefinitions>
-                        <TextBlock 
-                            Margin="12,0,0,0"
-                            VerticalAlignment="Center"
-                            Grid.RowSpan="2" 
-                            TextAlignment="Center"
-                            FontSize="20"
-                            Foreground="#FFA067"
-                            >78%</TextBlock>
-                        <Border
-                            Margin="8,0,0,0"
-                            Grid.RowSpan="2"
-                            Grid.Column="1"
-                            Height="60"
-                            Width="60"
-                            Background="#FFA067"
-                            VerticalAlignment="Center"
-                            CornerRadius="12"
-                            ></Border>
-                        <TextBlock 
-                            Margin="12,0,0,0"
-                            VerticalAlignment="Bottom"
-                            Grid.Column="2"
-                            FontWeight="SemiBold"
-                            >兄弟们，我又搬新家了！</TextBlock>
-                        <TextBlock
-                            Margin="12,4,0,0"
-                            VerticalAlignment="Top"
-                            Grid.Column="2" Grid.Row="1"
-                            >UP: 刘墉干净又卫生</TextBlock>
-                    </Grid>
-                </Border>
-                <Border 
-                    Margin="0,8,0,0"
-                    BorderThickness="2" 
-                    BorderBrush="#EDF0F3" 
-                    Width="300" 
-                    Height="100"
-                    CornerRadius="8"
-                    >
-                    <Grid>
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="60" />
                             <ColumnDefinition Width="Auto" />
-                            <ColumnDefinition Width="*" />
                         </Grid.ColumnDefinitions>
-                        <Grid.RowDefinitions>
-                            <RowDefinition Height="1*" />
-                            <RowDefinition Height="1*" />
-                        </Grid.RowDefinitions>
-                        <TextBlock 
-                            Margin="12,0,0,0"
-                            VerticalAlignment="Center"
-                            Grid.RowSpan="2" 
-                            TextAlignment="Center"
-                            FontSize="20"
-                            Foreground="#FE7066"
-                            >34%</TextBlock>
-                        <Border
-                            Margin="8,0,0,0"
-                            Grid.RowSpan="2"
-                            Grid.Column="1"
-                            Height="60"
-                            Width="60"
-                            Background="#FE7066"
-                            VerticalAlignment="Center"
-                            CornerRadius="12"
-                            ></Border>
-                        <TextBlock 
-                            Margin="12,0,0,0"
-                            VerticalAlignment="Bottom"
-                            Grid.Column="2"
-                            FontWeight="SemiBold"
-                            >Merry Christmas!</TextBlock>
-                        <TextBlock
-                            Margin="12,4,0,0"
-                            VerticalAlignment="Top"
-                            Grid.Column="2" Grid.Row="1"
-                            >UP: ---夙愿---</TextBlock>
+                        <FontIcon FontFamily="Segoe Fluent Icons" Glyph="&#xE8B7;" />
+                        <TextBlock Grid.Column="1" Margin="12,0" VerticalAlignment="Center">视频库位置</TextBlock>
+                        <Button Grid.Column="3">
+                            <SymbolIcon Symbol="NewFolder"/>
+                        </Button>
                     </Grid>
-                </Border>
-            </StackPanel>
-        </Grid>
+                </Expander.Header>
+                <Expander.Content>
+                    <ListView ItemsSource="{x:Bind VideoLibrary, Mode=OneWay}" SelectionMode="None" ItemTemplate="{StaticResource LibraryListTemplate}" ItemContainerStyle="{StaticResource LibraryListContainerStyle}"/>
+                </Expander.Content>
+            </Expander>
+            <TextBlock Margin="0,12" FontSize="18">调试</TextBlock>
+            <Button Click="OpenInstalledLocationClick">打开安装位置</Button>
+            <Button Click="OpenDataLocationClick">打开数据位置</Button>
+            <Button Click="ClearDataClick" Style="{ThemeResource AccentButtonStyle}">删除应用数据</Button>
+        </StackPanel>
     </Grid>
 </Page>

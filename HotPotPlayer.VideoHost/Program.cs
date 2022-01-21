@@ -1,4 +1,5 @@
 using System;
+using System.Diagnostics;
 using System.IO;
 using System.Threading;
 using System.Windows.Forms;
@@ -31,6 +32,7 @@ namespace HotPotPlayer.VideoHost
                 {
                     MediaFile = media,
                 });
+                Debug.WriteLine("Exit");
             });
             t.SetApartmentState(ApartmentState.STA);
             t.Start();

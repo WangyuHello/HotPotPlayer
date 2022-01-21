@@ -8,7 +8,7 @@ namespace HotPotPlayer.VideoHost
 {
     public partial class MainForm : Form
     {
-        private MpvPlayer mpv;
+        public MpvPlayer mpv;
 
         public FileInfo? MediaFile { get; set; }
 
@@ -23,13 +23,7 @@ namespace HotPotPlayer.VideoHost
             mpv.API.SetPropertyString("vo", "gpu");
             mpv.API.SetPropertyString("gpu-context", "d3d11");
             mpv.API.SetPropertyString("hwdec", "d3d11va");
-            //mpv.API.SetPropertyString("hwdec", "dxva2");
             mpv.API.Command("script-binding", "stats/display-stats-toggle");
-        }
-
-        private void MainForm_FormClosing(object sender, FormClosingEventArgs e)
-        {
-            mpv.Dispose();
         }
 
         private void MainForm_Shown(object sender, EventArgs e)
@@ -49,6 +43,18 @@ namespace HotPotPlayer.VideoHost
                 Text = mediaFile.Name;
                 mpv.Load(mediaFile.FullName);
             }
+
+            //if (MediaFile!.Exists)
+            //{
+            //    Text = MediaFile.Name;
+            //    Program.mpv.SetMpvHost(Handle);
+            //    Program.mpv.Load(MediaFile.FullName);
+            //}
+        }
+
+        private void MainForm_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            mpv.Dispose();
         }
     }
 }
