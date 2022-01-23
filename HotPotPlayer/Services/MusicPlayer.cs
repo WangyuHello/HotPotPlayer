@@ -344,7 +344,7 @@ namespace HotPotPlayer.Services
                     var app = (App)Application.Current;
                     var volume = app.GetConfig("Volume");
                     _audioFile = new AudioFileReader(music.File.FullName);
-                    if (volume != null)
+                    if ((volume != null) && ((float)volume != 0))
                     {
                         _audioFile.Volume = (float)volume;
                     }
