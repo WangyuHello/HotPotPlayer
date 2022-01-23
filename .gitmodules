@@ -1,6 +1,6 @@
 [submodule "Mpv.NET-lib-"]
 	path = Mpv.NET-lib-
-	url = git@github.com:hudec117/Mpv.NET-lib-.git
+	url = git@github.com:WangyuHello/Mpv.NET-lib-.git
 [submodule "WinUIEx"]
 	path = WinUIEx
-	url = git@github.com:dotMorten/WinUIEx.git
+	url = git@github.com:WangyuHello/WinUIEx.git
