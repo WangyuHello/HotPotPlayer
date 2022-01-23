@@ -1,4 +1,5 @@
 ﻿using HotPotPlayer.Extensions;
+using Microsoft.UI.Xaml;
 using MongoDB.Bson;
 using Realms;
 using System;
@@ -50,13 +51,13 @@ namespace HotPotPlayer.Models
             return string.Join(", ", Artists);
         }
 
-        public string GetTrack()
+        public Visibility GetTrackVisibility()
         {
             if (AlbumRef == null || AlbumRef.IsPlayList)
             {
-                return string.Empty;
+                return Visibility.Collapsed;
             }
-            return Track.ToString();
+            return Visibility.Visible;
         }
     }
 

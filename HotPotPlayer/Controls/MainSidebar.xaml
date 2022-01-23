@@ -36,7 +36,7 @@
             <SymbolIcon Symbol="World" />
         </Button>
         <Button Grid.Row="5" Margin="0,4" x:Name="CloudMusic" Style="{StaticResource MainNavButton}" Click="NavigateClick" Tag="CloudMusic" IsEnabled="{x:Bind GetEnableState('CloudMusic', SelectedPageName), Mode=OneWay}">
-            <SymbolIcon Symbol="Zoom" />
+            <ImageIcon Source="ms-appx:///Assets/bilibili.svg" />
         </Button>
         <Button x:Name="Setting" Grid.Row="7" Style="{StaticResource MainNavButton}" Click="NavigateClick" Tag="Setting" IsEnabled="{x:Bind GetEnableState('Setting', SelectedPageName), Mode=OneWay}">
             <SymbolIcon Symbol="Setting" />

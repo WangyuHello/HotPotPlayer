@@ -14,12 +14,10 @@ namespace HotPotPlayer
     public partial class App : Application
     {
         //https://docs.microsoft.com/en-us/windows/apps/design/app-settings/store-and-retrieve-app-data?view=winui-3.0-preview
-        readonly ApplicationDataContainer localSettings = ApplicationData.Current.LocalSettings;
-        readonly StorageFolder localCacheFolder = ApplicationData.Current.LocalCacheFolder;
-        readonly StorageFolder localAppDataFolder = ApplicationData.Current.LocalFolder;
+        ApplicationDataContainer localSettings;
 
-        internal string CacheFolder => localCacheFolder.Path;
-        internal string LocalFolder => localAppDataFolder.Path;
+        internal string CacheFolder => ApplicationData.Current.LocalCacheFolder.Path;
+        internal string LocalFolder => ApplicationData.Current.LocalFolder.Path;
 
         //https://docs.microsoft.com/zh-cn/windows/uwp/files/quickstart-managing-folders-in-the-music-pictures-and-videos-libraries
         private static List<string> GetMusicLibrary()
@@ -50,5 +48,18 @@ namespace HotPotPlayer
 
         private List<string> _musicPlayList;
         internal List<string> MusicPlayList => _musicPlayList ??= MusicLibrary.Select(m => Path.Combine(m, "Playlists")).ToList();
+    
+        public object GetConfig(string key)
+        {
+            localSettings ??= ApplicationData.Current.LocalSettings;
+            localSettings.Values.TryGetValue(key, out var value);
+            return value;
+        }
+
+        public void SetConfig(string key, object value)
+        {
+            localSettings ??= ApplicationData.Current.LocalSettings;
+            localSettings.Values[key] = value;
+        }
     }
 }

@@ -23,22 +23,26 @@
                     <ColumnDefinition Width="Auto" />
                     <ColumnDefinition Width="*" />
                     <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="Auto" />
                 </Grid.ColumnDefinitions>
-                <Button Style="{StaticResource TransparentButton}" Tag="{x:Bind }" Click="PlayBarListClick">
-                    <SymbolIcon Symbol="Play" />
+                <Button Style="{StaticResource TransparentButton}" Height="32" Width="32" Tag="{x:Bind }" Click="PlayBarListClick">
+                    <FontIcon FontFamily="Segoe UI Emoji" Glyph="&#x1F3B5;" />
                 </Button>
-                <StackPanel Grid.Column="1" Margin="20,0,0,0">
-                    <TextBlock Text="{x:Bind Title}" FontSize="14"/>
-                    <TextBlock Foreground="DimGray" Text="{x:Bind GetArtists()}" FontSize="12"/>
+                <StackPanel Grid.Column="1" Margin="8,0,0,0">
+                    <TextBlock Text="{x:Bind Title}" FontSize="14" TextTrimming="CharacterEllipsis"/>
+                    <TextBlock Foreground="DimGray" Text="{x:Bind GetArtists()}" FontSize="12" TextTrimming="CharacterEllipsis"/>
                 </StackPanel>
-                <TextBlock Grid.Column="2" Margin="0,0,16,0" Text="{x:Bind Duration.ToString('mm\\\\:ss')}" VerticalAlignment="Center"/>
+                <TextBlock Grid.Column="2" Margin="16,0,0,0" Text="{x:Bind Duration.ToString('mm\\\\:ss')}" VerticalAlignment="Center"/>
+                <Button Grid.Column="3" Style="{StaticResource TransparentButton}" Height="32" Width="32" Tag="{x:Bind }" >
+                    <FontIcon FontFamily="Segoe UI Emoji" Glyph="&#x1F251;" />
+                </Button>
             </Grid>
         </DataTemplate>
 
         <Style x:Key="PlayBarListContainerStyle" TargetType="ListViewItem">
             <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
             <Setter Property="VerticalContentAlignment" Value="Stretch"/>
-            <Setter Property="Padding" Value="4" />
+            <Setter Property="Padding" Value="8,4,16,4" />
             <Setter Property="Margin" Value="0" />
         </Style>
 
@@ -49,6 +53,15 @@
             <Setter Property="MaxHeight" Value="40" />
             <Setter Property="Padding" Value="12,0" />
             <Setter Property="CornerRadius" Value="16" />
+            <Setter Property="ScrollViewer.HorizontalScrollMode" Value="Disabled"/>
+            <Setter Property="ScrollViewer.HorizontalScrollBarVisibility" Value="Disabled"/>
+            <Setter Property="ScrollViewer.VerticalScrollMode" Value="Disabled"/>
+            <Setter Property="ScrollViewer.VerticalScrollBarVisibility" Value="Disabled"/>
+        </Style>
+
+        <Style x:Key="PlayListPopupStyle" TargetType="FlyoutPresenter" >
+            <Setter Property="CornerRadius" Value="4" />
+            <Setter Property="Padding" Value="0,0" />
             <Setter Property="ScrollViewer.HorizontalScrollMode" Value="Disabled"/>
             <Setter Property="ScrollViewer.HorizontalScrollBarVisibility" Value="Disabled"/>
             <Setter Property="ScrollViewer.VerticalScrollMode" Value="Disabled"/>
@@ -95,7 +108,7 @@
                     <FontIcon FontFamily="Segoe Fluent Icons" Glyph="&#xF8AC;" />
                 </Button>
                 <Button Click="PlayButtonClick" Style="{StaticResource PlayButton}">
-                    <SymbolIcon Symbol="{x:Bind GetPlayButtonSymbol(MusicPlayer.IsPlaying), Mode=OneWay}" />
+                    <SymbolIcon Symbol="{x:Bind GetPlayButtonSymbol(MusicPlayer.IsPlaying, MusicPlayer.HasError), Mode=OneWay}" />
                 </Button>
                 <Button Style="{StaticResource NextPreviousButton}" Click="PlayNextButtonClick">
                     <FontIcon FontFamily="Segoe Fluent Icons" Glyph="&#xF8AD;" />
@@ -122,7 +135,7 @@
             <Button Style="{StaticResource PlayOtherButton}">
                 <FontIcon FontFamily="Segoe Fluent Icons" Glyph="&#xE762;" />
                 <Button.Flyout>
-                    <Flyout>
+                    <Flyout FlyoutPresenterStyle="{StaticResource PlayListPopupStyle}">
                         <StackPanel Orientation="Vertical" >
                             <StackPanel Orientation="Horizontal" FlowDirection="RightToLeft" Margin="0,0">
                                 <Button Width="40" Height="40" Style="{StaticResource TransparentButton}" ToolTipService.ToolTip="清空">

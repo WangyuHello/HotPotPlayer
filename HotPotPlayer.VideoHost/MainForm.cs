@@ -23,7 +23,9 @@ namespace HotPotPlayer.VideoHost
             mpv.API.SetPropertyString("vo", "gpu");
             mpv.API.SetPropertyString("gpu-context", "d3d11");
             mpv.API.SetPropertyString("hwdec", "d3d11va");
+#if DEBUG
             mpv.API.Command("script-binding", "stats/display-stats-toggle");
+#endif
         }
 
         private void MainForm_Shown(object sender, EventArgs e)

@@ -53,7 +53,7 @@
         <local:EvenOldTemplateSelector x:Key="EvenOldAlbumPopupTemplate" >
             <local:EvenOldTemplateSelector.EvenTemplate>
                 <DataTemplate x:DataType="models:MusicItem">
-                    <Button Style="{StaticResource AlbumPopupListButton}" Background="#90F4F7FE" Click="AlbumPopupListClick" Tag="{x:Bind }">
+                    <Button Style="{StaticResource AlbumPopupListButton}" Background="#40F4F7FE" Click="AlbumPopupListClick" Tag="{x:Bind }">
                         <Grid>
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="Auto" />
@@ -61,7 +61,7 @@
                                 <ColumnDefinition Width="180" />
                                 <ColumnDefinition Width="Auto" />
                             </Grid.ColumnDefinitions>
-                            <TextBlock Text="{x:Bind GetTrack()}" Margin="0,0,8,0" />
+                            <TextBlock Text="{x:Bind Track}" Margin="0,0,8,0" Visibility="{x:Bind GetTrackVisibility()}"/>
                             <TextBlock Grid.Column="1" Text="{x:Bind Title}" TextTrimming="CharacterEllipsis"/>
                             <TextBlock Grid.Column="2" Margin="0,0,16,0" Text="{x:Bind GetArtists()}" TextTrimming="CharacterEllipsis"/>
                             <TextBlock Grid.Column="3" Text="{x:Bind Duration.ToString('mm\\\\:ss')}" />
@@ -79,7 +79,7 @@
                                 <ColumnDefinition Width="180" />
                                 <ColumnDefinition Width="Auto" />
                             </Grid.ColumnDefinitions>
-                            <TextBlock Text="{x:Bind GetTrack()}" Margin="0,0,8,0" />
+                            <TextBlock Text="{x:Bind Track}" Margin="0,0,8,0" Visibility="{x:Bind GetTrackVisibility()}"/>
                             <TextBlock Grid.Column="1" Text="{x:Bind Title}" TextTrimming="CharacterEllipsis"/>
                             <TextBlock Grid.Column="2" Margin="0,0,16,0" Text="{x:Bind GetArtists()}" TextTrimming="CharacterEllipsis"/>
                             <TextBlock Grid.Column="3" Text="{x:Bind Duration.ToString('mm\\\\:ss')}" />
@@ -120,7 +120,7 @@
             <PivotItem Header="专辑" Margin="0">
                 <SemanticZoom>
                     <SemanticZoom.ZoomedInView>
-                        <GridView ItemsSource="{x:Bind LocalAlbumGroups.View}" ScrollViewer.IsHorizontalScrollChainingEnabled="False" SelectionMode="None" ItemTemplate="{StaticResource LocalAlbumZoomedInTemplate}" ItemContainerStyle="{StaticResource LocalAlbumContainerStyle}">
+                        <GridView ItemsSource="{x:Bind LocalAlbumGroups.View}" ScrollViewer.IsHorizontalScrollChainingEnabled="False" SelectionMode="None" ItemTemplate="{StaticResource LocalAlbumZoomedInTemplate}" ItemContainerStyle="{StaticResource LocalAlbumContainerStyle}" ShowsScrollingPlaceholders="True">
                             <GridView.GroupStyle>
                                 <GroupStyle HeaderTemplate="{StaticResource LocalAlbumZoomedInGroupHeaderTemplate}" />
                             </GridView.GroupStyle>
@@ -185,7 +185,12 @@
                         </StackPanel>
                     </Grid>
 
-                    <ListView Grid.Row="2" ItemsSource="{x:Bind SelectedAlbum.MusicItems, Mode=OneWay}" SelectionMode="None" ItemTemplateSelector="{StaticResource EvenOldAlbumPopupTemplate}" ItemContainerStyle="{StaticResource AlbumPopupListContainerStyle}" >
+                    <ListView Grid.Row="2" 
+                              ItemsSource="{x:Bind SelectedAlbum.MusicItems, Mode=OneWay}" 
+                              SelectionMode="None" 
+                              ItemTemplateSelector="{StaticResource EvenOldAlbumPopupTemplate}" 
+                              ItemContainerStyle="{StaticResource AlbumPopupListContainerStyle}" 
+                    >
 
                     </ListView>
 

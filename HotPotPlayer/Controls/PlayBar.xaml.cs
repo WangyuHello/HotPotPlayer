@@ -41,8 +41,12 @@ namespace HotPotPlayer.Controls
             return $"{music.GetArtists()} · {music.Album}";
         }
 
-        Symbol GetPlayButtonSymbol(bool isPlaying)
+        Symbol GetPlayButtonSymbol(bool isPlaying, bool hasError)
         {
+            if (hasError)
+            {
+                return Symbol.Clear;
+            }
             return isPlaying ? Symbol.Pause : Symbol.Play;
         }
 

@@ -131,7 +131,7 @@ namespace HotPotPlayer.Pages
         }
     }
 
-    public class EvenOldTemplateSelector: DataTemplateSelector
+    public class EvenOldTemplateSelector : DataTemplateSelector
     {
         public DataTemplate EvenTemplate { get; set; }
         public DataTemplate OddTemplate { get; set; }

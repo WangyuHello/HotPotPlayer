@@ -1,6 +1,8 @@
 ﻿using HotPotPlayer.Models;
 using Microsoft.UI.Dispatching;
+using Microsoft.UI.Xaml;
 using NAudio.Wave;
+using NAudio.Wave.SampleProviders;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -22,6 +24,11 @@ namespace HotPotPlayer.Services
 
     public class MusicPlayer : INotifyPropertyChanged, IDisposable
     {
+        public enum PlayerState 
+        { 
+            Error
+        }
+
         public event PropertyChangedEventHandler PropertyChanged;
 
         public void Set<T>(ref T oldValue, T newValue, [CallerMemberName] string propertyName = "")
@@ -78,6 +85,14 @@ namespace HotPotPlayer.Services
             set => Set(ref _isPlaying, value);
         }
 
+        private bool _hasError;
+
+        public bool HasError
+        {
+            get => _hasError;
+            set => Set(ref _hasError, value);
+        }
+
         private bool _isPlayBarVisible;
 
         public bool IsPlayBarVisible
@@ -86,14 +101,17 @@ namespace HotPotPlayer.Services
             set => Set(ref _isPlayBarVisible, value);
         }
 
-        public float? Volume
+        public float Volume
         {
-            get => _outputDevice?.Volume;
+            get => (_audioFile == null) ? 0 : _audioFile.Volume;
             set 
             {
-                if (value != _outputDevice.Volume)
+                if (value != _audioFile.Volume)
                 {
-                    _outputDevice.Volume = (float)value;
+                    if (_audioFile != null)
+                    {
+                        _audioFile.Volume = (float)value;
+                    }
                     PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(Volume)));
                 }
             }
@@ -262,14 +280,30 @@ namespace HotPotPlayer.Services
         public MusicPlayer()
         {
             _dispatcherQueue = DispatcherQueue.GetForCurrentThread();
-            _playerStarter = new BackgroundWorker();
+            _playerStarter = new BackgroundWorker
+            {
+                WorkerReportsProgress = true
+            };
             _playerStarter.RunWorkerCompleted += Worker_RunWorkerCompleted;
             _playerStarter.DoWork += Worker_DoWork;
+            _playerStarter.ProgressChanged += Worker_ProgressChanged;
             _timer = new System.Timers.Timer(500)
             {
                 AutoReset = true
             };
             _timer.Elapsed += Timer_Elapsed;
+        }
+
+        private void Worker_ProgressChanged(object sender, ProgressChangedEventArgs e)
+        {
+            var state = (PlayerState)e.ProgressPercentage;
+            switch (state)
+            {
+                case PlayerState.Error:
+                    break;
+                default:
+                    break;
+            }
         }
 
         private void Timer_Elapsed(object sender, System.Timers.ElapsedEventArgs e)
@@ -293,40 +327,68 @@ namespace HotPotPlayer.Services
             _isMusicSwitching = true;
             var index = (int)e.Argument;
             var music = CurrentPlayList[index];
-            e.Result = e.Argument;
-            if (_outputDevice == null)
+
+            try
             {
-                _outputDevice = new WaveOutEvent();
-                _outputDevice.PlaybackStopped += OnPlaybackStopped;
+                if (_outputDevice == null)
+                {
+                    _outputDevice = new WaveOutEvent();
+                    _outputDevice.PlaybackStopped += OnPlaybackStopped;
+                }
+                else
+                {
+                    _outputDevice.Stop();
+                }
+                if (_audioFile == null)
+                {
+                    var app = (App)Application.Current;
+                    var volume = app.GetConfig("Volume");
+                    _audioFile = new AudioFileReader(music.File.FullName);
+                    if (volume != null)
+                    {
+                        _audioFile.Volume = (float)volume;
+                    }
+                    _outputDevice.Init(_audioFile);
+                }
+                else
+                {
+                    _audioFile.Dispose();
+                    var tempVolume = (float)Volume;
+                    _audioFile = new AudioFileReader(music.File.FullName)
+                    {
+                        Volume = tempVolume
+                    };
+                    _outputDevice.Init(_audioFile);
+                }
+                _outputDevice.Play();
+                e.Result = e.Argument;
             }
-            else
+            catch (Exception ex)
             {
-                _outputDevice.Stop();
+                _playerStarter.ReportProgress((int)PlayerState.Error, ex);
             }
-            if (_audioFile == null)
-            {
-                _audioFile = new AudioFileReader(music.File.FullName);
-                _outputDevice.Init(_audioFile);
-            }
-            else
-            {
-                _audioFile.Dispose();
-                _audioFile = new AudioFileReader(music.File.FullName);
-                _outputDevice.Init(_audioFile);
-            }
-            _outputDevice.Play();
+
             _isMusicSwitching = false;
         }
 
         private void Worker_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
         {
             IsPlayBarVisible = true;
-            IsPlaying = true;
-            var index = (int)e.Result;
-            var music = CurrentPlayList[index];
-            CurrentPlaying = music;
-            CurrentPlayingIndex = index;
-            _timer.Start();
+            if (e.Result != null)
+            {
+                HasError = false;
+                IsPlaying = true;
+                var index = (int)e.Result;
+                var music = CurrentPlayList[index];
+                CurrentPlaying = music;
+                CurrentPlayingIndex = index;
+                _timer.Start();
+                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(Volume)));
+            }
+            else
+            {
+                HasError = true;
+            }
         }
 
         public void Dispose()
@@ -339,5 +401,11 @@ namespace HotPotPlayer.Services
 
         readonly BackgroundWorker _playerStarter;
         readonly DispatcherQueue _dispatcherQueue;
+
+        public void SaveConfig()
+        {
+            var app = (App)Application.Current;
+            app.SetConfig("Volume", Volume);
+        }
     }
 }
