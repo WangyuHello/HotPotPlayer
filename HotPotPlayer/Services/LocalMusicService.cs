@@ -388,6 +388,7 @@ namespace HotPotPlayer.Services
             foreach (var lib in libs)
             {
                 var di = new DirectoryInfo(lib);
+                if (!di.Exists) continue;
                 files.AddRange(di.GetFiles("*.zpl", SearchOption.AllDirectories));
             }
             return files;

@@ -64,7 +64,7 @@ namespace HotPotPlayer
         {
             MainWindow.Title = "HotPotPlayer";
             MainWindow.SetTitleBar(MainWindow.CustomTitleBar);
-            MainWindow.SetWindowSize(1070*2, 760*2);
+            MainWindow.CenterOnScreen(1070, 760);
             MainWindow.Closed += MainWindow_Closed;
 
             var firstArg = args.Arguments; //尚不支持，永远为null
