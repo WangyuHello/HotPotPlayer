@@ -25,6 +25,7 @@ namespace HotPotPlayer.Extensions
                 MainColor = i.MainColor.ToInt(),
                 LastWriteTime = i.LastWriteTime.ToBinary(),
                 AlbumArtists = string.Join(',', i.AlbumArtists),
+                Disc = i.Disc,
             };
         }
 
@@ -48,6 +49,7 @@ namespace HotPotPlayer.Extensions
                 MainColor = i.MainColor.ToColor(),
                 LastWriteTime = DateTime.FromBinary(i.LastWriteTime),
                 AlbumArtists = i.AlbumArtists.Split(','),
+                Disc = i.Disc,
             };
         }
 

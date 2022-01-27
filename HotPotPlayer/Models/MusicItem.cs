@@ -25,11 +25,13 @@ namespace HotPotPlayer.Models
         public Color MainColor { get; set; }
         public DateTime LastWriteTime { get; set; }
         public string[] AlbumArtists { get; set; }
+        public int Disc { get; set; }
 
         public AlbumItem AlbumRef { get; set; }
 
 
         public string AlbumSignature => Album+Year;
+        public int DiscTrack => (Disc << 16) | Track;
 
         public string GetArtists()
         {
@@ -54,6 +56,7 @@ namespace HotPotPlayer.Models
         public int MainColor { get; set; }
         public long LastWriteTime { get; set; }
         public string AlbumArtists { get; set; }
+        public int Disc { get; set; }
 
         /// <summary>
         /// 每个音乐属于唯一一个专辑

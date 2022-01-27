@@ -1,5 +1,6 @@
 ﻿using HotPotPlayer.Extensions;
 using HotPotPlayer.Models;
+using HotPotPlayer.Pages.Helper;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Controls.Primitives;
@@ -53,12 +54,17 @@ namespace HotPotPlayer.Pages.MusicSub
             get => _artistName;
             set => Set(ref _artistName, value);
         }
-
         private AlbumItem _selectedAlbum;
         public AlbumItem SelectedAlbum
         {
             get => _selectedAlbum;
             set => Set(ref _selectedAlbum, value);
+        }
+        MenuFlyout _albumAddFlyout;
+        MenuFlyout AlbumAddFlyout
+        {
+            get => _albumAddFlyout;
+            set => Set(ref _albumAddFlyout, value);
         }
 
         protected override async void OnNavigatedTo(NavigationEventArgs e)
@@ -72,7 +78,7 @@ namespace HotPotPlayer.Pages.MusicSub
             {
                 LocalAlbum.Add(item);
             }
-
+            AlbumAddFlyout = InitAlbumAddFlyout();
             base.OnNavigatedTo(e);
         }
 
@@ -101,52 +107,29 @@ namespace HotPotPlayer.Pages.MusicSub
             player.PlayNext(music, SelectedAlbum);
         }
 
-        private void AlbumPlay(object sender, RoutedEventArgs e)
+        MenuFlyout InitAlbumAddFlyout()
         {
-            var player = ((App)Application.Current).MusicPlayer.Value;
-            player.PlayNext(SelectedAlbum);
-        }
-
-        private void ArtistClick(object sender, RoutedEventArgs e)
-        {
-            if (sender is HyperlinkButton button)
+            var flyout = new MenuFlyout();
+            var i1 = new MenuFlyoutItem
             {
-                var artist = (string)button.Content;
-                var segs = artist.GetArtists();
-                if (segs.Length == 1)
-                {
-                    ((App)Application.Current).MainWindow.NavigateTo("MusicSub.Artist", artist);
-                }
-                else
-                {
-                    if (button.ContextFlyout == null)
-                    {
-                        var flyout = new MenuFlyout();
-                        foreach (var a in segs)
-                        {
-                            var item = new MenuFlyoutItem
-                            {
-                                Text = a,
-                            };
-                            item.Click += ArtistClick;
-                            flyout.Items.Add(item);
-                        }
-                        button.ContextFlyout = flyout;
-                    }
-                    button.ContextFlyout.ShowAt(button);
-                }
-            }
-            else if (sender is MenuFlyoutItem menuItem)
+                Text = "当前列表"
+            };
+            i1.Click += (s, a) => AlbumHelper.AlbumAddOne(SelectedAlbum);
+            flyout.Items.Add(i1);
+            var i2 = new MenuFlyoutSeparator();
+            flyout.Items.Add(i2);
+            foreach (var item in ((App)Application.Current).LocalMusicService.Value.LocalPlayLists)
             {
-                var artist = menuItem.Text;
-                ((App)Application.Current).MainWindow.NavigateTo("MusicSub.Artist", artist);
+                var i = new MenuFlyoutItem
+                {
+                    Text = item.Title,
+                    Tag = item
+                };
+                i.Click += (s, a) => AlbumHelper.AlbumAddToPlayList(item.Title, SelectedAlbum);
+                flyout.Items.Add(i);
             }
-        }
 
-        private void AlbumInfoClick(object sender, RoutedEventArgs e)
-        {
-            var album = (string)((HyperlinkButton)sender).Content;
-            ((App)Application.Current).MainWindow.NavigateTo("MusicSub.Album", album);
+            return flyout;
         }
     }
 }

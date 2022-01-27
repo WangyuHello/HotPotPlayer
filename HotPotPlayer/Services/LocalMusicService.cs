@@ -62,7 +62,8 @@ namespace HotPotPlayer.Services
                     Duration = tfile.Properties.Duration,
                     Track = (int)tfile.Tag.Track,
                     LastWriteTime = f.LastWriteTime,
-                    AlbumArtists = tfile.Tag.AlbumArtists
+                    AlbumArtists = tfile.Tag.AlbumArtists,
+                    Disc = (int)tfile.Tag.Disc,
                 };
 
                 return item;
@@ -95,7 +96,7 @@ namespace HotPotPlayer.Services
             var albums = allMusic.GroupBy(m2 => m2.AlbumSignature).Select(g2 => 
             {
                 var music = g2.ToList();
-                music.Sort((a,b) => a.Track.CompareTo(b.Track));
+                music.Sort((a,b) => a.DiscTrack.CompareTo(b.DiscTrack));
 
                 var (cover, color) = WriteCoverToLocalCache(g2.First());
 
@@ -116,6 +117,7 @@ namespace HotPotPlayer.Services
                 {
                     item.Cover = i.Cover;
                     item.MainColor = i.MainColor;
+                    item.AlbumRef = i;
                 }
                 return i;
             }).ToList();
@@ -133,13 +135,6 @@ namespace HotPotPlayer.Services
                     Year = g.Key,
                     Items = new ObservableCollection<AlbumItem>(albumList)
                 };
-                foreach (var a in r.Items)
-                {
-                    foreach (var item in a.MusicItems)
-                    {
-                        item.AlbumRef = a;
-                    }
-                }
                 return r;
             }).ToList();
             r.Sort((a, b) => b.Year.CompareTo(a.Year));
@@ -213,6 +208,9 @@ namespace HotPotPlayer.Services
             localMusicBackgroundWorker.RunWorkerAsync();
         }
 
+        public List<AlbumDataGroup> LocalAlbums;
+        public List<PlayListItem> LocalPlayLists;
+
         private void LocalMusicBackgroundWorker_ProgressChanged(object sender, ProgressChangedEventArgs e)
         {
             var state = (LocalMusicState)e.ProgressPercentage;
@@ -229,6 +227,8 @@ namespace HotPotPlayer.Services
                 case LocalMusicState.InitLoadingComplete:
                     OnLoadingEnded?.Invoke();
                     var (albumGroup, playLists) = ((List<AlbumDataGroup> a, List<PlayListItem> b))e.UserState;
+                    LocalAlbums = albumGroup;
+                    LocalPlayLists = playLists;
                     OnAlbumGroupChanged?.Invoke(albumGroup, playLists);
                     break;
                 case LocalMusicState.NoLibraryAccess:

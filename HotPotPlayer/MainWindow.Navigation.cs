@@ -31,6 +31,10 @@ namespace HotPotPlayer
 
         private void MainSidebar_OnBackClick()
         {
+            if (!MainFrame.CanGoBack)
+            {
+                return;
+            }
             var topName = MainFrame.BackStack.Last().SourcePageType.Name;
             MainFrame.GoBack();
             SelectedPageName = topName;

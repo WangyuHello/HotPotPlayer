@@ -179,6 +179,19 @@ namespace HotPotPlayer.Services
             PlayNext(0);
         }
 
+        public void AddToPlayList(AlbumItem album)
+        {
+            foreach (var item in album.MusicItems)
+            {
+                CurrentPlayList?.Add(item);
+            }
+        }
+
+        public void AddToPlayList(MusicItem music)
+        {
+            CurrentPlayList?.Add(music);
+        }
+
         /// <summary>
         /// 主方法
         /// </summary>

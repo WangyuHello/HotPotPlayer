@@ -1,5 +1,6 @@
 ﻿using HotPotPlayer.Services;
 using Microsoft.UI.Composition;
+using Microsoft.UI.Input;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Controls.Primitives;
@@ -63,6 +64,19 @@ namespace HotPotPlayer
             if (initMedia != null)
             {
                 app.PlayVideo(initMedia);
+            }
+        }
+
+        private void MainWindow_PointerReleased(object sender, PointerRoutedEventArgs e)
+        {
+            PointerPoint currentPoint = e.GetCurrentPoint(Root);
+            if (currentPoint.PointerDeviceType == PointerDeviceType.Mouse)
+            {
+                PointerPointProperties pointerProperties = currentPoint.Properties;
+                if (pointerProperties.PointerUpdateKind == PointerUpdateKind.XButton1Released)
+                {
+                    MainSidebar_OnBackClick();
+                }
             }
         }
 

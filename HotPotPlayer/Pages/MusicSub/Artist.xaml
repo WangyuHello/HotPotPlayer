@@ -8,6 +8,7 @@
     xmlns:muxdata="using:Microsoft.UI.Xaml.Data"
     xmlns:models="using:HotPotPlayer.Models"
     xmlns:pages="using:HotPotPlayer.Pages"
+    xmlns:helper="using:HotPotPlayer.Pages.Helper"
     xmlns:media2="using:Microsoft.UI.Xaml.Media"
     xmlns:controls="using:CommunityToolkit.WinUI.UI.Controls"
     mc:Ignorable="d"
@@ -51,7 +52,7 @@
                             </Grid.ColumnDefinitions>
                             <TextBlock Text="{x:Bind Track}" Margin="0,0,8,0" VerticalAlignment="Center"/>
                             <TextBlock Grid.Column="1" Text="{x:Bind Title}" TextTrimming="CharacterEllipsis" VerticalAlignment="Center"/>
-                            <HyperlinkButton Grid.Column="2" Content="{x:Bind GetArtists()}" VerticalAlignment="Center" Click="ArtistClick" Tag="{x:Bind }"/>
+                            <HyperlinkButton Grid.Column="2" Content="{x:Bind GetArtists()}" VerticalAlignment="Center" Click="{x:Bind helper:AlbumHelper.ArtistClick}" Tag="{x:Bind }"/>
                             <TextBlock Grid.Column="3" Margin="8,0,0,0" Text="{x:Bind Duration.ToString('mm\\\\:ss')}" VerticalAlignment="Center"/>
                         </Grid>
                     </Button>
@@ -69,7 +70,7 @@
                             </Grid.ColumnDefinitions>
                             <TextBlock Text="{x:Bind Track}" Margin="0,0,8,0" VerticalAlignment="Center"/>
                             <TextBlock Grid.Column="1" Text="{x:Bind Title}" TextTrimming="CharacterEllipsis" VerticalAlignment="Center"/>
-                            <HyperlinkButton Grid.Column="2" Content="{x:Bind GetArtists()}" VerticalAlignment="Center" Click="ArtistClick" Tag="{x:Bind }"/>
+                            <HyperlinkButton Grid.Column="2" Content="{x:Bind GetArtists()}" VerticalAlignment="Center" Click="{x:Bind helper:AlbumHelper.ArtistClick}" Tag="{x:Bind }"/>
                             <TextBlock Grid.Column="3" Margin="8,0,0,0" Text="{x:Bind Duration.ToString('mm\\\\:ss')}" VerticalAlignment="Center"/>
                         </Grid>
                     </Button>
@@ -153,18 +154,24 @@
                             <controls:ImageEx Source="{x:Bind SelectedAlbum.Cover, Mode=OneWay}" Style="{StaticResource LocalMusicImageStyle}"/>
                             <StackPanel Grid.Column="1" Margin="16,0,0,0">
                                 <TextBlock Text="{x:Bind SelectedAlbum.Title, Mode=OneWay}" MaxLines="2" FontSize="32" TextWrapping="Wrap" FontWeight="Medium" TextTrimming="CharacterEllipsis" />
-                                <HyperlinkButton Content="{x:Bind SelectedAlbum.GetArtists(), Mode=OneWay}" Padding="0,4" FontSize="18" Margin="0,8,0,0" Click="ArtistClick"/>
-                                <StackPanel Orientation="Horizontal" Margin="0,12,0,0" Spacing="8">
-                                    <Button Style="{StaticResource AlbumPlayButton}" Click="AlbumPlay">
+                                <HyperlinkButton Content="{x:Bind SelectedAlbum.GetArtists(), Mode=OneWay}" Padding="0,4" FontSize="18" Margin="0,8,0,0" Click="{x:Bind helper:AlbumHelper.ArtistClick}"/>
+                                <Grid Margin="0,12,0,0">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="Auto"/>
+                                        <ColumnDefinition Width="Auto"/>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="Auto"/>
+                                    </Grid.ColumnDefinitions>
+                                    <Button Grid.Column="0" Margin="0,0,8,0" Style="{StaticResource AlbumPlayButton}" Click="{x:Bind helper:AlbumHelper.AlbumPlay}" Tag="{x:Bind SelectedAlbum, Mode=OneWay}">
                                         <SymbolIcon Symbol="Play" />
                                     </Button>
-                                    <Button>
+                                    <SplitButton Grid.Column="1" Padding="6" Click="{x:Bind helper:AlbumHelper.AlbumAdd}" Tag="{x:Bind SelectedAlbum, Mode=OneWay}" Flyout="{x:Bind AlbumAddFlyout, Mode=OneWay}">
                                         <SymbolIcon Symbol="Add" />
+                                    </SplitButton>
+                                    <Button Grid.Column="3" Click="{x:Bind helper:AlbumHelper.AlbumDetailClick}" Tag="{x:Bind SelectedAlbum, Mode=OneWay}">
+                                        <SymbolIcon Symbol="FullScreen" />
                                     </Button>
-                                    <Button>
-                                        <SymbolIcon Symbol="AllApps" />
-                                    </Button>
-                                </StackPanel>
+                                </Grid>
                             </StackPanel>
                         </Grid>
 
