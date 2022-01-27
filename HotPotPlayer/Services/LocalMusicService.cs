@@ -247,6 +247,8 @@ namespace HotPotPlayer.Services
                 return;
             }
             var (albumGroup, playLists) = ((List<AlbumDataGroup> a, List<PlayListItem> b))e.Result;
+            LocalAlbums = albumGroup;
+            LocalPlayLists = playLists;
             OnAlbumGroupChanged?.Invoke(albumGroup, playLists);
         }
 
