@@ -14,58 +14,36 @@ namespace HotPotPlayer.Models
 {
     public record MusicItem
     {
+        public FileInfo Source { get; set; }
         public string Title { get; set; }
         public string[] Artists { get; set; }
         public string Album { get; set; }
-        public uint Year { get; set; }
+        public int Year { get; set; }
         public TimeSpan Duration { get; set; }
         public int Track { get; set; }
         public string Cover { get; set; }
-        public string Source { get; set; }
-        public FileInfo File { get; set; }
         public Color MainColor { get; set; }
-
-        public string AlbumSignature => Album+Year;
+        public DateTime LastWriteTime { get; set; }
+        public string[] AlbumArtists { get; set; }
 
         public AlbumItem AlbumRef { get; set; }
 
-        public MusicItemDb ToDb()
-        {
-            return new MusicItemDb
-            {
-                Title = Title,
-                Artists = string.Join(',', Artists),
-                Album = Album,
-                Year = (int)Year,
-                Duration = Duration.Ticks,
-                Track = Track,
-                Cover = Cover,
-                Source = Source,
-                File = File.FullName,
-                MainColor = MainColor.ToInt(),
-            };
-        }
+
+        public string AlbumSignature => Album+Year;
 
         public string GetArtists()
         {
             return string.Join(", ", Artists);
         }
-
-        public Visibility GetTrackVisibility()
-        {
-            if (AlbumRef == null || AlbumRef.IsPlayList)
-            {
-                return Visibility.Collapsed;
-            }
-            return Visibility.Visible;
-        }
     }
 
     public class MusicItemDb: RealmObject
     {
+        /// <summary>
+        /// 文件的路径作为Key，确保唯一性
+        /// </summary>
         [PrimaryKey]
-        public ObjectId Id { get; set; } = ObjectId.GenerateNewId();
-
+        public string Source { get; set; }
         public string Title { get; set; }
         public string Artists { get; set; }
         public string Album { get; set; }
@@ -73,28 +51,14 @@ namespace HotPotPlayer.Models
         public long Duration { get; set; }
         public int Track { get; set; }
         public string Cover { get; set; }
-        public string Source { get; set; }
-        public string File { get; set; }
         public int MainColor { get; set; }
+        public long LastWriteTime { get; set; }
+        public string AlbumArtists { get; set; }
 
-        //[Backlink(nameof(AlbumItemDb.MusicItems))]
-        //public IQueryable<AlbumItemDb> AlbumRef { get; }
-
-        public MusicItem ToOrigin()
-        {
-            return new MusicItem
-            {
-                Title = Title,
-                Artists = Artists.Split(','),
-                Album = Album,
-                Year = (uint)Year,
-                Duration = TimeSpan.FromTicks(Duration),
-                Track = Track,
-                Cover = Cover,
-                Source = Source,
-                File = new FileInfo(File),
-                MainColor = MainColor.ToColor(),
-            };
-        }
+        /// <summary>
+        /// 每个音乐属于唯一一个专辑
+        /// </summary>
+        [Backlink(nameof(AlbumItemDb.MusicItems))]
+        public IQueryable<AlbumItemDb> AlbumRef { get; }
     }
 }

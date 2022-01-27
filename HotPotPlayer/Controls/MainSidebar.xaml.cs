@@ -5,6 +5,7 @@ using Microsoft.UI.Xaml.Controls.Primitives;
 using Microsoft.UI.Xaml.Data;
 using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Media;
+using Microsoft.UI.Xaml.Media.Imaging;
 using Microsoft.UI.Xaml.Navigation;
 using System;
 using System.Collections.Generic;
@@ -54,9 +55,12 @@ namespace HotPotPlayer.Controls
                 "Bilibili" => sidbar.Bilibili,
                 "CloudMusic" => sidbar.CloudMusic,
                 "Setting" => sidbar.Setting,
-                _ => throw new NotImplementedException(),
+                _ => null,
             };
-            sidbar.StartPopAnimation(button);
+            if (button != null)
+            {
+                sidbar.StartPopAnimation(button);
+            }
         }
 
         public event Action<string> SelectedPageNameChanged;
@@ -64,7 +68,12 @@ namespace HotPotPlayer.Controls
 
         private bool GetEnableState(string name, string selectedName)
         {
-            return name != selectedName;
+            return !selectedName.StartsWith(name);
+        }
+
+        private ImageSource GetBilibiliImage(string selectedName)
+        {
+            return selectedName == "Bilibili" ? (BitmapSource)Resources["BilibiliBlue"] : (BitmapSource)Resources["Bilibili"];
         }
 
         private Visibility GetPopVisibility(string selected)

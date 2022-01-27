@@ -109,7 +109,7 @@ namespace HotPotPlayer.Controls
         {
             var button = (Button)sender;
             var music = (MusicItem)button.Tag;
-            MusicPlayer.PlayNext(music, null);
+            MusicPlayer.PlayNextContinue(music);
         }
 
         private void PlayModeButtonClick(object sender, RoutedEventArgs e)

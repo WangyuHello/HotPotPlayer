@@ -62,7 +62,7 @@ namespace HotPotPlayer.Pages
 
         private static void PlayVideo(VideoItem video)
         {
-            App.PlayVideo(video.File);
+            App.PlayVideo(video.Source);
         }
 
         private void SeriesClick(object sender, RoutedEventArgs e)

@@ -27,14 +27,13 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Content Remove="Assets\bilibili.svg" />
-  </ItemGroup>
-
-  <ItemGroup>
     <None Remove="Assets\Background.png" />
+    <None Remove="Assets\bilibili.svg" />
     <None Remove="Controls\MainSidebar.xaml" />
     <None Remove="Controls\PlayBar.xaml" />
     <None Remove="Controls\VolumePresenter.xaml" />
+    <None Remove="Pages\Album.xaml" />
+    <None Remove="Pages\Artist.xaml" />
     <None Remove="Pages\Bilibili.xaml" />
     <None Remove="Pages\CloudMusic.xaml" />
     <None Remove="Pages\Music.xaml" />
@@ -122,6 +121,12 @@
     <None Update="NativeLibs\swscale-5.dll">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <Page Update="Pages\Music\Album.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Update="Pages\Music\Artist.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Update="Styles\VLC.xaml">
       <Generator>MSBuild:Compile</Generator>
     </Page>

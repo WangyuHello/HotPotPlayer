@@ -80,6 +80,7 @@
                     </StackPanel>
                 </Border>
             </Grid>
+            <Image Grid.Row="2" Source="ms-appx:///Assets/bilibili-blue.svg" />
         </Grid>
         <Grid Grid.Column="1" 
               Background="#F9FAFB">

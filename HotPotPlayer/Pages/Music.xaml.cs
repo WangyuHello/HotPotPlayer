@@ -1,4 +1,5 @@
 ﻿using CommunityToolkit.WinUI.UI.Controls;
+using HotPotPlayer.Extensions;
 using HotPotPlayer.Models;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
@@ -34,7 +35,7 @@ namespace HotPotPlayer.Pages
         }
 
         public ObservableCollection<AlbumDataGroup> LocalAlbum { get; set; } = new ObservableCollection<AlbumDataGroup>();
-        public ObservableCollection<AlbumItem> LocalPlayList { get; set; } = new ObservableCollection<AlbumItem>();
+        public ObservableCollection<PlayListItem> LocalPlayList { get; set; } = new ObservableCollection<PlayListItem>();
 
         private bool _isFirstLoading;
         public bool IsFirstLoading 
@@ -54,6 +55,12 @@ namespace HotPotPlayer.Pages
             get => _selectedAlbum;
             set => Set(ref _selectedAlbum, value);
         }
+        private PlayListItem _selectedPlayList;
+        public PlayListItem SelectedPlayList
+        {
+            get => _selectedPlayList;
+            set => Set(ref _selectedPlayList, value);
+        }
 
         void InitializeMusic()
         {
@@ -65,7 +72,7 @@ namespace HotPotPlayer.Pages
             musicService.StartLoadLocalMusic();
         }
 
-        private void MusicService_OnAlbumGroupChanged(List<AlbumDataGroup> g, List<AlbumItem> l)
+        private void MusicService_OnAlbumGroupChanged(List<AlbumDataGroup> g, List<PlayListItem> l)
         {
             if (g != null)
             {
@@ -109,12 +116,18 @@ namespace HotPotPlayer.Pages
             }
         }
 
-
         private void AlbumClick(object sender, RoutedEventArgs e)
         {
             var album = ((Button)sender).Tag as AlbumItem;
             SelectedAlbum = album;
             AlbumPopup.ShowAt(Root);
+        }
+
+        private void PlayListClick(object sender, RoutedEventArgs e)
+        {
+            var playList = ((Button)sender).Tag as PlayListItem;
+            SelectedPlayList = playList;
+            PlayListPopup.ShowAt(Root);
         }
 
         private void AlbumPopupListClick(object sender, RoutedEventArgs e)
@@ -124,10 +137,91 @@ namespace HotPotPlayer.Pages
             player.PlayNext(music, SelectedAlbum);
         }
 
+        private void PlayListPopupListClick(object sender, RoutedEventArgs e)
+        {
+            var music = ((Button)sender).Tag as MusicItem;
+            var player = ((App)Application.Current).MusicPlayer.Value;
+            player.PlayNext(music, SelectedPlayList);
+        }
+
         private void AlbumPlay(object sender, RoutedEventArgs e)
         {
             var player = ((App)Application.Current).MusicPlayer.Value;
             player.PlayNext(SelectedAlbum);
+        }
+
+        private void PlayListPlay(object sender, RoutedEventArgs e)
+        {
+            var player = ((App)Application.Current).MusicPlayer.Value;
+            player.PlayNext(SelectedPlayList);
+        }
+
+        private void ArtistClick(object sender, RoutedEventArgs e)
+        {
+            if (sender is HyperlinkButton button)
+            {
+                var artist = (string)button.Content;
+                var segs = artist.GetArtists();
+                if (segs.Length == 1)
+                {
+                    ((App)Application.Current).MainWindow.NavigateTo("MusicSub.Artist", artist);
+                }
+                else
+                {
+                    if (button.ContextFlyout == null)
+                    {
+                        var flyout = new MenuFlyout();
+                        foreach (var a in segs)
+                        {
+                            var item = new MenuFlyoutItem
+                            {
+                                Text = a,
+                            };
+                            item.Click += ArtistClick;
+                            flyout.Items.Add(item);
+                        }
+                        button.ContextFlyout = flyout;
+                    }
+                    button.ContextFlyout.ShowAt(button);
+                }
+            }
+            else if (sender is MenuFlyoutItem menuItem)
+            {
+                var artist = menuItem.Text;
+                ((App)Application.Current).MainWindow.NavigateTo("MusicSub.Artist", artist);
+            }
+        }
+
+        private void ArtistClick2(object sender, RoutedEventArgs e)
+        {
+            var button = sender as HyperlinkButton;
+            var artist = (string)button.Content;
+            var segs = artist.GetArtists();
+            if (segs.Length == 1)
+            {
+                ((App)Application.Current).MainWindow.NavigateTo("MusicSub.Artist", artist);
+            }
+            else
+            {
+                var flyout = new MenuFlyout();
+                foreach (var a in segs)
+                {
+                    var item = new MenuFlyoutItem
+                    {
+                        Text = a,
+                    };
+                    item.Click += ArtistClick;
+                    flyout.Items.Add(item);
+                }
+                button.ContextFlyout = flyout;
+                button.ContextFlyout.ShowAt(button);
+            }
+        }
+
+        private void AlbumInfoClick(object sender, RoutedEventArgs e)
+        {
+            var music = (MusicItem)((HyperlinkButton)sender).Tag;
+            ((App)Application.Current).MainWindow.NavigateTo("MusicSub.Album", music);
         }
     }
 

@@ -1,4 +1,5 @@
-﻿using HotPotPlayer.Models;
+﻿using HotPotPlayer.Extensions;
+using HotPotPlayer.Models;
 using HotPotPlayer.Services.Video;
 using Microsoft.UI.Xaml;
 using Realms;
@@ -128,14 +129,11 @@ namespace HotPotPlayer.Services
 
                 localVideoBackgroundWorker.ReportProgress((int)LocalVideoState.InitLoadingComplete, videos);
 
-                var localDbList = _db.All<VideoItemDb>().ToList().Select(m => m.File);
-                var files2 = GetVideoFilesFromLibrary(libs).Select(f => f.FullName);
+                var files2 = GetVideoFilesFromLibrary(libs);
 
-                var newFiles = files2.Except(localDbList);
-                var delFiles = localDbList.Except(files2);
-                if (newFiles.Any() || delFiles.Any())
+                var hasUpdate = CheckVideoHasUpdate(files2, _db);
+                if (hasUpdate)
                 {
-                    //如果有更新，开始后台线程扫描
                     localVideoBackgroundWorker.ReportProgress((int)LocalVideoState.NonFirstLoading);
                 }
                 else
@@ -172,15 +170,26 @@ namespace HotPotPlayer.Services
 
                 var r2 = new VideoItem
                 {
+                    Source = f,
                     Title = title,
                     Duration = tfile.Properties.Duration,
-                    Source = f.FullName,
-                    File = f,
-                    Cover = VideoInfoHelper.SaveVideoThumbnail(f)
+                    Cover = VideoInfoHelper.SaveVideoThumbnail(f),
+                    LastWriteTime = f.LastWriteTime
                 };
                 return r2;
             }).ToList();
             return r;
+        }
+
+        private static bool CheckVideoHasUpdate(List<FileInfo> files, Realm db)
+        {
+            foreach (var f in files)
+            {
+                var target = db.All<VideoItemDb>().FirstOrDefault(m => m.Source == f.FullName);
+                if (target == null) return true;
+                if (target.LastWriteTime != f.LastWriteTime.ToBinary()) return true;
+            }
+            return false;
         }
     }
 }

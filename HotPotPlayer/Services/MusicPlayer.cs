@@ -130,6 +130,13 @@ namespace HotPotPlayer.Services
             CurrentPlayList = new ObservableCollection<MusicItem>() { music };
             PlayNext(0);
         }
+
+        public void PlayNextContinue(MusicItem music)
+        {
+            var index = CurrentPlayList?.IndexOf(music);
+            PlayNext(index);
+        }
+
         public void PlayNext(MusicItem music, AlbumItem album)
         {
             if (album != null)
@@ -145,7 +152,28 @@ namespace HotPotPlayer.Services
             }
         }
 
+        public void PlayNext(MusicItem music, PlayListItem playList)
+        {
+            if (playList != null)
+            {
+                CurrentPlayList = new ObservableCollection<MusicItem>(playList.MusicItems);
+                var index = playList.MusicItems.IndexOf(music);
+                PlayNext(index);
+            }
+            else
+            {
+                var index = CurrentPlayList?.IndexOf(music);
+                PlayNext(index);
+            }
+        }
+
         public void PlayNext(AlbumItem album)
+        {
+            CurrentPlayList = new ObservableCollection<MusicItem>(album.MusicItems);
+            PlayNext(0);
+        }
+
+        public void PlayNext(PlayListItem album)
         {
             CurrentPlayList = new ObservableCollection<MusicItem>(album.MusicItems);
             PlayNext(0);
@@ -343,7 +371,7 @@ namespace HotPotPlayer.Services
                 {
                     var app = (App)Application.Current;
                     var volume = app.GetConfig("Volume");
-                    _audioFile = new AudioFileReader(music.File.FullName);
+                    _audioFile = new AudioFileReader(music.Source.FullName);
                     if ((volume != null) && ((float)volume != 0))
                     {
                         _audioFile.Volume = (float)volume;
@@ -354,7 +382,7 @@ namespace HotPotPlayer.Services
                 {
                     _audioFile.Dispose();
                     var tempVolume = (float)Volume;
-                    _audioFile = new AudioFileReader(music.File.FullName)
+                    _audioFile = new AudioFileReader(music.Source.FullName)
                     {
                         Volume = tempVolume
                     };

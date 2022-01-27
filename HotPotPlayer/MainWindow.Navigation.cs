@@ -46,6 +46,10 @@ namespace HotPotPlayer
             SelectedPageName = InitPageName;
         }
 
-
+        public void NavigateTo(string name, object parameter)
+        {
+            MainFrame.Navigate(Type.GetType("HotPotPlayer.Pages." + name), parameter, new DrillInNavigationTransitionInfo());
+            SelectedPageName = name;
+        }
     }
 }

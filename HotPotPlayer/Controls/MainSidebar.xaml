@@ -8,7 +8,8 @@
     mc:Ignorable="d">
 
     <UserControl.Resources>
-        
+        <BitmapImage x:Key="BilibiliBlue" UriSource="ms-appx:///Assets/bilibili-blue.svg" />
+        <BitmapImage x:Key="Bilibili" UriSource="ms-appx:///Assets/bilibili.svg" />
     </UserControl.Resources>
 
     <Grid Background="{StaticResource MainNavBackground}" >
@@ -33,7 +34,7 @@
             <FontIcon FontFamily="Segoe Fluent Icons" Glyph="&#xE29B;" />
         </Button>
         <Button Grid.Row="4" Margin="0,4" x:Name="Bilibili" Style="{StaticResource MainNavButton}" Click="NavigateClick" Tag="Bilibili" IsEnabled="{x:Bind GetEnableState('Bilibili', SelectedPageName), Mode=OneWay}">
-            <ImageIcon Source="ms-appx:///Assets/bilibili.svg" />
+            <ImageIcon Source="ms-appx:///Assets/bilibili.svg" Width="20" />
         </Button>
         <Button Grid.Row="5" Margin="0,4" x:Name="CloudMusic" Style="{StaticResource MainNavButton}" Click="NavigateClick" Tag="CloudMusic" IsEnabled="{x:Bind GetEnableState('CloudMusic', SelectedPageName), Mode=OneWay}">
             <SymbolIcon Symbol="World" />

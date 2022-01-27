@@ -9,7 +9,7 @@ namespace HotPotPlayer.Models
 {
     public class AlbumDataGroup
     {
-        public uint Year { get; set; }
+        public int Year { get; set; }
         public ObservableCollection<AlbumItem> Items { get; set; }
     }
 }

@@ -20,41 +20,15 @@ namespace HotPotPlayer.Models
     {
         public string Title { get; set; }
         public string[] Artists { get; set; }
-        public uint Year { get; set; }
+        public int Year { get; set; }
         public string Cover { get; set; }
-        public List<MusicItem> MusicItems { get; set; }
         public Color MainColor { get; set; }
-
-        public bool IsPlayList { get; set; }
-        public DateTime LastWriteTime { get; set; }
+        public List<MusicItem> MusicItems { get; set; }
+        public string[] AllArtists { get; set; }
 
         public string GetArtists()
         {
             return string.Join(", ", Artists);
-        }
-
-        public AlbumItemDb ToDb()
-        {
-            var db = new AlbumItemDb
-            {
-                Title = Title,
-                Artists = string.Join(',', Artists),
-                Year = (int)Year,
-                Cover = Cover,
-                IsPlayList = IsPlayList,
-                LastWriteTime = LastWriteTime.ToBinary(),
-                MainColor = MainColor.ToInt(),
-            };
-            foreach (var item in MusicItems)
-            {
-                db.MusicItems.Add(item.ToDb());
-            }
-            return db;
-        }
-
-        public void SetPlayListCover()
-        {
-            Cover = MusicItems.First().Cover;
         }
     }
 
@@ -67,24 +41,8 @@ namespace HotPotPlayer.Models
         public string Artists { get; set; }
         public int Year { get; set; }
         public string Cover { get; set; }
-        public IList<MusicItemDb> MusicItems { get; }
-        public bool IsPlayList { get; set; }
-        public long LastWriteTime { get; set; }
         public int MainColor { get; set; }
-
-        public AlbumItem ToOrigin()
-        {
-            return new AlbumItem
-            {
-                Title = Title,
-                Artists = Artists.Split(','),
-                Year = (uint)Year,
-                Cover = Cover,
-                MusicItems = MusicItems.Select(i => i.ToOrigin()).ToList(),
-                IsPlayList = IsPlayList,
-                LastWriteTime = DateTime.FromBinary(LastWriteTime),
-                MainColor = MainColor.ToColor(),
-            };
-        }
+        public IList<MusicItemDb> MusicItems { get; }
+        public string AllArtists { get; set; }
     }
 }
