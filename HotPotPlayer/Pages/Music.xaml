@@ -21,9 +21,9 @@
         <CollectionViewSource x:Name="LocalAlbumGroups" Source="{x:Bind LocalAlbum}" IsSourceGrouped="True" ItemsPath="Items" />
 
         <DataTemplate x:Key="LocalAlbumZoomedInTemplate" x:DataType="models:AlbumItem">
-            <Button Style="{StaticResource AlbumGroupButton}" Click="AlbumClick" Tag="{x:Bind }">
+            <Button Style="{StaticResource AlbumGroupButton}" Click="AlbumClick" Tag="{x:Bind }" >
                 <StackPanel Spacing="8" Margin="0,0,0,12">
-                    <controls:ImageEx Source="{x:Bind Cover}" Style="{StaticResource LocalMusicImageStyle}"/>
+                    <controls:ImageEx Source="{x:Bind Cover}" Style="{StaticResource LocalMusicImageStyle}" />
                     <TextBlock Margin="8,0" Text="{x:Bind Title}" FontWeight="Bold" LineStackingStrategy="BaselineToBaseline" FontSize="14" MaxLines="2" TextTrimming="CharacterEllipsis" TextWrapping="Wrap" Height="40" ToolTipService.ToolTip="{x:Bind Title}"/>
                     <TextBlock Margin="8,0" Text="{x:Bind GetArtists()}" Foreground="Gray" ToolTipService.ToolTip="{x:Bind GetArtists()}"/>
                 </StackPanel>
@@ -33,7 +33,7 @@
         <DataTemplate x:Key="LocalPlayListTemplate" x:DataType="models:PlayListItem">
             <Button Style="{StaticResource AlbumGroupButton}" Click="PlayListClick" Tag="{x:Bind }">
                 <StackPanel Spacing="8" Margin="0,0,0,12">
-                    <controls:ImageEx Source="{x:Bind Cover}" Style="{StaticResource LocalMusicImageStyle}"/>
+                    <controls:ImageEx Source="{x:Bind Cover}" Style="{StaticResource LocalMusicImageStyle}" Background="LightGray"/>
                     <TextBlock Margin="8,0" Text="{x:Bind Title}" FontWeight="Medium" LineStackingStrategy="BaselineToBaseline" FontSize="18" TextTrimming="CharacterEllipsis" TextWrapping="Wrap" ToolTipService.ToolTip="{x:Bind Title}"/>
                 </StackPanel>
             </Button>

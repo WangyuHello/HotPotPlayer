@@ -76,6 +76,7 @@
     <PackageReference Include="PInvoke.User32" Version="0.7.104" />
     <PackageReference Include="Realm" Version="10.8.0" />
     <PackageReference Include="SixLabors.ImageSharp" Version="1.0.4" />
+    <PackageReference Include="SixLabors.ImageSharp.Drawing" Version="1.0.0-beta13" />
     <PackageReference Include="System.Text.Json" Version="6.0.1" />
     <PackageReference Include="TagLibSharp" Version="2.2.0" />
     <Manifest Include="$(ApplicationManifest)" />
