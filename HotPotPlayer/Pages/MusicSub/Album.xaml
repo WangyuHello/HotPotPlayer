@@ -9,6 +9,7 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:controls="using:CommunityToolkit.WinUI.UI.Controls"
+    xmlns:animations="using:CommunityToolkit.WinUI.UI.Animations"
     mc:Ignorable="d"
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
 
@@ -78,14 +79,14 @@
         <Grid Height="16">
 
         </Grid>
-        <Grid Grid.Row="1" Margin="16,0,16,8">
+        <Grid Grid.Row="1" Margin="16,0,16,8" animations:Connected.Key="AlbumBanner">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="Auto" />
                 <ColumnDefinition Width="*" />
             </Grid.ColumnDefinitions>
 
-            <controls:ImageEx Source="{x:Bind SelectedAlbum.Cover, Mode=OneWay}" Style="{StaticResource LocalAlbumImageStyle}"/>
-            <StackPanel Grid.Column="1" Margin="16,0,0,0">
+            <controls:ImageEx Source="{x:Bind SelectedAlbum.Cover, Mode=OneWay}" Style="{StaticResource LocalAlbumImageStyle}" />
+            <StackPanel Grid.Column="1" Margin="16,0,0,0" >
                 <TextBlock Text="{x:Bind SelectedAlbum.Title, Mode=OneWay}" MaxLines="2" FontSize="32" TextWrapping="Wrap" FontWeight="Medium" TextTrimming="CharacterEllipsis" />
                 <TextBlock Text="{x:Bind SelectedAlbum.Year, Mode=OneWay}" FontSize="18" Margin="0,4,0,0"/>
                 <HyperlinkButton Content="{x:Bind SelectedAlbum.GetArtists(), Mode=OneWay}" Padding="0,4" FontSize="18" Margin="0,4,0,0" Click="{x:Bind helper:AlbumHelper.ArtistClick2}"/>

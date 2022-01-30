@@ -8,6 +8,7 @@ using Microsoft.UI.Xaml.Controls.Primitives;
 using Microsoft.UI.Xaml.Data;
 using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Media;
+using Microsoft.UI.Xaml.Media.Animation;
 using Microsoft.UI.Xaml.Navigation;
 using System;
 using System.Collections.Generic;
@@ -130,7 +131,12 @@ namespace HotPotPlayer.Pages
         {
             var album = ((Button)sender).Tag as AlbumItem;
             SelectedAlbum = album;
-            AlbumPopup.ShowAt(Root);
+
+            var ani = AlbumGridView.PrepareConnectedAnimation("forwardAnimation", album, "AlbumConnectedElement");
+            ani.Configuration = new BasicConnectedAnimationConfiguration();
+            ani.TryStart(AlbumOverlayTarget);
+
+            OverlayPopup.Visibility = Visibility.Visible;
         }
 
         private void PlayListClick(object sender, RoutedEventArgs e)
@@ -185,6 +191,20 @@ namespace HotPotPlayer.Pages
                 }
             }
             return flyout;
+        }
+
+        private void AlbumOverlayTarget_Tapped(object sender, TappedRoutedEventArgs e)
+        {
+            e.Handled = true;
+        }
+
+        private async void OverlayPopup_Tapped(object sender, TappedRoutedEventArgs e)
+        {
+            ConnectedAnimation ConnectedAnimation = ConnectedAnimationService.GetForCurrentView().PrepareToAnimate("backwardsAnimation", AlbumOverlayTarget);
+            //ConnectedAnimation.Completed += (s, e) => OverlayPopup.Visibility = Visibility.Collapsed;
+            ConnectedAnimation.Configuration = new BasicConnectedAnimationConfiguration();
+            await AlbumGridView.TryStartConnectedAnimationAsync(ConnectedAnimation, SelectedAlbum, "AlbumConnectedElement");
+            OverlayPopup.Visibility = Visibility.Collapsed;
         }
     }
 
