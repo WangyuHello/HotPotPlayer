@@ -136,14 +136,19 @@ namespace HotPotPlayer.Pages
             ani.Configuration = new BasicConnectedAnimationConfiguration();
             ani.TryStart(AlbumOverlayTarget);
 
-            OverlayPopup.Visibility = Visibility.Visible;
+            AlbumOverlayPopup.Visibility = Visibility.Visible;
         }
 
         private void PlayListClick(object sender, RoutedEventArgs e)
         {
             var playList = ((Button)sender).Tag as PlayListItem;
             SelectedPlayList = playList;
-            PlayListPopup.ShowAt(Root);
+
+            var ani = PlayListGridView.PrepareConnectedAnimation("forwardAnimation2", playList, "PlayListConnectedElement");
+            ani.Configuration = new BasicConnectedAnimationConfiguration();
+            ani.TryStart(PlayListOverlayTarget);
+
+            PlayListOverlayPopup.Visibility = Visibility.Visible;
         }
 
         private void AlbumPopupListClick(object sender, RoutedEventArgs e)
@@ -198,13 +203,20 @@ namespace HotPotPlayer.Pages
             e.Handled = true;
         }
 
-        private async void OverlayPopup_Tapped(object sender, TappedRoutedEventArgs e)
+        private async void AlbumOverlayPopup_Tapped(object sender, TappedRoutedEventArgs e)
         {
-            ConnectedAnimation ConnectedAnimation = ConnectedAnimationService.GetForCurrentView().PrepareToAnimate("backwardsAnimation", AlbumOverlayTarget);
-            //ConnectedAnimation.Completed += (s, e) => OverlayPopup.Visibility = Visibility.Collapsed;
-            ConnectedAnimation.Configuration = new BasicConnectedAnimationConfiguration();
-            await AlbumGridView.TryStartConnectedAnimationAsync(ConnectedAnimation, SelectedAlbum, "AlbumConnectedElement");
-            OverlayPopup.Visibility = Visibility.Collapsed;
+            var anim = ConnectedAnimationService.GetForCurrentView().PrepareToAnimate("backwardsAnimation", AlbumOverlayTarget);
+            anim.Configuration = new BasicConnectedAnimationConfiguration();
+            await AlbumGridView.TryStartConnectedAnimationAsync(anim, SelectedAlbum, "AlbumConnectedElement");
+            AlbumOverlayPopup.Visibility = Visibility.Collapsed;
+        }
+
+        private async void PlayListOverlayPopup_Tapped(object sender, TappedRoutedEventArgs e)
+        {
+            var anim = ConnectedAnimationService.GetForCurrentView().PrepareToAnimate("backwardsAnimation2", PlayListOverlayTarget);
+            anim.Configuration = new BasicConnectedAnimationConfiguration();
+            await PlayListGridView.TryStartConnectedAnimationAsync(anim, SelectedPlayList, "PlayListConnectedElement");
+            PlayListOverlayPopup.Visibility = Visibility.Collapsed;
         }
     }
 

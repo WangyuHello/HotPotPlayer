@@ -79,7 +79,7 @@
         <Grid Height="16">
 
         </Grid>
-        <Grid Grid.Row="1" Margin="16,0,16,8" animations:Connected.Key="AlbumBanner">
+        <Grid Grid.Row="1" Margin="16,0,16,8" >
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="Auto" />
                 <ColumnDefinition Width="*" />

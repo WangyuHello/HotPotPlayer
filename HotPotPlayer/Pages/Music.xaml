@@ -33,7 +33,7 @@
         </DataTemplate>
 
         <DataTemplate x:Key="LocalPlayListTemplate" x:DataType="models:PlayListItem">
-            <Button Style="{StaticResource AlbumGroupButton}" Click="PlayListClick" Tag="{x:Bind }">
+            <Button Style="{StaticResource AlbumGroupButton}" Click="PlayListClick" Tag="{x:Bind }" x:Name="PlayListConnectedElement">
                 <StackPanel Spacing="8" Margin="0,0,0,12">
                     <controls:ImageEx Source="{x:Bind Cover}" Style="{StaticResource LocalMusicImageStyle}" Background="LightGray"/>
                     <TextBlock Margin="8,0" Text="{x:Bind Title}" FontWeight="Medium" LineStackingStrategy="BaselineToBaseline" FontSize="18" TextTrimming="CharacterEllipsis" TextWrapping="Wrap" ToolTipService.ToolTip="{x:Bind Title}"/>
@@ -147,26 +147,8 @@
             <Setter Property="Height" Value="40" />
         </Style>
 
-        <media2:AcrylicBrush x:Key="AlbumPopupBackground" TintOpacity="0.8" TintLuminosityOpacity="0.8" TintColor="LightGray" FallbackColor="SkyBlue" />
+        <media2:AcrylicBrush x:Key="PopupBackground" TintOpacity="0.8" TintLuminosityOpacity="0.8" TintColor="LightGray" FallbackColor="SkyBlue" />
 
-        <Style x:Key="AlbumPopupStyle" TargetType="FlyoutPresenter">
-            <Setter Property="MinWidth" Value="640" />
-            <Setter Property="MinHeight" Value="460" />
-            <Setter Property="MaxHeight" Value="560" />
-            <Setter Property="Padding" Value="0" />
-            <Setter Property="ScrollViewer.HorizontalScrollMode" Value="Disabled"/>
-            <Setter Property="ScrollViewer.HorizontalScrollBarVisibility" Value="Disabled"/>
-            <Setter Property="ScrollViewer.VerticalScrollMode" Value="Disabled"/>
-            <Setter Property="ScrollViewer.VerticalScrollBarVisibility" Value="Disabled"/>
-            <Setter Property="Margin" Value="0,80,0,0" />
-            <Setter Property="BorderThickness" Value="2" />
-            <Setter Property="CornerRadius" Value="8" />
-            <Setter Property="Background" Value="{StaticResource AlbumPopupBackground}" />
-        </Style>
-
-        <Style x:Key="PlayListPopupStyle" TargetType="FlyoutPresenter" BasedOn="{StaticResource AlbumPopupStyle}">
-            <Setter Property="MinWidth" Value="800" />
-        </Style>
     </Page.Resources>
 
     <Grid x:Name="Root" Background="White" Padding="36,0,0,0">
@@ -189,7 +171,7 @@
                 </SemanticZoom>
             </PivotItem>
             <PivotItem Header="播放列表" Margin="0">
-                <GridView ItemsSource="{x:Bind LocalPlayList}" ScrollViewer.IsHorizontalScrollChainingEnabled="False" SelectionMode="None" ItemTemplate="{StaticResource LocalPlayListTemplate}" ItemContainerStyle="{StaticResource LocalAlbumContainerStyle}" >
+                <GridView x:Name="PlayListGridView" ItemsSource="{x:Bind LocalPlayList}" ScrollViewer.IsHorizontalScrollChainingEnabled="False" SelectionMode="None" ItemTemplate="{StaticResource LocalPlayListTemplate}" ItemContainerStyle="{StaticResource LocalAlbumContainerStyle}" >
                     <GridView.Footer>
                         <Grid Height="100"/>
                     </GridView.Footer>
@@ -207,8 +189,8 @@
             <TextBlock FontSize="14">正在扫描音乐库</TextBlock>
         </StackPanel>
 
-        <Grid x:Name="OverlayPopup" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Visibility="Collapsed" Background="#00ffffff" Tapped="OverlayPopup_Tapped">
-            <Grid x:Name="AlbumOverlayTarget" Margin="0,-60,0,0" VerticalAlignment="Center" HorizontalAlignment="Center" Width="640" MinHeight="460" MaxHeight="560" CornerRadius="8" Background="{StaticResource AlbumPopupBackground}" Tapped="AlbumOverlayTarget_Tapped">
+        <Grid x:Name="AlbumOverlayPopup" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Visibility="Collapsed" Background="#00ffffff" Tapped="AlbumOverlayPopup_Tapped">
+            <Grid x:Name="AlbumOverlayTarget" Margin="0,-60,0,0" VerticalAlignment="Center" HorizontalAlignment="Center" Width="640" MinHeight="460" MaxHeight="560" CornerRadius="8" Background="{StaticResource PopupBackground}" Tapped="AlbumOverlayTarget_Tapped">
                 <animations:Implicit.HideAnimations>
                     <animations:OpacityAnimation Duration="0:0:0.45" From="1" To="0" />
                 </animations:Implicit.HideAnimations>
@@ -225,13 +207,13 @@
                 <Grid Height="16">
 
                 </Grid>
-                <Grid Grid.Row="1" Margin="16,0,16,8" animations:Connected.Key="AlbumBanner">
+                <Grid Grid.Row="1" Margin="16,0,16,8" >
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="Auto" />
                         <ColumnDefinition Width="*" />
                     </Grid.ColumnDefinitions>
 
-                    <controls:ImageEx  Source="{x:Bind SelectedAlbum.Cover, Mode=OneWay}" Style="{StaticResource LocalAlbumImageStyle}" />
+                    <controls:ImageEx  Source="{x:Bind SelectedAlbum.Cover, Mode=OneWay}" Style="{StaticResource LocalAlbumPopupImageStyle}" />
                     <StackPanel Grid.Column="1" Margin="16,0,0,0" >
                         <TextBlock Text="{x:Bind SelectedAlbum.Title, Mode=OneWay}" MaxLines="2" FontSize="32" TextWrapping="Wrap" FontWeight="Medium" TextTrimming="CharacterEllipsis" >
 
@@ -271,54 +253,56 @@
                         >
 
                 </ListView>
-
             </Grid>
         </Grid>
 
-        <Grid>
-            <FlyoutBase.AttachedFlyout>
-                <Flyout x:Name="PlayListPopup" FlyoutPresenterStyle="{StaticResource PlayListPopupStyle}">
-                    <Grid >
-                        <Grid.RowDefinitions>
-                            <RowDefinition Height="Auto" />
-                            <RowDefinition Height="Auto" />
-                            <RowDefinition Height="*" />
-                        </Grid.RowDefinitions>
-                        <Grid Height="16">
+        <Grid x:Name="PlayListOverlayPopup" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Visibility="Collapsed" Background="#00ffffff" Tapped="PlayListOverlayPopup_Tapped">
+            <Grid x:Name="PlayListOverlayTarget" Margin="0,-60,0,0" VerticalAlignment="Center" HorizontalAlignment="Center" Width="800" MinHeight="460" MaxHeight="560" CornerRadius="8" Background="{StaticResource PopupBackground}" Tapped="AlbumOverlayTarget_Tapped">
+                <animations:Implicit.HideAnimations>
+                    <animations:OpacityAnimation Duration="0:0:0.45" From="1" To="0" />
+                </animations:Implicit.HideAnimations>
 
-                        </Grid>
-                        <Grid Grid.Row="1" Margin="16,0,16,8">
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="Auto" />
-                                <ColumnDefinition Width="*" />
-                            </Grid.ColumnDefinitions>
+                <animations:Implicit.ShowAnimations>
+                    <animations:OpacityAnimation Duration="0:0:0.01" From="0" To="1" />
+                </animations:Implicit.ShowAnimations>
+                
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="*" />
+                </Grid.RowDefinitions>
+                <Grid Height="16">
 
-                            <controls:ImageEx Source="{x:Bind SelectedPlayList.Cover, Mode=OneWay}" Style="{StaticResource LocalMusicImageStyle}"/>
-                            <StackPanel Grid.Column="1" Margin="16,0,0,0">
-                                <TextBlock Text="{x:Bind SelectedPlayList.Title, Mode=OneWay}" MaxLines="2" FontSize="32" TextWrapping="Wrap" FontWeight="Medium" TextTrimming="CharacterEllipsis" />
-                                <StackPanel Orientation="Horizontal" Margin="0,12,0,0" Spacing="8">
-                                    <Button Style="{StaticResource AlbumPlayButton}" Click="PlayListPlay">
-                                        <SymbolIcon Symbol="Play" />
-                                    </Button>
-                                    <SplitButton Padding="6">
-                                        <SymbolIcon Symbol="Add" />
-                                    </SplitButton>
-                                </StackPanel>
-                            </StackPanel>
-                        </Grid>
+                </Grid>
+                <Grid Grid.Row="1" Margin="16,0,16,8">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="*" />
+                    </Grid.ColumnDefinitions>
 
-                        <ListView Grid.Row="2" 
-                              ItemsSource="{x:Bind SelectedPlayList.MusicItems, Mode=OneWay}" 
-                              SelectionMode="None" 
-                              ItemTemplateSelector="{StaticResource EvenOldPlayListPopupTemplate}" 
-                              ItemContainerStyle="{StaticResource AlbumPopupListContainerStyle}" 
-                        >
+                    <controls:ImageEx Source="{x:Bind SelectedPlayList.Cover, Mode=OneWay}" Style="{StaticResource LocalMusicImageStyle}"/>
+                    <StackPanel Grid.Column="1" Margin="16,0,0,0">
+                        <TextBlock Text="{x:Bind SelectedPlayList.Title, Mode=OneWay}" MaxLines="2" FontSize="32" TextWrapping="Wrap" FontWeight="Medium" TextTrimming="CharacterEllipsis" />
+                        <StackPanel Orientation="Horizontal" Margin="0,12,0,0" Spacing="8">
+                            <Button Style="{StaticResource AlbumPlayButton}" Click="PlayListPlay">
+                                <SymbolIcon Symbol="Play" />
+                            </Button>
+                            <SplitButton Padding="6">
+                                <SymbolIcon Symbol="Add" />
+                            </SplitButton>
+                        </StackPanel>
+                    </StackPanel>
+                </Grid>
 
-                        </ListView>
+                <ListView Grid.Row="2" 
+                        ItemsSource="{x:Bind SelectedPlayList.MusicItems, Mode=OneWay}" 
+                        SelectionMode="None" 
+                        ItemTemplateSelector="{StaticResource EvenOldPlayListPopupTemplate}" 
+                        ItemContainerStyle="{StaticResource AlbumPopupListContainerStyle}" 
+                >
 
-                    </Grid>
-                </Flyout>
-            </FlyoutBase.AttachedFlyout>
+                </ListView>
+            </Grid>
         </Grid>
 
     </Grid>
