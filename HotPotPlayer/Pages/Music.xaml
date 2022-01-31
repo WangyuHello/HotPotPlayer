@@ -35,7 +35,7 @@
         <DataTemplate x:Key="LocalPlayListTemplate" x:DataType="models:PlayListItem">
             <Button Style="{StaticResource AlbumGroupButton}" Click="PlayListClick" Tag="{x:Bind }" x:Name="PlayListConnectedElement">
                 <StackPanel Spacing="8" Margin="0,0,0,12">
-                    <controls:ImageEx Source="{x:Bind Cover}" Style="{StaticResource LocalMusicImageStyle}" Background="LightGray"/>
+                    <controls:ImageEx Source="{x:Bind Cover}" Style="{StaticResource LocalMusicImageStyle}" />
                     <TextBlock Margin="8,0" Text="{x:Bind Title}" FontWeight="Medium" LineStackingStrategy="BaselineToBaseline" FontSize="18" TextTrimming="CharacterEllipsis" TextWrapping="Wrap" ToolTipService.ToolTip="{x:Bind Title}"/>
                 </StackPanel>
             </Button>
@@ -152,7 +152,7 @@
     </Page.Resources>
 
     <Grid x:Name="Root" Background="White" Padding="36,0,0,0">
-        <Pivot>
+        <Pivot x:Name="RootPivot" >
             <PivotItem Header="专辑" Margin="0">
                 <SemanticZoom>
                     <SemanticZoom.ZoomedInView>
@@ -189,7 +189,9 @@
             <TextBlock FontSize="14">正在扫描音乐库</TextBlock>
         </StackPanel>
 
-        <Grid x:Name="AlbumOverlayPopup" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Visibility="Collapsed" Background="#00ffffff" Tapped="AlbumOverlayPopup_Tapped">
+        <Grid x:Name="AlbumOverlayPopup" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Visibility="Collapsed" Background="#00000000" Tapped="AlbumOverlayPopup_Tapped">
+                        
+            
             <Grid x:Name="AlbumOverlayTarget" Margin="0,-60,0,0" VerticalAlignment="Center" HorizontalAlignment="Center" Width="640" MinHeight="460" MaxHeight="560" CornerRadius="8" Background="{StaticResource PopupBackground}" Tapped="AlbumOverlayTarget_Tapped">
                 <animations:Implicit.HideAnimations>
                     <animations:OpacityAnimation Duration="0:0:0.45" From="1" To="0" />
