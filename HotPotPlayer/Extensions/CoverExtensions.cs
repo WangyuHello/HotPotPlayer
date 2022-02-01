@@ -28,13 +28,13 @@ namespace HotPotPlayer.Extensions
             var smallCovers = covers.Select(co => {
                 if (co.Width > co.Height)
                 {
-                    co.Mutate(x => x.Crop(new Rectangle((co.Width - co.Height) / 2, 0, co.Height, co.Height)));
+                    co.Mutate(x => x.Crop(new Rectangle((co.Width - co.Height) / 2, 0, co.Height, co.Height)).Resize(new Size(135, 135)));
                 }
                 else
                 {
-                    co.Mutate(x => x.Crop(new Rectangle(0, (co.Height - co.Width) / 2, co.Width, co.Width)));
+                    co.Mutate(x => x.Crop(new Rectangle(0, (co.Height - co.Width) / 2, co.Width, co.Width)).Resize(new Size(135, 135)));
                 }
-                co.Mutate(x => x.ConvertToAvatar(new Size(135, 135), 67.5f));
+                //co.Mutate(x => x.ConvertToAvatar(new Size(135, 135), 0));
 
                 return co;
             });
