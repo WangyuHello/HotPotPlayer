@@ -17,6 +17,7 @@ using System.Runtime.InteropServices.WindowsRuntime;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
 using Windows.Storage;
+using Windows.Storage.Pickers;
 
 // To learn more about WinUI, the WinUI project structure,
 // and more about our project templates, see: http://aka.ms/winui-project-info.
@@ -73,6 +74,14 @@ namespace HotPotPlayer.Pages
             set => Set(ref _videoLibrary, value);
         }
 
+        private ObservableCollection<LibraryItem> _seriesLibrary;
+
+        public ObservableCollection<LibraryItem> SeriesLibrary
+        {
+            get => _seriesLibrary;
+            set => Set(ref _seriesLibrary, value);
+        }
+
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
             base.OnNavigatedTo(e);
@@ -85,6 +94,11 @@ namespace HotPotPlayer.Pages
             if (videoLib != null)
             {
                 VideoLibrary = new ObservableCollection<LibraryItem>(videoLib.Select(l => new LibraryItem { Path = l, IsSystemLibrary = true }));
+            }
+            var seriesLib = ((App)Application.Current).SeriesLibrary;
+            if (seriesLib != null)
+            {
+                SeriesLibrary = new ObservableCollection<LibraryItem>(seriesLib.Select(l => new LibraryItem { Path = l }));
             }
         }
 
@@ -121,6 +135,32 @@ namespace HotPotPlayer.Pages
             dialog.XamlRoot = XamlRoot;
 
             var _ = await dialog.ShowAsync();
+        }
+
+        private async void AddSeriesLibrary(object sender, RoutedEventArgs e)
+        {
+            var folderPicker = new FolderPicker();
+            folderPicker.SuggestedStartLocation = PickerLocationId.ComputerFolder;
+            WinRT.Interop.InitializeWithWindow.Initialize(folderPicker, ((App)Application.Current).WindowHandle);
+
+            var folder = await folderPicker.PickSingleFolderAsync();
+            if (folder != null)
+            {
+                var path = folder.Path;
+                if (SeriesLibrary == null)
+                {
+                    SeriesLibrary = new ObservableCollection<LibraryItem>
+                    {
+                        new LibraryItem {Path = path}
+                    };
+                    ((App)Application.Current).SeriesLibrary = SeriesLibrary.Select(s => s.Path).ToList();
+                }
+                if (!SeriesLibrary.Where(s => s.Path == path).Any())
+                {
+                    SeriesLibrary.Add(new LibraryItem { Path = path });
+                    ((App)Application.Current).SeriesLibrary = SeriesLibrary.Select(s => s.Path).ToList();
+                }
+            }
         }
     }
 }

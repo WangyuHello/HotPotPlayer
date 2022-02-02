@@ -49,6 +49,12 @@ namespace HotPotPlayer
         private List<string> _musicPlayList;
         internal List<string> MusicPlayList => _musicPlayList ??= MusicLibrary.Select(m => Path.Combine(m, "Playlists")).ToList();
     
+        public List<string> SeriesLibrary
+        {
+            get => (List<string>)GetConfig("SeriesLibrary");
+            set => SetConfig("SeriesLibrary", value);
+        }
+
         public object GetConfig(string key)
         {
             localSettings ??= ApplicationData.Current.LocalSettings;

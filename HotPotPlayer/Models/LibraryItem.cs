@@ -12,5 +12,7 @@ namespace HotPotPlayer.Models
         public bool IsSystemLibrary { get; set; }
 
         public bool GetRemoveVisible => !IsSystemLibrary;
+
+        public bool GetAvailable => System.IO.Directory.Exists(Path);
     }
 }
