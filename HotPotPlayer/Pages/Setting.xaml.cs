@@ -50,6 +50,8 @@ namespace HotPotPlayer.Pages
             return lib == null;
         }
 
+        App App => (App)Application.Current;
+
         private bool _isVideoLibraryWarningVisible;
 
         public bool IsVideoLibraryWarningVisible
@@ -77,12 +79,12 @@ namespace HotPotPlayer.Pages
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
             base.OnNavigatedTo(e);
-            var musicLib = ((App)Application.Current).MusicLibrary;
+            var musicLib = App.MusicLibrary;
             if (musicLib != null)
             {
                 MusicLibrary = new ObservableCollection<LibraryItem>(musicLib);
             }
-            var videoLib = ((App)Application.Current).VideoLibrary;
+            var videoLib = App.VideoLibrary;
             if (videoLib != null)
             {
                 VideoLibrary = new ObservableCollection<LibraryItem>(videoLib);
@@ -107,7 +109,7 @@ namespace HotPotPlayer.Pages
 
         private async void OpenDataLocationClick(object sender, RoutedEventArgs e)
         {
-            var loc = ((App)Application.Current).LocalFolder;
+            var loc = App.LocalFolder;
             bool _ = await Windows.System.Launcher.LaunchUriAsync(new Uri(loc));
         }
 
@@ -126,7 +128,7 @@ namespace HotPotPlayer.Pages
 
         private void ClearConfigClick(object sender, RoutedEventArgs e)
         {
-            ((App)Application.Current).ResetSettings();
+            App.ResetSettings();
         }
 
         private async void AddVideoLibrary(object sender, RoutedEventArgs e)
@@ -135,7 +137,7 @@ namespace HotPotPlayer.Pages
             {
                 SuggestedStartLocation = PickerLocationId.ComputerFolder
             };
-            WinRT.Interop.InitializeWithWindow.Initialize(folderPicker, ((App)Application.Current).WindowHandle);
+            WinRT.Interop.InitializeWithWindow.Initialize(folderPicker, App.WindowHandle);
 
             var folder = await folderPicker.PickSingleFolderAsync();
             if (folder != null)
@@ -147,14 +149,56 @@ namespace HotPotPlayer.Pages
                     {
                         new LibraryItem {Path = path}
                     };
-                    ((App)Application.Current).VideoLibrary = VideoLibrary.Select(s => s).ToList();
+                    App.VideoLibrary = VideoLibrary.Select(s => s).ToList();
                 }
                 if (!VideoLibrary.Where(s => s.Path == path).Any())
                 {
                     VideoLibrary.Add(new LibraryItem { Path = path });
-                    ((App)Application.Current).VideoLibrary = VideoLibrary.Select(s => s).ToList();
+                    App.VideoLibrary = VideoLibrary.Select(s => s).ToList();
                 }
             }
+        }
+
+        private async void AddMusicLibrary(object sender, RoutedEventArgs e)
+        {
+            var folderPicker = new FolderPicker
+            {
+                SuggestedStartLocation = PickerLocationId.ComputerFolder
+            };
+            WinRT.Interop.InitializeWithWindow.Initialize(folderPicker, App.WindowHandle);
+
+            var folder = await folderPicker.PickSingleFolderAsync();
+            if (folder != null)
+            {
+                var path = folder.Path;
+                if (MusicLibrary == null)
+                {
+                    MusicLibrary = new ObservableCollection<LibraryItem>
+                    {
+                        new LibraryItem {Path = path}
+                    };
+                    App.MusicLibrary = MusicLibrary.Select(s => s).ToList();
+                }
+                if (!MusicLibrary.Where(s => s.Path == path).Any())
+                {
+                    MusicLibrary.Add(new LibraryItem { Path = path });
+                    App.MusicLibrary = MusicLibrary.Select(s => s).ToList();
+                }
+            }
+        }
+
+        private void MusicRemoveClick(object sender, RoutedEventArgs e)
+        {
+            var item = ((Button)sender).Tag as LibraryItem;
+            MusicLibrary.Remove(item);
+            App.MusicLibrary = MusicLibrary.Select(s => s).ToList();
+        }
+
+        private void VideoRemoveClick(object sender, RoutedEventArgs e)
+        {
+            var item = ((Button)sender).Tag as LibraryItem;
+            VideoLibrary.Remove(item);
+            App.VideoLibrary = VideoLibrary.Select(s => s).ToList();
         }
     }
 }

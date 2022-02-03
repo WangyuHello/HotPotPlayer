@@ -11,15 +11,23 @@
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
 
     <Page.Resources>
-        <DataTemplate x:Key="LibraryListTemplate" x:DataType="model:LibraryItem">
+        <DataTemplate x:Key="MusicLibraryListTemplate" x:DataType="model:LibraryItem">
             <Grid HorizontalAlignment="Stretch">
                 <TextBlock Text="{x:Bind Path}" FontSize="14" HorizontalAlignment="Left" VerticalAlignment="Center"/>
-                <Button HorizontalAlignment="Right" Visibility="{x:Bind GetRemoveVisible}">
+                <Button HorizontalAlignment="Right" Visibility="{x:Bind GetRemoveVisible}" Tag="{x:Bind }" Click="MusicRemoveClick">
                     <SymbolIcon Symbol="Clear" />
                 </Button>
             </Grid>
         </DataTemplate>
-
+        <DataTemplate x:Key="VideoLibraryListTemplate" x:DataType="model:LibraryItem">
+            <Grid HorizontalAlignment="Stretch">
+                <TextBlock Text="{x:Bind Path}" FontSize="14" HorizontalAlignment="Left" VerticalAlignment="Center"/>
+                <Button HorizontalAlignment="Right" Visibility="{x:Bind GetRemoveVisible}" Tag="{x:Bind }" Click="VideoRemoveClick">
+                    <SymbolIcon Symbol="Clear" />
+                </Button>
+            </Grid>
+        </DataTemplate>
+        
         <Style x:Key="LibraryListContainerStyle" TargetType="ListViewItem">
             <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
             <Setter Property="VerticalContentAlignment" Value="Stretch"/>
@@ -60,13 +68,13 @@
                         </Grid.ColumnDefinitions>
                         <FontIcon FontFamily="Segoe Fluent Icons" Glyph="&#xE8B7;" />
                         <TextBlock Grid.Column="1" Margin="12,0" VerticalAlignment="Center">音乐库位置</TextBlock>
-                        <Button Grid.Column="3">
+                        <Button Grid.Column="3" Click="AddMusicLibrary">
                             <SymbolIcon Symbol="NewFolder"/>
                         </Button>
                     </Grid>
                 </Expander.Header>
                 <Expander.Content>
-                    <ListView ItemsSource="{x:Bind MusicLibrary, Mode=OneWay}" SelectionMode="None" ItemTemplate="{StaticResource LibraryListTemplate}" ItemContainerStyle="{StaticResource LibraryListContainerStyle}"/>
+                    <ListView ItemsSource="{x:Bind MusicLibrary, Mode=OneWay}" SelectionMode="None" ItemTemplate="{StaticResource MusicLibraryListTemplate}" ItemContainerStyle="{StaticResource LibraryListContainerStyle}"/>
                 </Expander.Content>
             </Expander>
             <Expander HorizontalAlignment="Stretch" Margin="0,8,0,8" HorizontalContentAlignment="Stretch">
@@ -86,7 +94,7 @@
                     </Grid>
                 </Expander.Header>
                 <Expander.Content>
-                    <ListView ItemsSource="{x:Bind VideoLibrary, Mode=OneWay}" SelectionMode="None" ItemTemplate="{StaticResource LibraryListTemplate}" ItemContainerStyle="{StaticResource LibraryListContainerStyle}"/>
+                    <ListView ItemsSource="{x:Bind VideoLibrary, Mode=OneWay}" SelectionMode="None" ItemTemplate="{StaticResource VideoLibraryListTemplate}" ItemContainerStyle="{StaticResource LibraryListContainerStyle}"/>
                 </Expander.Content>
             </Expander>
             <TextBlock Margin="0,12" FontSize="18">调试</TextBlock>
