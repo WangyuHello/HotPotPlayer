@@ -9,7 +9,10 @@ namespace HotPotPlayer.Helpers
 {
     public static class RemovableDiskHelper
     {
-        public static List<string> GetRemovableDisk()
+        private static List<string> _removableDisks;
+        public static List<string> RemovableDisks => _removableDisks ??= GetRemovableDisk();
+
+        private static List<string> GetRemovableDisk()
         {
             var lstDisk = new List<string>();
             var mgtCls = new ManagementClass("Win32_DiskDrive");

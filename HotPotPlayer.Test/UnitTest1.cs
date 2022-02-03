@@ -8,7 +8,7 @@ namespace HotPotPlayer.Test
         [Fact]
         public void Test1()
         {
-            var l = RemovableDiskHelper.GetRemovableDisk();
+            var l = RemovableDiskHelper.RemovableDisks;
         }
     }
 }
