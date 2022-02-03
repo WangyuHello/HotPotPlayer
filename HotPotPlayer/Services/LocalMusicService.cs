@@ -41,7 +41,7 @@ namespace HotPotPlayer.Services
 
         //FileSystemWatcher _fsw;
 
-        static List<string> GetMusicLibrary => ((App)Application.Current).MusicLibrary;
+        static List<LibraryItem> GetMusicLibrary => ((App)Application.Current).MusicLibrary;
 
         static readonly List<string> SupportedExt = new() { ".flac", ".wav", ".m4a", ".mp3" };
 
@@ -294,7 +294,7 @@ namespace HotPotPlayer.Services
 
                 localMusicBackgroundWorker.ReportProgress((int)LocalMusicState.InitLoadingComplete, (groupsDb, playListList));
 
-                var files2 = GetMusicFilesFromLibrary(libs);
+                var files2 = GetMusicFilesFromLibrary(libs.Select(l => l.Path).ToList());
 
                 var musicHasUpdate = CheckMusicHasUpdate(files2);
                 var playListHasUpdate = CheckPlayListHasUpdate(playListList, playListFiles);
@@ -321,7 +321,7 @@ namespace HotPotPlayer.Services
             }
 
             _db ??= Realm.GetInstance(DbPath);
-            List<AlbumDataGroup> groups = skipScanAllMusic ? null : ScanAllMusic(libs);
+            List<AlbumDataGroup> groups = skipScanAllMusic ? null : ScanAllMusic(libs.Select(l => l.Path).ToList());
             List<PlayListItem> playLists = ScanAllPlayList(playListFiles);
 
             e.Result = (groups, playLists);
@@ -386,7 +386,7 @@ namespace HotPotPlayer.Services
 
         private static List<FileInfo> GetAllPlaylists()
         {
-            var libs = ((App)Application.Current).MusicPlayList;
+            var libs = ((App)Application.Current).MusicPlayList.Select(s => s.Path);
             List<FileInfo> files = new();
             foreach (var lib in libs)
             {

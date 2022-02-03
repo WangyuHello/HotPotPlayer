@@ -103,7 +103,23 @@ namespace HotPotPlayer.Services
 
         public float Volume
         {
-            get => (_audioFile == null) ? 0 : _audioFile.Volume;
+            get
+            {
+                if(_audioFile == null)
+                {
+                    var app = (App)Application.Current;
+                    var volume = app.GetConfig<float?>("Volume");
+                    if (volume != null)
+                    {
+                        return (float)volume;
+                    }
+                    return 0f;
+                }
+                else
+                {
+                    return _audioFile.Volume;
+                }
+            }
             set 
             {
                 if (value != _audioFile.Volume)
@@ -382,12 +398,11 @@ namespace HotPotPlayer.Services
                 }
                 if (_audioFile == null)
                 {
-                    var app = (App)Application.Current;
-                    var volume = app.GetConfig("Volume");
+                    var volume = Volume;
                     _audioFile = new AudioFileReader(music.Source.FullName);
-                    if ((volume != null) && ((float)volume != 0))
+                    if (volume != 0)
                     {
-                        _audioFile.Volume = (float)volume;
+                        _audioFile.Volume = volume;
                     }
                     _outputDevice.Init(_audioFile);
                 }
@@ -446,7 +461,10 @@ namespace HotPotPlayer.Services
         public void SaveConfig()
         {
             var app = (App)Application.Current;
-            app.SetConfig("Volume", Volume);
+            if (Volume != 0)
+            {
+                app.SetConfig("Volume", Volume);
+            }
         }
     }
 }

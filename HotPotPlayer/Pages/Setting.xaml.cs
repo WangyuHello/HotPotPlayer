@@ -74,31 +74,18 @@ namespace HotPotPlayer.Pages
             set => Set(ref _videoLibrary, value);
         }
 
-        private ObservableCollection<LibraryItem> _seriesLibrary;
-
-        public ObservableCollection<LibraryItem> SeriesLibrary
-        {
-            get => _seriesLibrary;
-            set => Set(ref _seriesLibrary, value);
-        }
-
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
             base.OnNavigatedTo(e);
             var musicLib = ((App)Application.Current).MusicLibrary;
             if (musicLib != null)
             {
-                MusicLibrary = new ObservableCollection<LibraryItem>(musicLib.Select(l => new LibraryItem { Path = l, IsSystemLibrary = true}));
+                MusicLibrary = new ObservableCollection<LibraryItem>(musicLib);
             }
             var videoLib = ((App)Application.Current).VideoLibrary;
             if (videoLib != null)
             {
-                VideoLibrary = new ObservableCollection<LibraryItem>(videoLib.Select(l => new LibraryItem { Path = l, IsSystemLibrary = true }));
-            }
-            var seriesLib = ((App)Application.Current).SeriesLibrary;
-            if (seriesLib != null)
-            {
-                SeriesLibrary = new ObservableCollection<LibraryItem>(seriesLib.Select(l => new LibraryItem { Path = l }));
+                VideoLibrary = new ObservableCollection<LibraryItem>(videoLib);
             }
         }
 
@@ -137,28 +124,35 @@ namespace HotPotPlayer.Pages
             var _ = await dialog.ShowAsync();
         }
 
-        private async void AddSeriesLibrary(object sender, RoutedEventArgs e)
+        private void ClearConfigClick(object sender, RoutedEventArgs e)
         {
-            var folderPicker = new FolderPicker();
-            folderPicker.SuggestedStartLocation = PickerLocationId.ComputerFolder;
+            ((App)Application.Current).ResetSettings();
+        }
+
+        private async void AddVideoLibrary(object sender, RoutedEventArgs e)
+        {
+            var folderPicker = new FolderPicker
+            {
+                SuggestedStartLocation = PickerLocationId.ComputerFolder
+            };
             WinRT.Interop.InitializeWithWindow.Initialize(folderPicker, ((App)Application.Current).WindowHandle);
 
             var folder = await folderPicker.PickSingleFolderAsync();
             if (folder != null)
             {
                 var path = folder.Path;
-                if (SeriesLibrary == null)
+                if (VideoLibrary == null)
                 {
-                    SeriesLibrary = new ObservableCollection<LibraryItem>
+                    VideoLibrary = new ObservableCollection<LibraryItem>
                     {
                         new LibraryItem {Path = path}
                     };
-                    ((App)Application.Current).SeriesLibrary = SeriesLibrary.Select(s => s.Path).ToList();
+                    ((App)Application.Current).VideoLibrary = VideoLibrary.Select(s => s).ToList();
                 }
-                if (!SeriesLibrary.Where(s => s.Path == path).Any())
+                if (!VideoLibrary.Where(s => s.Path == path).Any())
                 {
-                    SeriesLibrary.Add(new LibraryItem { Path = path });
-                    ((App)Application.Current).SeriesLibrary = SeriesLibrary.Select(s => s.Path).ToList();
+                    VideoLibrary.Add(new LibraryItem { Path = path });
+                    ((App)Application.Current).VideoLibrary = VideoLibrary.Select(s => s).ToList();
                 }
             }
         }

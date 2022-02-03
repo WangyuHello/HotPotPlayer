@@ -58,6 +58,7 @@ namespace HotPotPlayer
         private void MainWindow_Closed(object sender, WindowEventArgs args)
         {
             MusicPlayer.Value.SaveConfig();
+            SaveSettings();
         }
 
         private void InitMainWindow(Microsoft.UI.Xaml.LaunchActivatedEventArgs args)

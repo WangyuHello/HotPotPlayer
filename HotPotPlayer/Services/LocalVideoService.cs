@@ -30,7 +30,7 @@ namespace HotPotPlayer.Services
         public event Action OnLoadingEnded;
         public event Action OnNoLibraryAccess;
 
-        static List<string> GetVideoLibrary => ((App)Application.Current).VideoLibrary;
+        static List<LibraryItem> GetVideoLibrary => ((App)Application.Current).VideoLibrary;
         static readonly List<string> SupportedExt = new() { ".mkv", ".mp4" };
 
         private static List<FileInfo> GetVideoFilesFromLibrary(List<string> libs)
@@ -129,7 +129,7 @@ namespace HotPotPlayer.Services
 
                 localVideoBackgroundWorker.ReportProgress((int)LocalVideoState.InitLoadingComplete, videos);
 
-                var files2 = GetVideoFilesFromLibrary(libs);
+                var files2 = GetVideoFilesFromLibrary(libs.Select(l => l.Path).ToList());
 
                 var hasUpdate = CheckVideoHasUpdate(files2, _db);
                 if (hasUpdate)
@@ -147,7 +147,7 @@ namespace HotPotPlayer.Services
                 localVideoBackgroundWorker.ReportProgress((int)LocalVideoState.FirstLoading);
             }
 
-            var files = GetVideoFilesFromLibrary(libs);
+            var files = GetVideoFilesFromLibrary(libs.Select(l => l.Path).ToList());
             var videos2 = GetAllVideo(files);
 
             using var _db2 = Realm.GetInstance(dbPath);

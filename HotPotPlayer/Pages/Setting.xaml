@@ -69,7 +69,7 @@
                     <ListView ItemsSource="{x:Bind MusicLibrary, Mode=OneWay}" SelectionMode="None" ItemTemplate="{StaticResource LibraryListTemplate}" ItemContainerStyle="{StaticResource LibraryListContainerStyle}"/>
                 </Expander.Content>
             </Expander>
-            <Expander HorizontalAlignment="Stretch" Margin="0,8,0,0" HorizontalContentAlignment="Stretch">
+            <Expander HorizontalAlignment="Stretch" Margin="0,8,0,8" HorizontalContentAlignment="Stretch">
                 <Expander.Header>
                     <Grid>
                         <Grid.ColumnDefinitions>
@@ -80,7 +80,7 @@
                         </Grid.ColumnDefinitions>
                         <FontIcon FontFamily="Segoe Fluent Icons" Glyph="&#xE8B7;" />
                         <TextBlock Grid.Column="1" Margin="12,0" VerticalAlignment="Center">视频库位置</TextBlock>
-                        <Button Grid.Column="3">
+                        <Button Grid.Column="3" Click="AddVideoLibrary">
                             <SymbolIcon Symbol="NewFolder"/>
                         </Button>
                     </Grid>
@@ -89,30 +89,11 @@
                     <ListView ItemsSource="{x:Bind VideoLibrary, Mode=OneWay}" SelectionMode="None" ItemTemplate="{StaticResource LibraryListTemplate}" ItemContainerStyle="{StaticResource LibraryListContainerStyle}"/>
                 </Expander.Content>
             </Expander>
-            <Expander HorizontalAlignment="Stretch" Margin="0,8,0,0" HorizontalContentAlignment="Stretch">
-                <Expander.Header>
-                    <Grid>
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="Auto" />
-                            <ColumnDefinition Width="Auto" />
-                            <ColumnDefinition Width="*" />
-                            <ColumnDefinition Width="Auto" />
-                        </Grid.ColumnDefinitions>
-                        <FontIcon FontFamily="Segoe Fluent Icons" Glyph="&#xE8B7;" />
-                        <TextBlock Grid.Column="1" Margin="12,0" VerticalAlignment="Center">番剧库位置</TextBlock>
-                        <Button Grid.Column="3" Click="AddSeriesLibrary">
-                            <SymbolIcon Symbol="NewFolder" />
-                        </Button>
-                    </Grid>
-                </Expander.Header>
-                <Expander.Content>
-                    <ListView ItemsSource="{x:Bind SeriesLibrary, Mode=OneWay}" SelectionMode="None" ItemTemplate="{StaticResource LibraryListTemplate}" ItemContainerStyle="{StaticResource LibraryListContainerStyle}"/>
-                </Expander.Content>
-            </Expander>
             <TextBlock Margin="0,12" FontSize="18">调试</TextBlock>
             <Button Click="OpenInstalledLocationClick">打开安装位置</Button>
             <Button Click="OpenDataLocationClick">打开数据位置</Button>
             <Button Click="ClearDataClick" Style="{ThemeResource AccentButtonStyle}">删除应用数据</Button>
+            <Button Click="ClearConfigClick" Style="{ThemeResource AccentButtonStyle}">删除应用配置</Button>
         </StackPanel>
     </Grid>
 </Page>
