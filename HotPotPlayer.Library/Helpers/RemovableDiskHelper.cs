@@ -7,14 +7,20 @@ using System.Threading.Tasks;
 
 namespace HotPotPlayer.Helpers
 {
+    public record RemovableDisk
+    {
+        public string Disk { get; set; }
+        public string Type { get; set; }
+    }
+
     public static class RemovableDiskHelper
     {
-        private static List<string> _removableDisks;
-        public static List<string> RemovableDisks => _removableDisks ??= GetRemovableDisk();
+        private static List<RemovableDisk> _removableDisks;
+        public static List<RemovableDisk> RemovableDisks => _removableDisks ??= GetRemovableDisk();
 
-        private static List<string> GetRemovableDisk()
+        private static List<RemovableDisk> GetRemovableDisk()
         {
-            var lstDisk = new List<string>();
+            var lstDisk = new List<RemovableDisk>();
             var mgtCls = new ManagementClass("Win32_DiskDrive");
             var disks = mgtCls.GetInstances();
             foreach (ManagementObject mo in disks)
@@ -39,13 +45,40 @@ namespace HotPotPlayer.Helpers
                 {
                     foreach (ManagementBaseObject disk in diskPartition.GetRelated("Win32_LogicalDisk"))
                     {
-                        lstDisk.Add(disk.Properties["Name"].Value.ToString());
+                        lstDisk.Add(new RemovableDisk
+                        {
+                            Disk = disk.Properties["Name"].Value.ToString(),
+                            Type = mo.Properties["InterfaceType"].Value.ToString(),
+                        });
                     }
                 }
 
-                //Console.WriteLine("-------------------------------------------------------------------------------------------");
             }
             return lstDisk;
+        }
+
+        public static bool IsRemovableDisk(string path)
+        {
+            foreach (var item in RemovableDisks)
+            {
+                if (path.StartsWith(item.Disk))
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        public static string GetRemovableDiskType(string path)
+        {
+            foreach (var item in RemovableDisks)
+            {
+                if (path.StartsWith(item.Disk))
+                {
+                    return item.Type;
+                }
+            }
+            return string.Empty;
         }
     }
 }

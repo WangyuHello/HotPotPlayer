@@ -13,16 +13,34 @@
     <Page.Resources>
         <DataTemplate x:Key="MusicLibraryListTemplate" x:DataType="model:LibraryItem">
             <Grid HorizontalAlignment="Stretch">
-                <TextBlock Text="{x:Bind Path}" FontSize="14" HorizontalAlignment="Left" VerticalAlignment="Center"/>
-                <Button HorizontalAlignment="Right" Visibility="{x:Bind GetRemoveVisible}" Tag="{x:Bind }" Click="MusicRemoveClick">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+                <TextBlock Text="{x:Bind Path}" FontSize="14" VerticalAlignment="Center"/>
+                <Border Grid.Column="1" Margin="8,0,0,-2" Visibility="{x:Bind IsRemovableDisk}" VerticalAlignment="Center" BorderBrush="Black" BorderThickness="1" CornerRadius="4" Padding="4,0.8,4,2">
+                    <TextBlock Text="{x:Bind RemovableDiskType}" />
+                </Border>
+                <Button Grid.Column="3" Visibility="{x:Bind GetRemoveVisible}" Tag="{x:Bind }" Click="MusicRemoveClick">
                     <SymbolIcon Symbol="Clear" />
                 </Button>
             </Grid>
         </DataTemplate>
         <DataTemplate x:Key="VideoLibraryListTemplate" x:DataType="model:LibraryItem">
             <Grid HorizontalAlignment="Stretch">
-                <TextBlock Text="{x:Bind Path}" FontSize="14" HorizontalAlignment="Left" VerticalAlignment="Center"/>
-                <Button HorizontalAlignment="Right" Visibility="{x:Bind GetRemoveVisible}" Tag="{x:Bind }" Click="VideoRemoveClick">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+                <TextBlock Text="{x:Bind Path}" FontSize="14" VerticalAlignment="Center"/>
+                <Border Grid.Column="1" Margin="8,0,0,-2" Visibility="{x:Bind IsRemovableDisk}" VerticalAlignment="Center" BorderBrush="Black" BorderThickness="1" CornerRadius="4" Padding="4,0.8,4,2">
+                    <TextBlock Text="{x:Bind RemovableDiskType}" />
+                </Border>
+                <Button Grid.Column="3" Visibility="{x:Bind GetRemoveVisible}" Tag="{x:Bind }" Click="VideoRemoveClick">
                     <SymbolIcon Symbol="Clear" />
                 </Button>
             </Grid>

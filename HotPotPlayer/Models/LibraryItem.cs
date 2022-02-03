@@ -21,21 +21,12 @@ namespace HotPotPlayer.Models
         {
             get
             {
-                if (_isRemovableDisk == null)
-                {
-                    var disk = RemovableDiskHelper.RemovableDisks;
-                    foreach (var item in disk)
-                    {
-                        if (Path.StartsWith(item))
-                        {
-                            _isRemovableDisk = true;
-                            return true;
-                        }
-                    }
-                    _isRemovableDisk = false;
-                }
+                _isRemovableDisk ??= RemovableDiskHelper.IsRemovableDisk(Path);
                 return _isRemovableDisk.Value;
             }
         }
+
+        private string _removableDiskType;
+        public string RemovableDiskType => _removableDiskType ??= RemovableDiskHelper.GetRemovableDiskType(Path);
     }
 }
