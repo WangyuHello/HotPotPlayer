@@ -1,7 +1,9 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>net6.0-windows</TargetFramework>
+    <TargetFramework>net6.0-windows10.0.19041.0</TargetFramework>
+    <TargetPlatformMinVersion>10.0.17763.0</TargetPlatformMinVersion>
+    <UseWinUI>true</UseWinUI>
 
     <IsPackable>false</IsPackable>
   </PropertyGroup>
@@ -20,7 +22,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\HotPotPlayer.Library\HotPotPlayer.Library.csproj" />
+    <ProjectReference Include="..\HotPotPlayer\HotPotPlayer.csproj" />
   </ItemGroup>
 
 </Project>

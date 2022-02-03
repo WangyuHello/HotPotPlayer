@@ -143,5 +143,31 @@ namespace HotPotPlayer.Extensions
                 LastWriteTime = DateTime.FromBinary(i.LastWriteTime)
             };
         }
+
+        public static SeriesItemDb ToDb(this SeriesItem i)
+        {
+            var r = new SeriesItemDb
+            {
+                Source = i.Source.FullName,
+                Title = i.Title,
+                Cover = i.Cover,
+            };
+            foreach (var item in i.Videos)
+            {
+                r.Videos.Add(item.ToDb());
+            }
+            return r;
+        }
+
+        public static SeriesItem ToOrigin(this SeriesItemDb i)
+        {
+            return new SeriesItem
+            {
+                Source = new DirectoryInfo(i.Source),
+                Title = i.Title,
+                Cover = i.Cover,
+                Videos = i.Videos.Select(s => s.ToOrigin()).ToList()
+            };
+        }
     }
 }

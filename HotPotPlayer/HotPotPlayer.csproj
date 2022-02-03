@@ -77,6 +77,7 @@
     <PackageReference Include="Realm" Version="10.8.0" />
     <PackageReference Include="SixLabors.ImageSharp" Version="1.0.4" />
     <PackageReference Include="SixLabors.ImageSharp.Drawing" Version="1.0.0-beta13" />
+    <PackageReference Include="System.Management" Version="6.0.0" />
     <PackageReference Include="System.Text.Json" Version="6.0.1" />
     <PackageReference Include="TagLibSharp" Version="2.2.0" />
     <Manifest Include="$(ApplicationManifest)" />
@@ -93,7 +94,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\HotPotPlayer.Library\HotPotPlayer.Library.csproj" />
     <ProjectReference Include="..\HotPotPlayer.VideoHost\HotPotPlayer.VideoHost.csproj" />
     <ProjectReference Include="..\NeteaseCloudMusicApi\NeteaseCloudMusicApi\NeteaseCloudMusicApi.csproj" />
     <ProjectReference Include="..\WinUIEx\src\WinUIEx\WinUIEx.csproj" />
