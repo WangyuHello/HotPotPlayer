@@ -13,7 +13,7 @@ using System.Threading.Tasks;
 
 namespace HotPotPlayer.Services
 {
-    internal class LocalVideoService
+    public class LocalVideoService
     {
         enum LocalVideoState
         {
@@ -30,8 +30,10 @@ namespace HotPotPlayer.Services
         public event Action OnLoadingEnded;
         public event Action OnNoLibraryAccess;
 
-        static List<LibraryItem> GetVideoLibrary => ((App)Application.Current).VideoLibrary;
+        static List<LibraryItem> VideoLibrary => App.VideoLibrary;
         static readonly List<string> SupportedExt = new() { ".mkv", ".mp4" };
+
+        static App App => (App)Application.Current;
 
         private static List<FileInfo> GetVideoFilesFromLibrary(List<string> libs)
         {
@@ -48,7 +50,7 @@ namespace HotPotPlayer.Services
         BackgroundWorker localVideoBackgroundWorker;
 
 
-        internal void StartLoadLocalVideo()
+        public void StartLoadLocalVideo()
         {
             localVideoBackgroundWorker = new BackgroundWorker
             {
@@ -67,7 +69,7 @@ namespace HotPotPlayer.Services
 
         static string GetDbPath()
         {
-            var baseDir = ((App)Application.Current).LocalFolder;
+            var baseDir = App.LocalFolder;
             var dbDir = Path.Combine(baseDir, "Db");
             if (!Directory.Exists(dbDir)) { Directory.CreateDirectory(dbDir); }
             var dbPath = Path.Combine(dbDir, "LocalVideo.db");
@@ -115,7 +117,7 @@ namespace HotPotPlayer.Services
         private void LocalVideoBackgroundWorker_DoWork(object sender, DoWorkEventArgs e)
         {
             var dbPath = GetDbPath();
-            var libs = GetVideoLibrary;
+            var libs = VideoLibrary;
             if (libs == null)
             {
                 localVideoBackgroundWorker.ReportProgress((int)LocalVideoState.NoLibraryAccess);
