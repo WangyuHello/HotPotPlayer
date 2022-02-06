@@ -30,7 +30,7 @@ namespace HotPotPlayer.Controls
             PlaySlider.AddHandler(PointerPressedEvent, new PointerEventHandler(PlaySlider_OnPointerPressed), true);
         }
 
-        MusicPlayer MusicPlayer => ((App)Application.Current).MusicPlayer.Value;
+        MusicPlayer MusicPlayer => ((App)Application.Current).MusicPlayer;
 
         string GetSubtitle(MusicItem music)
         {

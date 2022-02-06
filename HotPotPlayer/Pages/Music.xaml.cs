@@ -2,6 +2,7 @@
 using HotPotPlayer.Extensions;
 using HotPotPlayer.Models;
 using HotPotPlayer.Pages.Helper;
+using HotPotPlayer.Services;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Controls.Primitives;
@@ -75,7 +76,7 @@ namespace HotPotPlayer.Pages
 
         void InitializeMusic()
         {
-            var musicService = ((App)Application.Current).LocalMusicService.Value;
+            var musicService = ((App)Application.Current).LocalMusicService;
             musicService.OnAlbumGroupChanged += MusicService_OnAlbumGroupChanged;
             musicService.OnFirstLoadingStarted += () => IsFirstLoading = true;
             musicService.OnNonFirstLoadingStarted += () => IsNonFirstLoading = true;
@@ -152,24 +153,23 @@ namespace HotPotPlayer.Pages
             PlayListOverlayPopup.Visibility = Visibility.Visible;
         }
 
+        MusicPlayer MusicPlayer => ((App)Application.Current).MusicPlayer;
+
         private void AlbumPopupListClick(object sender, RoutedEventArgs e)
         {
             var music = ((Button)sender).Tag as MusicItem;
-            var player = ((App)Application.Current).MusicPlayer.Value;
-            player.PlayNext(music, SelectedAlbum);
+            MusicPlayer.PlayNext(music, SelectedAlbum);
         }
 
         private void PlayListPopupListClick(object sender, RoutedEventArgs e)
         {
             var music = ((Button)sender).Tag as MusicItem;
-            var player = ((App)Application.Current).MusicPlayer.Value;
-            player.PlayNext(music, SelectedPlayList);
+            MusicPlayer.PlayNext(music, SelectedPlayList);
         }
 
         private void PlayListPlay(object sender, RoutedEventArgs e)
         {
-            var player = ((App)Application.Current).MusicPlayer.Value;
-            player.PlayNext(SelectedPlayList);
+            MusicPlayer.PlayNext(SelectedPlayList);
         }
 
         MenuFlyout InitAlbumAddFlyout()
@@ -181,11 +181,11 @@ namespace HotPotPlayer.Pages
             };
             i1.Click += (s, a) => AlbumHelper.AlbumAddOne(SelectedAlbum);
             flyout.Items.Add(i1);
-            if (((App)Application.Current).LocalMusicService.Value.LocalPlayLists.Count > 0)
+            if (((App)Application.Current).LocalMusicService.LocalPlayLists.Count > 0)
             {
                 var i2 = new MenuFlyoutSeparator();
                 flyout.Items.Add(i2);
-                foreach (var item in ((App)Application.Current).LocalMusicService.Value.LocalPlayLists)
+                foreach (var item in ((App)Application.Current).LocalMusicService.LocalPlayLists)
                 {
                     var i = new MenuFlyoutItem
                     {

@@ -14,7 +14,7 @@ namespace HotPotPlayer.Pages.Helper
 {
     internal class AlbumHelper
     {
-        static MusicPlayer Player => ((App)Application.Current).MusicPlayer.Value;
+        static MusicPlayer Player => ((App)Application.Current).MusicPlayer;
         static MainWindow MainWindow => ((App)Application.Current).MainWindow;
 
         internal static void AlbumAdd(SplitButton sender, SplitButtonClickEventArgs args)

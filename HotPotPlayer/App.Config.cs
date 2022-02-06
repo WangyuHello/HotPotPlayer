@@ -12,10 +12,20 @@ using Windows.Storage;
 
 namespace HotPotPlayer
 {
-    public partial class App : Application
+    public partial class App : AppBase
     {
-        internal string CacheFolder => ApplicationData.Current.LocalCacheFolder.Path;
-        internal string LocalFolder => ApplicationData.Current.LocalFolder.Path;
+        public override string CacheFolder => ApplicationData.Current.LocalCacheFolder.Path;
+        public override string LocalFolder => ApplicationData.Current.LocalFolder.Path;
+
+        public override string DatabaseFolder
+        {
+            get
+            {
+                var dbDir = Path.Combine(LocalFolder, "Db");
+                if (!Directory.Exists(dbDir)) { Directory.CreateDirectory(dbDir); }
+                return dbDir;
+            }
+        }
 
         //https://docs.microsoft.com/zh-cn/windows/uwp/files/quickstart-managing-folders-in-the-music-pictures-and-videos-libraries
         private static List<string> GetSystemMusicLibrary()
@@ -40,7 +50,7 @@ namespace HotPotPlayer
 
         private List<string> _systemMusicLibrary;
         private List<LibraryItem> _musicLibrary;
-        internal List<LibraryItem> MusicLibrary
+        public override List<LibraryItem> MusicLibrary
         {
             set
             {
@@ -72,7 +82,7 @@ namespace HotPotPlayer
 
         private List<string> _systemVideoLibrary;
         private List<LibraryItem> _videoLibrary;
-        internal List<LibraryItem> VideoLibrary
+        public override List<LibraryItem> VideoLibrary
         {
             set
             {
@@ -103,7 +113,7 @@ namespace HotPotPlayer
         }
 
         private List<LibraryItem> _musicPlayList;
-        internal List<LibraryItem> MusicPlayList
+        public override List<LibraryItem> MusicPlayList
         {
             get
             {
@@ -117,7 +127,7 @@ namespace HotPotPlayer
         }
 
         private JObject _settings;
-        public JObject Settings
+        private JObject Settings
         {
             get
             {
@@ -154,7 +164,7 @@ namespace HotPotPlayer
             File.WriteAllText(configFile, json);
         }
 
-        public T GetConfig<T>(string key)
+        public override T GetConfig<T>(string key)
         {
             var r = Settings.TryGetValue(key, out var value);
             if (r)
@@ -164,7 +174,7 @@ namespace HotPotPlayer
             return default;
         }
 
-        public T[] GetConfigArray<T>(string key)
+        public override T[] GetConfigArray<T>(string key)
         {
             var r = Settings.TryGetValue(key, out var value);
             if (r)
@@ -174,17 +184,12 @@ namespace HotPotPlayer
             return null;
         }
 
-        public void SetConfig(string key, string value)
+        public override void SetConfig<T>(string key, T value)
         {
-            Settings[key] = value;
+            Settings[key] = JToken.FromObject(value);
         }
 
-        public void SetConfig(string key, float value)
-        {
-            Settings[key] = value;
-        }
-
-        public void SetConfig(string key, string[] value)
+        public override void SetConfigArray<T>(string key, T[] value)
         {
             Settings[key] = new JArray(value);
         }

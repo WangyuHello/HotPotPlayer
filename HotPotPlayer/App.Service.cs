@@ -13,12 +13,20 @@ using System.Threading.Tasks;
 
 namespace HotPotPlayer
 {
-    public partial class App : Application
+    public partial class App : AppBase
     {
-        internal Lazy<LocalMusicService> LocalMusicService = new();
-        internal Lazy<NetEaseMusicService> NetEaseMusicService = new();
-        internal Lazy<LocalVideoService> LocalVideoService = new();
-        internal Lazy<MusicPlayer> MusicPlayer = new();
+        LocalMusicService localMusicService;
+        internal LocalMusicService LocalMusicService => localMusicService ??= new LocalMusicService(this);
+        
+        NetEaseMusicService netEaseMusicService;
+        internal NetEaseMusicService NetEaseMusicService => netEaseMusicService ??= new NetEaseMusicService();
+
+        LocalVideoService localVideoService;
+        internal LocalVideoService LocalVideoService => localVideoService ??= new LocalVideoService(this);
+
+        MusicPlayer musicPlayer;
+        internal MusicPlayer MusicPlayer => musicPlayer ??= new MusicPlayer();
+
         public FileInfo InitMediaFile { get; set; }
 
         public void PlayVideo(FileInfo video)

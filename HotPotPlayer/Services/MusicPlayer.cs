@@ -22,22 +22,11 @@ namespace HotPotPlayer.Services
         Shuffle
     }
 
-    public class MusicPlayer : INotifyPropertyChanged, IDisposable
+    public class MusicPlayer: ServiceBase
     {
         public enum PlayerState 
         { 
             Error
-        }
-
-        public event PropertyChangedEventHandler PropertyChanged;
-
-        public void Set<T>(ref T oldValue, T newValue, [CallerMemberName] string propertyName = "")
-        {
-            if (!EqualityComparer<T>.Default.Equals(oldValue, newValue))
-            {
-                oldValue = newValue;
-                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-            }
         }
 
         private MusicItem _currentPlaying;
@@ -128,7 +117,7 @@ namespace HotPotPlayer.Services
                     {
                         _audioFile.Volume = (float)value;
                     }
-                    PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(Volume)));
+                    RaisePropertyChanged(nameof(Volume));
                 }
             }
         }
@@ -439,7 +428,7 @@ namespace HotPotPlayer.Services
                 CurrentPlaying = music;
                 CurrentPlayingIndex = index;
                 _timer.Start();
-                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(Volume)));
+                RaisePropertyChanged(nameof(Volume));
             }
             else
             {
@@ -447,7 +436,7 @@ namespace HotPotPlayer.Services
             }
         }
 
-        public void Dispose()
+        public override void Dispose()
         {
             _playerStarter?.Dispose();
             _outputDevice?.Dispose();

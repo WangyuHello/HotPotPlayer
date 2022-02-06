@@ -85,7 +85,7 @@ namespace HotPotPlayer.Pages
 
         private void InitializeVideo()
         {
-            var videoService = ((App)Application.Current).LocalVideoService.Value;
+            var videoService = ((App)Application.Current).LocalVideoService;
             videoService.OnVideoChanged += VideoService_OnVideoChanged;
             videoService.OnFirstLoadingStarted += () => IsFirstLoading = true;
             videoService.OnNonFirstLoadingStarted += () => IsNonFirstLoading = true;

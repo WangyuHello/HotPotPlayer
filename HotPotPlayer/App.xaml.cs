@@ -29,7 +29,7 @@ namespace HotPotPlayer
     /// <summary>
     /// Provides application-specific behavior to supplement the default Application class.
     /// </summary>
-    public partial class App : Application
+    public partial class App : AppBase
     {
         /// <summary>
         /// Initializes the singleton application object.  This is the first line of authored code
@@ -57,7 +57,7 @@ namespace HotPotPlayer
 
         private void MainWindow_Closed(object sender, WindowEventArgs args)
         {
-            MusicPlayer.Value.SaveConfig();
+            MusicPlayer.SaveConfig();
             SaveSettings();
         }
 

@@ -46,7 +46,7 @@ namespace HotPotPlayer
             }
         }
 
-        MusicPlayer MusicPlayer => ((App)Application.Current).MusicPlayer.Value;
+        MusicPlayer MusicPlayer => ((App)Application.Current).MusicPlayer;
         //TrayIcon tray;
 
         private void MainWindow_Loaded(object sender, RoutedEventArgs e)

@@ -22,8 +22,10 @@ using Windows.Storage;
 
 namespace HotPotPlayer.Services
 {
-    internal class LocalMusicService: IDisposable
+    internal class LocalMusicService: ServiceBaseWithApp
     {
+        public LocalMusicService(AppBase app) : base(app) { }
+
         enum LocalMusicState
         {
             Idle,
@@ -41,7 +43,7 @@ namespace HotPotPlayer.Services
 
         //FileSystemWatcher _fsw;
 
-        static List<LibraryItem> GetMusicLibrary => ((App)Application.Current).MusicLibrary;
+        List<LibraryItem> GetMusicLibrary => App.MusicLibrary;
 
         static readonly List<string> SupportedExt = new() { ".flac", ".wav", ".m4a", ".mp3" };
 
@@ -145,7 +147,7 @@ namespace HotPotPlayer.Services
 
         (string, Windows.UI.Color) WriteCoverToLocalCache(MusicItem m)
         {
-            var baseDir = ((App)Application.Current).LocalFolder;
+            var baseDir = App.LocalFolder;
             var albumCoverDir = Path.Combine(baseDir, "Cover");
             if (!Directory.Exists(albumCoverDir))
             {
@@ -252,12 +254,9 @@ namespace HotPotPlayer.Services
             OnAlbumGroupChanged?.Invoke(albumGroup, playLists);
         }
 
-        static string GetDbPath()
+        string GetDbPath()
         {
-            var baseDir = ((App)Application.Current).LocalFolder;
-            var dbDir = Path.Combine(baseDir, "Db");
-            if (!Directory.Exists(dbDir)) { Directory.CreateDirectory(dbDir); }
-            var dbPath = Path.Combine(dbDir, "LocalMusic.db");
+            var dbPath = Path.Combine(App.DatabaseFolder, "LocalMusic.db");
             return dbPath;
         }
 
@@ -371,6 +370,8 @@ namespace HotPotPlayer.Services
 
         BackgroundWorker localMusicBackgroundWorker;
 
+
+
         private static bool CheckPlayListHasUpdate(List<PlayListItem> stored, List<FileInfo> current)
         {
             foreach (var s in stored)
@@ -384,9 +385,9 @@ namespace HotPotPlayer.Services
             return false;
         }
 
-        private static List<FileInfo> GetAllPlaylists()
+        private List<FileInfo> GetAllPlaylists()
         {
-            var libs = ((App)Application.Current).MusicPlayList.Select(s => s.Path);
+            var libs = App.MusicPlayList.Select(s => s.Path);
             List<FileInfo> files = new();
             foreach (var lib in libs)
             {
@@ -485,7 +486,7 @@ namespace HotPotPlayer.Services
             return album;
         }
 
-        public void Dispose()
+        public override void Dispose()
         {
             localMusicBackgroundWorker?.Dispose();
             _db?.Dispose();

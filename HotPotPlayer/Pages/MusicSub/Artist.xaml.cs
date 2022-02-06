@@ -86,7 +86,7 @@ namespace HotPotPlayer.Pages.MusicSub
         {
             var albumGroup = await Task.Run(() =>
             {
-                var musicService = ((App)Application.Current).LocalMusicService.Value;
+                var musicService = ((App)Application.Current).LocalMusicService;
                 var albumGroup = musicService.GetArtistAlbumGroup(name);
                 return albumGroup;
             });
@@ -103,7 +103,7 @@ namespace HotPotPlayer.Pages.MusicSub
         private void AlbumPopupListClick(object sender, RoutedEventArgs e)
         {
             var music = ((Button)sender).Tag as MusicItem;
-            var player = ((App)Application.Current).MusicPlayer.Value;
+            var player = ((App)Application.Current).MusicPlayer;
             player.PlayNext(music, SelectedAlbum);
         }
 
@@ -118,7 +118,7 @@ namespace HotPotPlayer.Pages.MusicSub
             flyout.Items.Add(i1);
             var i2 = new MenuFlyoutSeparator();
             flyout.Items.Add(i2);
-            foreach (var item in ((App)Application.Current).LocalMusicService.Value.LocalPlayLists)
+            foreach (var item in ((App)Application.Current).LocalMusicService.LocalPlayLists)
             {
                 var i = new MenuFlyoutItem
                 {
