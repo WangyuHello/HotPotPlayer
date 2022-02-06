@@ -10,12 +10,19 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 namespace HotPotPlayer.Test.Tests
 {
     [TestClass]
-    public class UnitTest1
+    public class VideoTest
     {
+        AppBase App { get; init; }
+
+        public VideoTest(AppBase app)
+        {
+            App = app;
+        }
+
         [TestMethod]
         public void TestMethod1()
         {
-            Assert.AreEqual(0, 0);
+            App.LocalVideoService.StartLoadLocalVideo();
         }
     }
 }

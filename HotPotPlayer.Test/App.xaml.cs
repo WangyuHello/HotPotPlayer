@@ -44,24 +44,25 @@ namespace HotPotPlayer.Test
         /// <param name="args">Details about the launch request and process.</param>
         protected override void OnLaunched(Microsoft.UI.Xaml.LaunchActivatedEventArgs args)
         {
-            Microsoft.VisualStudio.TestPlatform.TestExecutor.UnitTestClient.CreateDefaultUI();
+            //Microsoft.VisualStudio.TestPlatform.TestExecutor.UnitTestClient.CreateDefaultUI();
 
-            m_window = new MainWindow();
+            //m_window = new MainWindow();
 
             // Ensure the current window is active
-            m_window.Activate();
+            //m_window.Activate();
 
-            UITestMethodAttribute.DispatcherQueue = m_window.DispatcherQueue;
+            //UITestMethodAttribute.DispatcherQueue = m_window.DispatcherQueue;
 
             // Replace back with e.Arguments when https://github.com/microsoft/microsoft-ui-xaml/issues/3368 is fixed
-            Microsoft.VisualStudio.TestPlatform.TestExecutor.UnitTestClient.Run(Environment.CommandLine);
+            //Microsoft.VisualStudio.TestPlatform.TestExecutor.UnitTestClient.Run(Environment.CommandLine);
+            SimpleTestScheduler.Start();
         }
 
         private Window m_window;
 
         string GetSubDir(string name)
         {
-            var folder = System.IO.Path.Combine(Environment.CurrentDirectory, name);
+            var folder = System.IO.Path.Combine(@"C:\Users\wangyu\Desktop\UITest", name);
             if (!Directory.Exists(folder))
             {
                 Directory.CreateDirectory(folder);
@@ -71,7 +72,7 @@ namespace HotPotPlayer.Test
 
         public override string CacheFolder => GetSubDir("LocalCache");
         public override string LocalFolder => GetSubDir("LocalState");
-        public override string DatabaseFolder => GetSubDir("DatabaseState");
+        public override string DatabaseFolder => GetSubDir("Database");
 
         public override List<LibraryItem> MusicLibrary
         {
