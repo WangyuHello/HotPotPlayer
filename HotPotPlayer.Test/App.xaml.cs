@@ -7,6 +7,7 @@ using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Navigation;
 using Microsoft.UI.Xaml.Shapes;
+using Microsoft.VisualStudio.TestTools.UnitTesting.AppContainer;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -43,9 +44,17 @@ namespace HotPotPlayer.Test
         /// <param name="args">Details about the launch request and process.</param>
         protected override void OnLaunched(Microsoft.UI.Xaml.LaunchActivatedEventArgs args)
         {
+            Microsoft.VisualStudio.TestPlatform.TestExecutor.UnitTestClient.CreateDefaultUI();
+
             m_window = new MainWindow();
+
+            // Ensure the current window is active
             m_window.Activate();
-            WinUIEx.TestTools.MSTest.UnitTestClient.Run(m_window);
+
+            UITestMethodAttribute.DispatcherQueue = m_window.DispatcherQueue;
+
+            // Replace back with e.Arguments when https://github.com/microsoft/microsoft-ui-xaml/issues/3368 is fixed
+            Microsoft.VisualStudio.TestPlatform.TestExecutor.UnitTestClient.Run(Environment.CommandLine);
         }
 
         private Window m_window;

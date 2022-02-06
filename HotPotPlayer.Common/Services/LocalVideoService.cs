@@ -164,7 +164,7 @@ namespace HotPotPlayer.Services
             e.Result = videos2;
         }
 
-        static List<VideoItem> GetAllVideo(IEnumerable<FileInfo> files)
+        List<VideoItem> GetAllVideo(IEnumerable<FileInfo> files)
         {
             var r = files.Select(f =>
             {
@@ -177,7 +177,7 @@ namespace HotPotPlayer.Services
                     Source = f,
                     Title = title,
                     Duration = tfile.Properties.Duration,
-                    Cover = VideoInfoHelper.SaveVideoThumbnail(f),
+                    Cover = VideoInfoHelper.SaveVideoThumbnail(f, App),
                     LastWriteTime = f.LastWriteTime
                 };
                 return r2;

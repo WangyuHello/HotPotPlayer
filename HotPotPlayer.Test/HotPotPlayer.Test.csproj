@@ -24,10 +24,22 @@
 
   <ItemGroup>
     <PackageReference Include="Microsoft.WindowsAppSDK" Version="1.0.0" />
-    <PackageReference Include="Microsoft.Windows.SDK.BuildTools" Version="10.0.22000.194" />
-    <PackageReference Include="MSTest.TestAdapter" Version="2.2.8" />
-    <PackageReference Include="WinUIEx.TestTools.MSTest" Version="1.0.0" />
+    <PackageReference Include="Microsoft.Windows.SDK.BuildTools" Version="10.0.22543-preview" />
+    <PackageReference Include="MSTest.TestAdapter">
+      <Version>2.2.8</Version>
+    </PackageReference>
+    <PackageReference Include="MSTest.TestFramework">
+      <Version>2.2.8</Version>
+    </PackageReference>
+    <PackageReference Include="Microsoft.TestPlatform.TestHost">
+      <Version>17.1.0-release-20220113-05</Version>
+      <ExcludeAssets>build</ExcludeAssets>
+    </PackageReference>
     <Manifest Include="$(ApplicationManifest)" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectCapability Include="TestContainer" />
   </ItemGroup>
 
   <!-- Defining the "Msix" ProjectCapability here allows the Single-project MSIX Packaging
@@ -37,6 +49,6 @@
     <ProjectCapability Include="Msix" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\HotPotPlayer\HotPotPlayer.csproj" />
+    <ProjectReference Include="..\HotPotPlayer.Common\HotPotPlayer.Common.csproj" />
   </ItemGroup>
 </Project>

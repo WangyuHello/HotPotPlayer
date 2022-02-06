@@ -398,7 +398,7 @@ namespace HotPotPlayer.Services
             return files;
         }
 
-        private static List<PlayListItem> GetAllPlaylistItem(Realm db, List<FileInfo> files)
+        private List<PlayListItem> GetAllPlaylistItem(Realm db, List<FileInfo> files)
         {
             var r = files.Select(f =>
             {
@@ -425,7 +425,7 @@ namespace HotPotPlayer.Services
                     LastWriteTime = f.LastWriteTime,
                     MusicItems = files,
                 };
-                pl.SetPlayListCover();
+                pl.SetPlayListCover(App);
                 return pl;
             }).ToList();
 

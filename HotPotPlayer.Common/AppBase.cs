@@ -44,7 +44,7 @@ namespace HotPotPlayer
         public LocalVideoService LocalVideoService => localVideoService ??= new LocalVideoService(this);
 
         MusicPlayer musicPlayer;
-        public MusicPlayer MusicPlayer => musicPlayer ??= new MusicPlayer();
+        public MusicPlayer MusicPlayer => musicPlayer ??= new MusicPlayer(this);
 
         private JObject _settings;
         private JObject Settings

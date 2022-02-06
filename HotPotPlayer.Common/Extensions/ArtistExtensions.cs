@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace HotPotPlayer.Extensions
 {
-    internal static class ArtistExtensions
+    public static class ArtistExtensions
     {
         public static string[] GetArtists(this string s)
         {

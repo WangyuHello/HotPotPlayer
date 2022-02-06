@@ -21,7 +21,7 @@ namespace HotPotPlayer.Extensions
     {
         static readonly MD5 md5 = MD5.Create();
 
-        public static void SetPlayListCover(this PlayListItem i)
+        public static void SetPlayListCover(this PlayListItem i, AppBase app)
         {
             var seg = i.MusicItems.Count / 9;
             var covers = Enumerable.Range(0, 9).Select(ind => i.MusicItems[ind * seg]).Select(ind => Image.Load<Rgba32>(ind.Cover));
@@ -48,7 +48,7 @@ namespace HotPotPlayer.Extensions
                 return "";
             }).ToList();
 
-            var baseDir = ((App)Application.Current).LocalFolder;
+            var baseDir = app.LocalFolder;
             var albumCoverDir = System.IO.Path.Combine(baseDir, "Cover");
 
             var _IMemoryGroup = image.GetPixelMemoryGroup();

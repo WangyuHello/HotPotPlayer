@@ -22,7 +22,7 @@ namespace HotPotPlayer.Services
         Shuffle
     }
 
-    public class MusicPlayer: ServiceBase
+    public class MusicPlayer: ServiceBaseWithApp
     {
         public enum PlayerState 
         { 
@@ -96,8 +96,7 @@ namespace HotPotPlayer.Services
             {
                 if(_audioFile == null)
                 {
-                    var app = (App)Application.Current;
-                    var volume = app.GetConfig<float?>("Volume");
+                    var volume = App.GetConfig<float?>("Volume");
                     if (volume != null)
                     {
                         return (float)volume;
@@ -323,7 +322,7 @@ namespace HotPotPlayer.Services
         readonly System.Timers.Timer _timer;
         bool _isMusicSwitching;
 
-        public MusicPlayer()
+        public MusicPlayer(AppBase app): base(app)
         {
             _dispatcherQueue = DispatcherQueue.GetForCurrentThread();
             _playerStarter = new BackgroundWorker
@@ -449,10 +448,9 @@ namespace HotPotPlayer.Services
 
         public void SaveConfig()
         {
-            var app = (App)Application.Current;
             if (Volume != 0)
             {
-                app.SetConfig("Volume", Volume);
+                App.SetConfig("Volume", Volume);
             }
         }
     }
