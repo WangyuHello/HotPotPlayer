@@ -137,7 +137,7 @@ namespace HotPotPlayer.Pages
             {
                 SuggestedStartLocation = PickerLocationId.ComputerFolder
             };
-            WinRT.Interop.InitializeWithWindow.Initialize(folderPicker, App.WindowHandle);
+            WinRT.Interop.InitializeWithWindow.Initialize(folderPicker, App.MainWindowHandle);
 
             var folder = await folderPicker.PickSingleFolderAsync();
             if (folder != null)
@@ -165,7 +165,7 @@ namespace HotPotPlayer.Pages
             {
                 SuggestedStartLocation = PickerLocationId.ComputerFolder
             };
-            WinRT.Interop.InitializeWithWindow.Initialize(folderPicker, App.WindowHandle);
+            WinRT.Interop.InitializeWithWindow.Initialize(folderPicker, App.MainWindowHandle);
 
             var folder = await folderPicker.PickSingleFolderAsync();
             if (folder != null)

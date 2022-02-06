@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace HotPotPlayer.Services
 {
-    internal class NetEaseMusicService: ServiceBase
+    public class NetEaseMusicService: ServiceBase
     {
         readonly CloudMusicApi api = new();
         long uid;

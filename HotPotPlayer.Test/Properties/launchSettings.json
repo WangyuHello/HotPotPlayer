@@ -1,0 +1,10 @@
+{
+  "profiles": {
+    "HotPotPlayer.Test (Package)": {
+      "commandName": "MsixPackage"
+    },
+    "HotPotPlayer.Test (Unpackaged)": {
+      "commandName": "Project"
+    }
+  }
+}

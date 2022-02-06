@@ -1,4 +1,4 @@
-﻿using HotPotPlayer.Pages;
+﻿using HotPotPlayer.Models;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Controls.Primitives;
@@ -7,24 +7,20 @@ using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Navigation;
 using Microsoft.UI.Xaml.Shapes;
-using WinRT;
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.IO;
 using System.Linq;
-using System.Runtime.InteropServices;
 using System.Runtime.InteropServices.WindowsRuntime;
 using Windows.ApplicationModel;
 using Windows.ApplicationModel.Activation;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
-using WinUIEx;
 
 // To learn more about WinUI, the WinUI project structure,
 // and more about our project templates, see: http://aka.ms/winui-project-info.
 
-namespace HotPotPlayer
+namespace HotPotPlayer.Test
 {
     /// <summary>
     /// Provides application-specific behavior to supplement the default Application class.
@@ -47,42 +43,55 @@ namespace HotPotPlayer
         /// <param name="args">Details about the launch request and process.</param>
         protected override void OnLaunched(Microsoft.UI.Xaml.LaunchActivatedEventArgs args)
         {
-            MainWindow = new MainWindow
+            m_window = new MainWindow();
+            m_window.Activate();
+            WinUIEx.TestTools.MSTest.UnitTestClient.Run(m_window);
+        }
+
+        private Window m_window;
+
+        string GetSubDir(string name)
+        {
+            var folder = System.IO.Path.Combine(Environment.CurrentDirectory, name);
+            if (!Directory.Exists(folder))
             {
-                ExtendsContentIntoTitleBar = true
+                Directory.CreateDirectory(folder);
+            }
+            return folder;
+        }
+
+        public override string CacheFolder => GetSubDir("LocalCache");
+        public override string LocalFolder => GetSubDir("LocalState");
+        public override string DatabaseFolder => GetSubDir("DatabaseState");
+
+        public override List<LibraryItem> MusicLibrary
+        {
+            get => new()
+            {
+                new LibraryItem
+                {
+                    Path = @"D:\Music",
+                    IsSystemLibrary = true
+                }
             };
-            InitMainWindow(args);
-            MainWindow.Activate();
+            set { }
         }
-
-        private void MainWindow_Closed(object sender, WindowEventArgs args)
+        public override List<LibraryItem> VideoLibrary
         {
-            MusicPlayer.SaveConfig();
-            SaveSettings();
-        }
-
-        private void InitMainWindow(Microsoft.UI.Xaml.LaunchActivatedEventArgs args)
-        {
-            MainWindow.Title = "HotPotPlayer";
-            MainWindow.SetTitleBar(MainWindow.CustomTitleBar);
-            MainWindow.CenterOnScreen(1070, 760);
-            MainWindow.Closed += MainWindow_Closed;
-
-            var firstArg = args.Arguments; //尚不支持，永远为null
-            var args2 = Environment.GetCommandLineArgs();
-            var firstArg2 = args2.Length > 1 ? args2[1] : null;
-            if (!string.IsNullOrEmpty(firstArg2) && File.Exists(firstArg2))
+            get => new()
             {
-                //InitPageName == null
-                InitMediaFile = new FileInfo(firstArg2);
-            }
-            else
-            {
-                MainWindow.InitPageName = "Music";
-            }
+                new LibraryItem
+                {
+                    Path = @"D:\视频",
+                    IsSystemLibrary = true
+                },
+                new LibraryItem
+                {
+                    Path = @"E:\动漫",
+                    IsSystemLibrary = false
+                }
+            };
+            set { }
         }
-
-        public MainWindow MainWindow;
-        public IntPtr MainWindowHandle => MainWindow.GetWindowHandle();
     }
 }

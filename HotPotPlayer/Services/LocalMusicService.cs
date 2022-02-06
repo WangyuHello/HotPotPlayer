@@ -22,7 +22,7 @@ using Windows.Storage;
 
 namespace HotPotPlayer.Services
 {
-    internal class LocalMusicService: ServiceBaseWithApp
+    public class LocalMusicService: ServiceBaseWithApp
     {
         public LocalMusicService(AppBase app) : base(app) { }
 
