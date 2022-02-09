@@ -30,13 +30,13 @@ namespace HotPotPlayer.Services
         public virtual void Dispose() { }
     }
 
-    public class ServiceBaseWithApp: ServiceBase
+    public class ServiceBaseWithConfig: ServiceBase
     {
-        protected AppBase App { get; init; }
+        protected ConfigBase Config { get; init; }
 
-        public ServiceBaseWithApp(AppBase app)
+        public ServiceBaseWithConfig(ConfigBase config)
         {
-            App = app;
+            Config = config;
         }
     }
 }

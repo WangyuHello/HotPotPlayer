@@ -51,6 +51,7 @@ namespace HotPotPlayer.Pages
         }
 
         App App => (App)Application.Current;
+        ConfigBase Config => App.Config;
 
         private bool _isVideoLibraryWarningVisible;
 
@@ -79,12 +80,12 @@ namespace HotPotPlayer.Pages
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
             base.OnNavigatedTo(e);
-            var musicLib = App.MusicLibrary;
+            var musicLib = Config.MusicLibrary;
             if (musicLib != null)
             {
                 MusicLibrary = new ObservableCollection<LibraryItem>(musicLib);
             }
-            var videoLib = App.VideoLibrary;
+            var videoLib = Config.VideoLibrary;
             if (videoLib != null)
             {
                 VideoLibrary = new ObservableCollection<LibraryItem>(videoLib);
@@ -109,7 +110,7 @@ namespace HotPotPlayer.Pages
 
         private async void OpenDataLocationClick(object sender, RoutedEventArgs e)
         {
-            var loc = App.LocalFolder;
+            var loc = Config.LocalFolder;
             bool _ = await Windows.System.Launcher.LaunchUriAsync(new Uri(loc));
         }
 
@@ -128,7 +129,7 @@ namespace HotPotPlayer.Pages
 
         private void ClearConfigClick(object sender, RoutedEventArgs e)
         {
-            App.ResetSettings();
+            Config.ResetSettings();
         }
 
         private async void AddVideoLibrary(object sender, RoutedEventArgs e)
@@ -149,12 +150,12 @@ namespace HotPotPlayer.Pages
                     {
                         new LibraryItem {Path = path}
                     };
-                    App.VideoLibrary = VideoLibrary.Select(s => s).ToList();
+                    Config.VideoLibrary = VideoLibrary.Select(s => s).ToList();
                 }
                 if (!VideoLibrary.Where(s => s.Path == path).Any())
                 {
                     VideoLibrary.Add(new LibraryItem { Path = path });
-                    App.VideoLibrary = VideoLibrary.Select(s => s).ToList();
+                    Config.VideoLibrary = VideoLibrary.Select(s => s).ToList();
                 }
             }
         }
@@ -177,12 +178,12 @@ namespace HotPotPlayer.Pages
                     {
                         new LibraryItem {Path = path}
                     };
-                    App.MusicLibrary = MusicLibrary.Select(s => s).ToList();
+                    Config.MusicLibrary = MusicLibrary.Select(s => s).ToList();
                 }
                 if (!MusicLibrary.Where(s => s.Path == path).Any())
                 {
                     MusicLibrary.Add(new LibraryItem { Path = path });
-                    App.MusicLibrary = MusicLibrary.Select(s => s).ToList();
+                    Config.MusicLibrary = MusicLibrary.Select(s => s).ToList();
                 }
             }
         }
@@ -191,14 +192,14 @@ namespace HotPotPlayer.Pages
         {
             var item = ((Button)sender).Tag as LibraryItem;
             MusicLibrary.Remove(item);
-            App.MusicLibrary = MusicLibrary.Select(s => s).ToList();
+            Config.MusicLibrary = MusicLibrary.Select(s => s).ToList();
         }
 
         private void VideoRemoveClick(object sender, RoutedEventArgs e)
         {
             var item = ((Button)sender).Tag as LibraryItem;
             VideoLibrary.Remove(item);
-            App.VideoLibrary = VideoLibrary.Select(s => s).ToList();
+            Config.VideoLibrary = VideoLibrary.Select(s => s).ToList();
         }
     }
 }

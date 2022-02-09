@@ -13,9 +13,9 @@ using System.Threading.Tasks;
 
 namespace HotPotPlayer.Services
 {
-    public class LocalVideoService: ServiceBaseWithApp
+    public class LocalVideoService: ServiceBaseWithConfig
     {
-        public LocalVideoService(AppBase app) : base(app) { }
+        public LocalVideoService(ConfigBase config) : base(config) { }
 
         enum LocalVideoState
         {
@@ -40,6 +40,7 @@ namespace HotPotPlayer.Services
             foreach (var lib in libs)
             {
                 var di = new DirectoryInfo(lib);
+                if (!di.Exists) continue;
                 files.AddRange(di.GetFiles("*.*", SearchOption.AllDirectories).Where(f => SupportedExt.Contains(f.Extension)));
             }
 
@@ -68,7 +69,7 @@ namespace HotPotPlayer.Services
 
         string GetDbPath()
         {
-            var dbPath = Path.Combine(App.DatabaseFolder, "LocalVideo.db");
+            var dbPath = Path.Combine(Config.DatabaseFolder, "LocalVideo.db");
             return dbPath;
         }
 
@@ -119,7 +120,7 @@ namespace HotPotPlayer.Services
         private void LocalVideoBackgroundWorker_DoWork(object sender, DoWorkEventArgs e)
         {
             var dbPath = DbPath;
-            var libs = App.VideoLibrary;
+            var libs = Config.VideoLibrary;
             if (libs == null)
             {
                 localVideoBackgroundWorker.ReportProgress((int)LocalVideoState.NoLibraryAccess);
@@ -177,7 +178,7 @@ namespace HotPotPlayer.Services
                     Source = f,
                     Title = title,
                     Duration = tfile.Properties.Duration,
-                    Cover = VideoInfoHelper.SaveVideoThumbnail(f, App),
+                    Cover = VideoInfoHelper.SaveVideoThumbnail(f, Config),
                     LastWriteTime = f.LastWriteTime
                 };
                 return r2;

@@ -25,9 +25,9 @@ namespace HotPotPlayer.Services.Video
         static readonly AVHWDeviceType HWDevice;
         static readonly MD5 md5 = MD5.Create();
 
-        public static string SaveVideoThumbnail(FileInfo file, AppBase app)
+        public static string SaveVideoThumbnail(FileInfo file, ConfigBase config)
         {
-            return DecodeOneFrame(file.FullName, app);
+            return DecodeOneFrame(file.FullName, config);
         }
 
         public static AVHWDeviceType ConfigureHWDecoder()
@@ -59,7 +59,7 @@ namespace HotPotPlayer.Services.Video
             return HWtype;
         }
 
-        public static unsafe string DecodeOneFrame(string url, AppBase app)
+        public static unsafe string DecodeOneFrame(string url, ConfigBase config)
         {
             using var vsd = new VideoStreamDecoder(url, HWDevice);
             var info = vsd.GetContextInfo();
@@ -79,7 +79,7 @@ namespace HotPotPlayer.Services.Video
                 var ptr = (IntPtr)convertedFrame.data[0];
                 var data = new Span<byte>((byte*)ptr, convertedFrame.linesize[0] * convertedFrame.height);
 
-                var baseDir = app.LocalFolder;
+                var baseDir = config.LocalFolder;
                 var videoCoverDir = Path.Combine(baseDir, "VideoCover");
                 if (!Directory.Exists(videoCoverDir))
                 {

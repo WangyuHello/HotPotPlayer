@@ -1,7 +1,4 @@
 ﻿using HotPotPlayer.Models;
-using HotPotPlayer.Services;
-using Microsoft.UI.Xaml;
-using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -12,7 +9,7 @@ using Windows.Storage;
 
 namespace HotPotPlayer
 {
-    public partial class App : AppBase
+    public class AppConfig : ConfigBase
     {
         public override string CacheFolder => ApplicationData.Current.LocalCacheFolder.Path;
         public override string LocalFolder => ApplicationData.Current.LocalFolder.Path;

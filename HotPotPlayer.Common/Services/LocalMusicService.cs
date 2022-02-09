@@ -22,9 +22,9 @@ using Windows.Storage;
 
 namespace HotPotPlayer.Services
 {
-    public class LocalMusicService: ServiceBaseWithApp
+    public class LocalMusicService: ServiceBaseWithConfig
     {
-        public LocalMusicService(AppBase app) : base(app) { }
+        public LocalMusicService(ConfigBase config) : base(config) { }
 
         enum LocalMusicState
         {
@@ -43,7 +43,7 @@ namespace HotPotPlayer.Services
 
         //FileSystemWatcher _fsw;
 
-        List<LibraryItem> GetMusicLibrary => App.MusicLibrary;
+        List<LibraryItem> GetMusicLibrary => Config.MusicLibrary;
 
         static readonly List<string> SupportedExt = new() { ".flac", ".wav", ".m4a", ".mp3" };
 
@@ -147,7 +147,7 @@ namespace HotPotPlayer.Services
 
         (string, Windows.UI.Color) WriteCoverToLocalCache(MusicItem m)
         {
-            var baseDir = App.LocalFolder;
+            var baseDir = Config.LocalFolder;
             var albumCoverDir = Path.Combine(baseDir, "Cover");
             if (!Directory.Exists(albumCoverDir))
             {
@@ -256,7 +256,7 @@ namespace HotPotPlayer.Services
 
         string GetDbPath()
         {
-            var dbPath = Path.Combine(App.DatabaseFolder, "LocalMusic.db");
+            var dbPath = Path.Combine(Config.DatabaseFolder, "LocalMusic.db");
             return dbPath;
         }
 
@@ -387,7 +387,7 @@ namespace HotPotPlayer.Services
 
         private List<FileInfo> GetAllPlaylists()
         {
-            var libs = App.MusicPlayList.Select(s => s.Path);
+            var libs = Config.MusicPlayList.Select(s => s.Path);
             List<FileInfo> files = new();
             foreach (var lib in libs)
             {
@@ -425,7 +425,7 @@ namespace HotPotPlayer.Services
                     LastWriteTime = f.LastWriteTime,
                     MusicItems = files,
                 };
-                pl.SetPlayListCover(App);
+                pl.SetPlayListCover(Config);
                 return pl;
             }).ToList();
 
