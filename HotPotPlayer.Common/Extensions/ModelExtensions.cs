@@ -169,5 +169,23 @@ namespace HotPotPlayer.Extensions
                 Videos = i.Videos.Select(s => s.ToOrigin()).ToList()
             };
         }
+
+        public static SingleVideoItemsDb ToDb(this SingleVideoItems i)
+        {
+            var r = new SingleVideoItemsDb();
+            foreach (var item in i.Videos)
+            {
+                r.Videos.Add(item.ToDb());
+            }
+            return r;
+        }
+
+        public static SingleVideoItems ToOrigin(this SingleVideoItemsDb i)
+        {
+            return new SingleVideoItems
+            {
+                Videos = i.Videos.Select(s => s.ToOrigin()).ToList()
+            };
+        }
     }
 }

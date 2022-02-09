@@ -17,7 +17,7 @@ namespace HotPotPlayer.Models
         public List<VideoItem> Videos { get; set; }
     }
 
-    public class SeriesItemDb
+    public class SeriesItemDb: RealmObject
     {
         [PrimaryKey]
         public string Source { get; set; }

@@ -5,6 +5,7 @@ using Microsoft.UI.Xaml;
 using Realms;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.IO;
 using System.Linq;
@@ -26,7 +27,7 @@ namespace HotPotPlayer.Services
             NoLibraryAccess
         }
 
-        public event Action<List<VideoItem>> OnVideoChanged;
+        public event Action<List<SingleVideoItemsGroup>, List<SeriesItem>> OnVideoChanged;
         public event Action OnFirstLoadingStarted;
         public event Action OnNonFirstLoadingStarted;
         public event Action OnLoadingEnded;
@@ -34,12 +35,13 @@ namespace HotPotPlayer.Services
 
         static readonly List<string> SupportedExt = new() { ".mkv", ".mp4" };
 
-        private static List<FileInfo> GetVideoFilesFromLibrary(List<string> libs)
+        private List<FileInfo> GetVideoFilesFromLibrary()
         {
+            var libs = Config.VideoLibrary;
             List<FileInfo> files = new();
             foreach (var lib in libs)
             {
-                var di = new DirectoryInfo(lib);
+                var di = new DirectoryInfo(lib.Path);
                 if (!di.Exists) continue;
                 files.AddRange(di.GetFiles("*.*", SearchOption.AllDirectories).Where(f => SupportedExt.Contains(f.Extension)));
             }
@@ -74,7 +76,7 @@ namespace HotPotPlayer.Services
         }
 
         string _dbPath;
-        string DbPath
+        string DbFilePath
         {
             get => _dbPath ??= GetDbPath();
         }
@@ -86,8 +88,8 @@ namespace HotPotPlayer.Services
             {
                 return;
             }
-            var videos = (List<VideoItem>)e.Result;
-            OnVideoChanged?.Invoke(videos);
+            var (singleVideoGroup, series) = ((List<SingleVideoItemsGroup> a, List<SeriesItem> b))e.Result;
+            OnVideoChanged?.Invoke(singleVideoGroup, series);
         }
 
         private void LocalVideoBackgroundWorker_ProgressChanged(object sender, ProgressChangedEventArgs e)
@@ -105,8 +107,8 @@ namespace HotPotPlayer.Services
                     break;
                 case LocalVideoState.InitLoadingComplete:
                     OnLoadingEnded?.Invoke();
-                    var videos = (List<VideoItem>)e.UserState;
-                    OnVideoChanged?.Invoke(videos);
+                    var (singleVideoGroup, series) = ((List<SingleVideoItemsGroup> a, List<SeriesItem> b))e.UserState;
+                    OnVideoChanged?.Invoke(singleVideoGroup, series);
                     break;
                 case LocalVideoState.NoLibraryAccess:
                     OnNoLibraryAccess?.Invoke();
@@ -119,24 +121,23 @@ namespace HotPotPlayer.Services
 
         private void LocalVideoBackgroundWorker_DoWork(object sender, DoWorkEventArgs e)
         {
-            var dbPath = DbPath;
-            var libs = Config.VideoLibrary;
-            if (libs == null)
+            var dbFilePath = DbFilePath;
+            if (Config.VideoLibrary == null)
             {
                 localVideoBackgroundWorker.ReportProgress((int)LocalVideoState.NoLibraryAccess);
                 return;
             }
 
-            if (File.Exists(dbPath))
+            if (File.Exists(dbFilePath))
             {
-                using var _db = Realm.GetInstance(dbPath);
-                var videos = _db.All<VideoItemDb>().ToList().Select(d => d.ToOrigin()).ToList();
+                using var _db = Realm.GetInstance(dbFilePath);
+                var singleVideos_ = _db.All<SingleVideoItemsDb>().First().ToOrigin();
+                var series_ = _db.All<SeriesItemDb>().AsEnumerable().Select(s => s.ToOrigin()).ToList();
+                var singleVideosGroup_ = GroupSingleVideosByYear(singleVideos_);
 
-                localVideoBackgroundWorker.ReportProgress((int)LocalVideoState.InitLoadingComplete, videos);
-
-                var files2 = GetVideoFilesFromLibrary(libs.Select(l => l.Path).ToList());
-
-                var hasUpdate = CheckVideoHasUpdate(files2, _db);
+                localVideoBackgroundWorker.ReportProgress((int)LocalVideoState.InitLoadingComplete, (singleVideosGroup_, series_));
+                
+                bool hasUpdate = CheckVideoLibraryHasUpdate(_db);
                 if (hasUpdate)
                 {
                     localVideoBackgroundWorker.ReportProgress((int)LocalVideoState.NonFirstLoading);
@@ -152,49 +153,63 @@ namespace HotPotPlayer.Services
                 localVideoBackgroundWorker.ReportProgress((int)LocalVideoState.FirstLoading);
             }
 
-            var files = GetVideoFilesFromLibrary(libs.Select(l => l.Path).ToList());
-            var videos2 = GetAllVideo(files);
+            var files = GetVideoFilesFromLibrary();
+            var (singleVideos, series) = GroupVideosToSeries(files);
+            var singleVideos2 = AddVideoInfo(singleVideos);
+            var singleVideosGroup = GroupSingleVideosByYear(singleVideos2);
 
-            using var _db2 = Realm.GetInstance(dbPath);
+            using var _db2 = Realm.GetInstance(dbFilePath);
             _db2.Write(() =>
             {
-                _db2.RemoveAll();
-                _db2.Add(videos2.Select(a => a.ToDb()));
+                _db2.Add(singleVideos2.ToDb(), update: true);
+                _db2.Add(series.Select(s => s.ToDb()), update: true);
             });
 
-            e.Result = videos2;
+            e.Result = (singleVideosGroup, series);
         }
 
-        List<VideoItem> GetAllVideo(IEnumerable<FileInfo> files)
+        public sealed class CustomEqComparer : EqualityComparer<VideoItemDb>
         {
-            var r = files.Select(f =>
+            public override bool Equals(VideoItemDb x, VideoItemDb y)
             {
-                using var tfile = TagLib.File.Create(f.FullName);
-                var tTitle = tfile.Tag.Title;
-                var title = string.IsNullOrEmpty(tTitle) ? Path.GetFileNameWithoutExtension(f.Name) : tTitle;
-
-                var r2 = new VideoItem
-                {
-                    Source = f,
-                    Title = title,
-                    Duration = tfile.Properties.Duration,
-                    Cover = VideoInfoHelper.SaveVideoThumbnail(f, Config),
-                    LastWriteTime = f.LastWriteTime
-                };
-                return r2;
-            }).ToList();
-            return r;
-        }
-
-        private static bool CheckVideoHasUpdate(List<FileInfo> files, Realm db)
-        {
-            foreach (var f in files)
-            {
-                var target = db.All<VideoItemDb>().FirstOrDefault(m => m.Source == f.FullName);
-                if (target == null) return true;
-                if (target.LastWriteTime != f.LastWriteTime.ToBinary()) return true;
+                if (x.Source == y.Source && x.LastWriteTime == y.LastWriteTime)
+                    return true;
+                return false;
             }
-            return false;
+
+            public override int GetHashCode(VideoItemDb obj)
+            {
+                return obj.Source.GetHashCode() + obj.LastWriteTime.GetHashCode();
+            }
+        }
+
+        private bool CheckVideoLibraryHasUpdate(Realm _db)
+        {
+            var currentFiles = GetVideoFilesFromLibrary().Select(c => new VideoItemDb
+            {
+                Source = c.FullName,
+                LastWriteTime = c.LastWriteTime.ToBinary()
+            });
+            var dbFiles = _db.All<VideoItemDb>().ToList();
+
+            var exc = currentFiles.Except(dbFiles, new CustomEqComparer());
+            var exc2 = exc.Where(d => Directory.Exists(Path.GetPathRoot(d.Source)));
+            return exc2.Any();
+        }
+
+        SingleVideoItems AddVideoInfo(SingleVideoItems s)
+        {
+            s.Videos.ForEach(f =>
+            {
+                using var tfile = TagLib.File.Create(f.Source.FullName);
+                var tTitle = tfile.Tag.Title;
+                var title = string.IsNullOrEmpty(tTitle) ? Path.GetFileNameWithoutExtension(f.Source.Name) : tTitle;
+
+                f.Title = title;
+                f.Duration = tfile.Properties.Duration;
+                f.Cover = VideoInfoHelper.SaveVideoThumbnail(f.Source, Config);
+            });
+            return s;
         }
 
         static bool IsSeries(SeriesItem s)
@@ -220,7 +235,7 @@ namespace HotPotPlayer.Services
             return false;
         }
 
-        static (List<VideoItem>, List<SeriesItem>) GroupVideosToSeries(List<FileInfo> files)
+        static (SingleVideoItems, List<SeriesItem>) GroupVideosToSeries(List<FileInfo> files)
         {
             var group = files.GroupBy(f => f.Directory.FullName);
             var singleVideos = new List<VideoItem>();
@@ -234,7 +249,7 @@ namespace HotPotPlayer.Services
                     Videos = g.Select(f => new VideoItem
                     {
                         Source = f,
-                        Title = f.Name,
+                        Title = Path.GetFileNameWithoutExtension(f.Name),
                         LastWriteTime = f.LastWriteTime,
                     }).ToList()
                 };
@@ -257,7 +272,20 @@ namespace HotPotPlayer.Services
                     singleVideos.AddRange(item.Videos);
                 }
             }
-            return (singleVideos, seriesVideos);
+            var s = new SingleVideoItems
+            {
+                Videos = singleVideos
+            };
+            return (s, seriesVideos);
+        }
+    
+        static List<SingleVideoItemsGroup> GroupSingleVideosByYear(SingleVideoItems s)
+        {
+            return s.Videos.GroupBy(v => v.LastWriteTime.Year).Select(g => new SingleVideoItemsGroup
+            {
+                Year = g.Key,
+                Items = new ObservableCollection<VideoItem>(g)
+            }).ToList();
         }
     }
 }

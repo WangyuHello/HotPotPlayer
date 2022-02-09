@@ -7,9 +7,9 @@ using System.Threading.Tasks;
 
 namespace HotPotPlayer.Models
 {
-    public class SeriesGroup
+    public class SingleVideoItemsGroup
     {
         public int Year { get; set; }
-        public ObservableCollection<SeriesItem> Items { get; set; }
+        public ObservableCollection<VideoItem> Items { get; set; }
     }
 }

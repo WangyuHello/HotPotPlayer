@@ -24,6 +24,11 @@ namespace HotPotPlayer.Test
         public override string LocalFolder => GetSubDir("LocalState");
         public override string DatabaseFolder => GetSubDir("Database");
 
+        public void ClearDb()
+        {
+            Directory.Delete(DatabaseFolder, true);
+        }
+
         public override List<LibraryItem> MusicLibrary
         {
             get => new()

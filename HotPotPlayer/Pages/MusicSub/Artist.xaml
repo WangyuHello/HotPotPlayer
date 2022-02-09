@@ -31,12 +31,12 @@
             <Setter Property="Margin" Value="8" />
         </Style>
 
-        <DataTemplate x:Key="LocalAlbumZoomedInGroupHeaderTemplate" x:DataType="models:AlbumDataGroup">
+        <DataTemplate x:Key="LocalAlbumZoomedInGroupHeaderTemplate" x:DataType="models:AlbumGroup">
             <TextBlock Text="{x:Bind Year}" Foreground="{ThemeResource ApplicationForegroundThemeBrush}" Style="{StaticResource SubtitleTextBlockStyle}"/>
         </DataTemplate>
 
         <DataTemplate x:Key="LocalAlbumZoomedOutTemplate" x:DataType="muxdata:ICollectionViewGroup">
-            <TextBlock Margin="8" Text="{x:Bind ((models:AlbumDataGroup)Group).Year}" FontSize="20" TextWrapping="Wrap"/>
+            <TextBlock Margin="8" Text="{x:Bind ((models:AlbumGroup)Group).Year}" FontSize="20" TextWrapping="Wrap"/>
         </DataTemplate>
 
         <pages:EvenOldTemplateSelector x:Key="EvenOldAlbumPopupTemplate" >

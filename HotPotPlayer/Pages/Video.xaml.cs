@@ -36,8 +36,8 @@ namespace HotPotPlayer.Pages
             this.InitializeComponent();
         }
 
-        public ObservableCollection<SeriesGroup> LocalSeries { get; set; } = new ObservableCollection<SeriesGroup>();
-        public ObservableCollection<VideoItem> LocalVideo { get; set; } = new ObservableCollection<VideoItem>();
+        public ObservableCollection<SeriesItem> LocalSeries { get; set; } = new();
+        public ObservableCollection<SingleVideoItemsGroup> LocalVideo { get; set; } = new();
         
         private bool _isFirstLoading;
         public bool IsFirstLoading
@@ -93,12 +93,17 @@ namespace HotPotPlayer.Pages
             videoService.StartLoadLocalVideo();
         }
 
-        private void VideoService_OnVideoChanged(List<VideoItem> l)
+        private void VideoService_OnVideoChanged(List<SingleVideoItemsGroup> l, List<SeriesItem> s)
         {
             LocalVideo.Clear();
             foreach (var i in l)
             {
                 LocalVideo.Add(i);
+            }
+            LocalSeries.Clear();
+            foreach (var i in s)
+            {
+                LocalSeries.Add(i);
             }
         }
 
