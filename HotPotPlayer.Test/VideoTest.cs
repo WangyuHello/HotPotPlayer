@@ -19,6 +19,15 @@ namespace HotPotPlayer.Test
             videoService.StartLoadLocalVideo();
         }
 
+        [Fact]
+        public void Test2()
+        {
+            var config = new MockConfig();
+            var videoService = new LocalVideoService(config);
+            videoService.OnVideoChanged += VideoService_OnVideoChanged;
+            videoService.StartLoadLocalVideo();
+        }
+
         private void VideoService_OnVideoChanged(List<SingleVideoItemsGroup> arg1, List<SeriesItem> arg2)
         {
             Debug.WriteLine("");

@@ -216,11 +216,18 @@ namespace HotPotPlayer.Services
         {
             var all = s.Videos.Select(s => s.Source.FullName).ToList();
             var allCount = all.Select(s => s.Length).Distinct().ToList();
-            if (allCount.Count > 5)
+            var th = (int)(all.Count * 0.2);
+            if (allCount.Count > th)
             {
                 return false;
             }
-            return true;
+            foreach (var item in s.Videos)
+            {
+                var dir = item.Source.Directory.Name;
+                var name = item.Source.Name;
+                if (name.Contains(dir)) return true;
+            }
+            return false;
         }
 
         static bool HasDetected(string path, List<string> detectPath)
@@ -281,11 +288,13 @@ namespace HotPotPlayer.Services
     
         static List<SingleVideoItemsGroup> GroupSingleVideosByYear(SingleVideoItems s)
         {
-            return s.Videos.GroupBy(v => v.LastWriteTime.Year).Select(g => new SingleVideoItemsGroup
+            var r = s.Videos.GroupBy(v => v.LastWriteTime.Year).Select(g => new SingleVideoItemsGroup
             {
                 Year = g.Key,
                 Items = new ObservableCollection<VideoItem>(g)
             }).ToList();
+            r.Sort((a, b) => b.Year.CompareTo(a.Year));
+            return r;
         }
     }
 }
