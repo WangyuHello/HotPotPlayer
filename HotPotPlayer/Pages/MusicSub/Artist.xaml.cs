@@ -46,7 +46,7 @@ namespace HotPotPlayer.Pages.MusicSub
             }
         }
 
-        public ObservableCollection<AlbumDataGroup> LocalAlbum { get; set; } = new ObservableCollection<AlbumDataGroup>();
+        public ObservableCollection<AlbumGroup> LocalAlbum { get; set; } = new ObservableCollection<AlbumGroup>();
 
         private string _artistName;
         public string ArtistName
@@ -82,7 +82,7 @@ namespace HotPotPlayer.Pages.MusicSub
             base.OnNavigatedTo(e);
         }
 
-        static async Task<IEnumerable<AlbumDataGroup>> GetArtistWorksAsync(string name)
+        static async Task<IEnumerable<AlbumGroup>> GetArtistWorksAsync(string name)
         {
             var albumGroup = await Task.Run(() =>
             {

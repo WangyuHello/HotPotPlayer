@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace HotPotPlayer.Models
 {
-    public class AlbumDataGroup
+    public class AlbumGroup
     {
         public int Year { get; set; }
         public ObservableCollection<AlbumItem> Items { get; set; }

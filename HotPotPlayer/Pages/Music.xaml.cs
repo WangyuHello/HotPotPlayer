@@ -38,7 +38,7 @@ namespace HotPotPlayer.Pages
             InitializeComponent();
         }
 
-        public ObservableCollection<AlbumDataGroup> LocalAlbum { get; set; } = new ObservableCollection<AlbumDataGroup>();
+        public ObservableCollection<AlbumGroup> LocalAlbum { get; set; } = new ObservableCollection<AlbumGroup>();
         public ObservableCollection<PlayListItem> LocalPlayList { get; set; } = new ObservableCollection<PlayListItem>();
 
         readonly AlbumHelper AlbumHelper = new();
@@ -84,7 +84,7 @@ namespace HotPotPlayer.Pages
             musicService.StartLoadLocalMusic();
         }
 
-        private void MusicService_OnAlbumGroupChanged(List<AlbumDataGroup> g, List<PlayListItem> l)
+        private void MusicService_OnAlbumGroupChanged(List<AlbumGroup> g, List<PlayListItem> l)
         {
             if (g != null)
             {

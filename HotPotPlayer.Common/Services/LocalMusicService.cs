@@ -35,7 +35,7 @@ namespace HotPotPlayer.Services
             NoLibraryAccess
         }
 
-        public event Action<List<AlbumDataGroup>, List<PlayListItem>> OnAlbumGroupChanged;
+        public event Action<List<AlbumGroup>, List<PlayListItem>> OnAlbumGroupChanged;
         public event Action OnFirstLoadingStarted;
         public event Action OnNonFirstLoadingStarted;
         public event Action OnLoadingEnded;
@@ -126,13 +126,13 @@ namespace HotPotPlayer.Services
             return albums;
         }
 
-        static List<AlbumDataGroup> GroupAllAlbumByYear(IEnumerable<AlbumItem> albums)
+        static List<AlbumGroup> GroupAllAlbumByYear(IEnumerable<AlbumItem> albums)
         {
             var r = albums.GroupBy(m => m.Year).Select(g => 
             {
                 var albumList = g.ToList();
                 albumList.Sort((a,b) => (a.Title ?? "").CompareTo(b.Title ?? ""));
-                var r = new AlbumDataGroup()
+                var r = new AlbumGroup()
                 {
                     Year = g.Key,
                     Items = new ObservableCollection<AlbumItem>(albumList)
@@ -210,7 +210,7 @@ namespace HotPotPlayer.Services
             localMusicBackgroundWorker.RunWorkerAsync();
         }
 
-        public List<AlbumDataGroup> LocalAlbums;
+        public List<AlbumGroup> LocalAlbums;
         public List<PlayListItem> LocalPlayLists;
 
         private void LocalMusicBackgroundWorker_ProgressChanged(object sender, ProgressChangedEventArgs e)
@@ -228,7 +228,7 @@ namespace HotPotPlayer.Services
                     break;
                 case LocalMusicState.InitLoadingComplete:
                     OnLoadingEnded?.Invoke();
-                    var (albumGroup, playLists) = ((List<AlbumDataGroup> a, List<PlayListItem> b))e.UserState;
+                    var (albumGroup, playLists) = ((List<AlbumGroup> a, List<PlayListItem> b))e.UserState;
                     LocalAlbums = albumGroup;
                     LocalPlayLists = playLists;
                     OnAlbumGroupChanged?.Invoke(albumGroup, playLists);
@@ -248,7 +248,7 @@ namespace HotPotPlayer.Services
             {
                 return;
             }
-            var (albumGroup, playLists) = ((List<AlbumDataGroup> a, List<PlayListItem> b))e.Result;
+            var (albumGroup, playLists) = ((List<AlbumGroup> a, List<PlayListItem> b))e.Result;
             LocalAlbums = albumGroup;
             LocalPlayLists = playLists;
             OnAlbumGroupChanged?.Invoke(albumGroup, playLists);
@@ -320,7 +320,7 @@ namespace HotPotPlayer.Services
             }
 
             _db ??= Realm.GetInstance(DbPath);
-            List<AlbumDataGroup> groups = skipScanAllMusic ? null : ScanAllMusic(libs.Select(l => l.Path).ToList());
+            List<AlbumGroup> groups = skipScanAllMusic ? null : ScanAllMusic(libs.Select(l => l.Path).ToList());
             List<PlayListItem> playLists = ScanAllPlayList(playListFiles);
 
             e.Result = (groups, playLists);
@@ -350,7 +350,7 @@ namespace HotPotPlayer.Services
             return playLists;
         }
 
-        private List<AlbumDataGroup> ScanAllMusic(List<string> libs)
+        private List<AlbumGroup> ScanAllMusic(List<string> libs)
         {
             var files = GetMusicFilesFromLibrary(libs);
             var allmusic = GetAllMusicItemAsync(files);
@@ -471,7 +471,7 @@ namespace HotPotPlayer.Services
             return result;
         }
 
-        public List<AlbumDataGroup> GetArtistAlbumGroup(string artistName)
+        public List<AlbumGroup> GetArtistAlbumGroup(string artistName)
         {
             var album = QueryArtistAlbum(artistName);
             var group = GroupAllAlbumByYear(album);
