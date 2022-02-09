@@ -327,15 +327,33 @@ namespace HotPotPlayer.Services
             _db?.Dispose();
         }
 
+        sealed class CustomEqComparer : EqualityComparer<MusicItemDb>
+        {
+            public override bool Equals(MusicItemDb x, MusicItemDb y)
+            {
+                if (x.Source == y.Source && x.LastWriteTime == y.LastWriteTime)
+                    return true;
+                return false;
+            }
+
+            public override int GetHashCode(MusicItemDb obj)
+            {
+                return obj.Source.GetHashCode() + obj.LastWriteTime.GetHashCode();
+            }
+        }
+
         private bool CheckMusicHasUpdate(List<FileInfo> files)
         {
-            foreach (var f in files)
+            var currentFiles = files.Select(c => new MusicItemDb
             {
-                var target = _db.All<MusicItemDb>().FirstOrDefault(m => m.Source == f.FullName);
-                if (target == null) return true;
-                if (target.LastWriteTime != f.LastWriteTime.ToBinary()) return true;
-            }
-            return false;
+                Source = c.FullName,
+                LastWriteTime = c.LastWriteTime.ToBinary()
+            });
+            var dbFiles = _db.All<MusicItemDb>().ToList();
+
+            var exc = currentFiles.Except(dbFiles, new CustomEqComparer());
+            var exc2 = exc.Where(d => Directory.Exists(Path.GetPathRoot(d.Source)));
+            return exc2.Any();
         }
 
         private List<PlayListItem> ScanAllPlayList(List<FileInfo> playListsFile)
