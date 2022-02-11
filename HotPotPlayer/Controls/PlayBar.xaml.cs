@@ -1,4 +1,6 @@
-﻿using HotPotPlayer.Models;
+﻿using HotPotPlayer.Extensions;
+using HotPotPlayer.Models;
+using HotPotPlayer.Pages.Helper;
 using HotPotPlayer.Services;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
@@ -115,6 +117,33 @@ namespace HotPotPlayer.Controls
         private void PlayModeButtonClick(object sender, RoutedEventArgs e)
         {
             MusicPlayer.TogglePlayMode();
+        }
+
+        private void SubtitleClick(object sender, RoutedEventArgs e)
+        {
+            var button = sender as Button;
+
+            var artists = MusicPlayer.CurrentPlaying.GetArtists().GetArtists();
+
+            var flyout = new MenuFlyout();
+            foreach (var a in artists)
+            {
+                var item = new MenuFlyoutItem
+                {
+                    Text = a,
+                };
+                item.Click += AlbumHelper.ArtistClick;
+                flyout.Items.Add(item);
+            }
+            var item2 = new MenuFlyoutItem
+            {
+                Text = MusicPlayer.CurrentPlaying.Album,
+                Tag = MusicPlayer.CurrentPlaying
+            };
+            item2.Click += AlbumHelper.AlbumInfoClick;
+            flyout.Items.Add(item2);
+            button.ContextFlyout = flyout;
+            button.ContextFlyout.ShowAt(button);
         }
     }
 }

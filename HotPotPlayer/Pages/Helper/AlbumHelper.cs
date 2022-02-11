@@ -8,7 +8,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Windows.Foundation;
 
 namespace HotPotPlayer.Pages.Helper
 {
@@ -42,7 +41,8 @@ namespace HotPotPlayer.Pages.Helper
 
         internal static void AlbumInfoClick(object sender, RoutedEventArgs e)
         {
-            var music = (MusicItem)((HyperlinkButton)sender).Tag;
+            var el = sender as FrameworkElement;
+            var music = el.Tag as MusicItem;
             MainWindow.NavigateTo("MusicSub.Album", music);
         }
 
