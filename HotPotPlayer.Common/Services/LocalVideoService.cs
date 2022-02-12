@@ -185,11 +185,10 @@ namespace HotPotPlayer.Services
 
         private bool CheckVideoLibraryHasUpdate(Realm _db)
         {
-            var currentFiles = GetVideoFilesFromLibrary().Select(c => new VideoItemDb
-            {
-                Source = c.FullName,
-                LastWriteTime = c.LastWriteTime.ToBinary()
-            });
+            var files = GetVideoFilesFromLibrary();
+            var (singleVideos, series) = GroupVideosToSeries(files);
+
+            var currentFiles = singleVideos.Videos.Concat(series.SelectMany(s => s.Videos)).Select(c => c.ToDb());
             var dbFiles = _db.All<VideoItemDb>().ToList();
 
             var exc = currentFiles.Except(dbFiles, new CustomEqComparer());
@@ -214,20 +213,23 @@ namespace HotPotPlayer.Services
 
         static bool IsSeries(SeriesItem s)
         {
-            var all = s.Videos.Select(s => s.Source.FullName).ToList();
-            var allCount = all.Select(s => s.Length).Distinct().ToList();
-            var th = (int)(all.Count * 0.2);
-            if (allCount.Count > th)
-            {
-                return false;
-            }
-            foreach (var item in s.Videos)
-            {
-                var dir = item.Source.Directory.Name;
-                var name = item.Source.Name;
-                if (name.Contains(dir)) return true;
-            }
-            return false;
+            var sign = s.Source.GetFiles("*.series");
+            return sign.Any();
+            //var all = s.Videos.Select(s => s.Source.FullName).ToList();
+            //var allCount = all.Select(s => s.Length).Distinct().ToList();
+            //var th = (int)(all.Count * 0.2);
+            //if (allCount.Count > th)
+            //{
+            //    return false;
+            //}
+            //foreach (var item in s.Videos)
+            //{
+            //    var dir = item.Source.Directory.Name;
+            //    var name = item.Source.Name;
+            //    var inter = new string(dir.Intersect(name).ToArray());
+            //    if (name.Contains(inter)) return true;
+            //}
+            //return true;
         }
 
         static bool HasDetected(string path, List<string> detectPath)
