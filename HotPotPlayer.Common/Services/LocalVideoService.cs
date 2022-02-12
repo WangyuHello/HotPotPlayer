@@ -134,6 +134,7 @@ namespace HotPotPlayer.Services
                 using var _db = Realm.GetInstance(dbFilePath);
                 var singleVideos_ = _db.All<SingleVideoItemsDb>().First().ToOrigin();
                 var series_ = _db.All<SeriesItemDb>().AsEnumerable().Select(s => s.ToOrigin()).ToList();
+                series_.Sort((a, b) => a.Title.CompareTo(b.Title));
                 var singleVideosGroup_ = GroupSingleVideosByYear(singleVideos_);
 
                 localVideoBackgroundWorker.ReportProgress((int)LocalVideoState.InitLoadingComplete, (singleVideosGroup_, series_));
