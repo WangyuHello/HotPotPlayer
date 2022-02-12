@@ -20,6 +20,7 @@ using HotPotPlayer.Models;
 using System.Collections.ObjectModel;
 using HotPotPlayer.Controls;
 using System.Text;
+using Microsoft.UI.Xaml.Media.Animation;
 
 // To learn more about WinUI, the WinUI project structure,
 // and more about our project templates, see: http://aka.ms/winui-project-info.
@@ -52,6 +53,13 @@ namespace HotPotPlayer.Pages
             set => Set(ref _isNonFirstLoading, value);
         }
 
+        private SeriesItem _selectedSeries;
+        public SeriesItem SelectedSeries
+        {
+            get => _selectedSeries;
+            set => Set(ref _selectedSeries, value);
+        }
+
         static App App => (App)Application.Current;
 
         private void VideoClick(object sender, RoutedEventArgs e)
@@ -68,7 +76,20 @@ namespace HotPotPlayer.Pages
         private void SeriesClick(object sender, RoutedEventArgs e)
         {
             var series = ((Button)sender).Tag as SeriesItem;
-            
+
+            SelectedSeries = series;
+
+            var ani = SeriesGridView.PrepareConnectedAnimation("forwardAnimation", series, "SeriesConnectedElement");
+            ani.Configuration = new BasicConnectedAnimationConfiguration();
+            ani.TryStart(SeriesOverlayTarget);
+
+            SeriesOverlayPopup.Visibility = Visibility.Visible;
+        }
+
+        private void SeriesPopupListClick(object sender, RoutedEventArgs e)
+        {
+            var video = ((Button)sender).Tag as VideoItem;
+            App.PlayVideo(video.Source);
         }
 
         bool IsFirstNavigate = true;
@@ -116,5 +137,19 @@ namespace HotPotPlayer.Pages
                 PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
             }
         }
+
+        private void SeriesOverlayTarget_Tapped(object sender, TappedRoutedEventArgs e)
+        {
+            e.Handled = true;
+        }
+
+        private async void SeriesOverlayPopup_Tapped(object sender, TappedRoutedEventArgs e)
+        {
+            var anim = ConnectedAnimationService.GetForCurrentView().PrepareToAnimate("backwardsAnimation", SeriesOverlayTarget);
+            anim.Configuration = new BasicConnectedAnimationConfiguration();
+            await SeriesGridView.TryStartConnectedAnimationAsync(anim, SelectedSeries, "SeriesConnectedElement");
+            SeriesOverlayPopup.Visibility = Visibility.Collapsed;
+        }
+
     }
 }

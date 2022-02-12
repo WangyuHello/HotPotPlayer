@@ -83,10 +83,14 @@
                             <ColumnDefinition Width="Auto" />
                             <ColumnDefinition Width="*" />
                             <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="Auto" />
                         </Grid.ColumnDefinitions>
                         <FontIcon FontFamily="Segoe Fluent Icons" Glyph="&#xE8B7;" />
                         <TextBlock Grid.Column="1" Margin="12,0" VerticalAlignment="Center">音乐库位置</TextBlock>
-                        <Button Grid.Column="3" Click="AddMusicLibrary">
+                        <Button Grid.Column="3" Click="ReloadMusicLibrary">
+                            <SymbolIcon Symbol="Refresh"/>
+                        </Button>
+                        <Button Grid.Column="4" Click="AddMusicLibrary">
                             <SymbolIcon Symbol="NewFolder"/>
                         </Button>
                     </Grid>
@@ -103,10 +107,14 @@
                             <ColumnDefinition Width="Auto" />
                             <ColumnDefinition Width="*" />
                             <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="Auto" />
                         </Grid.ColumnDefinitions>
                         <FontIcon FontFamily="Segoe Fluent Icons" Glyph="&#xE8B7;" />
                         <TextBlock Grid.Column="1" Margin="12,0" VerticalAlignment="Center">视频库位置</TextBlock>
-                        <Button Grid.Column="3" Click="AddVideoLibrary">
+                        <Button Grid.Column="3" Click="ReloadVideoLibrary">
+                            <SymbolIcon Symbol="Refresh"/>
+                        </Button>
+                        <Button Grid.Column="4" Click="AddVideoLibrary">
                             <SymbolIcon Symbol="NewFolder"/>
                         </Button>
                     </Grid>

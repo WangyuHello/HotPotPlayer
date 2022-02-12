@@ -147,7 +147,6 @@
             <Setter Property="Height" Value="40" />
         </Style>
 
-        <media2:AcrylicBrush x:Key="PopupBackground" TintOpacity="0.8" TintLuminosityOpacity="0.8" TintColor="LightGray" FallbackColor="SkyBlue" />
 
     </Page.Resources>
 
@@ -190,8 +189,6 @@
         </StackPanel>
 
         <Grid x:Name="AlbumOverlayPopup" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Visibility="Collapsed" Background="#00000000" Tapped="AlbumOverlayPopup_Tapped">
-                        
-            
             <Grid x:Name="AlbumOverlayTarget" Margin="0,-60,0,0" VerticalAlignment="Center" HorizontalAlignment="Center" Width="640" MinHeight="460" MaxHeight="560" CornerRadius="8" Background="{StaticResource PopupBackground}" Tapped="AlbumOverlayTarget_Tapped">
                 <animations:Implicit.HideAnimations>
                     <animations:OpacityAnimation Duration="0:0:0.45" From="1" To="0" />

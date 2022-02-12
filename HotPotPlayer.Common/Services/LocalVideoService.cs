@@ -121,6 +121,7 @@ namespace HotPotPlayer.Services
 
         private void LocalVideoBackgroundWorker_DoWork(object sender, DoWorkEventArgs e)
         {
+            //Task.Delay(200).Wait();
             var dbFilePath = DbFilePath;
             if (Config.VideoLibrary == null)
             {

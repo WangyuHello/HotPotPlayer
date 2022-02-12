@@ -228,11 +228,10 @@ namespace HotPotPlayer.Pages
 
         protected override DataTemplate SelectTemplateCore(object item, DependencyObject container)
         {
-            var music = (MusicItem)item;
             var listView = (ListView)ItemsControl.ItemsControlFromItemContainer(container);
 
             var list = listView.Items;
-            var ind = list.IndexOf(music);
+            var ind = list.IndexOf(item);
             if (IsOdd(ind))
             {
                 return OddTemplate;

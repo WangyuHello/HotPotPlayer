@@ -1,6 +1,7 @@
 ﻿<ResourceDictionary
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:media2="using:Microsoft.UI.Xaml.Media"
 >
 
     <SolidColorBrush x:Key="MainNavBackground" Color="#F1F3F6" />
@@ -11,4 +12,7 @@
     <SolidColorBrush x:Key="MainPlayBackground" Color="#6982F9" />
     <SolidColorBrush x:Key="MainPlayBackgroundPointOver" Color="#576CCF" />
     <SolidColorBrush x:Key="MainPlayBackgroundPressed" Color="#576CCF" />
+
+    <media2:AcrylicBrush x:Key="PopupBackground" TintOpacity="0.8" TintLuminosityOpacity="0.8" TintColor="LightGray" FallbackColor="SkyBlue" />
+
 </ResourceDictionary>

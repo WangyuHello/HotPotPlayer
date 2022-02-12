@@ -50,8 +50,9 @@ namespace HotPotPlayer.Pages
             return lib == null;
         }
 
-        App App => (App)Application.Current;
-        ConfigBase Config => App.Config;
+        static App App => (App)Application.Current;
+
+        static ConfigBase Config => App.Config;
 
         private bool _isVideoLibraryWarningVisible;
 
@@ -200,6 +201,16 @@ namespace HotPotPlayer.Pages
             var item = ((Button)sender).Tag as LibraryItem;
             VideoLibrary.Remove(item);
             Config.VideoLibrary = VideoLibrary.Select(s => s).ToList();
+        }
+
+        private void ReloadVideoLibrary(object sender, RoutedEventArgs e)
+        {
+            App.LocalVideoService.StartLoadLocalVideo();
+        }
+
+        private void ReloadMusicLibrary(object sender, RoutedEventArgs e)
+        {
+            App.LocalMusicService.StartLoadLocalMusic();
         }
     }
 }
