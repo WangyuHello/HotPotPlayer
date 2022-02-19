@@ -1,6 +1,4 @@
 ﻿using HotPotPlayer.Extensions;
-using Microsoft.UI.Xaml.Media;
-using Microsoft.UI.Xaml.Media.Imaging;
 using MongoDB.Bson;
 using Realms;
 using SixLabors.ImageSharp;
@@ -11,8 +9,6 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Windows.UI;
-using Color = Windows.UI.Color;
 
 namespace HotPotPlayer.Models
 {

@@ -35,7 +35,7 @@ namespace HotPotPlayer.Test
             {
                 new LibraryItem
                 {
-                    Path = @"D:\Music",
+                    Path = @"C:\Users\wangyu\Desktop\UITest\TestMusic",
                     IsSystemLibrary = true
                 }
             };

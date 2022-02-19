@@ -14,8 +14,9 @@
     <UserControl.Resources>
         <convs:SliderThumbConverter x:Key="SliderThumbConverter" TotalTime="{x:Bind MusicPlayer.CurrentPlaying.Duration, Mode=OneWay}"/>
         <convs:SliderVolumeConverter x:Key="SliderVolumeConverter" />
+        <convs:ColorConverter x:Key="ColorConverter" />
 
-        <media:AcrylicBrush x:Key="PlayBarBackground" TintOpacity="0.6" TintLuminosityOpacity="0.2" TintColor="{x:Bind MusicPlayer.CurrentPlaying.MainColor, Mode=OneWay}" FallbackColor="SkyBlue" />
+        <media:AcrylicBrush x:Key="PlayBarBackground" TintOpacity="0.6" TintLuminosityOpacity="0.2" TintColor="{x:Bind MusicPlayer.CurrentPlaying.MainColor, Mode=OneWay, Converter={StaticResource ColorConverter}}" FallbackColor="SkyBlue" />
 
         <DataTemplate x:Key="PlayBarListTemplate" x:DataType="model:MusicItem">
             <Grid>

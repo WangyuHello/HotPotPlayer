@@ -1,8 +1,5 @@
 ﻿using HotPotPlayer.Extensions;
 using HotPotPlayer.Models;
-using Microsoft.UI;
-using Microsoft.UI.Xaml;
-using Microsoft.UI.Xaml.Media.Imaging;
 using Realms;
 using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.PixelFormats;
@@ -43,11 +40,9 @@ namespace HotPotPlayer.Services
 
         //FileSystemWatcher _fsw;
 
-        List<LibraryItem> GetMusicLibrary => Config.MusicLibrary;
-
         static readonly List<string> SupportedExt = new() { ".flac", ".wav", ".m4a", ".mp3" };
 
-        static List<MusicItem> GetAllMusicItemAsync(IEnumerable<FileInfo> files)
+        static List<MusicItem> GetAllMusicItem(IEnumerable<FileInfo> files)
         {
             var r = files.Select(f =>
             {
@@ -145,8 +140,12 @@ namespace HotPotPlayer.Services
 
         readonly MD5 md5 = MD5.Create();
 
-        (string, Windows.UI.Color) WriteCoverToLocalCache(MusicItem m)
+        (string, Color) WriteCoverToLocalCache(MusicItem m)
         {
+            if (!string.IsNullOrEmpty(m.Cover))
+            {
+                return (m.Cover, m.MainColor);
+            }
             var baseDir = Config.LocalFolder;
             var albumCoverDir = Path.Combine(baseDir, "Cover");
             if (!Directory.Exists(albumCoverDir))
@@ -172,10 +171,10 @@ namespace HotPotPlayer.Services
 
                 return (albumCoverName, color);
             }
-            return (string.Empty, Colors.White);
+            return (string.Empty, Color.White);
         }
 
-        private static Windows.UI.Color GetMainColor(Image<Rgba32> image)
+        private static Color GetMainColor(Image<Rgba32> image)
         {
             var wQua = image.Width >> 2;
             var hQua = image.Height >> 2;
@@ -190,7 +189,7 @@ namespace HotPotPlayer.Services
             int r = (pix.R + pix1.R + pix2.R + pix3.R + pix4.R) / 5;
             int g = (pix.G + pix1.G + pix2.G + pix3.G + pix4.G) / 5;
             int b = (pix.B + pix1.B + pix2.B + pix3.B + pix4.B) / 5;
-            return Windows.UI.Color.FromArgb((byte)a, (byte)r, (byte)g, (byte)b);
+            return Color.FromRgba((byte)r, (byte)g, (byte)b, (byte)a);
         }
 
         public void StartLoadLocalMusic()
@@ -271,14 +270,16 @@ namespace HotPotPlayer.Services
         void LocalMusicBackgroundWorker_DoWork(object sender, DoWorkEventArgs e)
         {
             //检查是否有缓存好的数据库
-            var libs = GetMusicLibrary;
+            var libs = Config.MusicLibrary;
             if (libs == null)
             {
                 localMusicBackgroundWorker.ReportProgress((int)LocalMusicState.NoLibraryAccess);
                 return;
             }
             var playListFiles = GetAllPlaylists();
-            bool skipScanAllMusic = false;
+
+            IEnumerable<string> removeList = null;
+            IEnumerable<FileInfo> addOrUpdateList = null;
 
             if (File.Exists(DbPath))
             {
@@ -295,17 +296,16 @@ namespace HotPotPlayer.Services
 
                 var files2 = GetMusicFilesFromLibrary(libs.Select(l => l.Path).ToList());
 
-                var musicHasUpdate = CheckMusicHasUpdate(files2);
+                (removeList, addOrUpdateList) = CheckMusicHasUpdate(files2);
                 var playListHasUpdate = CheckPlayListHasUpdate(playListList, playListFiles);
 
-                if (musicHasUpdate)
+                if (addOrUpdateList.Any() || playListHasUpdate)
                 {
                     localMusicBackgroundWorker.ReportProgress((int)LocalMusicState.NonFirstLoading);
                 }
-                else if (playListHasUpdate)
+                else if (removeList.Any())
                 {
-                    localMusicBackgroundWorker.ReportProgress((int)LocalMusicState.NonFirstLoading);
-                    skipScanAllMusic = true;
+
                 }
                 else
                 {
@@ -320,11 +320,70 @@ namespace HotPotPlayer.Services
             }
 
             _db ??= Realm.GetInstance(DbPath);
-            List<AlbumGroup> groups = skipScanAllMusic ? null : ScanAllMusic(libs.Select(l => l.Path).ToList());
+            List<AlbumGroup> groups = null;
+            if (addOrUpdateList != null && addOrUpdateList.Any())
+            {
+                groups = AddOrUpdateNewMusicAndSave(addOrUpdateList);
+            }
+            else if(removeList != null && removeList.Any())
+            {
+                groups = RemoveMusicAndSave(removeList);
+            }
+            else
+            {
+                groups = ScanAllMusicAndSave(libs.Select(l => l.Path).ToList());
+            }
             List<PlayListItem> playLists = ScanAllPlayList(playListFiles);
 
             e.Result = (groups, playLists);
             _db?.Dispose();
+        }
+
+        private List<AlbumGroup> RemoveMusicAndSave(IEnumerable<string> removeList)
+        {
+            _db.Write(() =>
+            {
+                foreach (var item in removeList)
+                {
+                    _db.Remove(_db.Find<MusicItemDb>(item));
+                }
+            });
+
+            var allmusic = _db.All<MusicItemDb>().AsEnumerable().Select(d => d.ToOrigin());
+            var albums = GroupAllMusicIntoAlbum(allmusic);
+
+            _db.Write(() =>
+            {
+                var existAlbum = _db.All<AlbumItemDb>();
+                var existMusic = _db.All<MusicItemDb>();
+                _db.RemoveRange(existAlbum);
+                _db.RemoveRange(existMusic);
+                _db.Add(albums.Select(a => a.ToDb()));
+            });
+
+            var groups = GroupAllAlbumByYear(albums);
+            return groups;
+        }
+
+        private List<AlbumGroup> AddOrUpdateNewMusicAndSave(IEnumerable<FileInfo> addOrUpdateList)
+        {
+            List<AlbumGroup> groups;
+            var addOrUpdateMusic = GetAllMusicItem(addOrUpdateList);
+            _db.Write(() =>
+            {
+                _db.Add(addOrUpdateMusic.Select(a => a.ToDb()), update: true);
+            });
+
+            var allmusic = _db.All<MusicItemDb>().AsEnumerable().Select(d => d.ToOrigin());
+            var albums = GroupAllMusicIntoAlbum(allmusic);
+
+            _db.Write(() =>
+            {
+                _db.Add(albums.Select(a => a.ToDb()), update: true);
+            });
+
+            groups = GroupAllAlbumByYear(albums);
+            return groups;
         }
 
         sealed class CustomEqComparer : EqualityComparer<MusicItemDb>
@@ -342,7 +401,7 @@ namespace HotPotPlayer.Services
             }
         }
 
-        private bool CheckMusicHasUpdate(List<FileInfo> files)
+        private (IEnumerable<string> removeList, IEnumerable<FileInfo> addOrUpdateList) CheckMusicHasUpdate(List<FileInfo> files)
         {
             var currentFiles = files.Select(c => new MusicItemDb
             {
@@ -351,9 +410,14 @@ namespace HotPotPlayer.Services
             });
             var dbFiles = _db.All<MusicItemDb>().ToList();
 
-            var exc = currentFiles.Except(dbFiles, new CustomEqComparer());
-            var exc2 = exc.Where(d => Directory.Exists(Path.GetPathRoot(d.Source)));
-            return exc2.Any();
+            var newFiles = currentFiles.Except(dbFiles, new CustomEqComparer());
+            var exc2 = newFiles.Where(d => Directory.Exists(Path.GetPathRoot(d.Source)))
+                .Select(s => new FileInfo(s.Source));
+
+            var removeFileKeys = dbFiles.Except(currentFiles, new CustomEqComparer())
+                .Select(d => d.Source);
+
+            return (removeFileKeys, exc2);
         }
 
         private List<PlayListItem> ScanAllPlayList(List<FileInfo> playListsFile)
@@ -368,10 +432,10 @@ namespace HotPotPlayer.Services
             return playLists;
         }
 
-        private List<AlbumGroup> ScanAllMusic(List<string> libs)
+        private List<AlbumGroup> ScanAllMusicAndSave(List<string> libs)
         {
             var files = GetMusicFilesFromLibrary(libs);
-            var allmusic = GetAllMusicItemAsync(files);
+            var allmusic = GetAllMusicItem(files);
             var albums = GroupAllMusicIntoAlbum(allmusic);
             var groups = GroupAllAlbumByYear(albums);
 

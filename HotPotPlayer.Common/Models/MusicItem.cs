@@ -1,14 +1,13 @@
 ﻿using HotPotPlayer.Extensions;
-using Microsoft.UI.Xaml;
 using MongoDB.Bson;
 using Realms;
+using SixLabors.ImageSharp;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Windows.UI;
 
 namespace HotPotPlayer.Models
 {

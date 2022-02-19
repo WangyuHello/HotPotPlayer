@@ -1,9 +1,10 @@
-﻿using System;
+﻿using SixLabors.ImageSharp;
+using SixLabors.ImageSharp.PixelFormats;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Windows.UI;
 
 namespace HotPotPlayer.Extensions
 {
@@ -11,7 +12,8 @@ namespace HotPotPlayer.Extensions
     {
         public static int ToInt(this Color color)
         {
-            return (color.A << 24) + (color.R << 16) + (color.G << 8) + color.B;
+            var pix = color.ToPixel<Bgra32>();
+            return (pix.A << 24) + (pix.R << 16) + (pix.G << 8) + pix.B;
         }
 
         public static Color ToColor(this int color)
@@ -20,7 +22,7 @@ namespace HotPotPlayer.Extensions
             byte r = (byte)((color >> 16) & 0xFF);
             byte g = (byte)((color >> 8) & 0xFF);
             byte b = (byte)(color & 0xFF);
-            return Color.FromArgb(a, r, g, b);
+            return Color.FromRgba(r, g, b, a);
         }
     }
 }
