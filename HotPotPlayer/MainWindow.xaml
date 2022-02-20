@@ -17,7 +17,18 @@
                 <ColumnDefinition Width="60" />
                 <ColumnDefinition Width="*" />
             </Grid.ColumnDefinitions>
-            <controls:MainSidebar IsBackEnable="{x:Bind MainFrame.CanGoBack, Mode=OneWay}" SelectedPageName="{x:Bind SelectedPageName, Mode=TwoWay}" SelectedPageNameChanged="MainSidebar_SelectedPageNameChanged" OnBackClick="MainSidebar_OnBackClick"/>
+            <controls:MainSidebar 
+                IsBackEnable="{x:Bind MainFrame.CanGoBack, Mode=OneWay}" 
+                SelectedPageName="{x:Bind SelectedPageName, Mode=TwoWay}" 
+                SelectedPageNameChanged="MainSidebar_SelectedPageNameChanged" 
+                OnBackClick="MainSidebar_OnBackClick">
+                
+                <animations:Implicit.ShowAnimations>
+                    <animations:OpacityAnimation Duration="0:0:1" From="0.0" To="1.0" Delay="0:0:0.5"/>
+                    <animations:TranslationAnimation Duration="0:0:1" From="-60,0,0" To="0,0,0" Delay="0:0:0.5" EasingMode="EaseOut"/>
+                </animations:Implicit.ShowAnimations>
+                
+            </controls:MainSidebar>
             <Frame x:Name="MainFrame" Margin="0,28,0,0" Grid.Column="1" />
         </Grid>
 
