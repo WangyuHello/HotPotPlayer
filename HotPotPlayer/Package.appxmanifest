@@ -42,11 +42,35 @@
       </uap:VisualElements>
       <Extensions>
         <uap:Extension Category="windows.fileTypeAssociation">
-          <uap:FileTypeAssociation Name="hotpotplayer">
+          <uap:FileTypeAssociation Name="hotpotplayer.mkv">
             <uap:SupportedFileTypes>
               <uap:FileType>.mkv</uap:FileType>
             </uap:SupportedFileTypes>
-            <uap:DisplayName>HotPotPlayer</uap:DisplayName>
+            <uap:DisplayName>Matroska文件</uap:DisplayName>
+          </uap:FileTypeAssociation>
+        </uap:Extension>
+        <uap:Extension Category="windows.fileTypeAssociation">
+          <uap:FileTypeAssociation Name="hotpotplayer.flac">
+            <uap:SupportedFileTypes>
+              <uap:FileType>.flac</uap:FileType>
+            </uap:SupportedFileTypes>
+            <uap:DisplayName>FLAC文件</uap:DisplayName>
+          </uap:FileTypeAssociation>
+        </uap:Extension>
+        <uap:Extension Category="windows.fileTypeAssociation">
+          <uap:FileTypeAssociation Name="hotpotplayer.mp3">
+            <uap:SupportedFileTypes>
+              <uap:FileType>.mp3</uap:FileType>
+            </uap:SupportedFileTypes>
+            <uap:DisplayName>MP3文件</uap:DisplayName>
+          </uap:FileTypeAssociation>
+        </uap:Extension>
+        <uap:Extension Category="windows.fileTypeAssociation">
+          <uap:FileTypeAssociation Name="hotpotplayer.m4a">
+            <uap:SupportedFileTypes>
+              <uap:FileType>.m4a</uap:FileType>
+            </uap:SupportedFileTypes>
+            <uap:DisplayName>M4a文件</uap:DisplayName>
           </uap:FileTypeAssociation>
         </uap:Extension>
       </Extensions>

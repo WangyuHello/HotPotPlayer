@@ -57,13 +57,21 @@ namespace HotPotPlayer
             //tray.TrayIconLeftMouseDown += Tray_TrayIconLeftMouseDown;
         }
 
-        private static void MediaInit()
+        private void MediaInit()
         {
             var app = (App)Application.Current;
             var initMedia = app.InitMediaFile;
             if (initMedia != null)
             {
-                app.PlayVideo(initMedia);
+                if (LocalMusicService.SupportedExt.Contains(initMedia.Extension))
+                {
+                    var music = LocalMusicService.FileToMusic(initMedia);
+                    MusicPlayer.PlayNext(music);
+                }
+                else
+                {
+                    app.PlayVideo(initMedia);
+                }
             }
         }
 

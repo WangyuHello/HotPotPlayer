@@ -40,33 +40,33 @@ namespace HotPotPlayer.Services
         public event Action OnNoLibraryAccess;
 
 
-        static readonly List<string> SupportedExt = new() { ".flac", ".wav", ".m4a", ".mp3" };
+        public static readonly List<string> SupportedExt = new() { ".flac", ".wav", ".m4a", ".mp3" };
 
         static List<MusicItem> GetAllMusicItem(IEnumerable<FileInfo> files)
         {
-            var r = files.Select(f =>
+            return files.Select(FileToMusic).ToList();
+        }
+
+        public static MusicItem FileToMusic(FileInfo f)
+        {
+            using var tfile = TagLib.File.Create(f.FullName);
+            //var duration = await GetMusicDurationAsync(f);
+            var item = new MusicItem
             {
-                using var tfile = TagLib.File.Create(f.FullName);
-                //var duration = await GetMusicDurationAsync(f);
-                var item = new MusicItem
-                {
-                    Source = f,
-                    Title = tfile.Tag.Title,
-                    Artists = tfile.Tag.Performers,
-                    Album = tfile.Tag.Album,
-                    Year = (int)tfile.Tag.Year,
-                    //Duration = duration,
-                    Duration = tfile.Properties.Duration,
-                    Track = (int)tfile.Tag.Track,
-                    LastWriteTime = f.LastWriteTime,
-                    AlbumArtists = tfile.Tag.AlbumArtists,
-                    Disc = (int)tfile.Tag.Disc,
-                };
+                Source = f,
+                Title = tfile.Tag.Title,
+                Artists = tfile.Tag.Performers,
+                Album = tfile.Tag.Album,
+                Year = (int)tfile.Tag.Year,
+                //Duration = duration,
+                Duration = tfile.Properties.Duration,
+                Track = (int)tfile.Tag.Track,
+                LastWriteTime = f.LastWriteTime,
+                AlbumArtists = tfile.Tag.AlbumArtists,
+                Disc = (int)tfile.Tag.Disc,
+            };
 
-                return item;
-            }).ToList();
-
-            return r;
+            return item;
         }
 
         static async Task<TimeSpan> GetMusicDurationAsync(FileInfo f)
@@ -196,8 +196,8 @@ namespace HotPotPlayer.Services
             Worker.RunWorkerAsync();
         }
 
-        public List<AlbumGroup> LocalAlbums;
-        public List<PlayListItem> LocalPlayLists;
+        public List<AlbumGroup> LocalAlbums = new();
+        public List<PlayListItem> LocalPlayLists = new();
 
         private void ProgressChanged(object sender, ProgressChangedEventArgs e)
         {

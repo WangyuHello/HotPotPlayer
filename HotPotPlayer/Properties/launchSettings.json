@@ -6,6 +6,10 @@
     "VideoInit": {
       "commandName": "MsixPackage",
       "commandLineArgs": "\"D:\\视频\\【Animenz】Bios（10周年版）-_罪恶王冠_OST.459129031.mkv\""
+    },
+    "MusicInit": {
+      "commandName": "MsixPackage",
+      "commandLineArgs": "\"D:\\Music\\01_01_三原色_YOASOBI.flac\""
     }
   }
 }

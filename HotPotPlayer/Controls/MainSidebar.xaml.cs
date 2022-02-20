@@ -48,13 +48,14 @@ namespace HotPotPlayer.Controls
         private static void SelectedPageNameCallback(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
             var sidbar = (MainSidebar)d;
-            var button = e.NewValue switch
+            var newPageName = e.NewValue as string;
+            var button = newPageName switch
             {
-                "Music" => sidbar.Music,
-                "Video" => sidbar.Video,
-                "Bilibili" => sidbar.Bilibili,
-                "CloudMusic" => sidbar.CloudMusic,
-                "Setting" => sidbar.Setting,
+                string n when n.StartsWith("Music") => sidbar.Music,
+                string n when n.StartsWith("Video") => sidbar.Video,
+                string n when n.StartsWith("Bilibili") => sidbar.Bilibili,
+                string n when n.StartsWith("CloudMusic") => sidbar.CloudMusic,
+                string n when n.StartsWith("Setting") => sidbar.Setting,
                 _ => null,
             };
             if (button != null)
