@@ -1,5 +1,6 @@
 ﻿using HotPotPlayer.Extensions;
 using HotPotPlayer.Models;
+using Microsoft.UI.Dispatching;
 using Realms;
 using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.PixelFormats;
@@ -38,7 +39,6 @@ namespace HotPotPlayer.Services
         public event Action OnLoadingEnded;
         public event Action OnNoLibraryAccess;
 
-        //FileSystemWatcher _fsw;
 
         static readonly List<string> SupportedExt = new() { ".flac", ".wav", ".m4a", ".mp3" };
 
@@ -188,6 +188,7 @@ namespace HotPotPlayer.Services
 
         public void StartLoadLocalMusic()
         {
+            UIQueue ??= DispatcherQueue.GetForCurrentThread();
             if (Worker.IsBusy)
             {
                 return;
@@ -296,6 +297,7 @@ namespace HotPotPlayer.Services
                 else
                 {
                     _db?.Dispose();
+                    InitFileSystemWatcher();
                     return;
                 }
             }
@@ -323,6 +325,8 @@ namespace HotPotPlayer.Services
 
             e.Result = (groups, playLists);
             _db?.Dispose();
+
+            InitFileSystemWatcher();
         }
 
         private List<AlbumGroup> RemoveMusicAndSave(IEnumerable<string> removeList)
@@ -365,6 +369,8 @@ namespace HotPotPlayer.Services
 
             _db.Write(() =>
             {
+                var existAlbum = _db.All<AlbumItemDb>();
+                _db.RemoveRange(existAlbum);
                 _db.Add(albums.Select(a => a.ToDb()), update: true);
             });
 
@@ -456,6 +462,86 @@ namespace HotPotPlayer.Services
             }
         }
 
+        BackgroundWorker _watcherWorker;
+        BackgroundWorker WatcherWorker
+        {
+            get
+            {
+                if (_watcherWorker == null)
+                {
+                    _watcherWorker = new BackgroundWorker
+                    {
+                        WorkerSupportsCancellation = true,
+                        WorkerReportsProgress = true
+                    };
+                    _watcherWorker.DoWork += WatcherDoWork;
+                    _watcherWorker.ProgressChanged += WatcherProgressChanged;
+                    _watcherWorker.RunWorkerCompleted += WatcherRunWorkerCompleted;
+                }
+                return _watcherWorker;
+            }
+        }
+
+        DispatcherQueue UIQueue;
+
+        private void WatcherProgressChanged(object sender, ProgressChangedEventArgs e)
+        {
+            var state = (LocalMusicState)e.ProgressPercentage;
+            switch (state)
+            {
+                case LocalMusicState.NonFirstLoading:
+                    UIQueue?.TryEnqueue(() =>
+                    {
+                        OnNonFirstLoadingStarted?.Invoke();
+                    });
+                    break;
+                default:
+                    break;
+            }
+        }
+
+        private void WatcherRunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
+        {
+            if (e.Result == null)
+            {
+                return;
+            }
+            var (albumGroup, playLists) = ((List<AlbumGroup> a, List<PlayListItem> b))e.Result;
+            LocalAlbums = albumGroup;
+            LocalPlayLists = playLists;
+            UIQueue?.TryEnqueue(() =>
+            {
+                OnLoadingEnded?.Invoke();
+                OnAlbumGroupChanged?.Invoke(albumGroup, playLists);
+            });
+        }
+
+        private void WatcherDoWork(object sender, DoWorkEventArgs e)
+        {
+            WatcherWorker.ReportProgress((int)LocalMusicState.NonFirstLoading);
+
+            _db = Realm.GetInstance(DbPath);
+            var files2 = GetMusicFilesFromLibrary(Config.MusicLibrary.Select(l => l.Path).ToList());
+
+            var (removeList, addOrUpdateList) = CheckMusicHasUpdate(files2);
+
+            List<AlbumGroup> groups = null;
+            if (addOrUpdateList != null && addOrUpdateList.Any())
+            {
+                groups = AddOrUpdateNewMusicAndSave(addOrUpdateList);
+            }
+            else if (removeList != null && removeList.Any())
+            {
+                groups = RemoveMusicAndSave(removeList);
+            }
+
+            var playListFiles = GetAllPlaylists();
+            List<PlayListItem> playLists = ScanAllPlayList(playListFiles);
+
+            e.Result = (groups, playLists);
+            _db?.Dispose();
+        }
+
         private static bool CheckPlayListHasUpdate(List<PlayListItem> stored, List<FileInfo> current)
         {
             foreach (var s in stored)
@@ -516,37 +602,51 @@ namespace HotPotPlayer.Services
             return r;
         }
 
-        //private void InitFileSystemWatcher()
-        //{
-        //    _fsw = new FileSystemWatcher
-        //    {
-        //        Path = GetMusicLibrary.First(),
-        //        IncludeSubdirectories = true,
-        //        Filter = "*.flac|*.wav|*.m4a|*.mp3",
-        //        NotifyFilter = NotifyFilters.FileName | NotifyFilters.DirectoryName
-        //    };
+        List<FileSystemWatcher> _watchers;
 
-        //    _fsw.Created += MusicCreated;
-        //    _fsw.Renamed += MusicRenamed;
-        //}
+        private void InitFileSystemWatcher()
+        {
+            _watchers = Config.MusicLibrary.Select(l =>
+            {
+                var fsw = new FileSystemWatcher
+                {
+                    Path = l.Path,
+                    IncludeSubdirectories = true,
+                    NotifyFilter = NotifyFilters.FileName | NotifyFilters.DirectoryName
+                };
 
-        //private void MusicRenamed(object sender, RenamedEventArgs e)
-        //{
-        //    var old = e.OldFullPath;
-        //    var newPath = e.FullPath;
-        //    using var db = Realm.GetInstance(GetDbPath());
-        //    db.Write(() =>
-        //    {
-        //        var music = db.All<MusicItemDb>().Where(m => m.File == old).First();
-        //        music.File = newPath;
-        //        music.Source = newPath;
-        //    });
-        //}
+                fsw.Created += WatcherMusicCreated;
+                fsw.Renamed += WatcherMusicRenamed;
+                fsw.Deleted += WatcherMusicDeleted;
 
-        //private void MusicCreated(object sender, FileSystemEventArgs e)
-        //{
-            
-        //}
+                fsw.EnableRaisingEvents = true;
+                return fsw;
+            }).ToList();
+        }
+
+        private void WatcherMusicDeleted(object sender, FileSystemEventArgs e)
+        {
+            if (!WatcherWorker.IsBusy)
+            {
+                WatcherWorker.RunWorkerAsync();
+            }
+        }
+
+        private void WatcherMusicRenamed(object sender, RenamedEventArgs e)
+        {
+            if (!WatcherWorker.IsBusy)
+            {
+                WatcherWorker.RunWorkerAsync();
+            }
+        }
+
+        private void WatcherMusicCreated(object sender, FileSystemEventArgs e)
+        {
+            if (!WatcherWorker.IsBusy)
+            {
+                WatcherWorker.RunWorkerAsync();
+            }
+        }
 
         List<AlbumItem> QueryArtistAlbum(string artistName)
         {
