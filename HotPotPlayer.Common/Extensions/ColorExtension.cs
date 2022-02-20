@@ -24,5 +24,23 @@ namespace HotPotPlayer.Extensions
             byte b = (byte)(color & 0xFF);
             return Color.FromRgba(r, g, b, a);
         }
+
+        public static Color GetMainColor(this Image<Rgba32> image)
+        {
+            var wQua = image.Width >> 2;
+            var hQua = image.Height >> 2;
+            var centerX = image.Width >> 1;
+            var centerY = image.Height >> 1;
+            var pix = image[centerX, centerY];
+            var pix1 = image[wQua, hQua];
+            var pix2 = image[3 * wQua, hQua];
+            var pix3 = image[wQua, 3 * hQua];
+            var pix4 = image[3 * wQua, 3 * hQua];
+            int a = (pix.A + pix1.A + pix2.A + pix3.A + pix4.A) / 5;
+            int r = (pix.R + pix1.R + pix2.R + pix3.R + pix4.R) / 5;
+            int g = (pix.G + pix1.G + pix2.G + pix3.G + pix4.G) / 5;
+            int b = (pix.B + pix1.B + pix2.B + pix3.B + pix4.B) / 5;
+            return Color.FromRgba((byte)r, (byte)g, (byte)b, (byte)a);
+        }
     }
 }

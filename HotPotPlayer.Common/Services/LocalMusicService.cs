@@ -138,7 +138,25 @@ namespace HotPotPlayer.Services
             return r;
         }
 
-        readonly MD5 md5 = MD5.Create();
+        MD5 _md5;
+        MD5 Md5 => _md5 ??= MD5.Create();
+
+        string _albumCoverDir;
+        string AlbumCoverDir
+        {
+            get
+            {
+                if (string.IsNullOrEmpty(_albumCoverDir))
+                {
+                    _albumCoverDir = Path.Combine(Config.LocalFolder, "Cover");
+                    if (!Directory.Exists(_albumCoverDir))
+                    {
+                        Directory.CreateDirectory(_albumCoverDir);
+                    }
+                }
+                return _albumCoverDir;
+            }
+        }
 
         (string, Color) WriteCoverToLocalCache(MusicItem m)
         {
@@ -146,27 +164,21 @@ namespace HotPotPlayer.Services
             {
                 return (m.Cover, m.MainColor);
             }
-            var baseDir = Config.LocalFolder;
-            var albumCoverDir = Path.Combine(baseDir, "Cover");
-            if (!Directory.Exists(albumCoverDir))
-            {
-                Directory.CreateDirectory(albumCoverDir);
-            }
-
+         
             var tag = TagLib.File.Create(m.Source.FullName);
             Span<byte> binary = tag.Tag.Pictures?.FirstOrDefault()?.Data?.Data;
 
             if (binary != null && binary.Length != 0)
             {
-                var buffer = md5.ComputeHash(binary.ToArray());
+                var buffer = Md5.ComputeHash(binary.ToArray());
                 var hashName = Convert.ToHexString(buffer);
-                var albumCoverName = Path.Combine(albumCoverDir, hashName);
+                var albumCoverName = Path.Combine(AlbumCoverDir, hashName);
 
                 using var image = Image.Load<Rgba32>(binary);
                 var width = image.Width;
                 var height = image.Height;
                 image.Mutate(x => x.Resize(400, 400*height/width));
-                var color = GetMainColor(image);
+                var color = image.GetMainColor();
                 image.SaveAsPng(albumCoverName);
 
                 return (albumCoverName, color);
@@ -174,45 +186,19 @@ namespace HotPotPlayer.Services
             return (string.Empty, Color.White);
         }
 
-        private static Color GetMainColor(Image<Rgba32> image)
-        {
-            var wQua = image.Width >> 2;
-            var hQua = image.Height >> 2;
-            var centerX = image.Width >> 1;
-            var centerY = image.Height >> 1;
-            var pix = image[centerX, centerY];
-            var pix1 = image[wQua, hQua];
-            var pix2 = image[3*wQua, hQua];
-            var pix3 = image[wQua, 3*hQua];
-            var pix4 = image[3*wQua, 3* hQua];
-            int a = (pix.A + pix1.A + pix2.A + pix3.A + pix4.A) / 5;
-            int r = (pix.R + pix1.R + pix2.R + pix3.R + pix4.R) / 5;
-            int g = (pix.G + pix1.G + pix2.G + pix3.G + pix4.G) / 5;
-            int b = (pix.B + pix1.B + pix2.B + pix3.B + pix4.B) / 5;
-            return Color.FromRgba((byte)r, (byte)g, (byte)b, (byte)a);
-        }
-
         public void StartLoadLocalMusic()
         {
-            localMusicBackgroundWorker = new BackgroundWorker
-            {
-                WorkerSupportsCancellation = true,
-                WorkerReportsProgress = true
-            };
-            localMusicBackgroundWorker.DoWork += LocalMusicBackgroundWorker_DoWork;
-            localMusicBackgroundWorker.ProgressChanged += LocalMusicBackgroundWorker_ProgressChanged;
-            localMusicBackgroundWorker.RunWorkerCompleted += LocalMusicBackgroundWorker_RunWorkerCompleted;
-            if (localMusicBackgroundWorker.IsBusy)
+            if (Worker.IsBusy)
             {
                 return;
             }
-            localMusicBackgroundWorker.RunWorkerAsync();
+            Worker.RunWorkerAsync();
         }
 
         public List<AlbumGroup> LocalAlbums;
         public List<PlayListItem> LocalPlayLists;
 
-        private void LocalMusicBackgroundWorker_ProgressChanged(object sender, ProgressChangedEventArgs e)
+        private void ProgressChanged(object sender, ProgressChangedEventArgs e)
         {
             var state = (LocalMusicState)e.ProgressPercentage;
             switch (state)
@@ -240,7 +226,7 @@ namespace HotPotPlayer.Services
             }
         }
 
-        void LocalMusicBackgroundWorker_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
+        void RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
         {
             OnLoadingEnded?.Invoke();
             if (e.Result == null)
@@ -267,13 +253,13 @@ namespace HotPotPlayer.Services
 
         Realm _db;
 
-        void LocalMusicBackgroundWorker_DoWork(object sender, DoWorkEventArgs e)
+        void DoWork(object sender, DoWorkEventArgs e)
         {
             //检查是否有缓存好的数据库
             var libs = Config.MusicLibrary;
             if (libs == null)
             {
-                localMusicBackgroundWorker.ReportProgress((int)LocalMusicState.NoLibraryAccess);
+                Worker.ReportProgress((int)LocalMusicState.NoLibraryAccess);
                 return;
             }
             var playListFiles = GetAllPlaylists();
@@ -292,7 +278,7 @@ namespace HotPotPlayer.Services
 
                 var groupsDb = GroupAllAlbumByYear(albumList_);
 
-                localMusicBackgroundWorker.ReportProgress((int)LocalMusicState.InitLoadingComplete, (groupsDb, playListList));
+                Worker.ReportProgress((int)LocalMusicState.InitLoadingComplete, (groupsDb, playListList));
 
                 var files2 = GetMusicFilesFromLibrary(libs.Select(l => l.Path).ToList());
 
@@ -301,7 +287,7 @@ namespace HotPotPlayer.Services
 
                 if (addOrUpdateList.Any() || playListHasUpdate)
                 {
-                    localMusicBackgroundWorker.ReportProgress((int)LocalMusicState.NonFirstLoading);
+                    Worker.ReportProgress((int)LocalMusicState.NonFirstLoading);
                 }
                 else if (removeList.Any())
                 {
@@ -316,7 +302,7 @@ namespace HotPotPlayer.Services
             else
             {
                 //如果没有返回空集，并开始后台线程扫描
-                localMusicBackgroundWorker.ReportProgress((int)LocalMusicState.FirstLoading);
+                Worker.ReportProgress((int)LocalMusicState.FirstLoading);
             }
 
             _db ??= Realm.GetInstance(DbPath);
@@ -450,9 +436,25 @@ namespace HotPotPlayer.Services
             return groups;
         }
 
-        BackgroundWorker localMusicBackgroundWorker;
-
-
+        BackgroundWorker _worker;
+        BackgroundWorker Worker
+        {
+            get
+            {
+                if (_worker == null)
+                {
+                    _worker = new BackgroundWorker
+                    {
+                        WorkerSupportsCancellation = true,
+                        WorkerReportsProgress = true
+                    };
+                    _worker.DoWork += DoWork;
+                    _worker.ProgressChanged += ProgressChanged;
+                    _worker.RunWorkerCompleted += RunWorkerCompleted;
+                }
+                return _worker;
+            }
+        }
 
         private static bool CheckPlayListHasUpdate(List<PlayListItem> stored, List<FileInfo> current)
         {
@@ -570,7 +572,7 @@ namespace HotPotPlayer.Services
 
         public override void Dispose()
         {
-            localMusicBackgroundWorker?.Dispose();
+            Worker?.Dispose();
             _db?.Dispose();
             //_fsw?.Dispose();
         }
