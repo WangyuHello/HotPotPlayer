@@ -437,6 +437,19 @@ namespace HotPotPlayer.Services
             }
         }
 
+        public void ShowPlayBar()
+        {
+            if (CurrentPlaying != null)
+            {
+                IsPlayBarVisible = true;
+            }
+        }
+
+        public void HidePlayBar()
+        {
+            IsPlayBarVisible = false;
+        }
+
         public override void Dispose()
         {
             _playerStarter?.Dispose();

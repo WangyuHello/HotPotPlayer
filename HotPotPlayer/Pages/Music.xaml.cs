@@ -111,6 +111,7 @@ namespace HotPotPlayer.Pages
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
             base.OnNavigatedTo(e);
+
             if (IsFirstNavigate)
             {
                 IsFirstNavigate = false;

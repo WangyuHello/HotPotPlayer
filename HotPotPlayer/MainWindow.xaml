@@ -29,17 +29,17 @@
                 </animations:Implicit.ShowAnimations>
                 
             </controls:MainSidebar>
-            <Frame x:Name="MainFrame" Margin="0,28,0,0" Grid.Column="1" />
+            <Frame x:Name="MainFrame" Margin="0,28,0,0" Grid.Column="1" Navigated="MainFrame_Navigated"/>
         </Grid>
 
         <controls:PlayBar VerticalAlignment="Bottom" HorizontalAlignment="Stretch" Margin="80,0,24,16" Visibility="{x:Bind MusicPlayer.IsPlayBarVisible, Mode=OneWay}">
             <animations:Implicit.ShowAnimations>
-                <animations:OpacityAnimation Duration="0:0:1" From="0.0" To="1.0" />
-                <animations:TranslationAnimation Duration="0:0:1" From="0,40,0" To="0,0,0" />
+                <animations:OpacityAnimation Duration="0:0:0.8" From="0.0" To="1.0" />
+                <animations:TranslationAnimation Duration="0:0:0.8" From="0,80,0" To="0,0,0" EasingMode="EaseOut"/>
             </animations:Implicit.ShowAnimations>
             <animations:Implicit.HideAnimations>
-                <animations:OpacityAnimation Duration="0:0:1" From="1.0" To="0.0" />
-                <animations:TranslationAnimation Duration="0:0:1" From="0,0,0" To="0,40,0" />
+                <animations:OpacityAnimation Duration="0:0:0.8" From="1.0" To="0.0" />
+                <animations:TranslationAnimation Duration="0:0:0.8" From="0,0,0" To="0,80,0" />
             </animations:Implicit.HideAnimations>
         </controls:PlayBar>
 
