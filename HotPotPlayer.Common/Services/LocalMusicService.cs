@@ -655,11 +655,12 @@ namespace HotPotPlayer.Services
             return result;
         }
 
-        public List<AlbumGroup> GetArtistAlbumGroup(string artistName)
+        public (List<AlbumGroup>, List<MusicItem>) GetArtistAlbumGroup(string artistName)
         {
             var album = QueryArtistAlbum(artistName);
             var group = GroupAllAlbumByYear(album);
-            return group;
+            var music = album.SelectMany(a => a.MusicItems).ToList();
+            return (group, music);
         }
 
         public AlbumItem QueryAlbum(MusicItem musicItem)

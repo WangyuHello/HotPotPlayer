@@ -7,6 +7,7 @@ using Microsoft.UI.Xaml.Controls.Primitives;
 using Microsoft.UI.Xaml.Data;
 using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Media;
+using Microsoft.UI.Xaml.Media.Animation;
 using Microsoft.UI.Xaml.Navigation;
 using System;
 using System.Collections.Generic;
@@ -47,6 +48,7 @@ namespace HotPotPlayer.Pages.MusicSub
         }
 
         public ObservableCollection<AlbumGroup> LocalAlbum { get; set; } = new ObservableCollection<AlbumGroup>();
+        public ObservableCollection<MusicItem> LocalArtistMusic { get; set; } = new ObservableCollection<MusicItem>();
 
         private string _artistName;
         public string ArtistName
@@ -72,17 +74,22 @@ namespace HotPotPlayer.Pages.MusicSub
             var artistName = (string)e.Parameter;
             ArtistName = artistName;
 
-            var albumGroup = await GetArtistWorksAsync(artistName);
+            var (albumGroup, music) = await GetArtistWorksAsync(artistName);
             LocalAlbum.Clear();
             foreach (var item in albumGroup)
             {
                 LocalAlbum.Add(item);
             }
             AlbumAddFlyout = InitAlbumAddFlyout();
+            LocalArtistMusic.Clear();
+            foreach (var item in music)
+            {
+                LocalArtistMusic.Add(item);
+            }
             base.OnNavigatedTo(e);
         }
 
-        static async Task<IEnumerable<AlbumGroup>> GetArtistWorksAsync(string name)
+        static async Task<(IEnumerable<AlbumGroup>, IEnumerable<MusicItem>)> GetArtistWorksAsync(string name)
         {
             var albumGroup = await Task.Run(() =>
             {
@@ -97,7 +104,12 @@ namespace HotPotPlayer.Pages.MusicSub
         {
             var album = ((Button)sender).Tag as AlbumItem;
             SelectedAlbum = album;
-            AlbumPopup.ShowAt(Root);
+
+            var ani = AlbumGridView.PrepareConnectedAnimation("forwardAnimation", album, "AlbumConnectedElement");
+            ani.Configuration = new BasicConnectedAnimationConfiguration();
+            ani.TryStart(AlbumOverlayTarget);
+
+            AlbumOverlayPopup.Visibility = Visibility.Visible;
         }
 
         private void AlbumPopupListClick(object sender, RoutedEventArgs e)
@@ -130,6 +142,26 @@ namespace HotPotPlayer.Pages.MusicSub
             }
 
             return flyout;
+        }
+
+        private void AlbumOverlayTarget_Tapped(object sender, TappedRoutedEventArgs e)
+        {
+            e.Handled = true;
+        }
+
+        private async void AlbumOverlayPopup_Tapped(object sender, TappedRoutedEventArgs e)
+        {
+            var anim = ConnectedAnimationService.GetForCurrentView().PrepareToAnimate("backwardsAnimation", AlbumOverlayTarget);
+            anim.Configuration = new BasicConnectedAnimationConfiguration();
+            await AlbumGridView.TryStartConnectedAnimationAsync(anim, SelectedAlbum, "AlbumConnectedElement");
+            AlbumOverlayPopup.Visibility = Visibility.Collapsed;
+        }
+
+        private void ArtistMusicListClick(object sender, RoutedEventArgs e)
+        {
+            var music = ((Button)sender).Tag as MusicItem;
+            var player = ((App)Application.Current).MusicPlayer;
+            player.PlayNext(music);
         }
     }
 }

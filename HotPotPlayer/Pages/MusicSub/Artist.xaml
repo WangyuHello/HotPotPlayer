@@ -11,6 +11,7 @@
     xmlns:helper="using:HotPotPlayer.Pages.Helper"
     xmlns:media2="using:Microsoft.UI.Xaml.Media"
     xmlns:controls="using:CommunityToolkit.WinUI.UI.Controls"
+    xmlns:animations="using:CommunityToolkit.WinUI.UI.Animations"
     mc:Ignorable="d"
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
 
@@ -18,7 +19,7 @@
         <CollectionViewSource x:Name="LocalAlbumGroups" Source="{x:Bind LocalAlbum}" IsSourceGrouped="True" ItemsPath="Items" />
 
         <DataTemplate x:Key="LocalAlbumZoomedInTemplate" x:DataType="models:AlbumItem">
-            <Button Style="{StaticResource AlbumGroupButton}" Click="AlbumClick" Tag="{x:Bind }">
+            <Button Style="{StaticResource AlbumGroupButton}" Click="AlbumClick" Tag="{x:Bind }" x:Name="AlbumConnectedElement">
                 <StackPanel Spacing="8" Margin="0,0,0,12">
                     <controls:ImageEx Source="{x:Bind Cover}" Style="{StaticResource LocalMusicImageStyle}"/>
                     <TextBlock Margin="8,0" Text="{x:Bind Title}" FontWeight="Bold" LineStackingStrategy="BaselineToBaseline" FontSize="14" MaxLines="2" TextTrimming="CharacterEllipsis" TextWrapping="Wrap" Height="40" ToolTipService.ToolTip="{x:Bind Title}"/>
@@ -102,6 +103,61 @@
             <Setter Property="CornerRadius" Value="8" />
             <Setter Property="Background" Value="{StaticResource AlbumPopupBackground}" />
         </Style>
+
+        <pages:EvenOldTemplateSelector x:Key="EvenOldArtistMusicListTemplate" >
+            <pages:EvenOldTemplateSelector.EvenTemplate>
+                <DataTemplate x:DataType="models:MusicItem">
+                    <Button Style="{StaticResource AlbumPopupListButton}" Background="#ffF4F7FE" Click="ArtistMusicListClick" Tag="{x:Bind }">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
+                            <TextBlock Text="{x:Bind Track}" Margin="0,0,8,0" VerticalAlignment="Center" Visibility="Collapsed"/>
+                            <TextBlock Grid.Column="1" Text="{x:Bind Title}" TextTrimming="CharacterEllipsis" VerticalAlignment="Center"/>
+                            <HyperlinkButton Grid.Column="2" Content="{x:Bind GetArtists()}" VerticalAlignment="Center" Click="{x:Bind helper:AlbumHelper.ArtistClick}" Tag="{x:Bind }"/>
+                            <TextBlock Grid.Column="3" Margin="8,0,0,0" Text="{x:Bind Duration.ToString('mm\\\\:ss')}" VerticalAlignment="Center"/>
+                            <Button Grid.Column="4" Style="{StaticResource TransparentButton}" Margin="16,0,0,0" CornerRadius="4" Padding="4">
+                                <SymbolIcon Symbol="More" />
+                            </Button>
+                        </Grid>
+                    </Button>
+                </DataTemplate>
+            </pages:EvenOldTemplateSelector.EvenTemplate>
+            <pages:EvenOldTemplateSelector.OddTemplate>
+                <DataTemplate x:DataType="models:MusicItem">
+                    <Button Style="{StaticResource AlbumPopupListButton}" Click="ArtistMusicListClick" Tag="{x:Bind }">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
+                            <TextBlock Text="{x:Bind Track}" Margin="0,0,8,0" VerticalAlignment="Center" Visibility="Collapsed"/>
+                            <TextBlock Grid.Column="1" Text="{x:Bind Title}" TextTrimming="CharacterEllipsis" VerticalAlignment="Center"/>
+                            <HyperlinkButton Grid.Column="2" Content="{x:Bind GetArtists()}" VerticalAlignment="Center" Click="{x:Bind helper:AlbumHelper.ArtistClick}" Tag="{x:Bind }"/>
+                            <TextBlock Grid.Column="3" Margin="8,0,0,0" Text="{x:Bind Duration.ToString('mm\\\\:ss')}" VerticalAlignment="Center" />
+                            <Button Grid.Column="4" Style="{StaticResource TransparentButton}" Margin="16,0,0,0" CornerRadius="4" Padding="4" VerticalAlignment="Center">
+                                <SymbolIcon Symbol="More" />
+                            </Button>
+                        </Grid>
+                    </Button>
+                </DataTemplate>
+            </pages:EvenOldTemplateSelector.OddTemplate>
+        </pages:EvenOldTemplateSelector>
+
+        <Style x:Key="ArtistMusicListContainerStyle" TargetType="ListViewItem">
+            <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+            <Setter Property="VerticalContentAlignment" Value="Stretch"/>
+            <Setter Property="Padding" Value="0" />
+            <Setter Property="Margin" Value="0" />
+            <Setter Property="Height" Value="40" />
+        </Style>
     </Page.Resources>
 
     <Grid x:Name="Root" Background="White" Padding="36,0,0,0">
@@ -114,7 +170,7 @@
             <PivotItem Header="专辑" Margin="0">
                 <SemanticZoom>
                     <SemanticZoom.ZoomedInView>
-                        <GridView ItemsSource="{x:Bind LocalAlbumGroups.View}" ScrollViewer.IsHorizontalScrollChainingEnabled="False" SelectionMode="None" ItemTemplate="{StaticResource LocalAlbumZoomedInTemplate}" ItemContainerStyle="{StaticResource LocalAlbumContainerStyle}" ShowsScrollingPlaceholders="True">
+                        <GridView x:Name="AlbumGridView" ItemsSource="{x:Bind LocalAlbumGroups.View}" ScrollViewer.IsHorizontalScrollChainingEnabled="False" SelectionMode="None" ItemTemplate="{StaticResource LocalAlbumZoomedInTemplate}" ItemContainerStyle="{StaticResource LocalAlbumContainerStyle}" ShowsScrollingPlaceholders="True">
                             <GridView.GroupStyle>
                                 <GroupStyle HeaderTemplate="{StaticResource LocalAlbumZoomedInGroupHeaderTemplate}" />
                             </GridView.GroupStyle>
@@ -129,64 +185,83 @@
                 </SemanticZoom>
             </PivotItem>
             <PivotItem Header="列表" Margin="0">
-
+                <ListView ItemsSource="{x:Bind LocalArtistMusic, Mode=OneWay}" 
+                          SelectionMode="None" 
+                          ItemTemplateSelector="{StaticResource EvenOldArtistMusicListTemplate}" 
+                          ItemContainerStyle="{StaticResource ArtistMusicListContainerStyle}" 
+                    >
+                    <ListView.Footer>
+                        <Grid Height="100"/>
+                    </ListView.Footer>
+                </ListView>
             </PivotItem>
         </Pivot>
 
-        <Grid>
-            <FlyoutBase.AttachedFlyout>
-                <Flyout x:Name="AlbumPopup" FlyoutPresenterStyle="{StaticResource AlbumPopupStyle}">
-                    <Grid >
-                        <Grid.RowDefinitions>
-                            <RowDefinition Height="Auto" />
-                            <RowDefinition Height="Auto" />
-                            <RowDefinition Height="*" />
-                        </Grid.RowDefinitions>
-                        <Grid Height="16">
+        <Grid Grid.RowSpan="2" x:Name="AlbumOverlayPopup" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Visibility="Collapsed" Background="#00000000" Tapped="AlbumOverlayPopup_Tapped">
+            <Grid x:Name="AlbumOverlayTarget" Margin="0,-60,0,0" VerticalAlignment="Center" HorizontalAlignment="Center" Width="640" MinHeight="460" MaxHeight="560" CornerRadius="8" Background="{StaticResource PopupBackground}" Tapped="AlbumOverlayTarget_Tapped">
+                <animations:Implicit.HideAnimations>
+                    <animations:OpacityAnimation Duration="0:0:0.45" From="1" To="0" />
+                </animations:Implicit.HideAnimations>
 
-                        </Grid>
-                        <Grid Grid.Row="1" Margin="16,0,16,8">
+                <animations:Implicit.ShowAnimations>
+                    <animations:OpacityAnimation Duration="0:0:0.01" From="0" To="1" />
+                </animations:Implicit.ShowAnimations>
+
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="*" />
+                </Grid.RowDefinitions>
+                <Grid Height="16">
+
+                </Grid>
+                <Grid Grid.Row="1" Margin="16,0,16,8" >
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="*" />
+                    </Grid.ColumnDefinitions>
+
+                    <controls:ImageEx  Source="{x:Bind SelectedAlbum.Cover, Mode=OneWay}" Style="{StaticResource LocalAlbumPopupImageStyle}" />
+                    <StackPanel Grid.Column="1" Margin="16,0,0,0" >
+                        <TextBlock Text="{x:Bind SelectedAlbum.Title, Mode=OneWay}" MaxLines="2" FontSize="32" TextWrapping="Wrap" FontWeight="Medium" TextTrimming="CharacterEllipsis" >
+
+                        </TextBlock>
+                        <TextBlock Text="{x:Bind SelectedAlbum.Year, Mode=OneWay}" FontSize="18" Margin="0,4,0,0">
+
+                        </TextBlock>
+                        <HyperlinkButton Content="{x:Bind SelectedAlbum.GetArtists(), Mode=OneWay}" Padding="0,4" FontSize="18" Margin="0,4,0,0" Click="{x:Bind helper:AlbumHelper.ArtistClick2}">
+
+                        </HyperlinkButton>
+                        <Grid Margin="0,12,0,0">
                             <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="Auto" />
-                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="Auto"/>
+                                <ColumnDefinition Width="Auto"/>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="Auto"/>
                             </Grid.ColumnDefinitions>
 
-                            <controls:ImageEx Source="{x:Bind SelectedAlbum.Cover, Mode=OneWay}" Style="{StaticResource LocalMusicImageStyle}"/>
-                            <StackPanel Grid.Column="1" Margin="16,0,0,0">
-                                <TextBlock Text="{x:Bind SelectedAlbum.Title, Mode=OneWay}" MaxLines="2" FontSize="32" TextWrapping="Wrap" FontWeight="Medium" TextTrimming="CharacterEllipsis" />
-                                <HyperlinkButton Content="{x:Bind SelectedAlbum.GetArtists(), Mode=OneWay}" Padding="0,4" FontSize="18" Margin="0,8,0,0" Click="{x:Bind helper:AlbumHelper.ArtistClick}"/>
-                                <Grid Margin="0,12,0,0">
-                                    <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="Auto"/>
-                                        <ColumnDefinition Width="Auto"/>
-                                        <ColumnDefinition Width="*"/>
-                                        <ColumnDefinition Width="Auto"/>
-                                    </Grid.ColumnDefinitions>
-                                    <Button Grid.Column="0" Margin="0,0,8,0" Style="{StaticResource AlbumPlayButton}" Click="{x:Bind helper:AlbumHelper.AlbumPlay}" Tag="{x:Bind SelectedAlbum, Mode=OneWay}">
-                                        <SymbolIcon Symbol="Play" />
-                                    </Button>
-                                    <SplitButton Grid.Column="1" Padding="6" Click="{x:Bind helper:AlbumHelper.AlbumAdd}" Tag="{x:Bind SelectedAlbum, Mode=OneWay}" Flyout="{x:Bind AlbumAddFlyout, Mode=OneWay}">
-                                        <SymbolIcon Symbol="Add" />
-                                    </SplitButton>
-                                    <Button Grid.Column="3" Click="{x:Bind helper:AlbumHelper.AlbumDetailClick}" Tag="{x:Bind SelectedAlbum, Mode=OneWay}">
-                                        <SymbolIcon Symbol="FullScreen" />
-                                    </Button>
-                                </Grid>
-                            </StackPanel>
+                            <Button Grid.Column="0" Margin="0,0,8,0" Style="{StaticResource AlbumPlayButton}" Click="{x:Bind helper:AlbumHelper.AlbumPlay}" Tag="{x:Bind SelectedAlbum, Mode=OneWay}">
+                                <SymbolIcon Symbol="Play" />
+                            </Button>
+                            <SplitButton Grid.Column="1" Padding="6" Click="{x:Bind helper:AlbumHelper.AlbumAdd}" Tag="{x:Bind SelectedAlbum, Mode=OneWay}" Flyout="{x:Bind AlbumAddFlyout, Mode=OneWay}">
+                                <SymbolIcon Symbol="Add" />
+                            </SplitButton>
+                            <Button Grid.Column="3" Click="{x:Bind helper:AlbumHelper.AlbumDetailClick}" Tag="{x:Bind SelectedAlbum, Mode=OneWay}">
+                                <SymbolIcon Symbol="FullScreen" />
+                            </Button>
                         </Grid>
+                    </StackPanel>
+                </Grid>
 
-                        <ListView Grid.Row="2" 
+                <ListView Grid.Row="2" 
                               ItemsSource="{x:Bind SelectedAlbum.MusicItems, Mode=OneWay}" 
                               SelectionMode="None" 
                               ItemTemplateSelector="{StaticResource EvenOldAlbumPopupTemplate}" 
                               ItemContainerStyle="{StaticResource AlbumPopupListContainerStyle}" 
-                    >
+                        >
 
-                        </ListView>
-
-                    </Grid>
-                </Flyout>
-            </FlyoutBase.AttachedFlyout>
+                </ListView>
+            </Grid>
         </Grid>
     </Grid>
 </Page>

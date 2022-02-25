@@ -41,8 +41,6 @@ namespace HotPotPlayer.Pages
         public ObservableCollection<AlbumGroup> LocalAlbum { get; set; } = new ObservableCollection<AlbumGroup>();
         public ObservableCollection<PlayListItem> LocalPlayList { get; set; } = new ObservableCollection<PlayListItem>();
 
-        readonly AlbumHelper AlbumHelper = new();
-
         private bool _isFirstLoading;
         public bool IsFirstLoading 
         {
