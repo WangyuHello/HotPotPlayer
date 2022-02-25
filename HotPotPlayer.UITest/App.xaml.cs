@@ -46,10 +46,10 @@ namespace HotPotPlayer.Test
         {
             //Microsoft.VisualStudio.TestPlatform.TestExecutor.UnitTestClient.CreateDefaultUI();
 
-            //m_window = new MainWindow();
+            m_window = new MainWindow();
 
             // Ensure the current window is active
-            //m_window.Activate();
+            m_window.Activate();
 
             //UITestMethodAttribute.DispatcherQueue = m_window.DispatcherQueue;
 

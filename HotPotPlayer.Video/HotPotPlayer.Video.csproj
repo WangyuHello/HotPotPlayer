@@ -15,8 +15,6 @@
 
   <ItemGroup>
       <PackageReference Include="Microsoft.WindowsAppSDK" Version="1.0.0" />
-      <PackageReference Include="VideoLAN.LibVLC.Windows" Version="3.0.16" />
-      <PackageReference Include="LibVLCSharp" Version="3.6.5" />
       <PackageReference Include="Avalonia.Angle.Windows.Natives" Version="2.1.0.2020091801" />
       <PackageReference Include="OpenTK" Version="5.0.0-pre.6" />
       <PackageReference Include="SharpDX" Version="4.2.0" />
@@ -25,9 +23,11 @@
       <PackageReference Include="Silk.NET.OpenGLES" Version="2.12.0" />
       <PackageReference Include="Silk.NET.OpenGLES.Extensions.ANGLE" Version="2.12.0" />
       <PackageReference Include="SkiaSharp.Views.WinUI" Version="2.88.0-preview.179" />
+      <PackageReference Include="VideoLAN.LibVLC.Windows" Version="3.0.16" />
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\libvlcsharp\src\LibVLCSharp\LibVLCSharp.csproj" />
     <ProjectReference Include="..\Mpv.NET-lib-\src\Mpv.NET\Mpv.NET.csproj" />
   </ItemGroup>
 

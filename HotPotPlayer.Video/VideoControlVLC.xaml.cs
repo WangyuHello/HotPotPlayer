@@ -1,4 +1,4 @@
-﻿using LibVLCSharp.Platforms.UWP;
+﻿using LibVLCSharp.Platforms.WinUI;
 using LibVLCSharp.Shared;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
@@ -53,8 +53,9 @@ namespace HotPotPlayer.Controls
         {
             Core.Initialize();
             LibVLC = new LibVLC(enableDebugLogs: true, eventArgs.SwapChainOptions);
+            //LibVLC = new LibVLC(enableDebugLogs: true);
             MediaPlayer = new MediaPlayer(LibVLC);
-            using var media = new Media(LibVLC, @"D:\视频\【Animenz】Bios（10周年版）-_罪恶王冠_OST.459129031.mkv");
+            using var media = new Media(LibVLC, @"E:\Videos\【Animenz】Bios（10周年版）-_罪恶王冠_OST.459129031.mkv");
             MediaPlayer.Play(media);
         }
     }
