@@ -10,3 +10,6 @@
 [submodule "mpv"]
 	path = mpv
 	url = https://github.com/WangyuHello/mpv
+[submodule "libvlcsharp"]
+	path = libvlcsharp
+	url = git@github.com:WangyuHello/libvlcsharp.git
