@@ -6,52 +6,27 @@
     <RuntimeIdentifiers>win10-x64</RuntimeIdentifiers>
     <UseWinUI>true</UseWinUI>
     <Platforms>x64</Platforms>
+    <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
   </PropertyGroup>
   <ItemGroup>
     <None Remove="VideoControl.xaml" />
-    <None Remove="VideoControl2.xaml" />
-    <None Remove="VideoControlVLC.xaml" />
   </ItemGroup>
 
   <ItemGroup>
       <PackageReference Include="Microsoft.WindowsAppSDK" Version="1.0.0" />
-      <PackageReference Include="Avalonia.Angle.Windows.Natives" Version="2.1.0.2020091801" />
-      <PackageReference Include="OpenTK" Version="5.0.0-pre.6" />
-      <PackageReference Include="SharpDX" Version="4.2.0" />
-      <PackageReference Include="SharpDX.Direct3D11" Version="4.2.0" />
-      <PackageReference Include="Silk.NET" Version="2.12.0" />
-      <PackageReference Include="Silk.NET.OpenGLES" Version="2.12.0" />
-      <PackageReference Include="Silk.NET.OpenGLES.Extensions.ANGLE" Version="2.12.0" />
-      <PackageReference Include="SkiaSharp.Views.WinUI" Version="2.88.0-preview.179" />
-      <PackageReference Include="VideoLAN.LibVLC.Windows" Version="3.0.16" />
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\libvlcsharp\src\LibVLCSharp\LibVLCSharp.csproj" />
     <ProjectReference Include="..\Mpv.NET-lib-\src\Mpv.NET\Mpv.NET.csproj" />
   </ItemGroup>
 
   <ItemGroup>
-    <Page Update="VideoControl.xaml">
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Update="VideoControl2.xaml">
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Update="VideoControlVLC.xaml">
+    <Page Update="Controls\VideoControl.xaml">
       <Generator>MSBuild:Compile</Generator>
     </Page>
   </ItemGroup>
 
   <ItemGroup>
-    <None Update="NativeLibs\libEGL.dll">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Update="NativeLibs\libGLESv2.dll">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Update="NativeLibs\mpv-2.dll">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
+    <Folder Include="NativeLibs\" />
   </ItemGroup>
 </Project>

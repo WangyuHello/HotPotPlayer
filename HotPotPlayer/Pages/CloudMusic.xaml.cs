@@ -27,5 +27,7 @@ namespace HotPotPlayer.Pages
         {
             this.InitializeComponent();
         }
+
+        FileInfo VideoFile = new FileInfo(@"D:\视频\【8_15.生肉】紫罗兰永恒花园_交响音乐会_2021.389701874.mkv");
     }
 }
