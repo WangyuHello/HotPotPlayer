@@ -28,13 +28,23 @@ namespace HotPotPlayer.Video.Controls
     public sealed partial class VideoControl : UserControl, INotifyPropertyChanged
     {
         readonly WriteableBitmap _bitmap;
-        IntPtr? _renderTarget;
+        IntPtr _renderTarget;
         int bufferSize = 4 * 1920 * 1080;
 
+        bool mpvInited;
         MpvPlayer _mpv;
         MpvPlayer Mpv
         {
-            get => _mpv ??= new MpvPlayer(@"NativeLibs\mpv-2.dll");
+            get
+            {
+                if (_mpv == null)
+                {
+                    _renderTarget = Marshal.AllocHGlobal(bufferSize);
+                    _mpv = new MpvPlayer(@"NativeLibs\mpv-2.dll", _renderTarget, OnNewFrameDrawed);
+                    mpvInited = true;
+                }
+                return _mpv;
+            }
         }
 
         public VideoControl()
@@ -65,31 +75,33 @@ namespace HotPotPlayer.Video.Controls
             DependencyProperty.Register("VideoSource", typeof(FileInfo), typeof(VideoControl), new PropertyMetadata(default(FileInfo), OnVideoSourceChanged));
 
 
-        unsafe void OnNewFrameDrawed()
+        unsafe void OnNewFrameDrawed(IntPtr context)
         {
-            if (videoRoot == null || _renderTarget == null)
+            if (videoRoot == null || !mpvInited)
             {
                 return;
             }
-
-            using var bstream = _bitmap.PixelBuffer.AsStream();
-            bstream.Write(new Span<byte>(_renderTarget.Value.ToPointer(), bufferSize));
+            DispatcherQueue.TryEnqueue(() =>
+            {
+                using var bstream = _bitmap.PixelBuffer.AsStream();
+                bstream.Write(new Span<byte>(_renderTarget.ToPointer(), bufferSize));
+                Mpv.API.RenderReportSwap();
+            });
         }
 
         private static void OnVideoSourceChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
             var c = (VideoControl)d;
+            var file = (FileInfo)e.NewValue;
 
-            c._renderTarget ??= Marshal.AllocHGlobal(c.bufferSize);
-
-
-            c.Mpv.API.SetPropertyString("vo", "gpu");
+            //c.Mpv.API.SetPropertyString("vo", "gpu");
             c.Mpv.API.SetPropertyString("gpu-context", "d3d11");
             c.Mpv.API.SetPropertyString("hwdec", "d3d11va");
 #if DEBUG
             c.Mpv.API.Command("script-binding", "stats/display-stats-toggle");
 #endif
-
+            c.Mpv.Load(file.FullName);
+            c.Mpv.API.StartRender();
         }
     }
 }
