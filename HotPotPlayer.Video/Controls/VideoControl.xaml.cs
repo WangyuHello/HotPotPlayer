@@ -27,6 +27,23 @@ namespace HotPotPlayer.Video.Controls
 {
     public sealed partial class VideoControl : UserControl, INotifyPropertyChanged
     {
+        readonly WriteableBitmap _bitmap;
+        IntPtr? _renderTarget;
+        int bufferSize = 4 * 1920 * 1080;
+
+        MpvPlayer _mpv;
+        MpvPlayer Mpv
+        {
+            get => _mpv ??= new MpvPlayer(@"NativeLibs\mpv-2.dll");
+        }
+
+        public VideoControl()
+        {
+            this.InitializeComponent();
+            _bitmap = new WriteableBitmap(1920, 1080);
+            videoRoot.Source = _bitmap;
+        }
+
         public event PropertyChangedEventHandler PropertyChanged;
 
         public void Set<T>(ref T oldValue, T newValue, [CallerMemberName] string propertyName = "")
@@ -47,9 +64,6 @@ namespace HotPotPlayer.Video.Controls
         public static readonly DependencyProperty VideoSourceProperty =
             DependencyProperty.Register("VideoSource", typeof(FileInfo), typeof(VideoControl), new PropertyMetadata(default(FileInfo), OnVideoSourceChanged));
 
-        WriteableBitmap _bitmap = new WriteableBitmap(1920, 1080);
-        IntPtr? _renderTarget;
-        int bufferSize = 4 * 1920 * 1080;
 
         unsafe void OnNewFrameDrawed()
         {
@@ -67,6 +81,15 @@ namespace HotPotPlayer.Video.Controls
             var c = (VideoControl)d;
 
             c._renderTarget ??= Marshal.AllocHGlobal(c.bufferSize);
+
+
+            c.Mpv.API.SetPropertyString("vo", "gpu");
+            c.Mpv.API.SetPropertyString("gpu-context", "d3d11");
+            c.Mpv.API.SetPropertyString("hwdec", "d3d11va");
+#if DEBUG
+            c.Mpv.API.Command("script-binding", "stats/display-stats-toggle");
+#endif
+
         }
     }
 }
