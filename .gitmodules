@@ -13,3 +13,6 @@
 [submodule "libvlcsharp"]
 	path = libvlcsharp
 	url = git@github.com:WangyuHello/libvlcsharp.git
+[submodule "mpv-winbuild-cmake"]
+	path = mpv-winbuild-cmake
+	url = git@github.com:WangyuHello/mpv-winbuild-cmake.git
