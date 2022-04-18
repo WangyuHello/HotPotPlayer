@@ -23,24 +23,75 @@ namespace HotPotPlayer.Services
     public class LocalMusicService: ServiceBaseWithConfig
     {
         public LocalMusicService(ConfigBase config) : base(config) { }
-
-        enum LocalMusicState
+        
+        #region State
+        public enum LocalMusicState
         {
             Idle,
             FirstLoading,
             NonFirstLoading,
-            InitLoadingComplete,
+            InitComplete,
+            Complete,
             NoLibraryAccess
         }
 
-        public event Action<List<AlbumGroup>, List<PlayListItem>> OnAlbumGroupChanged;
-        public event Action OnFirstLoadingStarted;
-        public event Action OnNonFirstLoadingStarted;
-        public event Action OnLoadingEnded;
-        public event Action OnNoLibraryAccess;
+        private LocalMusicState _state = LocalMusicState.Idle;
 
+        public LocalMusicState State
+        {
+            get => _state;
+            set => Set(ref _state, value);
+        }
 
-        public static readonly List<string> SupportedExt = new() { ".flac", ".wav", ".m4a", ".mp3" };
+        #endregion
+        #region Property
+        private ObservableCollection<AlbumGroup> _localAlbumGroup;
+
+        public ObservableCollection<AlbumGroup> LocalAlbumGroup
+        {
+            get => _localAlbumGroup ??= new ObservableCollection<AlbumGroup>();
+            set => Set(ref _localAlbumGroup, value);
+        }
+
+        private ObservableCollection<PlayListItem> _localPlayListList;
+
+        public ObservableCollection<PlayListItem> LocalPlayListList
+        {
+            get => _localPlayListList;
+            set => Set(ref _localPlayListList, value);
+        }
+        #endregion
+        #region Field
+        static readonly string[] SupportedExt = new[] { ".flac", ".wav", ".m4a", ".mp3" };
+
+        BackgroundWorker _loader;
+        BackgroundWorker Loader
+        {
+            get
+            {
+                if (_loader == null)
+                {
+                    _loader = new BackgroundWorker
+                    {
+                        WorkerSupportsCancellation = true,
+                    };
+                    _loader.DoWork += LoadLocalMusic;
+                    _loader.RunWorkerCompleted += LoadLocalCompleted;
+                }
+                return _loader;
+            }
+        }
+
+        string _dbPath;
+        string DbPath => _dbPath ??= Path.Combine(Config.DatabaseFolder, "LocalMusic.db");
+
+        MD5 _md5;
+        MD5 Md5 => _md5 ??= MD5.Create();
+
+        DispatcherQueue _UIQueue;
+
+        List<FileSystemWatcher> _watchers;
+        #endregion
 
         static List<MusicItem> GetAllMusicItem(IEnumerable<FileInfo> files)
         {
@@ -76,8 +127,9 @@ namespace HotPotPlayer.Services
             return prop == null ? TimeSpan.Zero : prop.Duration;
         }
 
-        private static List<FileInfo> GetMusicFilesFromLibrary(List<string> libs)
+        private List<FileInfo> GetMusicFilesFromLibrary()
         {
+            var libs = Config.MusicPlayList.Select(s => s.Path);
             List<FileInfo> files = new();
             foreach (var lib in libs)
             {
@@ -138,8 +190,7 @@ namespace HotPotPlayer.Services
             return r;
         }
 
-        MD5 _md5;
-        MD5 Md5 => _md5 ??= MD5.Create();
+
 
         string _albumCoverDir;
         string AlbumCoverDir
@@ -186,199 +237,153 @@ namespace HotPotPlayer.Services
             return (string.Empty, Color.White);
         }
 
+        /// <summary>
+        /// 启动加载本地音乐
+        /// </summary>
         public void StartLoadLocalMusic()
         {
-            UIQueue ??= DispatcherQueue.GetForCurrentThread();
-            if (Worker.IsBusy)
+            _UIQueue ??= DispatcherQueue.GetForCurrentThread();
+            if (Loader.IsBusy)
             {
                 return;
             }
-            Worker.RunWorkerAsync();
+            Loader.RunWorkerAsync();
         }
 
-        public List<AlbumGroup> LocalAlbums = new();
-        public List<PlayListItem> LocalPlayLists = new();
-
-        private void ProgressChanged(object sender, ProgressChangedEventArgs e)
+        void LoadLocalCompleted(object sender, RunWorkerCompletedEventArgs e)
         {
-            var state = (LocalMusicState)e.ProgressPercentage;
-            switch (state)
+            State = LocalMusicState.Complete;
+        }
+
+        void EnqueueChangeState(LocalMusicState newState)
+        {
+            _UIQueue.TryEnqueue(() =>
             {
-                case LocalMusicState.Idle:
-                    break;
-                case LocalMusicState.FirstLoading:
-                    OnFirstLoadingStarted?.Invoke();
-                    break;
-                case LocalMusicState.NonFirstLoading:
-                    OnNonFirstLoadingStarted?.Invoke();
-                    break;
-                case LocalMusicState.InitLoadingComplete:
-                    OnLoadingEnded?.Invoke();
-                    var (albumGroup, playLists) = ((List<AlbumGroup> a, List<PlayListItem> b))e.UserState;
-                    LocalAlbums = albumGroup;
-                    LocalPlayLists = playLists;
-                    OnAlbumGroupChanged?.Invoke(albumGroup, playLists);
-                    break;
-                case LocalMusicState.NoLibraryAccess:
-                    OnNoLibraryAccess?.Invoke();
-                    break;
-                default:
-                    break;
-            }
+                State = newState;
+            });
         }
 
-        void RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
-        {
-            OnLoadingEnded?.Invoke();
-            if (e.Result == null)
-            {
-                return;
-            }
-            var (albumGroup, playLists) = ((List<AlbumGroup> a, List<PlayListItem> b))e.Result;
-            LocalAlbums = albumGroup;
-            LocalPlayLists = playLists;
-            OnAlbumGroupChanged?.Invoke(albumGroup, playLists);
-        }
-
-        string GetDbPath()
-        {
-            var dbPath = Path.Combine(Config.DatabaseFolder, "LocalMusic.db");
-            return dbPath;
-        }
-
-        string _dbPath;
-        string DbPath
-        {
-            get => _dbPath ??= GetDbPath();
-        }
-
-        Realm _db;
-
-        void DoWork(object sender, DoWorkEventArgs e)
+        void LoadLocalMusic(object sender, DoWorkEventArgs e)
         {
             //检查是否有缓存好的数据库
             var libs = Config.MusicLibrary;
             if (libs == null)
             {
-                Worker.ReportProgress((int)LocalMusicState.NoLibraryAccess);
+                EnqueueChangeState(LocalMusicState.NoLibraryAccess);
                 return;
             }
-            var playListFiles = GetAllPlaylists();
 
-            IEnumerable<string> removeList = null;
-            IEnumerable<FileInfo> addOrUpdateList = null;
+            // 获取DB，如果没有其会自动创建
+            using var db = Realm.GetInstance(DbPath);
 
-            if (File.Exists(DbPath))
+            // 获取DB内容
+            var dbAlbums = db.All<AlbumItemDb>();
+            var dbPlayLists = db.All<PlayListItemDb>();
+
+            // 转换为非数据库类型
+            var dbAlbumList_ = dbAlbums.AsEnumerable().Select(d => d.ToOrigin()).ToList();
+            var dbPlayListList = dbPlayLists.AsEnumerable().Select(d => d.ToOrigin()).ToList();
+
+            // Album分组
+            var dbAlbumGroups = GroupAllAlbumByYear(dbAlbumList_);
+            _UIQueue.TryEnqueue(() =>
             {
-                //如果有就返回数据库
-                _db = Realm.GetInstance(DbPath);
-                var albums_ = _db.All<AlbumItemDb>();
-                var albumList_ = albums_.AsEnumerable().Select(d => d.ToOrigin()).ToList();
-                var playLists_ = _db.All<PlayListItemDb>();
-                var playListList = playLists_.AsEnumerable().Select(d => d.ToOrigin()).ToList();
+                LocalAlbumGroup = new ObservableCollection<AlbumGroup>(dbAlbumGroups);
+                LocalPlayListList = new ObservableCollection<PlayListItem>(dbPlayListList);
+                State = LocalMusicState.InitComplete;
+            });
 
-                var groupsDb = GroupAllAlbumByYear(albumList_);
+            // 查询本地文件变动
+            var localMusicFiles = GetMusicFilesFromLibrary();
+            var localPlayListFiles = GetAllPlaylistFiles();
+            var (removeList, addOrUpdateList) = CheckMusicHasUpdate(db, localMusicFiles);
+            var playListHasUpdate = CheckPlayListHasUpdate(dbPlayListList, localPlayListFiles);
 
-                Worker.ReportProgress((int)LocalMusicState.InitLoadingComplete, (groupsDb, playListList));
-
-                var files2 = GetMusicFilesFromLibrary(libs.Select(l => l.Path).ToList());
-
-                (removeList, addOrUpdateList) = CheckMusicHasUpdate(files2);
-                var playListHasUpdate = CheckPlayListHasUpdate(playListList, playListFiles);
-
-                if (addOrUpdateList.Any() || playListHasUpdate)
-                {
-                    Worker.ReportProgress((int)LocalMusicState.NonFirstLoading);
-                }
-                else if (removeList.Any())
-                {
-
-                }
-                else
-                {
-                    _db?.Dispose();
-                    InitFileSystemWatcher();
-                    return;
-                }
-            }
-            else
-            {
-                //如果没有返回空集，并开始后台线程扫描
-                Worker.ReportProgress((int)LocalMusicState.FirstLoading);
-            }
-
-            _db ??= Realm.GetInstance(DbPath);
-            List<AlbumGroup> groups = null;
+            // 应用更改
+            ObservableCollection<AlbumGroup> newAlbumGroup = null;
+            ObservableCollection<PlayListItem> newPlayListList = null;
             if (addOrUpdateList != null && addOrUpdateList.Any())
             {
-                groups = AddOrUpdateNewMusicAndSave(addOrUpdateList);
+                newAlbumGroup = new(AddOrUpdateMusicAndSave(db, addOrUpdateList));
             }
-            else if(removeList != null && removeList.Any())
+            if (removeList != null && removeList.Any())
             {
-                groups = RemoveMusicAndSave(removeList);
+                newAlbumGroup = new(RemoveMusicAndSave(db, removeList));
             }
-            else
+            if (playListHasUpdate)
             {
-                groups = ScanAllMusicAndSave(libs.Select(l => l.Path).ToList());
+                newPlayListList = new(ScanAllPlayList(db, localPlayListFiles));
             }
-            List<PlayListItem> playLists = ScanAllPlayList(playListFiles);
 
-            e.Result = (groups, playLists);
-            _db?.Dispose();
+            if (newAlbumGroup != null)
+            {
+                _UIQueue.TryEnqueue(() =>
+                {
+                    LocalAlbumGroup = newAlbumGroup;
+                });
+            };
+            if (newPlayListList != null)
+            {
+                _UIQueue.TryEnqueue(() =>
+                {
+                    LocalPlayListList = newPlayListList;
+                });
+            }
 
+            // 最后启动文件系统监控
             InitFileSystemWatcher();
         }
 
-        private List<AlbumGroup> RemoveMusicAndSave(IEnumerable<string> removeList)
+        private List<AlbumGroup> RemoveMusicAndSave(Realm db, IEnumerable<string> removeList)
         {
-            _db.Write(() =>
+            db.Write(() =>
             {
                 foreach (var item in removeList)
                 {
-                    _db.Remove(_db.Find<MusicItemDb>(item));
+                    db.Remove(db.Find<MusicItemDb>(item));
                 }
             });
 
-            var allmusic = _db.All<MusicItemDb>().AsEnumerable().Select(d => d.ToOrigin());
+            var allmusic = db.All<MusicItemDb>().AsEnumerable().Select(d => d.ToOrigin());
             var albums = GroupAllMusicIntoAlbum(allmusic);
 
-            _db.Write(() =>
+            db.Write(() =>
             {
-                var existAlbum = _db.All<AlbumItemDb>();
-                var existMusic = _db.All<MusicItemDb>();
-                _db.RemoveRange(existAlbum);
-                _db.RemoveRange(existMusic);
-                _db.Add(albums.Select(a => a.ToDb()));
+                var existAlbum = db.All<AlbumItemDb>();
+                var existMusic = db.All<MusicItemDb>();
+                db.RemoveRange(existAlbum);
+                db.RemoveRange(existMusic);
+                db.Add(albums.Select(a => a.ToDb()));
             });
 
             var groups = GroupAllAlbumByYear(albums);
             return groups;
         }
 
-        private List<AlbumGroup> AddOrUpdateNewMusicAndSave(IEnumerable<FileInfo> addOrUpdateList)
+        private List<AlbumGroup> AddOrUpdateMusicAndSave(Realm db, IEnumerable<FileInfo> addOrUpdateList)
         {
             List<AlbumGroup> groups;
             var addOrUpdateMusic = GetAllMusicItem(addOrUpdateList);
-            _db.Write(() =>
+            db.Write(() =>
             {
-                _db.Add(addOrUpdateMusic.Select(a => a.ToDb()), update: true);
+                db.Add(addOrUpdateMusic.Select(a => a.ToDb()), update: true);
             });
 
-            var allmusic = _db.All<MusicItemDb>().AsEnumerable().Select(d => d.ToOrigin());
+            var allmusic = db.All<MusicItemDb>().AsEnumerable().Select(d => d.ToOrigin());
             var albums = GroupAllMusicIntoAlbum(allmusic);
 
-            _db.Write(() =>
+            db.Write(() =>
             {
-                var existAlbum = _db.All<AlbumItemDb>();
-                _db.RemoveRange(existAlbum);
-                _db.Add(albums.Select(a => a.ToDb()), update: true);
+                var existAlbum = db.All<AlbumItemDb>();
+                db.RemoveRange(existAlbum);
+                db.Add(albums.Select(a => a.ToDb()), update: true);
             });
 
             groups = GroupAllAlbumByYear(albums);
             return groups;
         }
 
-        sealed class CustomEqComparer : EqualityComparer<MusicItemDb>
+        sealed class MusicItemComparer : EqualityComparer<MusicItemDb>
         {
             public override bool Equals(MusicItemDb x, MusicItemDb y)
             {
@@ -393,154 +398,37 @@ namespace HotPotPlayer.Services
             }
         }
 
-        private (IEnumerable<string> removeList, IEnumerable<FileInfo> addOrUpdateList) CheckMusicHasUpdate(List<FileInfo> files)
+        private static (IEnumerable<string> removeList, IEnumerable<FileInfo> addOrUpdateList) CheckMusicHasUpdate(Realm db, List<FileInfo> files)
         {
             var currentFiles = files.Select(c => new MusicItemDb
             {
                 Source = c.FullName,
                 LastWriteTime = c.LastWriteTime.ToBinary()
             });
-            var dbFiles = _db.All<MusicItemDb>().ToList();
+            var dbFiles = db.All<MusicItemDb>().ToList();
 
-            var newFiles = currentFiles.Except(dbFiles, new CustomEqComparer());
+            var newFiles = currentFiles.Except(dbFiles, new MusicItemComparer());
             var exc2 = newFiles.Where(d => Directory.Exists(Path.GetPathRoot(d.Source)))
                 .Select(s => new FileInfo(s.Source));
 
-            var removeFileKeys = dbFiles.Except(currentFiles, new CustomEqComparer())
+            var removeFileKeys = dbFiles.Except(currentFiles, new MusicItemComparer())
                 .Select(d => d.Source);
 
             return (removeFileKeys, exc2);
         }
 
-        private List<PlayListItem> ScanAllPlayList(List<FileInfo> playListsFile)
+        private List<PlayListItem> ScanAllPlayList(Realm db, List<FileInfo> playListsFile)
         {
-            var playLists = GetAllPlaylistItem(_db, playListsFile);
-            _db.Write(() =>
+            var playLists = GetAllPlaylistItem(db, playListsFile);
+            db.Write(() =>
             {
-                var exist = _db.All<PlayListItemDb>();
-                _db.RemoveRange(exist);
-                _db.Add(playLists.Select(a => a.ToDb()), update: true);
+                var exist = db.All<PlayListItemDb>();
+                db.RemoveRange(exist);
+                db.Add(playLists.Select(a => a.ToDb()), update: true);
             });
             return playLists;
         }
 
-        private List<AlbumGroup> ScanAllMusicAndSave(List<string> libs)
-        {
-            var files = GetMusicFilesFromLibrary(libs);
-            var allmusic = GetAllMusicItem(files);
-            var albums = GroupAllMusicIntoAlbum(allmusic);
-            var groups = GroupAllAlbumByYear(albums);
-
-            _db.Write(() =>
-            {
-                var existAlbum = _db.All<AlbumItemDb>();
-                var existMusic = _db.All<MusicItemDb>();
-                _db.RemoveRange(existAlbum);
-                _db.RemoveRange(existMusic);
-                _db.Add(albums.Select(a => a.ToDb()));
-            });
-            return groups;
-        }
-
-        BackgroundWorker _worker;
-        BackgroundWorker Worker
-        {
-            get
-            {
-                if (_worker == null)
-                {
-                    _worker = new BackgroundWorker
-                    {
-                        WorkerSupportsCancellation = true,
-                        WorkerReportsProgress = true
-                    };
-                    _worker.DoWork += DoWork;
-                    _worker.ProgressChanged += ProgressChanged;
-                    _worker.RunWorkerCompleted += RunWorkerCompleted;
-                }
-                return _worker;
-            }
-        }
-
-        BackgroundWorker _watcherWorker;
-        BackgroundWorker WatcherWorker
-        {
-            get
-            {
-                if (_watcherWorker == null)
-                {
-                    _watcherWorker = new BackgroundWorker
-                    {
-                        WorkerSupportsCancellation = true,
-                        WorkerReportsProgress = true
-                    };
-                    _watcherWorker.DoWork += WatcherDoWork;
-                    _watcherWorker.ProgressChanged += WatcherProgressChanged;
-                    _watcherWorker.RunWorkerCompleted += WatcherRunWorkerCompleted;
-                }
-                return _watcherWorker;
-            }
-        }
-
-        DispatcherQueue UIQueue;
-
-        private void WatcherProgressChanged(object sender, ProgressChangedEventArgs e)
-        {
-            var state = (LocalMusicState)e.ProgressPercentage;
-            switch (state)
-            {
-                case LocalMusicState.NonFirstLoading:
-                    UIQueue?.TryEnqueue(() =>
-                    {
-                        OnNonFirstLoadingStarted?.Invoke();
-                    });
-                    break;
-                default:
-                    break;
-            }
-        }
-
-        private void WatcherRunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
-        {
-            if (e.Result == null)
-            {
-                return;
-            }
-            var (albumGroup, playLists) = ((List<AlbumGroup> a, List<PlayListItem> b))e.Result;
-            LocalAlbums = albumGroup;
-            LocalPlayLists = playLists;
-            UIQueue?.TryEnqueue(() =>
-            {
-                OnLoadingEnded?.Invoke();
-                OnAlbumGroupChanged?.Invoke(albumGroup, playLists);
-            });
-        }
-
-        private void WatcherDoWork(object sender, DoWorkEventArgs e)
-        {
-            WatcherWorker.ReportProgress((int)LocalMusicState.NonFirstLoading);
-
-            _db = Realm.GetInstance(DbPath);
-            var files2 = GetMusicFilesFromLibrary(Config.MusicLibrary.Select(l => l.Path).ToList());
-
-            var (removeList, addOrUpdateList) = CheckMusicHasUpdate(files2);
-
-            List<AlbumGroup> groups = null;
-            if (addOrUpdateList != null && addOrUpdateList.Any())
-            {
-                groups = AddOrUpdateNewMusicAndSave(addOrUpdateList);
-            }
-            else if (removeList != null && removeList.Any())
-            {
-                groups = RemoveMusicAndSave(removeList);
-            }
-
-            var playListFiles = GetAllPlaylists();
-            List<PlayListItem> playLists = ScanAllPlayList(playListFiles);
-
-            e.Result = (groups, playLists);
-            _db?.Dispose();
-        }
 
         private static bool CheckPlayListHasUpdate(List<PlayListItem> stored, List<FileInfo> current)
         {
@@ -555,7 +443,7 @@ namespace HotPotPlayer.Services
             return false;
         }
 
-        private List<FileInfo> GetAllPlaylists()
+        private List<FileInfo> GetAllPlaylistFiles()
         {
             var libs = Config.MusicPlayList.Select(s => s.Path);
             List<FileInfo> files = new();
@@ -602,11 +490,10 @@ namespace HotPotPlayer.Services
             return r;
         }
 
-        List<FileSystemWatcher> _watchers;
-
+        #region FileSystemWatcher
         private void InitFileSystemWatcher()
         {
-            _watchers = Config.MusicLibrary.Select(l =>
+            _watchers ??= Config.MusicLibrary.Select(l =>
             {
                 var fsw = new FileSystemWatcher
                 {
@@ -626,27 +513,28 @@ namespace HotPotPlayer.Services
 
         private void WatcherMusicDeleted(object sender, FileSystemEventArgs e)
         {
-            if (!WatcherWorker.IsBusy)
+            if (!Loader.IsBusy)
             {
-                WatcherWorker.RunWorkerAsync();
+                Loader.RunWorkerAsync();
             }
         }
 
         private void WatcherMusicRenamed(object sender, RenamedEventArgs e)
         {
-            if (!WatcherWorker.IsBusy)
+            if (!Loader.IsBusy)
             {
-                WatcherWorker.RunWorkerAsync();
+                Loader.RunWorkerAsync();
             }
         }
 
         private void WatcherMusicCreated(object sender, FileSystemEventArgs e)
         {
-            if (!WatcherWorker.IsBusy)
+            if (!Loader.IsBusy)
             {
-                WatcherWorker.RunWorkerAsync();
+                Loader.RunWorkerAsync();
             }
         }
+        #endregion
 
         List<AlbumItem> QueryArtistAlbum(string artistName)
         {
@@ -673,9 +561,8 @@ namespace HotPotPlayer.Services
 
         public override void Dispose()
         {
-            Worker?.Dispose();
-            _db?.Dispose();
-            //_fsw?.Dispose();
+            Loader?.Dispose();
+            _watchers?.ForEach(fsw => fsw.Dispose());
         }
     }
 }
