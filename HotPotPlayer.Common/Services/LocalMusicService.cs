@@ -1,4 +1,5 @@
-﻿using HotPotPlayer.Extensions;
+﻿using CommunityToolkit.Common.Collections;
+using HotPotPlayer.Extensions;
 using HotPotPlayer.Models;
 using Microsoft.UI.Dispatching;
 using Realms;
@@ -37,12 +38,13 @@ namespace HotPotPlayer.Services
 
         #endregion
         #region Property
-        private ObservableCollection<AlbumGroup> _localAlbumGroup;
+        private ObservableGroupedCollection<int, AlbumItem> _localAlbumGroup;
+        private ReadOnlyObservableGroupedCollection<int, AlbumItem> _localAlbumGroup2;
 
-        public ObservableCollection<AlbumGroup> LocalAlbumGroup
+        public ReadOnlyObservableGroupedCollection<int, AlbumItem> LocalAlbumGroup
         {
-            get => _localAlbumGroup ??= new ObservableCollection<AlbumGroup>();
-            set => Set(ref _localAlbumGroup, value);
+            get => _localAlbumGroup2;
+            set => Set(ref _localAlbumGroup2, value);
         }
 
         private ObservableCollection<PlayListItem> _localPlayListList;
@@ -121,20 +123,9 @@ namespace HotPotPlayer.Services
             return albums;
         }
 
-        static List<AlbumGroup> GroupAllAlbumByYear(IEnumerable<AlbumItem> albums)
+        static IEnumerable<IGrouping<int, AlbumItem>> GroupAllAlbumByYear(IEnumerable<AlbumItem> albums)
         {
-            var r = albums.GroupBy(m => m.Year).Select(g => 
-            {
-                var albumList = g.ToList();
-                albumList.Sort((a,b) => (a.Title ?? "").CompareTo(b.Title ?? ""));
-                var r = new AlbumGroup()
-                {
-                    Year = g.Key,
-                    Items = new ObservableCollection<AlbumItem>(albumList)
-                };
-                return r;
-            }).ToList();
-            r.Sort((a, b) => b.Year.CompareTo(a.Year));
+            var r = albums.GroupBy(m => m.Year).OrderByDescending(g => g.Key);
             return r;
         }
 
@@ -191,10 +182,11 @@ namespace HotPotPlayer.Services
 
             // Album分组
             var dbAlbumGroups = GroupAllAlbumByYear(dbAlbumList_);
+            _localAlbumGroup = new(dbAlbumGroups);
             UIQueue?.TryEnqueue(() =>
             {
-                LocalAlbumGroup = new ObservableCollection<AlbumGroup>(dbAlbumGroups);
-                LocalPlayListList = new ObservableCollection<PlayListItem>(dbPlayListList);
+                LocalAlbumGroup = new(_localAlbumGroup);
+                LocalPlayListList = new(dbPlayListList);
                 State = LocalMusicState.InitComplete;
             });
 
@@ -206,7 +198,7 @@ namespace HotPotPlayer.Services
             var playListHasUpdate = CheckPlayListHasUpdate(db, localPlayListFiles);
 
             // 应用更改
-            ObservableCollection<AlbumGroup> newAlbumGroup = null;
+            ObservableGroupedCollection<int, AlbumItem> newAlbumGroup = null;
             ObservableCollection<PlayListItem> newPlayListList = null;
             if (addOrUpdateList != null && addOrUpdateList.Any())
             {
@@ -223,9 +215,10 @@ namespace HotPotPlayer.Services
 
             if (newAlbumGroup != null)
             {
+                _localAlbumGroup = newAlbumGroup;
                 UIQueue?.TryEnqueue(() =>
                 {
-                    LocalAlbumGroup = newAlbumGroup;
+                    LocalAlbumGroup = new(_localAlbumGroup);
                 });
             };
             if (newPlayListList != null)
@@ -240,7 +233,7 @@ namespace HotPotPlayer.Services
             InitFileSystemWatcher();
         }
 
-        private static List<AlbumGroup> RemoveMusicAndSave(Realm db, IEnumerable<string> removeList)
+        private static IEnumerable<IGrouping<int, AlbumItem>> RemoveMusicAndSave(Realm db, IEnumerable<string> removeList)
         {
             db.Write(() =>
             {
@@ -266,7 +259,7 @@ namespace HotPotPlayer.Services
             return groups;
         }
 
-        private static List<AlbumGroup> AddOrUpdateMusicAndSave(Realm db, IEnumerable<FileInfo> addOrUpdateList)
+        private static IEnumerable<IGrouping<int, AlbumItem>> AddOrUpdateMusicAndSave(Realm db, IEnumerable<FileInfo> addOrUpdateList)
         {
             var addOrUpdateMusic = addOrUpdateList.Select(f => f.ToMusicItem()).ToList();
             db.Write(() =>
@@ -298,6 +291,21 @@ namespace HotPotPlayer.Services
             }
 
             public override int GetHashCode(MusicItemDb obj)
+            {
+                return obj.Source.GetHashCode() + obj.LastWriteTime.GetHashCode();
+            }
+        }
+
+        sealed class PlayListItemComparer : EqualityComparer<PlayListItemDb>
+        {
+            public override bool Equals(PlayListItemDb x, PlayListItemDb y)
+            {
+                if (x.Source == y.Source && x.LastWriteTime == y.LastWriteTime)
+                    return true;
+                return false;
+            }
+
+            public override int GetHashCode(PlayListItemDb obj)
             {
                 return obj.Source.GetHashCode() + obj.LastWriteTime.GetHashCode();
             }
@@ -337,17 +345,17 @@ namespace HotPotPlayer.Services
 
         private static bool CheckPlayListHasUpdate(Realm db, List<FileInfo> current)
         {
-            var stored = db.All<PlayListItemDb>();
-
-            foreach (var s in stored)
+            var dbFiles = db.All<PlayListItemDb>().ToList();
+            var currentFiles = current.Select(c => new PlayListItemDb
             {
-                var match = current.FirstOrDefault(f => f.FullName == s.Source);
-                if (match != null && match.LastWriteTime.ToBinary() != s.LastWriteTime)
-                {
-                    return true;
-                }
-            }
-            return false;
+                Source = c.FullName,
+                LastWriteTime = c.LastWriteTime.ToBinary()
+            });
+
+            var newFiles = currentFiles.Except(dbFiles, new PlayListItemComparer());
+            var removeFiles = dbFiles.Except(currentFiles, new PlayListItemComparer());
+
+            return newFiles.Any() || removeFiles.Any();
         }
 
         private List<FileInfo> GetPlaylistFilesFromLibrary()
@@ -450,7 +458,7 @@ namespace HotPotPlayer.Services
             return result;
         }
 
-        public (List<AlbumGroup>, List<MusicItem>) GetArtistAlbumGroup(string artistName)
+        public (IEnumerable<IGrouping<int, AlbumItem>>, List<MusicItem>) GetArtistAlbumGroup(string artistName)
         {
             var album = QueryArtistAlbum(artistName);
             var group = GroupAllAlbumByYear(album);
