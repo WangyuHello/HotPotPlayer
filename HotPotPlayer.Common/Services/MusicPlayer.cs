@@ -1,17 +1,9 @@
 ﻿using HotPotPlayer.Models;
 using Microsoft.UI.Dispatching;
-using Microsoft.UI.Xaml;
 using NAudio.Wave;
-using NAudio.Wave.SampleProviders;
 using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
-using System.Linq;
-using System.Runtime.CompilerServices;
-using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
 
 namespace HotPotPlayer.Services
 {
@@ -25,8 +17,18 @@ namespace HotPotPlayer.Services
     public class MusicPlayer: ServiceBaseWithConfig
     {
         public enum PlayerState 
-        { 
+        {   
+            Idle,
+            Playing,
             Error
+        }
+
+        private PlayerState _state;
+
+        public PlayerState State
+        {
+            get => _state;
+            set => Set(ref _state, value);
         }
 
         private MusicItem _currentPlaying;
@@ -216,7 +218,7 @@ namespace HotPotPlayer.Services
                 {
                     return;
                 }
-                _timer.Stop();
+                _playerTimer.Stop();
                 CurrentTime = TimeSpan.Zero;
                 IsPlaying = false;
                 _playerStarter.RunWorkerAsync(index);
@@ -272,7 +274,7 @@ namespace HotPotPlayer.Services
             }
             if (_outputDevice.PlaybackState == PlaybackState.Playing)
             {
-                _timer.Stop();
+                _playerTimer.Stop();
                 _outputDevice.Pause();
                 IsPlaying = false;
             }
@@ -286,7 +288,7 @@ namespace HotPotPlayer.Services
             else
             {
                 _outputDevice.Play();
-                _timer.Start();
+                _playerTimer.Start();
                 IsPlaying = true;
             }
         }
@@ -309,7 +311,7 @@ namespace HotPotPlayer.Services
 
         private void OnPlaybackStopped(object sender, StoppedEventArgs e)
         {
-            _timer.Stop();
+            _playerTimer.Stop();
             _dispatcherQueue.TryEnqueue(() => IsPlaying = false);
             if (!_isMusicSwitching)
             {
@@ -319,7 +321,7 @@ namespace HotPotPlayer.Services
 
         WaveOutEvent _outputDevice;
         AudioFileReader _audioFile;
-        readonly System.Timers.Timer _timer;
+        readonly System.Timers.Timer _playerTimer;
         bool _isMusicSwitching;
 
         public MusicPlayer(ConfigBase config): base(config)
@@ -327,33 +329,19 @@ namespace HotPotPlayer.Services
             _dispatcherQueue = DispatcherQueue.GetForCurrentThread();
             _playerStarter = new BackgroundWorker
             {
-                WorkerReportsProgress = true
             };
-            _playerStarter.RunWorkerCompleted += Worker_RunWorkerCompleted;
-            _playerStarter.DoWork += Worker_DoWork;
-            _playerStarter.ProgressChanged += Worker_ProgressChanged;
-            _timer = new System.Timers.Timer(500)
+            _playerStarter.RunWorkerCompleted += PlayerStarterCompleted;
+            _playerStarter.DoWork += PlayerStarterDoWork;
+            _playerTimer = new System.Timers.Timer(500)
             {
                 AutoReset = true
             };
-            _timer.Elapsed += Timer_Elapsed;
+            _playerTimer.Elapsed += PlayerTimerElapsed;
 
             Config.SaveConfigWhenExit("Volume", () => (Volume != 0, Volume));
         }
 
-        private void Worker_ProgressChanged(object sender, ProgressChangedEventArgs e)
-        {
-            var state = (PlayerState)e.ProgressPercentage;
-            switch (state)
-            {
-                case PlayerState.Error:
-                    break;
-                default:
-                    break;
-            }
-        }
-
-        private void Timer_Elapsed(object sender, System.Timers.ElapsedEventArgs e)
+        private void PlayerTimerElapsed(object sender, System.Timers.ElapsedEventArgs e)
         {
             var time = _audioFile.CurrentTime;
             _dispatcherQueue.TryEnqueue(() =>
@@ -369,7 +357,7 @@ namespace HotPotPlayer.Services
             });
         }
 
-        private void Worker_DoWork(object sender, DoWorkEventArgs e)
+        private void PlayerStarterDoWork(object sender, DoWorkEventArgs e)
         {
             _isMusicSwitching = true;
             var index = (int)e.Argument;
@@ -417,7 +405,7 @@ namespace HotPotPlayer.Services
             _isMusicSwitching = false;
         }
 
-        private void Worker_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
+        private void PlayerStarterCompleted(object sender, RunWorkerCompletedEventArgs e)
         {
             IsPlayBarVisible = true;
             if (e.Result != null)
@@ -428,7 +416,7 @@ namespace HotPotPlayer.Services
                 var music = CurrentPlayList[index];
                 CurrentPlaying = music;
                 CurrentPlayingIndex = index;
-                _timer.Start();
+                _playerTimer.Start();
                 RaisePropertyChanged(nameof(Volume));
             }
             else
@@ -455,7 +443,7 @@ namespace HotPotPlayer.Services
             _playerStarter?.Dispose();
             _outputDevice?.Dispose();
             _audioFile?.Dispose();
-            _timer?.Dispose();
+            _playerTimer?.Dispose();
         }
 
         readonly BackgroundWorker _playerStarter;

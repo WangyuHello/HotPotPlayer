@@ -2,21 +2,13 @@
 using HotPotPlayer.Models;
 using Microsoft.UI.Dispatching;
 using Realms;
-using SixLabors.ImageSharp;
-using SixLabors.ImageSharp.PixelFormats;
-using SixLabors.ImageSharp.Processing;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
-using System.Diagnostics;
 using System.IO;
 using System.Linq;
-using System.Security.Cryptography;
-using System.Text;
-using System.Threading.Tasks;
 using System.Xml.Linq;
-using Windows.Storage;
 
 namespace HotPotPlayer.Services
 {
@@ -400,7 +392,7 @@ namespace HotPotPlayer.Services
                     LastWriteTime = f.LastWriteTime,
                     MusicItems = files,
                 };
-                pl.SetPlayListCover(Config);
+                //pl.SetPlayListCover(Config);
                 return pl;
             }).ToList();
 
