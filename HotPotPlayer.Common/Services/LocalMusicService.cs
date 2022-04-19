@@ -14,7 +14,7 @@ namespace HotPotPlayer.Services
 {
     public class LocalMusicService: ServiceBaseWithConfig
     {
-        public LocalMusicService(ConfigBase config) : base(config) { }
+        public LocalMusicService(ConfigBase config, DispatcherQueue uiQueue = null) : base(config, uiQueue) { }
         
         #region State
         public enum LocalMusicState
@@ -54,7 +54,7 @@ namespace HotPotPlayer.Services
         }
         #endregion
         #region Field
-        static readonly string[] SupportedExt = new[] { ".flac", ".wav", ".m4a", ".mp3" };
+        public static readonly string[] SupportedExt = new[] { ".flac", ".wav", ".m4a", ".mp3" };
 
         BackgroundWorker _loader;
         BackgroundWorker Loader
@@ -77,14 +77,13 @@ namespace HotPotPlayer.Services
         string _dbPath;
         string DbPath => _dbPath ??= Path.Combine(Config.DatabaseFolder, "LocalMusic.db");
 
-        DispatcherQueue _UIQueue;
 
         List<FileSystemWatcher> _watchers;
         #endregion
 
         private List<FileInfo> GetMusicFilesFromLibrary()
         {
-            var libs = Config.MusicPlayList.Select(s => s.Path);
+            var libs = Config.MusicLibrary.Select(s => s.Path);
             List<FileInfo> files = new();
             foreach (var lib in libs)
             {
@@ -144,7 +143,6 @@ namespace HotPotPlayer.Services
         /// </summary>
         public void StartLoadLocalMusic()
         {
-            _UIQueue ??= DispatcherQueue.GetForCurrentThread();
             if (Loader.IsBusy)
             {
                 return;
@@ -159,7 +157,7 @@ namespace HotPotPlayer.Services
 
         void EnqueueChangeState(LocalMusicState newState)
         {
-            _UIQueue.TryEnqueue(() =>
+            UIQueue?.TryEnqueue(() =>
             {
                 State = newState;
             });
@@ -193,7 +191,7 @@ namespace HotPotPlayer.Services
 
             // Album分组
             var dbAlbumGroups = GroupAllAlbumByYear(dbAlbumList_);
-            _UIQueue.TryEnqueue(() =>
+            UIQueue?.TryEnqueue(() =>
             {
                 LocalAlbumGroup = new ObservableCollection<AlbumGroup>(dbAlbumGroups);
                 LocalPlayListList = new ObservableCollection<PlayListItem>(dbPlayListList);
@@ -225,14 +223,14 @@ namespace HotPotPlayer.Services
 
             if (newAlbumGroup != null)
             {
-                _UIQueue.TryEnqueue(() =>
+                UIQueue?.TryEnqueue(() =>
                 {
                     LocalAlbumGroup = newAlbumGroup;
                 });
             };
             if (newPlayListList != null)
             {
-                _UIQueue.TryEnqueue(() =>
+                UIQueue?.TryEnqueue(() =>
                 {
                     LocalPlayListList = newPlayListList;
                 });
@@ -270,7 +268,7 @@ namespace HotPotPlayer.Services
 
         private static List<AlbumGroup> AddOrUpdateMusicAndSave(Realm db, IEnumerable<FileInfo> addOrUpdateList)
         {
-            var addOrUpdateMusic = addOrUpdateList.Select(f => f.ToMusicItem());
+            var addOrUpdateMusic = addOrUpdateList.Select(f => f.ToMusicItem()).ToList();
             db.Write(() =>
             {
                 db.Add(addOrUpdateMusic.Select(a => a.ToDb()), update: true);

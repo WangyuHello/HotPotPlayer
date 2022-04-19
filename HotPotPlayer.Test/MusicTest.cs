@@ -15,24 +15,34 @@ namespace HotPotPlayer.Test
             var config = new MockConfig();
             config.ClearDb();
             var musicService = new LocalMusicService(config);
-            musicService.OnAlbumGroupChanged += MusicService_OnAlbumGroupChanged; ;
             musicService.StartLoadLocalMusic();
         }
 
-        private void MusicService_OnAlbumGroupChanged(List<AlbumGroup> arg1, List<PlayListItem> arg2)
-        {
-            Console.WriteLine();
-        }
+
 
         [Fact]
         public void Test2()
         {
             var config = new MockConfig();
             var musicService = new LocalMusicService(config);
-            musicService.OnAlbumGroupChanged += MusicService_OnAlbumGroupChanged; ;
             musicService.StartLoadLocalMusic();
         }
 
+        [Fact]
+        public void Test3()
+        {
+            var config = new MockConfig2();
+            config.ClearDb();
+            var musicService = new LocalMusicService(config);
+            musicService.StartLoadLocalMusic();
+        }
 
+        [Fact]
+        public void Test4()
+        {
+            var config = new MockConfig2();
+            var musicService = new LocalMusicService(config);
+            musicService.StartLoadLocalMusic();
+        }
     }
 }

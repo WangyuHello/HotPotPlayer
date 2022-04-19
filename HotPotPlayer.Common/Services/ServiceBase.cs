@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.UI.Dispatching;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
@@ -30,10 +31,12 @@ namespace HotPotPlayer.Services
     public class ServiceBaseWithConfig: ServiceBase
     {
         protected ConfigBase Config { get; init; }
+        protected DispatcherQueue UIQueue { get; init; }
 
-        public ServiceBaseWithConfig(ConfigBase config)
+        public ServiceBaseWithConfig(ConfigBase config, DispatcherQueue uiThread = null)
         {
             Config = config;
+            UIQueue = uiThread;
         }
     }
 }
