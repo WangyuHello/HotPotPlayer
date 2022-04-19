@@ -85,47 +85,10 @@ namespace HotPotPlayer.Services
         string _dbPath;
         string DbPath => _dbPath ??= Path.Combine(Config.DatabaseFolder, "LocalMusic.db");
 
-        MD5 _md5;
-        MD5 Md5 => _md5 ??= MD5.Create();
-
         DispatcherQueue _UIQueue;
 
         List<FileSystemWatcher> _watchers;
         #endregion
-
-        static List<MusicItem> GetAllMusicItem(IEnumerable<FileInfo> files)
-        {
-            return files.Select(FileToMusic).ToList();
-        }
-
-        public static MusicItem FileToMusic(FileInfo f)
-        {
-            using var tfile = TagLib.File.Create(f.FullName);
-            //var duration = await GetMusicDurationAsync(f);
-            var item = new MusicItem
-            {
-                Source = f,
-                Title = tfile.Tag.Title,
-                Artists = tfile.Tag.Performers,
-                Album = tfile.Tag.Album,
-                Year = (int)tfile.Tag.Year,
-                //Duration = duration,
-                Duration = tfile.Properties.Duration,
-                Track = (int)tfile.Tag.Track,
-                LastWriteTime = f.LastWriteTime,
-                AlbumArtists = tfile.Tag.AlbumArtists,
-                Disc = (int)tfile.Tag.Disc,
-            };
-
-            return item;
-        }
-
-        static async Task<TimeSpan> GetMusicDurationAsync(FileInfo f)
-        {
-            var file = await StorageFile.GetFileFromPathAsync(f.FullName);
-            var prop = await file?.Properties?.GetMusicPropertiesAsync();
-            return prop == null ? TimeSpan.Zero : prop.Duration;
-        }
 
         private List<FileInfo> GetMusicFilesFromLibrary()
         {
@@ -140,14 +103,12 @@ namespace HotPotPlayer.Services
             return files;
         }
 
-        List<AlbumItem> GroupAllMusicIntoAlbum(IEnumerable<MusicItem> allMusic)
+        static IEnumerable<AlbumItem> GroupAllMusicIntoAlbum(IEnumerable<MusicItem> allMusic)
         {
             var albums = allMusic.GroupBy(m2 => m2.AlbumSignature).Select(g2 => 
             {
                 var music = g2.ToList();
                 music.Sort((a,b) => a.DiscTrack.CompareTo(b.DiscTrack));
-
-                var (cover, color) = WriteCoverToLocalCache(g2.First());
 
                 var albumArtists = g2.First().AlbumArtists.Length == 0 ? g2.First().Artists : g2.First().AlbumArtists;
                 var allArtists = g2.SelectMany(m => m.Artists).Concat(albumArtists).Distinct().ToArray();
@@ -157,19 +118,15 @@ namespace HotPotPlayer.Services
                     Title = g2.First().Album,
                     Artists = albumArtists,
                     Year = g2.First().Year,
-                    Cover = cover,
                     MusicItems = music,
-                    MainColor = color,
                     AllArtists = allArtists
                 };
                 foreach (var item in i.MusicItems)
                 {
-                    item.Cover = i.Cover;
-                    item.MainColor = i.MainColor;
                     item.AlbumRef = i;
                 }
                 return i;
-            }).ToList();
+            });
             return albums;
         }
 
@@ -188,53 +145,6 @@ namespace HotPotPlayer.Services
             }).ToList();
             r.Sort((a, b) => b.Year.CompareTo(a.Year));
             return r;
-        }
-
-
-
-        string _albumCoverDir;
-        string AlbumCoverDir
-        {
-            get
-            {
-                if (string.IsNullOrEmpty(_albumCoverDir))
-                {
-                    _albumCoverDir = Path.Combine(Config.LocalFolder, "Cover");
-                    if (!Directory.Exists(_albumCoverDir))
-                    {
-                        Directory.CreateDirectory(_albumCoverDir);
-                    }
-                }
-                return _albumCoverDir;
-            }
-        }
-
-        (string, Color) WriteCoverToLocalCache(MusicItem m)
-        {
-            if (!string.IsNullOrEmpty(m.Cover))
-            {
-                return (m.Cover, m.MainColor);
-            }
-         
-            var tag = TagLib.File.Create(m.Source.FullName);
-            Span<byte> binary = tag.Tag.Pictures?.FirstOrDefault()?.Data?.Data;
-
-            if (binary != null && binary.Length != 0)
-            {
-                var buffer = Md5.ComputeHash(binary.ToArray());
-                var hashName = Convert.ToHexString(buffer);
-                var albumCoverName = Path.Combine(AlbumCoverDir, hashName);
-
-                using var image = Image.Load<Rgba32>(binary);
-                var width = image.Width;
-                var height = image.Height;
-                image.Mutate(x => x.Resize(400, 400*height/width));
-                var color = image.GetMainColor();
-                image.SaveAsPng(albumCoverName);
-
-                return (albumCoverName, color);
-            }
-            return (string.Empty, Color.White);
         }
 
         /// <summary>
@@ -265,6 +175,7 @@ namespace HotPotPlayer.Services
 
         void LoadLocalMusic(object sender, DoWorkEventArgs e)
         {
+            bool? fromWatcher = (bool?)e.Argument;
             //检查是否有缓存好的数据库
             var libs = Config.MusicLibrary;
             if (libs == null)
@@ -276,6 +187,10 @@ namespace HotPotPlayer.Services
             // 获取DB，如果没有其会自动创建
             using var db = Realm.GetInstance(DbPath);
 
+            if (fromWatcher != null && (bool)fromWatcher)
+            {
+                goto CheckLocalUpdate;
+            }
             // 获取DB内容
             var dbAlbums = db.All<AlbumItemDb>();
             var dbPlayLists = db.All<PlayListItemDb>();
@@ -293,11 +208,12 @@ namespace HotPotPlayer.Services
                 State = LocalMusicState.InitComplete;
             });
 
+            CheckLocalUpdate:
             // 查询本地文件变动
             var localMusicFiles = GetMusicFilesFromLibrary();
-            var localPlayListFiles = GetAllPlaylistFiles();
+            var localPlayListFiles = GetPlaylistFilesFromLibrary();
             var (removeList, addOrUpdateList) = CheckMusicHasUpdate(db, localMusicFiles);
-            var playListHasUpdate = CheckPlayListHasUpdate(dbPlayListList, localPlayListFiles);
+            var playListHasUpdate = CheckPlayListHasUpdate(db, localPlayListFiles);
 
             // 应用更改
             ObservableCollection<AlbumGroup> newAlbumGroup = null;
@@ -334,7 +250,7 @@ namespace HotPotPlayer.Services
             InitFileSystemWatcher();
         }
 
-        private List<AlbumGroup> RemoveMusicAndSave(Realm db, IEnumerable<string> removeList)
+        private static List<AlbumGroup> RemoveMusicAndSave(Realm db, IEnumerable<string> removeList)
         {
             db.Write(() =>
             {
@@ -360,17 +276,16 @@ namespace HotPotPlayer.Services
             return groups;
         }
 
-        private List<AlbumGroup> AddOrUpdateMusicAndSave(Realm db, IEnumerable<FileInfo> addOrUpdateList)
+        private static List<AlbumGroup> AddOrUpdateMusicAndSave(Realm db, IEnumerable<FileInfo> addOrUpdateList)
         {
-            List<AlbumGroup> groups;
-            var addOrUpdateMusic = GetAllMusicItem(addOrUpdateList);
+            var addOrUpdateMusic = addOrUpdateList.Select(f => f.ToMusicItem());
             db.Write(() =>
             {
                 db.Add(addOrUpdateMusic.Select(a => a.ToDb()), update: true);
             });
 
             var allmusic = db.All<MusicItemDb>().AsEnumerable().Select(d => d.ToOrigin());
-            var albums = GroupAllMusicIntoAlbum(allmusic);
+            var albums = GroupAllMusicIntoAlbum(allmusic).ToList();
 
             db.Write(() =>
             {
@@ -379,7 +294,7 @@ namespace HotPotPlayer.Services
                 db.Add(albums.Select(a => a.ToDb()), update: true);
             });
 
-            groups = GroupAllAlbumByYear(albums);
+            var groups = GroupAllAlbumByYear(albums);
             return groups;
         }
 
@@ -430,12 +345,14 @@ namespace HotPotPlayer.Services
         }
 
 
-        private static bool CheckPlayListHasUpdate(List<PlayListItem> stored, List<FileInfo> current)
+        private static bool CheckPlayListHasUpdate(Realm db, List<FileInfo> current)
         {
+            var stored = db.All<PlayListItemDb>();
+
             foreach (var s in stored)
             {
-                var match = current.FirstOrDefault(f => f.FullName == s.Source.FullName);
-                if (match != null && match.LastWriteTime != s.LastWriteTime)
+                var match = current.FirstOrDefault(f => f.FullName == s.Source);
+                if (match != null && match.LastWriteTime.ToBinary() != s.LastWriteTime)
                 {
                     return true;
                 }
@@ -443,7 +360,7 @@ namespace HotPotPlayer.Services
             return false;
         }
 
-        private List<FileInfo> GetAllPlaylistFiles()
+        private List<FileInfo> GetPlaylistFilesFromLibrary()
         {
             var libs = Config.MusicPlayList.Select(s => s.Path);
             List<FileInfo> files = new();
@@ -515,7 +432,7 @@ namespace HotPotPlayer.Services
         {
             if (!Loader.IsBusy)
             {
-                Loader.RunWorkerAsync();
+                Loader.RunWorkerAsync(true);
             }
         }
 
@@ -523,7 +440,7 @@ namespace HotPotPlayer.Services
         {
             if (!Loader.IsBusy)
             {
-                Loader.RunWorkerAsync();
+                Loader.RunWorkerAsync(true);
             }
         }
 
@@ -531,7 +448,7 @@ namespace HotPotPlayer.Services
         {
             if (!Loader.IsBusy)
             {
-                Loader.RunWorkerAsync();
+                Loader.RunWorkerAsync(true);
             }
         }
         #endregion
