@@ -450,7 +450,7 @@ namespace HotPotPlayer.Helpers
             {
                 if (uri.IsFile)
                 {
-                    using (var tfile = TagLib.File.Create(uri.AbsolutePath))
+                    using (var tfile = TagLib.File.Create(uri.LocalPath))
                     {
                         byte[] binary = tfile.Tag.Pictures?.FirstOrDefault()?.Data?.Data;
                         ms.Write(binary, 0, binary.Length);

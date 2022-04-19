@@ -19,14 +19,14 @@ namespace HotPotPlayer.Helpers
         /// Private singleton field.
         /// </summary>
         [ThreadStatic]
-        private static ImageCache _instance;
+        private static ImageCacheEx _instance;
 
         private List<string> _extendedPropertyNames = new List<string>();
 
         /// <summary>
         /// Gets public singleton property.
         /// </summary>
-        public static ImageCache Instance => _instance ?? (_instance = new ImageCache());
+        public static ImageCacheEx Instance => _instance ?? (_instance = new ImageCacheEx());
 
         /// <summary>
         /// Gets or sets which DispatcherQueue is used to dispatch UI updates.

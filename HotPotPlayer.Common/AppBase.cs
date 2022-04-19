@@ -1,5 +1,6 @@
 ﻿using HotPotPlayer.Models;
 using HotPotPlayer.Services;
+using Microsoft.UI.Dispatching;
 using Microsoft.UI.Xaml;
 using Newtonsoft.Json.Linq;
 using System;
@@ -17,7 +18,7 @@ namespace HotPotPlayer
         public ConfigBase Config => config ??= new AppConfig();
 
         LocalMusicService localMusicService;
-        public LocalMusicService LocalMusicService => localMusicService ??= new LocalMusicService(Config);
+        public LocalMusicService LocalMusicService => localMusicService ??= new LocalMusicService(Config, DispatcherQueue.GetForCurrentThread());
 
         NetEaseMusicService netEaseMusicService;
         public NetEaseMusicService NetEaseMusicService => netEaseMusicService ??= new NetEaseMusicService();

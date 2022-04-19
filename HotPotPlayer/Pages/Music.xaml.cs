@@ -1,5 +1,6 @@
 ﻿using CommunityToolkit.WinUI.UI.Controls;
 using HotPotPlayer.Extensions;
+using HotPotPlayer.Helpers;
 using HotPotPlayer.Models;
 using HotPotPlayer.Pages.Helper;
 using HotPotPlayer.Services;
@@ -10,6 +11,7 @@ using Microsoft.UI.Xaml.Data;
 using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Media.Animation;
+using Microsoft.UI.Xaml.Media.Imaging;
 using Microsoft.UI.Xaml.Navigation;
 using System;
 using System.Collections.Generic;
@@ -38,21 +40,6 @@ namespace HotPotPlayer.Pages
             InitializeComponent();
         }
 
-        public ObservableCollection<AlbumGroup> LocalAlbum { get; set; } = new ObservableCollection<AlbumGroup>();
-        public ObservableCollection<PlayListItem> LocalPlayList { get; set; } = new ObservableCollection<PlayListItem>();
-
-        private bool _isFirstLoading;
-        public bool IsFirstLoading 
-        {
-            get => _isFirstLoading;
-            set => Set(ref _isFirstLoading, value);
-        }
-        private bool _isNonFirstLoading;
-        public bool IsNonFirstLoading
-        {
-            get => _isNonFirstLoading;
-            set => Set(ref _isNonFirstLoading, value);
-        }
         private AlbumItem _selectedAlbum;
         public AlbumItem SelectedAlbum
         {
@@ -72,37 +59,7 @@ namespace HotPotPlayer.Pages
             set => Set(ref _albumAddFlyout, value);
         }
 
-        void InitializeMusic()
-        {
-            var musicService = ((App)Application.Current).LocalMusicService;
-            musicService.OnAlbumGroupChanged += MusicService_OnAlbumGroupChanged;
-            musicService.OnFirstLoadingStarted += () => IsFirstLoading = true;
-            musicService.OnNonFirstLoadingStarted += () => IsNonFirstLoading = true;
-            musicService.OnLoadingEnded += () => { IsFirstLoading = false; IsNonFirstLoading = false; };
-            musicService.StartLoadLocalMusic();
-        }
-
-        private void MusicService_OnAlbumGroupChanged(List<AlbumGroup> g, List<PlayListItem> l)
-        {
-            if (g != null)
-            {
-                LocalAlbum.Clear();
-                foreach (var i in g)
-                {
-                    LocalAlbum.Add(i);
-                }
-            }
-
-            if (l != null)
-            {
-                LocalPlayList.Clear();
-                foreach (var i in l)
-                {
-                    LocalPlayList.Add(i);
-                }
-            }
-            AlbumAddFlyout = InitAlbumAddFlyout();
-        }
+        LocalMusicService MusicService => ((App)Application.Current).LocalMusicService;
 
         bool IsFirstNavigate = true;
 
@@ -113,7 +70,7 @@ namespace HotPotPlayer.Pages
             if (IsFirstNavigate)
             {
                 IsFirstNavigate = false;
-                InitializeMusic();
+                MusicService.StartLoadLocalMusic();
             }
         }
 
@@ -127,6 +84,13 @@ namespace HotPotPlayer.Pages
                 PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
             }
         }
+
+        Visibility GetLoadingVisibility(LocalMusicService.LocalMusicState state)
+        {
+            return state == LocalMusicService.LocalMusicState.Loading ? Visibility.Visible : Visibility.Collapsed;
+        }
+
+
 
         private void AlbumClick(object sender, RoutedEventArgs e)
         {
@@ -180,11 +144,11 @@ namespace HotPotPlayer.Pages
             };
             i1.Click += (s, a) => AlbumHelper.AlbumAddOne(SelectedAlbum);
             flyout.Items.Add(i1);
-            if (((App)Application.Current).LocalMusicService.LocalPlayLists.Count > 0)
+            if (MusicService.LocalPlayListList.Count > 0)
             {
                 var i2 = new MenuFlyoutSeparator();
                 flyout.Items.Add(i2);
-                foreach (var item in ((App)Application.Current).LocalMusicService.LocalPlayLists)
+                foreach (var item in MusicService.LocalPlayListList)
                 {
                     var i = new MenuFlyoutItem
                     {

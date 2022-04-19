@@ -15,17 +15,18 @@
     xmlns:media2="using:Microsoft.UI.Xaml.Media"
     xmlns:ui="using:CommunityToolkit.WinUI.UI"
     xmlns:animations="using:CommunityToolkit.WinUI.UI.Animations"
+    xmlns:collection="using:CommunityToolkit.Common.Collections"
     mc:Ignorable="d"
     NavigationCacheMode="Enabled"
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
 
     <Page.Resources>
-        <CollectionViewSource x:Name="LocalAlbumGroups" Source="{x:Bind LocalAlbum}" IsSourceGrouped="True" ItemsPath="Items" />
+        <CollectionViewSource x:Name="LocalAlbumGroups" Source="{x:Bind MusicService.LocalAlbumGroup}" IsSourceGrouped="True" />
 
         <DataTemplate x:Key="LocalAlbumZoomedInTemplate" x:DataType="models:AlbumItem">
             <Button Style="{StaticResource AlbumGroupButton}" Click="AlbumClick" Tag="{x:Bind }" x:Name="AlbumConnectedElement" >
                 <StackPanel Spacing="8" Margin="0,0,0,12">
-                    <controls:ImageEx Source="{x:Bind Cover}" Style="{StaticResource LocalMusicImageStyle}" />
+                    <controls:ImageEx Source="{x:Bind GetCoverAsync()}" Style="{StaticResource LocalMusicImageStyle}" />
                     <TextBlock Margin="8,0" Text="{x:Bind Title}" FontWeight="Bold" LineStackingStrategy="BaselineToBaseline" FontSize="14" MaxLines="2" TextTrimming="CharacterEllipsis" TextWrapping="Wrap" Height="40" ToolTipService.ToolTip="{x:Bind Title}"/>
                     <TextBlock Margin="8,0" Text="{x:Bind GetArtists()}" Foreground="Gray" ToolTipService.ToolTip="{x:Bind GetArtists()}"/>
                 </StackPanel>
@@ -45,12 +46,12 @@
             <Setter Property="Margin" Value="8" />
         </Style>
 
-        <DataTemplate x:Key="LocalAlbumZoomedInGroupHeaderTemplate" x:DataType="models:AlbumGroup">
-            <TextBlock Text="{x:Bind Year}" Foreground="{ThemeResource ApplicationForegroundThemeBrush}" Style="{StaticResource SubtitleTextBlockStyle}"/>
+        <DataTemplate x:Key="LocalAlbumZoomedInGroupHeaderTemplate" x:DataType="collection:IReadOnlyObservableGroup">
+            <TextBlock Text="{x:Bind Key.ToString()}" Foreground="{ThemeResource ApplicationForegroundThemeBrush}" Style="{StaticResource SubtitleTextBlockStyle}"/>
         </DataTemplate>
 
         <DataTemplate x:Key="LocalAlbumZoomedOutTemplate" x:DataType="muxdata:ICollectionViewGroup">
-            <TextBlock Margin="8" Text="{x:Bind ((models:AlbumGroup)Group).Year}" FontSize="20" TextWrapping="Wrap"/>
+            <TextBlock Margin="8" Text="{x:Bind ((collection:IReadOnlyObservableGroup)Group).Key.ToString()}" FontSize="20" TextWrapping="Wrap"/>
         </DataTemplate>
 
         <local:EvenOldTemplateSelector x:Key="EvenOldAlbumPopupTemplate" >
@@ -170,7 +171,7 @@
                 </SemanticZoom>
             </PivotItem>
             <PivotItem Header="播放列表" Margin="0">
-                <GridView x:Name="PlayListGridView" ItemsSource="{x:Bind LocalPlayList}" ScrollViewer.IsHorizontalScrollChainingEnabled="False" SelectionMode="None" ItemTemplate="{StaticResource LocalPlayListTemplate}" ItemContainerStyle="{StaticResource LocalAlbumContainerStyle}" >
+                <GridView x:Name="PlayListGridView" ItemsSource="{x:Bind MusicService.LocalPlayListList, Mode=OneWay}" ScrollViewer.IsHorizontalScrollChainingEnabled="False" SelectionMode="None" ItemTemplate="{StaticResource LocalPlayListTemplate}" ItemContainerStyle="{StaticResource LocalAlbumContainerStyle}" >
                     <GridView.Footer>
                         <Grid Height="100"/>
                     </GridView.Footer>
@@ -178,12 +179,7 @@
             </PivotItem>
         </Pivot>
 
-        <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center" Spacing="20" Visibility="{x:Bind IsFirstLoading, Mode=OneWay}" Translation="-24,0,0">
-            <ProgressRing IsActive="True" Height="60" Width="60"/>
-            <TextBlock FontSize="20">正在扫描音乐库</TextBlock>
-        </StackPanel>
-
-        <StackPanel VerticalAlignment="Top" HorizontalAlignment="Right" Spacing="8" Orientation="Horizontal" Margin="0,16,24,0" Visibility="{x:Bind IsNonFirstLoading, Mode=OneWay}">
+        <StackPanel VerticalAlignment="Top" HorizontalAlignment="Right" Spacing="8" Orientation="Horizontal" Margin="0,16,24,0" Visibility="{x:Bind GetLoadingVisibility(MusicService.State), Mode=OneWay}">
             <ProgressRing IsActive="True" Height="20" Width="20"/>
             <TextBlock FontSize="14">正在扫描音乐库</TextBlock>
         </StackPanel>

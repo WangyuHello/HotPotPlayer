@@ -97,11 +97,11 @@ namespace HotPotPlayer.Pages.MusicSub
             };
             i1.Click += (s, a) => AlbumHelper.AlbumAddOne(SelectedAlbum);
             flyout.Items.Add(i1);
-            if(((App)Application.Current).LocalMusicService.LocalPlayLists.Count > 0)
+            if(((App)Application.Current).LocalMusicService.LocalPlayListList.Count > 0)
             {
                 var i2 = new MenuFlyoutSeparator();
                 flyout.Items.Add(i2);
-                foreach (var item in ((App)Application.Current).LocalMusicService.LocalPlayLists)
+                foreach (var item in ((App)Application.Current).LocalMusicService.LocalPlayListList)
                 {
                     var i = new MenuFlyoutItem
                     {

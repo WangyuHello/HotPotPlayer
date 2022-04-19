@@ -1,4 +1,6 @@
 ﻿using HotPotPlayer.Extensions;
+using HotPotPlayer.Helpers;
+using Microsoft.UI.Xaml.Media.Imaging;
 using MongoDB.Bson;
 using Realms;
 using SixLabors.ImageSharp;
@@ -25,6 +27,11 @@ namespace HotPotPlayer.Models
         public string GetArtists()
         {
             return string.Join(", ", Artists);
+        }
+
+        public async Task<BitmapImage> GetCoverAsync()
+        {
+            return await ImageCacheEx.Instance.GetFromCacheAsync(Cover).ConfigureAwait(false);
         }
     }
 

@@ -1,4 +1,5 @@
-﻿using HotPotPlayer.Extensions;
+﻿using CommunityToolkit.Common.Collections;
+using HotPotPlayer.Extensions;
 using HotPotPlayer.Models;
 using HotPotPlayer.Pages.Helper;
 using Microsoft.UI.Xaml;
@@ -47,8 +48,8 @@ namespace HotPotPlayer.Pages.MusicSub
             }
         }
 
-        public ObservableCollection<AlbumGroup> LocalAlbum { get; set; } = new ObservableCollection<AlbumGroup>();
-        public ObservableCollection<MusicItem> LocalArtistMusic { get; set; } = new ObservableCollection<MusicItem>();
+        public ObservableGroupedCollection<int, AlbumItem> LocalAlbum { get; set; } = new();
+        public ObservableCollection<MusicItem> LocalArtistMusic { get; set; } = new();
 
         private string _artistName;
         public string ArtistName
@@ -75,11 +76,7 @@ namespace HotPotPlayer.Pages.MusicSub
             ArtistName = artistName;
 
             var (albumGroup, music) = await GetArtistWorksAsync(artistName);
-            LocalAlbum.Clear();
-            foreach (var item in albumGroup)
-            {
-                LocalAlbum.Add(item);
-            }
+            LocalAlbum = new ObservableGroupedCollection<int, AlbumItem>(albumGroup);
             AlbumAddFlyout = InitAlbumAddFlyout();
             LocalArtistMusic.Clear();
             foreach (var item in music)
@@ -89,7 +86,7 @@ namespace HotPotPlayer.Pages.MusicSub
             base.OnNavigatedTo(e);
         }
 
-        static async Task<(IEnumerable<AlbumGroup>, IEnumerable<MusicItem>)> GetArtistWorksAsync(string name)
+        static async Task<(IEnumerable<IGrouping<int, AlbumItem>>, IEnumerable<MusicItem>)> GetArtistWorksAsync(string name)
         {
             var albumGroup = await Task.Run(() =>
             {
@@ -130,7 +127,7 @@ namespace HotPotPlayer.Pages.MusicSub
             flyout.Items.Add(i1);
             var i2 = new MenuFlyoutSeparator();
             flyout.Items.Add(i2);
-            foreach (var item in ((App)Application.Current).LocalMusicService.LocalPlayLists)
+            foreach (var item in ((App)Application.Current).LocalMusicService.LocalPlayListList)
             {
                 var i = new MenuFlyoutItem
                 {

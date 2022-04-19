@@ -12,6 +12,7 @@
     xmlns:media2="using:Microsoft.UI.Xaml.Media"
     xmlns:controls="using:CommunityToolkit.WinUI.UI.Controls"
     xmlns:animations="using:CommunityToolkit.WinUI.UI.Animations"
+    xmlns:collection="using:CommunityToolkit.Common.Collections"
     mc:Ignorable="d"
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
 
@@ -32,12 +33,12 @@
             <Setter Property="Margin" Value="8" />
         </Style>
 
-        <DataTemplate x:Key="LocalAlbumZoomedInGroupHeaderTemplate" x:DataType="models:AlbumGroup">
-            <TextBlock Text="{x:Bind Year}" Foreground="{ThemeResource ApplicationForegroundThemeBrush}" Style="{StaticResource SubtitleTextBlockStyle}"/>
+        <DataTemplate x:Key="LocalAlbumZoomedInGroupHeaderTemplate" x:DataType="collection:IReadOnlyObservableGroup">
+            <TextBlock Text="{x:Bind (x:Int32)Key}" Foreground="{ThemeResource ApplicationForegroundThemeBrush}" Style="{StaticResource SubtitleTextBlockStyle}"/>
         </DataTemplate>
 
         <DataTemplate x:Key="LocalAlbumZoomedOutTemplate" x:DataType="muxdata:ICollectionViewGroup">
-            <TextBlock Margin="8" Text="{x:Bind ((models:AlbumGroup)Group).Year}" FontSize="20" TextWrapping="Wrap"/>
+            <TextBlock Margin="8" Text="{x:Bind ((collection:IReadOnlyObservableGroup)Group).Key}" FontSize="20" TextWrapping="Wrap"/>
         </DataTemplate>
 
         <pages:EvenOldTemplateSelector x:Key="EvenOldAlbumPopupTemplate" >

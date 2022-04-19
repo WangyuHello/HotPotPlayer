@@ -1,4 +1,5 @@
-﻿using HotPotPlayer.Services;
+﻿using HotPotPlayer.Extensions;
+using HotPotPlayer.Services;
 using Microsoft.UI.Composition;
 using Microsoft.UI.Input;
 using Microsoft.UI.Xaml;
@@ -65,7 +66,7 @@ namespace HotPotPlayer
             {
                 if (LocalMusicService.SupportedExt.Contains(initMedia.Extension))
                 {
-                    var music = LocalMusicService.FileToMusic(initMedia);
+                    var music = initMedia.ToMusicItem();
                     MusicPlayer.PlayNext(music);
                 }
                 else

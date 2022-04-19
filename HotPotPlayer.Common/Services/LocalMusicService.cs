@@ -21,8 +21,7 @@ namespace HotPotPlayer.Services
         public enum LocalMusicState
         {
             Idle,
-            FirstLoading,
-            NonFirstLoading,
+            Loading,
             InitComplete,
             Complete,
             NoLibraryAccess
@@ -38,13 +37,12 @@ namespace HotPotPlayer.Services
 
         #endregion
         #region Property
-        private ObservableGroupedCollection<int, AlbumItem> _localAlbumGroup;
+        private ObservableGroupedCollection<int, AlbumItem> _localAlbumGroup = new();
         private ReadOnlyObservableGroupedCollection<int, AlbumItem> _localAlbumGroup2;
 
         public ReadOnlyObservableGroupedCollection<int, AlbumItem> LocalAlbumGroup
         {
-            get => _localAlbumGroup2;
-            set => Set(ref _localAlbumGroup2, value);
+            get => _localAlbumGroup2 ??= new(_localAlbumGroup);
         }
 
         private ObservableCollection<PlayListItem> _localPlayListList;
@@ -112,7 +110,8 @@ namespace HotPotPlayer.Services
                     Artists = albumArtists,
                     Year = g2.First().Year,
                     MusicItems = music,
-                    AllArtists = allArtists
+                    AllArtists = allArtists,
+                    Cover = g2.First().Cover,
                 };
                 foreach (var item in i.MusicItems)
                 {
@@ -182,31 +181,34 @@ namespace HotPotPlayer.Services
 
             // Album分组
             var dbAlbumGroups = GroupAllAlbumByYear(dbAlbumList_);
-            _localAlbumGroup = new(dbAlbumGroups);
             UIQueue?.TryEnqueue(() =>
             {
-                LocalAlbumGroup = new(_localAlbumGroup);
+                foreach (var item in dbAlbumGroups)
+                {
+                    _localAlbumGroup.AddGroup(item.Key, item);
+                }
                 LocalPlayListList = new(dbPlayListList);
                 State = LocalMusicState.InitComplete;
             });
 
-            CheckLocalUpdate:
+        CheckLocalUpdate:
             // 查询本地文件变动
+            EnqueueChangeState(LocalMusicState.Loading);
             var localMusicFiles = GetMusicFilesFromLibrary();
             var localPlayListFiles = GetPlaylistFilesFromLibrary();
             var (removeList, addOrUpdateList) = CheckMusicHasUpdate(db, localMusicFiles);
             var playListHasUpdate = CheckPlayListHasUpdate(db, localPlayListFiles);
 
             // 应用更改
-            ObservableGroupedCollection<int, AlbumItem> newAlbumGroup = null;
+            IEnumerable<IGrouping<int, AlbumItem>> newAlbumGroup = null;
             ObservableCollection<PlayListItem> newPlayListList = null;
             if (addOrUpdateList != null && addOrUpdateList.Any())
             {
-                newAlbumGroup = new(AddOrUpdateMusicAndSave(db, addOrUpdateList));
+                newAlbumGroup = AddOrUpdateMusicAndSave(db, addOrUpdateList);
             }
             if (removeList != null && removeList.Any())
             {
-                newAlbumGroup = new(RemoveMusicAndSave(db, removeList));
+                newAlbumGroup = RemoveMusicAndSave(db, removeList);
             }
             if (playListHasUpdate)
             {
@@ -215,10 +217,13 @@ namespace HotPotPlayer.Services
 
             if (newAlbumGroup != null)
             {
-                _localAlbumGroup = newAlbumGroup;
                 UIQueue?.TryEnqueue(() =>
                 {
-                    LocalAlbumGroup = new(_localAlbumGroup);
+                    _localAlbumGroup.Clear();
+                    foreach (var item in newAlbumGroup)
+                    {
+                        _localAlbumGroup.AddGroup(item.Key, item);
+                    }
                 });
             };
             if (newPlayListList != null)
