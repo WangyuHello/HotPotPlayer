@@ -20,7 +20,7 @@ namespace HotPotPlayer.Models
         public int Year { get; set; }
         public TimeSpan Duration { get; set; }
         public int Track { get; set; }
-        public string Cover { get; set; }
+        public Uri Cover { get; set; }
         public Color MainColor { get; set; }
         public DateTime LastWriteTime { get; set; }
         public string[] AlbumArtists { get; set; }

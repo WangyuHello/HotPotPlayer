@@ -30,7 +30,6 @@ namespace HotPotPlayer.Helpers
         private ConcurrentDictionary<string, ConcurrentRequest> _concurrentTasks = new ConcurrentDictionary<string, ConcurrentRequest>();
 
         private HttpClient _httpClient = null;
-        private StorageFile _musicFile = null;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="CacheBase{T}"/> class.

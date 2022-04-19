@@ -398,7 +398,7 @@ namespace HotPotPlayer.Services
                     LastWriteTime = f.LastWriteTime,
                     MusicItems = files,
                 };
-                //pl.SetPlayListCover(Config);
+                pl.SetPlayListCover(Config);
                 return pl;
             }).ToList();
 

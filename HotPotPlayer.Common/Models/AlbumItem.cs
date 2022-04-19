@@ -17,7 +17,7 @@ namespace HotPotPlayer.Models
         public string Title { get; set; }
         public string[] Artists { get; set; }
         public int Year { get; set; }
-        public string Cover { get; set; }
+        public Uri Cover { get; set; }
         public Color MainColor { get; set; }
         public List<MusicItem> MusicItems { get; set; }
         public string[] AllArtists { get; set; }

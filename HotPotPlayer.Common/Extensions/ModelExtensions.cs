@@ -21,7 +21,7 @@ namespace HotPotPlayer.Extensions
                 Year = i.Year,
                 Duration = i.Duration.Ticks,
                 Track = i.Track,
-                Cover = i.Cover,
+                Cover = i.Cover.ToString(),
                 MainColor = i.MainColor.ToInt(),
                 LastWriteTime = i.LastWriteTime.ToBinary(),
                 AlbumArtists = string.Join(',', i.AlbumArtists),
@@ -45,7 +45,7 @@ namespace HotPotPlayer.Extensions
                 Year = i.Year,
                 Duration = TimeSpan.FromTicks(i.Duration),
                 Track = i.Track,
-                Cover = i.Cover,
+                Cover = new Uri(i.Cover),
                 MainColor = i.MainColor.ToColor(),
                 LastWriteTime = DateTime.FromBinary(i.LastWriteTime),
                 AlbumArtists = i.AlbumArtists.Split(','),
@@ -65,7 +65,7 @@ namespace HotPotPlayer.Extensions
                 Title = i.Title,
                 Artists = string.Join(',', i.Artists),
                 Year = i.Year,
-                Cover = i.Cover,
+                Cover = i.Cover.ToString(),
                 MainColor = i.MainColor.ToInt(),
                 AllArtists = string.Join(',', i.AllArtists),
             };
@@ -83,7 +83,7 @@ namespace HotPotPlayer.Extensions
                 Title = i.Title,
                 Artists = i.Artists.Split(','),
                 Year = i.Year,
-                Cover = i.Cover,
+                Cover = new Uri(i.Cover),
                 MusicItems = i.MusicItems.Select(i => i.ToOrigin()).ToList(),
                 MainColor = i.MainColor.ToColor(),
                 AllArtists = i.AllArtists.Split(','),
@@ -97,7 +97,7 @@ namespace HotPotPlayer.Extensions
                 Source = i.Source.FullName,
                 Title = i.Title,
                 Year = i.Year,
-                Cover = i.Cover,
+                Cover = i.Cover.ToString(),
                 LastWriteTime = i.LastWriteTime.ToBinary(),
             };
             foreach (var item in i.MusicItems)
@@ -114,7 +114,7 @@ namespace HotPotPlayer.Extensions
                 Source = new FileInfo(i.Source),
                 Title = i.Title,
                 Year = i.Year,
-                Cover = i.Cover,
+                Cover = new Uri(i.Cover),
                 LastWriteTime = DateTime.FromBinary(i.LastWriteTime),
                 MusicItems = i.MusicItems.Select(m => m.ToOrigin()).ToList(),
             };

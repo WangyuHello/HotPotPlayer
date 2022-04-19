@@ -14,7 +14,7 @@ namespace HotPotPlayer.Models
         public FileInfo Source { get; set; }
         public string Title { get; set; }
         public int Year { get; set; }
-        public string Cover { get; set; }
+        public Uri Cover { get; set; }
         public DateTime LastWriteTime { get; set; }
         public List<MusicItem> MusicItems { get; set; }
     }

@@ -21,6 +21,7 @@ namespace HotPotPlayer.Extensions
                 Artists = tfile.Tag.Performers,
                 Album = tfile.Tag.Album,
                 Year = (int)tfile.Tag.Year,
+                Cover = new Uri(f.FullName),
                 //Duration = duration,
                 Duration = tfile.Properties.Duration,
                 Track = (int)tfile.Tag.Track,
