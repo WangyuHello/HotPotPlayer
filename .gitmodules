@@ -16,3 +16,6 @@
 [submodule "mpv-winbuild-cmake"]
 	path = mpv-winbuild-cmake
 	url = git@github.com:WangyuHello/mpv-winbuild-cmake.git
+[submodule "taglib-sharp"]
+	path = taglib-sharp
+	url = git@github.com:WangyuHello/taglib-sharp.git
