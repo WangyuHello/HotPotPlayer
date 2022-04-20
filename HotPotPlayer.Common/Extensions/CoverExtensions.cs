@@ -19,7 +19,7 @@ namespace HotPotPlayer.Extensions
 {
     internal static class CoverExtensions
     {
-        public static void SetPlayListCover(this PlayListItem i, ConfigBase config)
+        public static void SetPlayListCover(this PlayListItem i)
         {
             i.Cover = i.MusicItems.First().Cover;
         }

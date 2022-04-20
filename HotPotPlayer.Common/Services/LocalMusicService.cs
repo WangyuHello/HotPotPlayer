@@ -336,9 +336,9 @@ namespace HotPotPlayer.Services
             return (removeFileKeys, exc2);
         }
 
-        private List<PlayListItem> ScanAllPlayList(Realm db, List<FileInfo> playListsFile)
+        private static List<PlayListItem> ScanAllPlayList(Realm db, List<FileInfo> playListsFile)
         {
-            var playLists = GetAllPlaylistItem(db, playListsFile);
+            var playLists = GetAllPlaylistItem(db, playListsFile).ToList();
             db.Write(() =>
             {
                 var exist = db.All<PlayListItemDb>();
@@ -377,37 +377,9 @@ namespace HotPotPlayer.Services
             return files;
         }
 
-        private List<PlayListItem> GetAllPlaylistItem(Realm db, List<FileInfo> files)
+        private static IEnumerable<PlayListItem> GetAllPlaylistItem(Realm db, List<FileInfo> files)
         {
-            var r = files.Select(f =>
-            {
-                var ost_doc = XDocument.Load(f.FullName);
-                var smil = ost_doc.Root;
-                var body = smil.Elements().FirstOrDefault(n => n.Name == "body");
-                var head = smil.Elements().FirstOrDefault(n => n.Name == "head");
-                var title = head.Elements().FirstOrDefault(n => n.Name == "title").Value;
-                var seq = body.Elements().FirstOrDefault(n => n.Name == "seq");
-                var srcs = seq.Elements().Select(m => m.Attribute("src").Value);
-                var files = srcs.Select(path =>
-                {
-                    var musicFromDb = db.All<MusicItemDb>().Where(d => d.Source == path).FirstOrDefault();
-                    var origin = musicFromDb?.ToOrigin();
-                    return origin;
-                }).ToList();
-                files.RemoveAll(f => f == null);
-
-                var pl = new PlayListItem
-                {
-                    Source = f,
-                    Title = title,
-                    Year = f.LastWriteTime.Year,
-                    LastWriteTime = f.LastWriteTime,
-                    MusicItems = files,
-                };
-                pl.SetPlayListCover(Config);
-                return pl;
-            }).ToList();
-
+            var r = files.Select(f => new PlayListItem(db, f));
             return r;
         }
 
