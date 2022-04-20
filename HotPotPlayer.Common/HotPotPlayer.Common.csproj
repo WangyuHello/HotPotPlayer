@@ -13,6 +13,7 @@
       <PackageReference Include="CommunityToolkit.Common" Version="7.1.2" />
       <PackageReference Include="CommunityToolkit.WinUI" Version="7.1.2" />
       <PackageReference Include="CommunityToolkit.WinUI.UI" Version="7.1.2" />
+      <PackageReference Include="CommunityToolkit.WinUI.UI.Controls.Core" Version="7.1.2" />
       <PackageReference Include="Microsoft.WindowsAppSDK" Version="1.0.0" />
       <PackageReference Include="Microsoft.Windows.SDK.BuildTools" Version="10.0.22000.194" />
       <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />

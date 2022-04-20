@@ -11,6 +11,7 @@
     xmlns:interactivity="using:Microsoft.Xaml.Interactivity"
     xmlns:interactions="using:Microsoft.Xaml.Interactions.Core"
     xmlns:controls="using:CommunityToolkit.WinUI.UI.Controls"
+    xmlns:cont2="using:HotPotPlayer.UI.Controls"
     xmlns:media="using:CommunityToolkit.WinUI.UI.Media"
     xmlns:media2="using:Microsoft.UI.Xaml.Media"
     xmlns:ui="using:CommunityToolkit.WinUI.UI"
@@ -26,7 +27,7 @@
         <DataTemplate x:Key="LocalAlbumZoomedInTemplate" x:DataType="models:AlbumItem">
             <Button Style="{StaticResource AlbumGroupButton}" Click="AlbumClick" Tag="{x:Bind }" x:Name="AlbumConnectedElement" >
                 <StackPanel Spacing="8" Margin="0,0,0,12">
-                    <controls:ImageEx Source="{x:Bind GetCoverAsync()}" Style="{StaticResource LocalMusicImageStyle}" />
+                    <cont2:ImageEx2 Source="{x:Bind Cover}" Style="{StaticResource LocalMusicImageStyle}" />
                     <TextBlock Margin="8,0" Text="{x:Bind Title}" FontWeight="Bold" LineStackingStrategy="BaselineToBaseline" FontSize="14" MaxLines="2" TextTrimming="CharacterEllipsis" TextWrapping="Wrap" Height="40" ToolTipService.ToolTip="{x:Bind Title}"/>
                     <TextBlock Margin="8,0" Text="{x:Bind GetArtists()}" Foreground="Gray" ToolTipService.ToolTip="{x:Bind GetArtists()}"/>
                 </StackPanel>
@@ -36,7 +37,7 @@
         <DataTemplate x:Key="LocalPlayListTemplate" x:DataType="models:PlayListItem">
             <Button Style="{StaticResource AlbumGroupButton}" Click="PlayListClick" Tag="{x:Bind }" x:Name="PlayListConnectedElement">
                 <StackPanel Spacing="8" Margin="0,0,0,12">
-                    <controls:ImageEx Source="{x:Bind Cover}" Style="{StaticResource LocalMusicImageStyle}" />
+                    <cont2:ImageEx2 Source="{x:Bind Cover}" Style="{StaticResource LocalMusicImageStyle}" />
                     <TextBlock Margin="8,0" Text="{x:Bind Title}" FontWeight="Medium" LineStackingStrategy="BaselineToBaseline" FontSize="18" TextTrimming="CharacterEllipsis" TextWrapping="Wrap" ToolTipService.ToolTip="{x:Bind Title}"/>
                 </StackPanel>
             </Button>
@@ -208,7 +209,7 @@
                         <ColumnDefinition Width="*" />
                     </Grid.ColumnDefinitions>
 
-                    <controls:ImageEx  Source="{x:Bind SelectedAlbum.Cover, Mode=OneWay}" Style="{StaticResource LocalAlbumPopupImageStyle}" />
+                    <cont2:ImageEx2  Source="{x:Bind SelectedAlbum.Cover, Mode=OneWay}" Style="{StaticResource LocalAlbumPopupImageStyle}" />
                     <StackPanel Grid.Column="1" Margin="16,0,0,0" >
                         <TextBlock Text="{x:Bind SelectedAlbum.Title, Mode=OneWay}" MaxLines="2" FontSize="32" TextWrapping="Wrap" FontWeight="Medium" TextTrimming="CharacterEllipsis" >
 
@@ -275,7 +276,7 @@
                         <ColumnDefinition Width="*" />
                     </Grid.ColumnDefinitions>
 
-                    <controls:ImageEx Source="{x:Bind SelectedPlayList.Cover, Mode=OneWay}" Style="{StaticResource LocalMusicImageStyle}"/>
+                    <cont2:ImageEx2 Source="{x:Bind SelectedPlayList.Cover, Mode=OneWay}" Style="{StaticResource LocalMusicImageStyle}"/>
                     <StackPanel Grid.Column="1" Margin="16,0,0,0">
                         <TextBlock Text="{x:Bind SelectedPlayList.Title, Mode=OneWay}" MaxLines="2" FontSize="32" TextWrapping="Wrap" FontWeight="Medium" TextTrimming="CharacterEllipsis" />
                         <StackPanel Orientation="Horizontal" Margin="0,12,0,0" Spacing="8">

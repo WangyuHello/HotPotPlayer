@@ -28,6 +28,7 @@
   <ItemGroup>
     <None Remove="Assets\Background.png" />
     <None Remove="Assets\bilibili.svg" />
+    <None Remove="Controls\ImageEx2.xaml" />
     <None Remove="Controls\MainSidebar.xaml" />
     <None Remove="Controls\PlayBar.xaml" />
     <None Remove="Controls\VolumePresenter.xaml" />

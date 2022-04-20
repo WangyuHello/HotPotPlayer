@@ -6,6 +6,7 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:controls="using:CommunityToolkit.WinUI.UI.Controls"
+    xmlns:cont="using:HotPotPlayer.UI.Controls"
     xmlns:convs="using:HotPotPlayer.Converters"
     xmlns:media="using:Microsoft.UI.Xaml.Media"
     xmlns:model="using:HotPotPlayer.Models"
@@ -83,7 +84,7 @@
                 <ColumnDefinition Width="*" />
             </Grid.ColumnDefinitions>
 
-            <controls:ImageEx Style="{StaticResource PlayBarImageStyle}" Source="{x:Bind MusicPlayer.CurrentPlaying.Cover, Mode=OneWay}"/>
+            <cont:ImageEx2 Style="{StaticResource PlayBarImageStyle}" Source="{x:Bind MusicPlayer.CurrentPlaying.Cover, Mode=OneWay}"/>
             <StackPanel Grid.Column="1" Margin="8,4" VerticalAlignment="Center" Spacing="4">
                 <TextBlock MaxLines="2" TextWrapping="Wrap" TextTrimming="CharacterEllipsis" FontSize="18" FontWeight="Medium" Text="{x:Bind MusicPlayer.CurrentPlaying.Title, Mode=OneWay}"></TextBlock>
                 <Button Style="{StaticResource TextButton}" Click="SubtitleClick">
