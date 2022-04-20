@@ -96,8 +96,6 @@ namespace HotPotPlayer.Extensions
             {
                 Source = i.Source.FullName,
                 Title = i.Title,
-                Year = i.Year,
-                Cover = i.Cover.ToString(),
                 LastWriteTime = i.LastWriteTime.ToBinary(),
             };
             foreach (var item in i.MusicItems)
@@ -113,8 +111,6 @@ namespace HotPotPlayer.Extensions
             {
                 Source = new FileInfo(i.Source),
                 Title = i.Title,
-                Year = i.Year,
-                Cover = new Uri(i.Cover),
                 LastWriteTime = DateTime.FromBinary(i.LastWriteTime),
                 MusicItems = i.MusicItems.Select(m => m.ToOrigin()).ToList(),
             };

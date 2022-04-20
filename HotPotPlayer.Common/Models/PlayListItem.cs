@@ -15,12 +15,17 @@ namespace HotPotPlayer.Models
     {
         public FileInfo Source { get; set; }
         public string Title { get; set; }
-        public int Year { get; set; }
-        public Uri Cover { get; set; }
+        public int Year => LastWriteTime.Year;
+        public Uri Cover => MusicItems.First().Cover;
         public DateTime LastWriteTime { get; set; }
         public List<MusicItem> MusicItems { get; set; }
 
         public PlayListItem() { }
+
+        public PlayListItem(string title)
+        {
+            Title = title;
+        }
 
         public PlayListItem(Realm db, FileInfo file)
         {
@@ -41,10 +46,14 @@ namespace HotPotPlayer.Models
 
             Source = file;
             Title = title;
-            Year = file.LastWriteTime.Year;
             LastWriteTime = file.LastWriteTime;
             MusicItems = files;
-            Cover = MusicItems.First().Cover;
+        }
+
+        public void AddMusic(MusicItem music)
+        {
+            MusicItems ??= new List<MusicItem>();
+            MusicItems.Add(music);
         }
 
         public void Write()
@@ -72,6 +81,8 @@ namespace HotPotPlayer.Models
             });
             doc.Add(smil);
             doc.Save(Source.FullName);
+            Source = new FileInfo(Source.FullName);
+            LastWriteTime = Source.LastWriteTime;
         }
     }
 
@@ -80,8 +91,6 @@ namespace HotPotPlayer.Models
         [PrimaryKey]
         public string Source { get; set; }
         public string Title { get; set; }
-        public int Year { get; set; }
-        public string Cover { get; set; }
         public long LastWriteTime { get; set; }
         public IList<MusicItemDb> MusicItems { get; }
     }
