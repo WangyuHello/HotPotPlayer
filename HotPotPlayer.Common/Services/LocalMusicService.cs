@@ -54,7 +54,6 @@ namespace HotPotPlayer.Services
         }
         #endregion
         #region Field
-        public static readonly string[] SupportedExt = new[] { ".flac", ".wav", ".m4a", ".mp3" };
 
         BackgroundWorker _loader;
         BackgroundWorker Loader
@@ -80,19 +79,6 @@ namespace HotPotPlayer.Services
 
         List<FileSystemWatcher> _watchers;
         #endregion
-
-        private List<FileInfo> GetMusicFilesFromLibrary()
-        {
-            var libs = Config.MusicLibrary.Select(s => s.Path);
-            List<FileInfo> files = new();
-            foreach (var lib in libs)
-            {
-                var di = new DirectoryInfo(lib);
-                files.AddRange(di.GetFiles("*.*", SearchOption.AllDirectories).Where(f => SupportedExt.Contains(f.Extension)));
-            }
-
-            return files;
-        }
 
         static IEnumerable<AlbumItem> GroupAllMusicIntoAlbum(IEnumerable<MusicItem> allMusic)
         {
@@ -195,8 +181,8 @@ namespace HotPotPlayer.Services
         CheckLocalUpdate:
             // 查询本地文件变动
             EnqueueChangeState(LocalMusicState.Loading);
-            var localMusicFiles = GetMusicFilesFromLibrary();
-            var localPlayListFiles = GetPlaylistFilesFromLibrary();
+            var localMusicFiles = Config.GetMusicFilesFromLibrary();
+            var localPlayListFiles = Config.GetPlaylistFilesFromLibrary();
             var (removeList, addOrUpdateList) = CheckMusicHasUpdate(db, localMusicFiles);
             var playListHasUpdate = CheckPlayListHasUpdate(db, localPlayListFiles);
 
@@ -218,21 +204,39 @@ namespace HotPotPlayer.Services
 
             if (newAlbumGroup != null)
             {
-                UIQueue?.TryEnqueue(() =>
+                if (UIQueue == null)
                 {
                     _localAlbumGroup.Clear();
                     foreach (var item in newAlbumGroup)
                     {
                         _localAlbumGroup.AddGroup(item.Key, item);
                     }
-                });
+                }
+                else
+                {
+                    UIQueue.TryEnqueue(() =>
+                    {
+                        _localAlbumGroup.Clear();
+                        foreach (var item in newAlbumGroup)
+                        {
+                            _localAlbumGroup.AddGroup(item.Key, item);
+                        }
+                    });
+                }
             };
             if (newPlayListList != null)
             {
-                UIQueue?.TryEnqueue(() =>
+                if (UIQueue == null)
                 {
                     LocalPlayListList = newPlayListList;
-                });
+                }
+                else
+                {
+                    UIQueue?.TryEnqueue(() =>
+                    {
+                        LocalPlayListList = newPlayListList;
+                    });
+                }
             }
 
             // 最后启动文件系统监控
@@ -362,19 +366,6 @@ namespace HotPotPlayer.Services
             var removeFiles = dbFiles.Except(currentFiles, new PlayListItemComparer());
 
             return newFiles.Any() || removeFiles.Any();
-        }
-
-        private List<FileInfo> GetPlaylistFilesFromLibrary()
-        {
-            var libs = Config.MusicPlayList.Select(s => s.Path);
-            List<FileInfo> files = new();
-            foreach (var lib in libs)
-            {
-                var di = new DirectoryInfo(lib);
-                if (!di.Exists) continue;
-                files.AddRange(di.GetFiles("*.zpl", SearchOption.AllDirectories));
-            }
-            return files;
         }
 
         private static IEnumerable<PlayListItem> GetAllPlaylistItem(Realm db, List<FileInfo> files)

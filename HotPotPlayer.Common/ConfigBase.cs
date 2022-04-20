@@ -18,17 +18,21 @@ namespace HotPotPlayer
         public abstract List<LibraryItem> MusicLibrary { get; set; }
         public abstract List<LibraryItem> VideoLibrary { get; set; }
 
-        private List<LibraryItem> _musicPlayList;
-        public List<LibraryItem> MusicPlayList
+        private List<LibraryItem> _musicPlayListDirectory;
+        public List<LibraryItem> MusicPlayListDirectory
         {
             get
             {
-                _musicPlayList ??= MusicLibrary.Select(m =>
+                _musicPlayListDirectory ??= MusicLibrary.Select(m =>
                 {
                     var p = Path.Combine(m.Path, "Playlists");
+                    if (!Directory.Exists(p))
+                    {
+                        Directory.CreateDirectory(p);
+                    }
                     return new LibraryItem { Path = p, IsSystemLibrary = m.IsSystemLibrary };
                 }).ToList();
-                return _musicPlayList;
+                return _musicPlayListDirectory;
             }
         }
 
@@ -123,6 +127,34 @@ namespace HotPotPlayer
                     SetConfig(key, v);
                 }
             });
+        }
+
+        public static readonly string[] SupportedExt = new[] { ".flac", ".wav", ".m4a", ".mp3" };
+
+        public List<FileInfo> GetMusicFilesFromLibrary()
+        {
+            var libs = MusicLibrary.Select(s => s.Path);
+            List<FileInfo> files = new();
+            foreach (var lib in libs)
+            {
+                var di = new DirectoryInfo(lib);
+                files.AddRange(di.GetFiles("*.*", SearchOption.AllDirectories).Where(f => SupportedExt.Contains(f.Extension)));
+            }
+
+            return files;
+        }
+
+        public List<FileInfo> GetPlaylistFilesFromLibrary()
+        {
+            var libs = MusicPlayListDirectory.Select(s => s.Path);
+            List<FileInfo> files = new();
+            foreach (var lib in libs)
+            {
+                var di = new DirectoryInfo(lib);
+                if (!di.Exists) continue;
+                files.AddRange(di.GetFiles("*.zpl", SearchOption.AllDirectories));
+            }
+            return files;
         }
     }
 }

@@ -22,9 +22,10 @@ namespace HotPotPlayer.Models
 
         public PlayListItem() { }
 
-        public PlayListItem(string title)
+        public PlayListItem(string title, DirectoryInfo directory)
         {
             Title = title;
+            Source = new FileInfo(Path.Combine(directory.FullName, title + ".zpl"));
         }
 
         public PlayListItem(Realm db, FileInfo file)
@@ -58,6 +59,10 @@ namespace HotPotPlayer.Models
 
         public void Write()
         {
+            if (MusicItems == null)
+            {
+                return;
+            }
             var doc = new XDocument();
             var smil = new XElement("smil");
             var head = new XElement("head");
@@ -65,7 +70,6 @@ namespace HotPotPlayer.Models
             var seq = new XElement("seq");
             head.Add(new[]
             {
-                new XElement("guid", "{B842F224-9826-4CE4-8705-D9C14BDEDA8C}"),
                 new XElement("title", Title),
             });
             foreach (var item in MusicItems)
@@ -81,6 +85,10 @@ namespace HotPotPlayer.Models
             });
             doc.Add(smil);
             doc.Save(Source.FullName);
+
+            var content = File.ReadAllLines(Source.FullName);
+            content[0] = "<?zpl version=\"2.0\"?>";
+            File.WriteAllLines(Source.FullName, content);
             Source = new FileInfo(Source.FullName);
             LastWriteTime = Source.LastWriteTime;
         }

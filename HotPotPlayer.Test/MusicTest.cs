@@ -2,7 +2,9 @@ using HotPotPlayer.Models;
 using HotPotPlayer.Services;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Diagnostics;
+using System.IO;
 using Xunit;
 
 namespace HotPotPlayer.Test
@@ -17,8 +19,6 @@ namespace HotPotPlayer.Test
             var musicService = new LocalMusicService(config);
             musicService.StartLoadLocalMusic();
         }
-
-
 
         [Fact]
         public void Test2()
@@ -43,6 +43,34 @@ namespace HotPotPlayer.Test
             var config = new MockConfig2();
             var musicService = new LocalMusicService(config);
             musicService.StartLoadLocalMusic();
+        }
+
+        MockConfig2 config;
+
+        [Fact]
+        public void TestPlayList()
+        {
+            config = new MockConfig2();
+            config.ClearDb();
+            var musicService = new LocalMusicService(config);
+            musicService.PropertyChanged += MusicService_PropertyChanged;
+            musicService.StartLoadLocalMusic();
+            Console.Read();
+        }
+
+        private void MusicService_PropertyChanged(object sender, PropertyChangedEventArgs e)
+        {
+            var service = (LocalMusicService)sender;
+            if (e.PropertyName == "State" && service.State == LocalMusicService.LocalMusicState.Complete)
+            {
+                var m1 = service.LocalAlbumGroup[0][3].MusicItems[0];
+                var m2 = service.LocalAlbumGroup[0][4].MusicItems[1];
+
+                PlayListItem pl = new PlayListItem("Test", new DirectoryInfo(config.MusicPlayListDirectory[0].Path));
+                pl.AddMusic(m1);
+                pl.AddMusic(m2);
+                pl.Write();
+            }
         }
     }
 }
