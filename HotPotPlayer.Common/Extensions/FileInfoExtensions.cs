@@ -12,7 +12,7 @@ namespace HotPotPlayer.Extensions
     {
         public static MusicItem ToMusicItem(this FileInfo f)
         {
-            using var tfile = TagLib.File.Create(f.FullName);
+            using var tfile = TagLib.File.Create(f.FullName, TagLib.ReadStyle.PictureLazy);
             //var duration = await GetMusicDurationAsync(f);
             var item = new MusicItem
             {
@@ -23,7 +23,7 @@ namespace HotPotPlayer.Extensions
                 Year = (int)tfile.Tag.Year,
                 Cover = new Uri(f.FullName),
                 //Duration = duration,
-                Duration = tfile.Properties.Duration,
+                //Duration = tfile.Properties.Duration,
                 Track = (int)tfile.Tag.Track,
                 LastWriteTime = f.LastWriteTime,
                 AlbumArtists = tfile.Tag.AlbumArtists,

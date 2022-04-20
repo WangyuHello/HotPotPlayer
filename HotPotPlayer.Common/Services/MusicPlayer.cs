@@ -39,6 +39,11 @@ namespace HotPotPlayer.Services
             set => Set(ref _currentPlaying, value);
         }
 
+        public TimeSpan? CurrentPlayingDuration
+        {
+            get => _audioFile?.TotalTime;
+        }
+
         private int _currentPlayingIndex = -1;
         public int CurrentPlayingIndex
         {
@@ -418,6 +423,7 @@ namespace HotPotPlayer.Services
                 CurrentPlayingIndex = index;
                 _playerTimer.Start();
                 RaisePropertyChanged(nameof(Volume));
+                RaisePropertyChanged(nameof(CurrentPlayingDuration));
             }
             else
             {

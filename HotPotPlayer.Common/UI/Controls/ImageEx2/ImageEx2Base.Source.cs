@@ -231,7 +231,14 @@ namespace HotPotPlayer.UI.Controls
         /// <returns><see cref="Task"/></returns>
         protected virtual async Task<ImageSource> ProvideCachedResourceAsync(Uri imageUri, CancellationToken token)
         {
-            var image = await ImageCacheEx.Instance.GetFromCacheAsync(imageUri, false, token);
+            var propValues = new List<KeyValuePair<string, object>>();
+            
+            if (Width > 0)
+            {
+                var decW = (int)(XamlRoot.RasterizationScale * Width);
+                propValues.Add(new KeyValuePair<string, object>(nameof(DecodePixelWidth), decW));
+            }
+            var image = await ImageCacheEx.Instance.GetFromCacheAsync(imageUri, true, token, propValues);
             return image;
         }
     }

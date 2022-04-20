@@ -116,6 +116,7 @@ namespace HotPotPlayer.Services
                 foreach (var item in i.MusicItems)
                 {
                     item.AlbumRef = i;
+                    item.Cover = i.Cover;
                 }
                 return i;
             });

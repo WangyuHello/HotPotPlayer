@@ -52,9 +52,22 @@ namespace HotPotPlayer.Controls
             return isPlaying ? Symbol.Pause : Symbol.Play;
         }
 
-        double GetSliderValue(TimeSpan current, TimeSpan total)
+        double GetSliderValue(TimeSpan current, TimeSpan? total)
         {
-            return 100 * current.Ticks / total.Ticks;
+            if (total == null)
+            {
+                return 0;
+            }
+            return 100 * current.Ticks / ((TimeSpan)total).Ticks;
+        }
+
+        string GetDuration(TimeSpan? duration)
+        {
+            if (duration == null)
+            {
+                return "--:--";
+            }
+            return ((TimeSpan)duration).ToString("mm\\:ss");
         }
 
         const string Loop = "\uE1CD";
@@ -90,8 +103,12 @@ namespace HotPotPlayer.Controls
 
         private TimeSpan GetToTime()
         {
+            if (MusicPlayer.CurrentPlayingDuration == null)
+            {
+                return TimeSpan.Zero;
+            }
             var percent100 = (int)PlaySlider.Value;
-            var v = percent100 * MusicPlayer.CurrentPlaying.Duration.Ticks / 100;
+            var v = percent100 * ((TimeSpan)MusicPlayer.CurrentPlayingDuration).Ticks / 100;
             var to = TimeSpan.FromTicks(v);
             return to;
         }

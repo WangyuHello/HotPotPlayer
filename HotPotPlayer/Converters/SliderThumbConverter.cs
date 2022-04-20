@@ -10,20 +10,24 @@ namespace HotPotPlayer.Converters
 {
     public class SliderThumbConverter : DependencyObject, IValueConverter
     {
-        public TimeSpan TotalTime
+        public TimeSpan? TotalTime
         {
-            get { return (TimeSpan)GetValue(TotalTimeProperty); }
+            get { return (TimeSpan?)GetValue(TotalTimeProperty); }
             set { SetValue(TotalTimeProperty, value); }
         }
 
         public static readonly DependencyProperty TotalTimeProperty =
-            DependencyProperty.Register("TotalTime", typeof(TimeSpan), typeof(SliderThumbConverter), new PropertyMetadata(TimeSpan.Zero));
+            DependencyProperty.Register("TotalTime", typeof(TimeSpan?), typeof(SliderThumbConverter), new PropertyMetadata(TimeSpan.Zero));
 
 
         public object Convert(object value, Type targetType, object parameter, string language)
         {
+            if (TotalTime == null)
+            {
+                return "--:--";
+            }
             var percent100 = (int)(double)value;
-            var v = percent100 * TotalTime.Ticks / 100;
+            var v = percent100 * ((TimeSpan)TotalTime).Ticks / 100;
             var t = TimeSpan.FromTicks(v);
             return t.ToString("mm\\:ss");
         }
