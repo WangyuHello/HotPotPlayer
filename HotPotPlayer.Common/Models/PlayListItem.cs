@@ -30,13 +30,8 @@ namespace HotPotPlayer.Models
 
         public PlayListItem(Realm db, FileInfo file)
         {
-            var doc = XDocument.Load(file.FullName);
-            var smil = doc.Root;
-            var body = smil.Elements().FirstOrDefault(n => n.Name == "body");
-            var head = smil.Elements().FirstOrDefault(n => n.Name == "head");
-            var title = head.Elements().FirstOrDefault(n => n.Name == "title").Value;
-            var seq = body.Elements().FirstOrDefault(n => n.Name == "seq");
-            var srcs = seq.Elements().Select(m => m.Attribute("src").Value);
+            var lines = File.ReadAllLines(file.FullName);
+            var srcs = lines.Where(l => !(l[0] == '#'));
             var files = srcs.Select(path =>
             {
                 var musicFromDb = db.All<MusicItemDb>().Where(d => d.Source == path).FirstOrDefault();
@@ -46,7 +41,7 @@ namespace HotPotPlayer.Models
             files.RemoveAll(f => f == null);
 
             Source = file;
-            Title = title;
+            Title = Path.GetFileNameWithoutExtension(file.FullName);
             LastWriteTime = file.LastWriteTime;
             MusicItems = files;
         }
@@ -63,32 +58,9 @@ namespace HotPotPlayer.Models
             {
                 return;
             }
-            var doc = new XDocument();
-            var smil = new XElement("smil");
-            var head = new XElement("head");
-            var body = new XElement("body");
-            var seq = new XElement("seq");
-            head.Add(new[]
-            {
-                new XElement("title", Title),
-            });
-            foreach (var item in MusicItems)
-            {
-                var media = new XElement("media");
-                media.SetAttributeValue("src", item.Source.FullName);
-                seq.Add(media);
-            }
-            body.Add(seq);
-            smil.Add(new[]
-            {
-                head,body
-            });
-            doc.Add(smil);
-            doc.Save(Source.FullName);
-
-            var content = File.ReadAllLines(Source.FullName);
-            content[0] = "<?zpl version=\"2.0\"?>";
-            File.WriteAllLines(Source.FullName, content);
+            var srcs = MusicItems.Select(m => m.Source.FullName);
+            var lines = new[] { "#EXTM3U", $"#{Title}.m3u8" }.Concat(srcs);
+            File.WriteAllLines(Source.FullName, lines);
             Source = new FileInfo(Source.FullName);
             LastWriteTime = Source.LastWriteTime;
         }

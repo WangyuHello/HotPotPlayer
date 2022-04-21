@@ -152,7 +152,7 @@ namespace HotPotPlayer
             {
                 var di = new DirectoryInfo(lib);
                 if (!di.Exists) continue;
-                files.AddRange(di.GetFiles("*.zpl", SearchOption.AllDirectories));
+                files.AddRange(di.GetFiles("*.m3u8", SearchOption.AllDirectories));
             }
             return files;
         }
