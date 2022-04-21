@@ -64,7 +64,7 @@ namespace HotPotPlayer
             var initMedia = app.InitMediaFile;
             if (initMedia != null)
             {
-                if (LocalMusicService.SupportedExt.Contains(initMedia.Extension))
+                if (((App)Application.Current).Config.SupportedExt.Contains(initMedia.Extension))
                 {
                     var music = initMedia.ToMusicItem();
                     MusicPlayer.PlayNext(music);

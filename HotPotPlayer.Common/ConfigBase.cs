@@ -129,7 +129,7 @@ namespace HotPotPlayer
             });
         }
 
-        public static readonly string[] SupportedExt = new[] { ".flac", ".wav", ".m4a", ".mp3" };
+        public readonly string[] SupportedExt = new[] { ".flac", ".wav", ".m4a", ".mp3" };
 
         public List<FileInfo> GetMusicFilesFromLibrary()
         {
