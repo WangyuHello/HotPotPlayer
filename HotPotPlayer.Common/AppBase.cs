@@ -17,8 +17,10 @@ namespace HotPotPlayer
         ConfigBase config;
         public ConfigBase Config => config ??= new AppConfig();
 
+        DispatcherQueue _uiQueue;
+
         LocalMusicService localMusicService;
-        public LocalMusicService LocalMusicService => localMusicService ??= new LocalMusicService(Config, DispatcherQueue.GetForCurrentThread());
+        public LocalMusicService LocalMusicService => localMusicService ??= new LocalMusicService(Config, _uiQueue ??= DispatcherQueue.GetForCurrentThread());
 
         NetEaseMusicService netEaseMusicService;
         public NetEaseMusicService NetEaseMusicService => netEaseMusicService ??= new NetEaseMusicService();
@@ -27,6 +29,6 @@ namespace HotPotPlayer
         public LocalVideoService LocalVideoService => localVideoService ??= new LocalVideoService(Config);
 
         MusicPlayer musicPlayer;
-        public MusicPlayer MusicPlayer => musicPlayer ??= new MusicPlayer(Config);
+        public MusicPlayer MusicPlayer => musicPlayer ??= new MusicPlayer(Config, _uiQueue ??= DispatcherQueue.GetForCurrentThread());
     }
 }

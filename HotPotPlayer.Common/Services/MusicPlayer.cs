@@ -1,9 +1,19 @@
-﻿using HotPotPlayer.Models;
+﻿using HotPotPlayer.Helpers;
+using HotPotPlayer.Models;
 using Microsoft.UI.Dispatching;
 using NAudio.Wave;
 using System;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.Runtime.InteropServices;
+using System.Threading.Tasks;
+using System.Timers;
+using Windows.Foundation;
+using Windows.Media;
+using Windows.Media.Core;
+using Windows.Media.Playback;
+using Windows.Storage;
+using WinRT;
 
 namespace HotPotPlayer.Services
 {
@@ -78,7 +88,20 @@ namespace HotPotPlayer.Services
         public bool IsPlaying
         {
             get => _isPlaying;
-            set => Set(ref _isPlaying, value);
+            set => Set(ref _isPlaying, value, nowPlaying =>
+            {
+                Task.Run(() =>
+                {
+                    if (nowPlaying)
+                    {
+                        SMTC.PlaybackStatus = MediaPlaybackStatus.Playing;
+                    }
+                    else
+                    {
+                        SMTC.PlaybackStatus = MediaPlaybackStatus.Paused;
+                    }
+                });
+            });
         }
 
         private bool _hasError;
@@ -134,6 +157,35 @@ namespace HotPotPlayer.Services
         {
             get => _playMode;
             set => Set(ref _playMode, value);
+        }
+
+        private SystemMediaTransportControls _smtc;
+
+        private SystemMediaTransportControls SMTC
+        {
+            get => _smtc;
+        }
+        /// <summary>
+        /// https://docs.microsoft.com/en-us/windows/apps/desktop/modernize/winrt-com-interop-csharp
+        /// </summary>
+        /// <returns></returns>
+        SystemMediaTransportControls InitSmtc()
+        {
+            var smtc = SystemMediaTransportControlsInterop.GetForWindow(Config.MainWindowHandle);
+            smtc.IsEnabled = true;
+            smtc.ButtonPressed += systemMediaControls_ButtonPressed;
+            smtc.PlaybackRateChangeRequested += systemMediaControls_PlaybackRateChangeRequested;
+            smtc.PlaybackPositionChangeRequested += systemMediaControls_PlaybackPositionChangeRequested;
+            smtc.AutoRepeatModeChangeRequested += systemMediaControls_AutoRepeatModeChangeRequested;
+            smtc.PropertyChanged += systemMediaControls_PropertyChanged;
+            smtc.IsPlayEnabled = true;
+            smtc.IsPauseEnabled = true;
+            smtc.IsStopEnabled = true;
+            smtc.IsNextEnabled = true;
+            smtc.IsPreviousEnabled = true;
+            smtc.PlaybackStatus = MediaPlaybackStatus.Closed;
+
+            return smtc;
         }
 
         public void PlayNext(MusicItem music)
@@ -317,27 +369,27 @@ namespace HotPotPlayer.Services
         private void OnPlaybackStopped(object sender, StoppedEventArgs e)
         {
             _playerTimer.Stop();
-            _dispatcherQueue.TryEnqueue(() => IsPlaying = false);
+            UIQueue.TryEnqueue(() => IsPlaying = false);
             if (!_isMusicSwitching)
             {
-                _dispatcherQueue.TryEnqueue(PlayNext);
+                UIQueue.TryEnqueue(PlayNext);
             }
         }
 
         WaveOutEvent _outputDevice;
         AudioFileReader _audioFile;
-        readonly System.Timers.Timer _playerTimer;
+        readonly Timer _playerTimer;
         bool _isMusicSwitching;
 
-        public MusicPlayer(ConfigBase config): base(config)
+        public MusicPlayer(ConfigBase config, DispatcherQueue queue): base(config, queue)
         {
-            _dispatcherQueue = DispatcherQueue.GetForCurrentThread();
             _playerStarter = new BackgroundWorker
             {
+                WorkerReportsProgress = true
             };
             _playerStarter.RunWorkerCompleted += PlayerStarterCompleted;
             _playerStarter.DoWork += PlayerStarterDoWork;
-            _playerTimer = new System.Timers.Timer(500)
+            _playerTimer = new Timer(500)
             {
                 AutoReset = true
             };
@@ -346,10 +398,10 @@ namespace HotPotPlayer.Services
             Config.SaveConfigWhenExit("Volume", () => (Volume != 0, Volume));
         }
 
-        private void PlayerTimerElapsed(object sender, System.Timers.ElapsedEventArgs e)
+        private void PlayerTimerElapsed(object sender, ElapsedEventArgs e)
         {
             var time = _audioFile.CurrentTime;
-            _dispatcherQueue.TryEnqueue(() =>
+            UIQueue.TryEnqueue(() =>
             {
                 try
                 {
@@ -360,6 +412,7 @@ namespace HotPotPlayer.Services
 
                 }
             });
+            UpdateSmtcPosition();
         }
 
         private void PlayerStarterDoWork(object sender, DoWorkEventArgs e)
@@ -401,6 +454,9 @@ namespace HotPotPlayer.Services
                 }
                 _outputDevice.Play();
                 e.Result = e.Argument;
+
+                _smtc ??= InitSmtc();
+                UpdateMstcInfoAsync((int)e.Argument);
             }
             catch (Exception ex)
             {
@@ -453,6 +509,122 @@ namespace HotPotPlayer.Services
         }
 
         readonly BackgroundWorker _playerStarter;
-        readonly DispatcherQueue _dispatcherQueue;
+
+        private void systemMediaControls_PropertyChanged(SystemMediaTransportControls sender, SystemMediaTransportControlsPropertyChangedEventArgs args)
+        {
+            if (args.Property == SystemMediaTransportControlsProperty.SoundLevel)
+            {
+                switch (SMTC.SoundLevel)
+                {
+                    case SoundLevel.Full:
+                    case SoundLevel.Low:
+                        
+                        break;
+                    case SoundLevel.Muted:
+                        
+                        break;
+                }
+            }
+        }
+
+        private void systemMediaControls_AutoRepeatModeChangeRequested(SystemMediaTransportControls sender, AutoRepeatModeChangeRequestedEventArgs args)
+        {
+            switch (args.RequestedAutoRepeatMode)
+            {
+                case MediaPlaybackAutoRepeatMode.None:
+                    PlayMode = PlayMode.Loop;
+                    break;
+                case MediaPlaybackAutoRepeatMode.List:
+                    PlayMode = PlayMode.Loop;
+                    break;
+                case MediaPlaybackAutoRepeatMode.Track:
+                    PlayMode = PlayMode.SingleLoop;
+                    break;
+            }
+
+            SMTC.AutoRepeatMode = args.RequestedAutoRepeatMode;
+        }
+
+        private void UpdateSmtcPosition()
+        {
+            var timelineProperties = new SystemMediaTransportControlsTimelineProperties
+            {
+                StartTime = TimeSpan.FromSeconds(0),
+                MinSeekTime = TimeSpan.FromSeconds(0),
+                Position = CurrentTime,
+                MaxSeekTime = CurrentPlayingDuration ?? TimeSpan.Zero,
+                EndTime = CurrentPlayingDuration ?? TimeSpan.Zero
+            };
+
+            SMTC.UpdateTimelineProperties(timelineProperties);
+        }
+
+        private void systemMediaControls_PlaybackPositionChangeRequested(SystemMediaTransportControls sender, PlaybackPositionChangeRequestedEventArgs args)
+        {
+            if (args.RequestedPlaybackPosition.Duration() <= (CurrentPlayingDuration ?? TimeSpan.Zero) &&
+            args.RequestedPlaybackPosition.Duration().TotalSeconds >= 0)
+            {
+                if (State == PlayerState.Playing)
+                {
+                    PlayTo(args.RequestedPlaybackPosition.Duration());
+                    UpdateSmtcPosition();
+                }
+            }
+        }
+
+        private void systemMediaControls_PlaybackRateChangeRequested(SystemMediaTransportControls sender, PlaybackRateChangeRequestedEventArgs args)
+        {
+            if (args.RequestedPlaybackRate >= 0 && args.RequestedPlaybackRate <= 2)
+            {
+                SMTC.PlaybackRate = args.RequestedPlaybackRate;
+            }
+        }
+
+        private void systemMediaControls_ButtonPressed(SystemMediaTransportControls sender, SystemMediaTransportControlsButtonPressedEventArgs args)
+        {
+            switch (args.Button)
+            {
+                case SystemMediaTransportControlsButton.Play:
+                    UIQueue.TryEnqueue(() => PlayOrPause());
+                    break;
+
+                case SystemMediaTransportControlsButton.Pause:
+                    UIQueue.TryEnqueue(() => PlayOrPause());
+                    break;
+
+                case SystemMediaTransportControlsButton.Stop:
+                    UIQueue.TryEnqueue(() => PlayOrPause());
+                    break;
+
+                case SystemMediaTransportControlsButton.Next:
+                    UIQueue.TryEnqueue(() => PlayNext());
+                    break;
+
+                case SystemMediaTransportControlsButton.Previous:
+                    UIQueue.TryEnqueue(() => PlayPrevious());
+                    break;
+            }
+        }
+
+        /// <summary>
+        /// https://docs.microsoft.com/en-us/windows/uwp/audio-video-camera/system-media-transport-controls
+        /// </summary>
+        /// <param name="index"></param>
+        private async void UpdateMstcInfoAsync(int index)
+        {
+            SMTC.PlaybackStatus = MediaPlaybackStatus.Playing;
+            var music = CurrentPlayList[index];
+            var mediaFile = await StorageFile.GetFileFromPathAsync(music.Source.FullName);
+            bool copyFromFileAsyncSuccessful;
+            try
+            {
+                copyFromFileAsyncSuccessful = await SMTC.DisplayUpdater.CopyFromFileAsync(MediaPlaybackType.Music, mediaFile);
+            }
+            catch (Exception)
+            {
+                
+            }
+            SMTC.DisplayUpdater.Update();
+        }
     }
 }

@@ -79,6 +79,8 @@ namespace HotPotPlayer
             {
                 MainWindow.InitPageName = "Music";
             }
+
+            Config.MainWindowHandle = MainWindowHandle;
         }
 
         public MainWindow MainWindow;

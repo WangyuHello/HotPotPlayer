@@ -11,6 +11,7 @@ namespace HotPotPlayer
 {
     public abstract class ConfigBase
     {
+        public IntPtr MainWindowHandle { get; set; }
         public abstract string CacheFolder { get; }
         public abstract string LocalFolder { get; }
         public abstract string DatabaseFolder { get; }

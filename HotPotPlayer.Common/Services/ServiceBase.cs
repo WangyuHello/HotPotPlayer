@@ -18,6 +18,16 @@ namespace HotPotPlayer.Services
             }
         }
 
+        public void Set<T>(ref T oldValue, T newValue, Action<T> callback, [CallerMemberName] string propertyName = "")
+        {
+            if (!EqualityComparer<T>.Default.Equals(oldValue, newValue))
+            {
+                oldValue = newValue;
+                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+                callback?.Invoke(newValue);
+            }
+        }
+
         protected void RaisePropertyChanged([CallerMemberName] string propertyName = "")
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
