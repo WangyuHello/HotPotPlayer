@@ -48,7 +48,13 @@ namespace HotPotPlayer.Pages.MusicSub
             }
         }
 
-        public ObservableGroupedCollection<int, AlbumItem> LocalAlbum { get; set; } = new();
+        private ObservableGroupedCollection<int, AlbumItem> _localAlbum { get; set; } = new();
+
+        private ReadOnlyObservableGroupedCollection<int, AlbumItem> _localAlbum2;
+        public ReadOnlyObservableGroupedCollection<int, AlbumItem> LocalAlbum
+        {
+            get => _localAlbum2 ??= new(_localAlbum);
+        }
         public ObservableCollection<MusicItem> LocalArtistMusic { get; set; } = new();
 
         private string _artistName;
@@ -75,11 +81,15 @@ namespace HotPotPlayer.Pages.MusicSub
             var artistName = (string)e.Parameter;
             ArtistName = artistName;
 
-            var (albumGroup, music) = await GetArtistWorksAsync(artistName);
-            LocalAlbum = new ObservableGroupedCollection<int, AlbumItem>(albumGroup);
+            var (albumGroupList, musicList) = await GetArtistWorksAsync(artistName);
+            _localAlbum.Clear();
+            foreach (var item in albumGroupList)
+            {
+                _localAlbum.AddGroup(item.Key, item);
+            }
             AlbumAddFlyout = InitAlbumAddFlyout();
             LocalArtistMusic.Clear();
-            foreach (var item in music)
+            foreach (var item in musicList)
             {
                 LocalArtistMusic.Add(item);
             }

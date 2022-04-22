@@ -96,6 +96,7 @@ namespace HotPotPlayer.Pages
         {
             var album = ((Button)sender).Tag as AlbumItem;
             SelectedAlbum = album;
+            InitAlbumAddFlyout();
 
             var ani = AlbumGridView.PrepareConnectedAnimation("forwardAnimation", album, "AlbumConnectedElement");
             ani.Configuration = new BasicConnectedAnimationConfiguration();
@@ -135,8 +136,12 @@ namespace HotPotPlayer.Pages
             MusicPlayer.PlayNext(SelectedPlayList);
         }
 
-        MenuFlyout InitAlbumAddFlyout()
+        void InitAlbumAddFlyout()
         {
+            if (AlbumAddFlyout != null)
+            {
+                return;
+            }
             var flyout = new MenuFlyout();
             var i1 = new MenuFlyoutItem 
             { 
@@ -159,7 +164,7 @@ namespace HotPotPlayer.Pages
                     flyout.Items.Add(i);
                 }
             }
-            return flyout;
+            AlbumAddFlyout = flyout;
         }
 
         private void AlbumOverlayTarget_Tapped(object sender, TappedRoutedEventArgs e)

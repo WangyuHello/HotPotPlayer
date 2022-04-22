@@ -26,7 +26,12 @@ namespace HotPotPlayer.Models
 
         public string GetArtists()
         {
-            return string.Join(", ", Artists);
+            var t = string.Join(", ", Artists);
+            if (string.IsNullOrEmpty(t))
+            {
+                t = AllArtists.FirstOrDefault();
+            }
+            return t;
         }
 
         public async Task<BitmapImage> GetCoverAsync()

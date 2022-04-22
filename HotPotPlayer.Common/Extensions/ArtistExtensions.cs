@@ -10,7 +10,7 @@ namespace HotPotPlayer.Extensions
     {
         public static string[] GetArtists(this string s)
         {
-            return s.Split(new char[] { ',', '×', '&', '、', '/' }).Select(s => s.Trim()).ToArray();
+            return s.Split(new char[] { ',', '×', '&', '、', '/', '・' }).Select(s => s.Trim()).ToArray();
         }
     }
 }
