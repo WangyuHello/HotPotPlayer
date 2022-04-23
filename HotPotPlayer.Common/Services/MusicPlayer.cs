@@ -462,6 +462,8 @@ namespace HotPotPlayer.Services
 
                 _smtc ??= InitSmtc();
                 UpdateMstcInfoAsync((int)e.Argument);
+
+                PreCacheNextMusic(index);
             }
             catch (Exception ex)
             {
@@ -469,6 +471,20 @@ namespace HotPotPlayer.Services
             }
 
             _isMusicSwitching = false;
+        }
+
+        private async void PreCacheNextMusic(int index)
+        {
+            index += 1;
+            if (index > CurrentPlayList.Count - 1)
+            {
+                return;
+            }
+            var next = CurrentPlayList[index];
+            if (next.PlayListRef != null)
+            {
+                await ImageCacheEx.Instance.PreCacheAsync(next.Cover);
+            }
         }
 
         private void PlayerStarterCompleted(object sender, RunWorkerCompletedEventArgs e)

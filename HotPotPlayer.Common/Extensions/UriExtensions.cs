@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
 namespace HotPotPlayer.Extensions
@@ -12,6 +13,7 @@ namespace HotPotPlayer.Extensions
         {
             var origin = uri.OriginalString;
             var s = origin[8..]; //去掉file:///
+            //s = Regex.Unescape(s);
             return s;
         }
     }
