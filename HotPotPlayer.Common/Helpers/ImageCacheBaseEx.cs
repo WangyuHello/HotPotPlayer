@@ -1,4 +1,5 @@
 ﻿using CommunityToolkit.WinUI.UI;
+using HotPotPlayer.Extensions;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
@@ -450,9 +451,11 @@ namespace HotPotPlayer.Helpers
             {
                 if (uri.IsFile)
                 {
-                    using (var tfile = TagLib.File.Create(uri.LocalPath))
+                    using (var tfile = TagLib.File.Create(uri.GetLocalPath()))
                     {
                         byte[] binary = tfile.Tag.Pictures?.FirstOrDefault()?.Data?.Data;
+                        if (binary == null) return instance;
+
                         ms.Write(binary, 0, binary.Length);
                         ms.Flush();
 

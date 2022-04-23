@@ -182,7 +182,6 @@ namespace HotPotPlayer.Services
 
         CheckLocalUpdate:
             // 查询本地文件变动
-            EnqueueChangeState(LocalMusicState.Loading);
             var localMusicFiles = Config.GetMusicFilesFromLibrary();
             var localPlayListFiles = Config.GetPlaylistFilesFromLibrary();
             var (removeList, addOrUpdateList) = CheckMusicHasUpdate(db, localMusicFiles);
@@ -193,14 +192,17 @@ namespace HotPotPlayer.Services
             ObservableCollection<PlayListItem> newPlayListList = null;
             if (addOrUpdateList != null && addOrUpdateList.Any())
             {
+                EnqueueChangeState(LocalMusicState.Loading);
                 newAlbumGroup = AddOrUpdateMusicAndSave(db, addOrUpdateList);
             }
             if (removeList != null && removeList.Any())
             {
+                EnqueueChangeState(LocalMusicState.Loading);
                 newAlbumGroup = RemoveMusicAndSave(db, removeList);
             }
             if (playListHasUpdate)
             {
+                EnqueueChangeState(LocalMusicState.Loading);
                 var l = ScanAllPlayList(db, localPlayListFiles);
                 SetPlayListRef(l);
                 newPlayListList = new(l);
