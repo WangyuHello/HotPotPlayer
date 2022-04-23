@@ -166,6 +166,7 @@ namespace HotPotPlayer.Services
             // 转换为非数据库类型
             var dbAlbumList_ = dbAlbums.AsEnumerable().Select(d => d.ToOrigin()).ToList();
             var dbPlayListList = dbPlayLists.AsEnumerable().Select(d => d.ToOrigin()).ToList();
+            SetPlayListRef(dbPlayListList);
 
             // Album分组
             var dbAlbumGroups = GroupAllAlbumByYear(dbAlbumList_);
@@ -200,7 +201,9 @@ namespace HotPotPlayer.Services
             }
             if (playListHasUpdate)
             {
-                newPlayListList = new(ScanAllPlayList(db, localPlayListFiles));
+                var l = ScanAllPlayList(db, localPlayListFiles);
+                SetPlayListRef(l);
+                newPlayListList = new(l);
             }
 
             if (newAlbumGroup != null)
@@ -242,6 +245,17 @@ namespace HotPotPlayer.Services
 
             // 最后启动文件系统监控
             InitFileSystemWatcher();
+        }
+
+        private void SetPlayListRef(List<PlayListItem> dbPlayListList)
+        {
+            foreach (var item in dbPlayListList)
+            {
+                foreach (var i2 in item.MusicItems)
+                {
+                    i2.PlayListRef = item;
+                }
+            }
         }
 
         private static IEnumerable<IGrouping<int, AlbumItem>> RemoveMusicAndSave(Realm db, IEnumerable<string> removeList)
@@ -446,14 +460,97 @@ namespace HotPotPlayer.Services
 
         public void AddAlbumToPlayList(string playList, AlbumItem album)
         {
-
+            var plist = LocalPlayListList.First(p => p.Title == playList);
+            var plistIndex = LocalPlayListList.IndexOf(plist);
+            foreach (var music in album.MusicItems)
+            {
+                var music2 = music with { PlayListRef = plist };
+                plist.AddMusic(music2);
+            }
+            LocalPlayListList[plistIndex] = plist;
+            Task.Run(async () =>
+            {
+                using var db = Realm.GetInstance(DbPath);
+                db.Write(() =>
+                {
+                    db.Add(plist.ToDb(), update: true);
+                });
+                await plist.WriteAsync();
+            });
         }
 
         public void AddMusicToPlayList(string playList, MusicItem music)
         {
             var plist = LocalPlayListList.First(p => p.Title == playList);
             var plistIndex = LocalPlayListList.IndexOf(plist);
-            plist.AddMusic(music);
+            var music2 = music with { PlayListRef = plist };
+            plist.AddMusic(music2);
+            LocalPlayListList[plistIndex] = plist;
+            Task.Run(async () =>
+            {
+                using var db = Realm.GetInstance(DbPath);
+                db.Write(() =>
+                {
+                    db.Add(plist.ToDb(), update: true);
+                });
+                await plist.WriteAsync();
+            });
+        }
+
+        public void PlayListMusicDelete(MusicItem music)
+        {
+            if (music.PlayListRef == null)
+            {
+                return;
+            }
+            var playList = music.PlayListRef.Title;
+            var plist = LocalPlayListList.First(p => p.Title == playList);
+            var plistIndex = LocalPlayListList.IndexOf(plist);
+            plist.DeleteMusic(music);
+            LocalPlayListList[plistIndex] = plist;
+            Task.Run(async () =>
+            {
+                using var db = Realm.GetInstance(DbPath);
+                db.Write(() =>
+                {
+                    db.Add(plist.ToDb(), update: true);
+                });
+                await plist.WriteAsync();
+            });
+        }
+
+        public void PlayListMusicUp(MusicItem music)
+        {
+            if (music.PlayListRef == null)
+            {
+                return;
+            }
+            var playList = music.PlayListRef.Title;
+            var plist = LocalPlayListList.First(p => p.Title == playList);
+            var plistIndex = LocalPlayListList.IndexOf(plist);
+            plist.UpMusic(music);
+            LocalPlayListList[plistIndex] = plist;
+            Task.Run(async () =>
+            {
+                using var db = Realm.GetInstance(DbPath);
+                db.Write(() =>
+                {
+                    db.Add(plist.ToDb(), update: true);
+                });
+                await plist.WriteAsync();
+            });
+        }
+
+        public void PlayListMusicDown(MusicItem music)
+        {
+            if (music.PlayListRef == null)
+            {
+                return;
+            }
+            var playList = music.PlayListRef.Title;
+            var plist = LocalPlayListList.First(p => p.Title == playList);
+            var plistIndex = LocalPlayListList.IndexOf(plist);
+            plist.DownMusic(music);
             LocalPlayListList[plistIndex] = plist;
             Task.Run(async () =>
             {

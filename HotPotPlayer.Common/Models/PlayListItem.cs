@@ -2,6 +2,7 @@
 using Realms;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -18,7 +19,7 @@ namespace HotPotPlayer.Models
         public int Year => LastWriteTime.Year;
         public Uri Cover => MusicItems.FirstOrDefault()?.Cover;
         public DateTime LastWriteTime { get; set; }
-        public List<MusicItem> MusicItems { get; set; }
+        public ObservableCollection<MusicItem> MusicItems { get; set; }
 
         public PlayListItem() { }
 
@@ -43,13 +44,48 @@ namespace HotPotPlayer.Models
             Source = file;
             Title = Path.GetFileNameWithoutExtension(file.FullName);
             LastWriteTime = file.LastWriteTime;
-            MusicItems = files;
+            MusicItems = new(files);
         }
 
         public void AddMusic(MusicItem music)
         {
-            MusicItems ??= new List<MusicItem>();
+            MusicItems ??= new();
             MusicItems.Add(music);
+        }
+
+        public void DeleteMusic(MusicItem music)
+        {
+            if (MusicItems == null)
+            {
+                return;
+            }
+            MusicItems.Remove(music);
+        }
+
+        public void UpMusic(MusicItem music)
+        {
+            var i1 = MusicItems.IndexOf(music);
+            if (i1 == 0)
+            {
+                return;
+            }
+            var i2 = i1 - 1;
+            var m2 = MusicItems[i2];
+            MusicItems[i2] = music;
+            MusicItems[i1] = m2;
+        }
+
+        public void DownMusic(MusicItem music)
+        {
+            var i1 = MusicItems.IndexOf(music);
+            if (i1 == MusicItems.Count - 1)
+            {
+                return;
+            }
+            var i2 = i1 + 1;
+            var m2 = MusicItems[i2];
+            MusicItems[i2] = music;
+            MusicItems[i1] = m2;
         }
 
         public void Write()

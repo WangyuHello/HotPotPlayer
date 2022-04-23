@@ -112,7 +112,7 @@ namespace HotPotPlayer.Extensions
                 Source = new FileInfo(i.Source),
                 Title = i.Title,
                 LastWriteTime = DateTime.FromBinary(i.LastWriteTime),
-                MusicItems = i.MusicItems.Select(m => m.ToOrigin()).ToList(),
+                MusicItems = new(i.MusicItems.Select(m => m.ToOrigin()).ToList()),
             };
         }
 

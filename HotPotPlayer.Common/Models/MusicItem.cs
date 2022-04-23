@@ -28,6 +28,7 @@ namespace HotPotPlayer.Models
 
         public AlbumItem AlbumRef { get; set; }
 
+        public PlayListItem PlayListRef { get; set; }
 
         public string AlbumSignature => Album+Year;
         public int DiscTrack => (Disc << 16) | Track;
