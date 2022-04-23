@@ -68,13 +68,17 @@
                                                          Storyboard.TargetName="Image"
                                                          Storyboard.TargetProperty="Opacity"
                                                          From="0"
-                                                         To="1" />
+                                                         To="1" 
+                                                         
+                                                         />
                                         <DoubleAnimation AutoReverse="False"
                                                          BeginTime="0"
                                                          Storyboard.TargetName="PlaceholderImage"
                                                          Storyboard.TargetProperty="Opacity"
                                                          From="1"
-                                                         To="0" />
+                                                         To="0" 
+                                                         
+                                                         />
                                     </Storyboard>
                                 </VisualState>
                                 <VisualState x:Name="Unloaded" />
