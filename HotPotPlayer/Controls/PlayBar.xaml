@@ -9,6 +9,7 @@
     xmlns:cont="using:HotPotPlayer.UI.Controls"
     xmlns:convs="using:HotPotPlayer.Converters"
     xmlns:media="using:Microsoft.UI.Xaml.Media"
+    xmlns:me="using:HotPotPlayer.Media"
     xmlns:model="using:HotPotPlayer.Models"
     mc:Ignorable="d">
 
@@ -17,7 +18,7 @@
         <convs:SliderVolumeConverter x:Key="SliderVolumeConverter" />
         <convs:ColorConverter x:Key="ColorConverter" />
 
-        <media:AcrylicBrush x:Key="PlayBarBackground" TintOpacity="0.6" TintLuminosityOpacity="0.2" TintColor="{x:Bind MusicPlayer.CurrentPlaying.MainColor, Mode=OneWay, Converter={StaticResource ColorConverter}}" FallbackColor="SkyBlue" />
+        <me:AcrylicBrushFromImage x:Key="PlayBarBackground" TintOpacity="0.6" TintLuminosityOpacity="0.2" ImageSource="{x:Bind MusicPlayer.CurrentPlaying.Cover, Mode=OneWay}" FallbackColor="SkyBlue" />
 
         <DataTemplate x:Key="PlayBarListTemplate" x:DataType="model:MusicItem">
             <Grid>
