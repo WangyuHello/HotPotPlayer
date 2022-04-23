@@ -145,24 +145,28 @@ namespace HotPotPlayer.Pages
             var flyout = new MenuFlyout();
             var i1 = new MenuFlyoutItem 
             { 
-                Text = "当前列表"
+                Text = "播放队列",
+                Icon = new SymbolIcon { Symbol = Symbol.MusicInfo },
             };
             i1.Click += (s, a) => AlbumHelper.AlbumAddOne(SelectedAlbum);
             flyout.Items.Add(i1);
-            if (MusicService.LocalPlayListList.Count > 0)
+            var i2 = new MenuFlyoutSeparator();
+            flyout.Items.Add(i2);
+            i1 = new MenuFlyoutItem
             {
-                var i2 = new MenuFlyoutSeparator();
-                flyout.Items.Add(i2);
-                foreach (var item in MusicService.LocalPlayListList)
+                Text = "新建播放列表",
+                Icon = new SymbolIcon { Symbol = Symbol.Add },
+            };
+            flyout.Items.Add(i1);
+            foreach (var item in MusicService.LocalPlayListList)
+            {
+                var i = new MenuFlyoutItem
                 {
-                    var i = new MenuFlyoutItem
-                    {
-                        Text = item.Title,
-                        Tag = item
-                    };
-                    i.Click += (s, a) => AlbumHelper.AlbumAddToPlayList(item.Title, SelectedAlbum);
-                    flyout.Items.Add(i);
-                }
+                    Text = item.Title,
+                    Tag = item
+                };
+                i.Click += (s, a) => AlbumHelper.AlbumAddToPlayList(item.Title, SelectedAlbum);
+                flyout.Items.Add(i);
             }
             AlbumAddFlyout = flyout;
         }

@@ -9,6 +9,7 @@ using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.IO;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Xml.Linq;
 
 namespace HotPotPlayer.Services
@@ -441,6 +442,28 @@ namespace HotPotPlayer.Services
             var musicDb = db.Find<MusicItemDb>(musicItem.GetKey());
             var album = musicDb.GetAlbum();
             return album;
+        }
+
+        public void AddAlbumToPlayList(string playList, AlbumItem album)
+        {
+
+        }
+
+        public void AddMusicToPlayList(string playList, MusicItem music)
+        {
+            var plist = LocalPlayListList.First(p => p.Title == playList);
+            var plistIndex = LocalPlayListList.IndexOf(plist);
+            plist.AddMusic(music);
+            LocalPlayListList[plistIndex] = plist;
+            Task.Run(async () =>
+            {
+                using var db = Realm.GetInstance(DbPath);
+                db.Write(() =>
+                {
+                    db.Add(plist.ToDb(), update: true);
+                });
+                await plist.WriteAsync();
+            });
         }
 
         public override void Dispose()

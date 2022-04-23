@@ -71,7 +71,7 @@
                             <TextBlock Grid.Column="1" Text="{x:Bind Title}" TextTrimming="CharacterEllipsis" VerticalAlignment="Center"/>
                             <HyperlinkButton Grid.Column="2" Content="{x:Bind GetArtists()}" VerticalAlignment="Center" Click="{x:Bind helper:AlbumHelper.ArtistClick}" Tag="{x:Bind }"/>
                             <TextBlock Grid.Column="3" Margin="8,0,0,0" Text="{x:Bind Duration.ToString('mm\\\\:ss')}" VerticalAlignment="Center"/>
-                            <Button Grid.Column="4" Style="{StaticResource TransparentButton}" Margin="16,0,0,0" CornerRadius="4" Padding="4">
+                            <Button Grid.Column="4" Style="{StaticResource TransparentButton}" Margin="16,0,0,0" CornerRadius="4" Padding="4" Tag="{x:Bind }" Click="{x:Bind helper:AlbumHelper.MusicClick}">
                                 <SymbolIcon Symbol="More" />
                             </Button>
                         </Grid>

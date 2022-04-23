@@ -250,9 +250,14 @@ namespace HotPotPlayer.Services
             }
         }
 
-        public void AddToPlayList(MusicItem music)
+        public void AddToPlayListLast(MusicItem music)
         {
             CurrentPlayList?.Add(music);
+        }
+
+        public void AddToPlayListNext(MusicItem music)
+        {
+            CurrentPlayList?.Insert(CurrentPlayingIndex + 1, music);
         }
 
         /// <summary>

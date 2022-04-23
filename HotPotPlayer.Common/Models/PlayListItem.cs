@@ -16,7 +16,7 @@ namespace HotPotPlayer.Models
         public FileInfo Source { get; set; }
         public string Title { get; set; }
         public int Year => LastWriteTime.Year;
-        public Uri Cover => MusicItems.First().Cover;
+        public Uri Cover => MusicItems.FirstOrDefault()?.Cover;
         public DateTime LastWriteTime { get; set; }
         public List<MusicItem> MusicItems { get; set; }
 
@@ -61,6 +61,19 @@ namespace HotPotPlayer.Models
             var srcs = MusicItems.Select(m => m.Source.FullName);
             var lines = new[] { "#EXTM3U", $"#{Title}.m3u8" }.Concat(srcs);
             File.WriteAllLines(Source.FullName, lines);
+            Source = new FileInfo(Source.FullName);
+            LastWriteTime = Source.LastWriteTime;
+        }
+
+        public async Task WriteAsync()
+        {
+            if (MusicItems == null)
+            {
+                return;
+            }
+            var srcs = MusicItems.Select(m => m.Source.FullName);
+            var lines = new[] { "#EXTM3U", $"#{Title}.m3u8" }.Concat(srcs);
+            await File.WriteAllLinesAsync(Source.FullName, lines);
             Source = new FileInfo(Source.FullName);
             LastWriteTime = Source.LastWriteTime;
         }
