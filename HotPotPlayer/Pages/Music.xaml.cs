@@ -191,6 +191,11 @@ namespace HotPotPlayer.Pages
             await PlayListGridView.TryStartConnectedAnimationAsync(anim, SelectedPlayList, "PlayListConnectedElement");
             PlayListOverlayPopup.Visibility = Visibility.Collapsed;
         }
+
+        private void AlbumGridView_ContainerContentChanging(ListViewBase sender, ContainerContentChangingEventArgs args)
+        {
+
+        }
     }
 
     public class EvenOldTemplateSelector : DataTemplateSelector
