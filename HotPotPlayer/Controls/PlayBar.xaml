@@ -18,7 +18,7 @@
         <convs:SliderVolumeConverter x:Key="SliderVolumeConverter" />
         <convs:ColorConverter x:Key="ColorConverter" />
 
-        <me:AcrylicBrushFromImage x:Key="PlayBarBackground" TintOpacity="0.6" TintLuminosityOpacity="0.2" ImageSource="{x:Bind MusicPlayer.CurrentPlaying.Cover, Mode=OneWay}" FallbackColor="SkyBlue" />
+        <me:AcrylicBrushFromImage x:Key="PlayBarBackground" TintOpacity="0.8" TintLuminosityOpacity="0.3" ImageSource="{x:Bind MusicPlayer.CurrentPlaying.Cover, Mode=OneWay}" FallbackColor="SkyBlue" />
 
         <DataTemplate x:Key="PlayBarListTemplate" x:DataType="model:MusicItem">
             <Grid>

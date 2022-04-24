@@ -210,6 +210,7 @@ namespace HotPotPlayer.Services
 
             if (newAlbumGroup != null)
             {
+#if DEBUG
                 if (UIQueue == null)
                 {
                     _localAlbumGroup.Clear();
@@ -220,6 +221,7 @@ namespace HotPotPlayer.Services
                 }
                 else
                 {
+#endif
                     UIQueue.TryEnqueue(() =>
                     {
                         _localAlbumGroup.Clear();
@@ -228,21 +230,27 @@ namespace HotPotPlayer.Services
                             _localAlbumGroup.AddGroup(item.Key, item);
                         }
                     });
+#if DEBUG
                 }
+#endif
             };
             if (newPlayListList != null)
             {
+#if DEBUG
                 if (UIQueue == null)
                 {
                     LocalPlayListList = newPlayListList;
                 }
                 else
                 {
+#endif
                     UIQueue?.TryEnqueue(() =>
                     {
                         LocalPlayListList = newPlayListList;
                     });
+#if DEBUG
                 }
+#endif
             }
 
             // 最后启动文件系统监控

@@ -31,8 +31,13 @@ namespace HotPotPlayer.Media
 
         private async void SetImage(Uri uri)
         {
+            Start:
             var file = await ImageCacheEx.Instance.GetFileFromCacheAsync(uri);
-            if (file == null) { return; }
+            if (file == null) 
+            {
+                await ImageCacheEx.Instance.PreCacheAsync(uri);
+                goto Start;
+            }
             using var image = Image.Load<Rgba32>(file.Path);
             var color = GetMainColor(image);
             TintColor = color;

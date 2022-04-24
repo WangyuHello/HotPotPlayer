@@ -9,7 +9,7 @@
     mc:Ignorable="d">
 
     <UserControl.Resources>
-        <media:AcrylicBrush x:Key="ToastBackground" TintOpacity="0.8" TintLuminosityOpacity="0.2" TintColor="LightSlateGray" FallbackColor="SkyBlue" />
+        <media:AcrylicBrush x:Key="ToastBackground" TintOpacity="0.8" TintLuminosityOpacity="0.4" TintColor="LightSlateGray" FallbackColor="SkyBlue" />
 
     </UserControl.Resources>
 
