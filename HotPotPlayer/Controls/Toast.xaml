@@ -1,0 +1,29 @@
+﻿<UserControl
+    x:Class="HotPotPlayer.Controls.Toast"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:HotPotPlayer.Controls"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:media="using:Microsoft.UI.Xaml.Media"
+    mc:Ignorable="d">
+
+    <UserControl.Resources>
+        <media:AcrylicBrush x:Key="ToastBackground" TintOpacity="0.8" TintLuminosityOpacity="0.2" TintColor="LightSlateGray" FallbackColor="SkyBlue" />
+
+    </UserControl.Resources>
+
+    <Grid Background="{ThemeResource ToastBackground}" CornerRadius="4" Padding="16,16">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="Auto" />
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="Auto" />
+        </Grid.ColumnDefinitions>
+
+        <FontIcon FontFamily="Segoe Fluent Icons" Glyph="&#xE946;" />
+        <TextBlock Margin="8,0" Grid.Column="1" Text="{x:Bind ToastInfo.Text, Mode=OneWay}" />
+        <Button Grid.Column="2" Style="{StaticResource TransparentButton}" Click="Dismiss">
+            <SymbolIcon Symbol="Clear" />
+        </Button>
+    </Grid>
+</UserControl>

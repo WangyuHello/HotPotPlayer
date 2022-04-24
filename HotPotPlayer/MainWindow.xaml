@@ -43,6 +43,17 @@
             </animations:Implicit.HideAnimations>
         </controls:PlayBar>
 
+        <controls:Toast x:Name="Toast" VerticalAlignment="Top" HorizontalAlignment="Stretch" Margin="240,40" Visibility="{x:Bind ToastVisible, Mode=OneWay}">
+            <animations:Implicit.ShowAnimations>
+                <animations:OpacityAnimation Duration="0:0:0.8" From="0.0" To="1.0" />
+                <animations:TranslationAnimation Duration="0:0:0.8" From="0,-80,0" To="0,0,0" EasingMode="EaseOut"/>
+            </animations:Implicit.ShowAnimations>
+            <animations:Implicit.HideAnimations>
+                <animations:OpacityAnimation Duration="0:0:0.8" From="1.0" To="0.0" />
+                <animations:TranslationAnimation Duration="0:0:0.8" From="0,0,0" To="0,-80,0" />
+            </animations:Implicit.HideAnimations>        
+        </controls:Toast>
+
         <Grid x:FieldModifier="public" x:Name="CustomTitleBar" 
               VerticalAlignment="Top"
               Margin="60,0,0,0"

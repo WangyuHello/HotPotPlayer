@@ -31,6 +31,7 @@
     <None Remove="Controls\ImageEx2.xaml" />
     <None Remove="Controls\MainSidebar.xaml" />
     <None Remove="Controls\PlayBar.xaml" />
+    <None Remove="Controls\Toast.xaml" />
     <None Remove="Controls\VolumePresenter.xaml" />
     <None Remove="Pages\Album.xaml" />
     <None Remove="Pages\Artist.xaml" />
@@ -93,6 +94,12 @@
     <ProjectReference Include="..\HotPotPlayer.VideoHost\HotPotPlayer.VideoHost.csproj" />
     <ProjectReference Include="..\NeteaseCloudMusicApi\NeteaseCloudMusicApi\NeteaseCloudMusicApi.csproj" />
     <ProjectReference Include="..\WinUIEx\src\WinUIEx\WinUIEx.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Page Update="Controls\Toast.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
   </ItemGroup>
 
   <ItemGroup>

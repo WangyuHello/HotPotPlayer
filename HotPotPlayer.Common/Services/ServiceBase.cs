@@ -42,11 +42,13 @@ namespace HotPotPlayer.Services
     {
         protected ConfigBase Config { get; init; }
         protected DispatcherQueue UIQueue { get; init; }
+        protected AppBase App { get; init; }
 
-        public ServiceBaseWithConfig(ConfigBase config, DispatcherQueue uiThread = null)
+        public ServiceBaseWithConfig(ConfigBase config, DispatcherQueue uiThread = null, AppBase app = null)
         {
             Config = config;
             UIQueue = uiThread;
+            App = app;
         }
     }
 }

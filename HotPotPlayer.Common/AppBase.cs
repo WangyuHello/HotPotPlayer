@@ -20,7 +20,7 @@ namespace HotPotPlayer
         DispatcherQueue _uiQueue;
 
         LocalMusicService localMusicService;
-        public LocalMusicService LocalMusicService => localMusicService ??= new LocalMusicService(Config, _uiQueue ??= DispatcherQueue.GetForCurrentThread());
+        public LocalMusicService LocalMusicService => localMusicService ??= new LocalMusicService(Config, _uiQueue ??= DispatcherQueue.GetForCurrentThread(), this);
 
         NetEaseMusicService netEaseMusicService;
         public NetEaseMusicService NetEaseMusicService => netEaseMusicService ??= new NetEaseMusicService();
@@ -30,5 +30,7 @@ namespace HotPotPlayer
 
         MusicPlayer musicPlayer;
         public MusicPlayer MusicPlayer => musicPlayer ??= new MusicPlayer(Config, _uiQueue ??= DispatcherQueue.GetForCurrentThread());
+
+        public abstract void ShowToast(ToastInfo toast);
     }
 }

@@ -47,10 +47,15 @@ namespace HotPotPlayer.Models
             MusicItems = new(files);
         }
 
-        public void AddMusic(MusicItem music)
+        public bool AddMusic(MusicItem music)
         {
             MusicItems ??= new();
+            if (MusicItems.Contains(music, new MusicItemComparer()))
+            {
+                return false;
+            }
             MusicItems.Add(music);
+            return true;
         }
 
         public void DeleteMusic(MusicItem music)

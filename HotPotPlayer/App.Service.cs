@@ -28,5 +28,10 @@ namespace HotPotPlayer
             Process.Start(info);
             //VideoHost.Program.Start(video);
         }
+
+        public override void ShowToast(ToastInfo toast)
+        {
+            MainWindow.ShowToast(toast);
+        }
     }
 }

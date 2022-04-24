@@ -64,4 +64,34 @@ namespace HotPotPlayer.Models
         [Backlink(nameof(AlbumItemDb.MusicItems))]
         public IQueryable<AlbumItemDb> AlbumRef { get; }
     }
+
+    sealed class MusicItemDbComparer : EqualityComparer<MusicItemDb>
+    {
+        public override bool Equals(MusicItemDb x, MusicItemDb y)
+        {
+            if (x.Source == y.Source && x.LastWriteTime == y.LastWriteTime)
+                return true;
+            return false;
+        }
+
+        public override int GetHashCode(MusicItemDb obj)
+        {
+            return obj.Source.GetHashCode() + obj.LastWriteTime.GetHashCode();
+        }
+    }
+
+    sealed class MusicItemComparer : EqualityComparer<MusicItem>
+    {
+        public override bool Equals(MusicItem x, MusicItem y)
+        {
+            if (x.Source == y.Source)
+                return true;
+            return false;
+        }
+
+        public override int GetHashCode(MusicItem obj)
+        {
+            return obj.Source.GetHashCode();
+        }
+    }
 }

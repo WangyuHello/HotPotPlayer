@@ -16,7 +16,7 @@ namespace HotPotPlayer.Services
 {
     public class LocalMusicService: ServiceBaseWithConfig
     {
-        public LocalMusicService(ConfigBase config, DispatcherQueue uiQueue = null) : base(config, uiQueue) { }
+        public LocalMusicService(ConfigBase config, DispatcherQueue uiQueue = null, AppBase app = null) : base(config, uiQueue, app) { }
         
         #region State
         public enum LocalMusicState
@@ -308,20 +308,6 @@ namespace HotPotPlayer.Services
             return groups;
         }
 
-        sealed class MusicItemComparer : EqualityComparer<MusicItemDb>
-        {
-            public override bool Equals(MusicItemDb x, MusicItemDb y)
-            {
-                if (x.Source == y.Source && x.LastWriteTime == y.LastWriteTime)
-                    return true;
-                return false;
-            }
-
-            public override int GetHashCode(MusicItemDb obj)
-            {
-                return obj.Source.GetHashCode() + obj.LastWriteTime.GetHashCode();
-            }
-        }
 
         sealed class PlayListItemComparer : EqualityComparer<PlayListItemDb>
         {
@@ -347,11 +333,11 @@ namespace HotPotPlayer.Services
             });
             var dbFiles = db.All<MusicItemDb>().ToList();
 
-            var newFiles = currentFiles.Except(dbFiles, new MusicItemComparer());
+            var newFiles = currentFiles.Except(dbFiles, new MusicItemDbComparer());
             var exc2 = newFiles.Where(d => Directory.Exists(Path.GetPathRoot(d.Source)))
                 .Select(s => new FileInfo(s.Source));
 
-            var removeFileKeys = dbFiles.Except(currentFiles, new MusicItemComparer())
+            var removeFileKeys = dbFiles.Except(currentFiles, new MusicItemDbComparer())
                 .Select(d => d.Source);
 
             return (removeFileKeys, exc2);
@@ -486,7 +472,11 @@ namespace HotPotPlayer.Services
             var plist = LocalPlayListList.First(p => p.Title == playList);
             var plistIndex = LocalPlayListList.IndexOf(plist);
             var music2 = music with { PlayListRef = plist };
-            plist.AddMusic(music2);
+            if (!plist.AddMusic(music2))
+            {
+                App?.ShowToast(new ToastInfo { Text = $"{music.Title} 已存在于 {playList}" });
+                return;
+            }
             LocalPlayListList[plistIndex] = plist;
             Task.Run(async () =>
             {
@@ -496,6 +486,11 @@ namespace HotPotPlayer.Services
                     db.Add(plist.ToDb(), update: true);
                 });
                 await plist.WriteAsync();
+
+                UIQueue.TryEnqueue(() =>
+                {
+                    App?.ShowToast(new ToastInfo { Text = $"已将 {music.Title} 添加到 {playList}" });
+                });
             });
         }
 
@@ -518,6 +513,11 @@ namespace HotPotPlayer.Services
                     db.Add(plist.ToDb(), update: true);
                 });
                 await plist.WriteAsync();
+
+                UIQueue.TryEnqueue(() =>
+                {
+                    App?.ShowToast(new ToastInfo { Text = $"已将 {music.Title} 从 {playList} 删除" });
+                });
             });
         }
 
