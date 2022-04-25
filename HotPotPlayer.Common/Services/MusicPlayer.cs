@@ -120,6 +120,14 @@ namespace HotPotPlayer.Services
             set => Set(ref _isPlayBarVisible, value);
         }
 
+        private bool _isPlayListBarVisible;
+
+        public bool IsPlayListBarVisible
+        {
+            get => _isPlayListBarVisible;
+            set => Set(ref _isPlayListBarVisible, value);
+        }
+
         public float Volume
         {
             get
@@ -186,6 +194,11 @@ namespace HotPotPlayer.Services
             smtc.PlaybackStatus = MediaPlaybackStatus.Closed;
 
             return smtc;
+        }
+
+        public void TogglePlayListBarVisibility()
+        {
+            IsPlayListBarVisible = !IsPlayListBarVisible;
         }
 
         public void PlayNext(MusicItem music)

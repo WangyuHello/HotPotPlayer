@@ -28,6 +28,7 @@
   <ItemGroup>
     <None Remove="Assets\Background.png" />
     <None Remove="Assets\bilibili.svg" />
+    <None Remove="Controls\CurrentPlayListBar.xaml" />
     <None Remove="Controls\ImageEx2.xaml" />
     <None Remove="Controls\MainSidebar.xaml" />
     <None Remove="Controls\PlayBar.xaml" />
@@ -90,6 +91,12 @@
     <ProjectReference Include="..\HotPotPlayer.VideoHost\HotPotPlayer.VideoHost.csproj" />
     <ProjectReference Include="..\NeteaseCloudMusicApi\NeteaseCloudMusicApi\NeteaseCloudMusicApi.csproj" />
     <ProjectReference Include="..\WinUIEx\src\WinUIEx\WinUIEx.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Page Update="Controls\CurrentPlayListBar.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
   </ItemGroup>
 
   <ItemGroup>

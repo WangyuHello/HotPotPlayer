@@ -20,35 +20,6 @@
 
         <me:AcrylicBrushFromImage x:Key="PlayBarBackground" TintOpacity="0.8" TintLuminosityOpacity="0.3" ImageSource="{x:Bind MusicPlayer.CurrentPlaying.Cover, Mode=OneWay}" FallbackColor="SkyBlue" />
 
-        <DataTemplate x:Key="PlayBarListTemplate" x:DataType="model:MusicItem">
-            <Grid>
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="Auto" />
-                    <ColumnDefinition Width="*" />
-                    <ColumnDefinition Width="Auto" />
-                    <ColumnDefinition Width="Auto" />
-                </Grid.ColumnDefinitions>
-                <Button Style="{StaticResource TransparentButton}" Height="32" Width="32" Tag="{x:Bind }" Click="PlayBarListClick">
-                    <FontIcon FontFamily="Segoe UI Emoji" Glyph="&#x1F3B5;" />
-                </Button>
-                <StackPanel Grid.Column="1" Margin="8,0,0,0">
-                    <TextBlock Text="{x:Bind Title}" FontSize="14" TextTrimming="CharacterEllipsis"/>
-                    <TextBlock Foreground="DimGray" Text="{x:Bind GetArtists()}" FontSize="12" TextTrimming="CharacterEllipsis"/>
-                </StackPanel>
-                <TextBlock Grid.Column="2" Margin="16,0,0,0" Text="{x:Bind Duration.ToString('mm\\\\:ss')}" VerticalAlignment="Center"/>
-                <Button Grid.Column="3" Style="{StaticResource TransparentButton}" Margin="8,0,0,0" Padding="4" CornerRadius="8" Tag="{x:Bind }" >
-                    <SymbolIcon Symbol="More" />
-                </Button>
-            </Grid>
-        </DataTemplate>
-
-        <Style x:Key="PlayBarListContainerStyle" TargetType="ListViewItem">
-            <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
-            <Setter Property="VerticalContentAlignment" Value="Stretch"/>
-            <Setter Property="Padding" Value="8,4,16,4" />
-            <Setter Property="Margin" Value="0" />
-        </Style>
-
         <Style x:Key="VolumePopupStyle" TargetType="FlyoutPresenter">
             <Setter Property="MinWidth" Value="160" />
             <Setter Property="MaxWidth" Value="160" />
@@ -62,14 +33,7 @@
             <Setter Property="ScrollViewer.VerticalScrollBarVisibility" Value="Disabled"/>
         </Style>
 
-        <Style x:Key="PlayListPopupStyle" TargetType="FlyoutPresenter" >
-            <Setter Property="CornerRadius" Value="4" />
-            <Setter Property="Padding" Value="0,0" />
-            <Setter Property="ScrollViewer.HorizontalScrollMode" Value="Disabled"/>
-            <Setter Property="ScrollViewer.HorizontalScrollBarVisibility" Value="Disabled"/>
-            <Setter Property="ScrollViewer.VerticalScrollMode" Value="Disabled"/>
-            <Setter Property="ScrollViewer.VerticalScrollBarVisibility" Value="Disabled"/>
-        </Style>
+
     </UserControl.Resources>
 
     <Grid Background="{ThemeResource PlayBarBackground}" CornerRadius="8">
@@ -137,20 +101,8 @@
                     </Flyout>
                 </Button.Flyout>
             </Button>
-            <Button Style="{StaticResource PlayOtherButton}">
+            <Button Style="{StaticResource PlayOtherButton}" Click="{x:Bind MusicPlayer.TogglePlayListBarVisibility}">
                 <FontIcon FontFamily="Segoe Fluent Icons" Glyph="&#xE762;" />
-                <Button.Flyout>
-                    <Flyout FlyoutPresenterStyle="{StaticResource PlayListPopupStyle}">
-                        <StackPanel Orientation="Vertical" >
-                            <StackPanel Orientation="Horizontal" FlowDirection="RightToLeft" Margin="0,0">
-                                <Button Width="40" Height="40" Style="{StaticResource TransparentButton}" ToolTipService.ToolTip="清空">
-                                    <FontIcon FontSize="16" HorizontalAlignment="Center" FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="&#xE10A;" />
-                                </Button>
-                            </StackPanel>
-                            <ListView Width="400" Height="400" SelectionMode="Single" ItemsSource="{x:Bind MusicPlayer.CurrentPlayList, Mode=OneWay}" ItemTemplate="{StaticResource PlayBarListTemplate}" ItemContainerStyle="{StaticResource PlayBarListContainerStyle}" SelectedIndex="{x:Bind MusicPlayer.CurrentPlayingIndex, Mode=OneWay}" />
-                        </StackPanel>
-                    </Flyout>
-                </Button.Flyout>
             </Button>
         </StackPanel>
     </Grid>

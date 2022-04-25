@@ -124,13 +124,6 @@ namespace HotPotPlayer.Controls
         }
 
 
-        private void PlayBarListClick(object sender, RoutedEventArgs e)
-        {
-            var button = (Button)sender;
-            var music = (MusicItem)button.Tag;
-            MusicPlayer.PlayNextContinue(music);
-        }
-
         private void PlayModeButtonClick(object sender, RoutedEventArgs e)
         {
             MusicPlayer.TogglePlayMode();
@@ -162,5 +155,6 @@ namespace HotPotPlayer.Controls
             button.ContextFlyout = flyout;
             button.ContextFlyout.ShowAt(button);
         }
+
     }
 }

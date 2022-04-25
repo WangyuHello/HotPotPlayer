@@ -32,6 +32,15 @@
             <Frame x:Name="MainFrame" Grid.Column="1" Navigated="MainFrame_Navigated"/>
         </Grid>
 
+        <controls:CurrentPlayListBar HorizontalAlignment="Right" Width="400" Visibility="{x:Bind MusicPlayer.IsPlayListBarVisible, Mode=OneWay}" >
+            <animations:Implicit.ShowAnimations>
+                <animations:TranslationAnimation Duration="0:0:0.4" From="400,0,0" To="0,0,0" EasingMode="EaseOut"/>
+            </animations:Implicit.ShowAnimations>
+            <animations:Implicit.HideAnimations>
+                <animations:TranslationAnimation Duration="0:0:0.4" From="0,0,0" To="400,0,0" />
+            </animations:Implicit.HideAnimations>
+        </controls:CurrentPlayListBar>
+
         <controls:PlayBar VerticalAlignment="Bottom" HorizontalAlignment="Stretch" Margin="80,0,24,16" Visibility="{x:Bind MusicPlayer.IsPlayBarVisible, Mode=OneWay}">
             <animations:Implicit.ShowAnimations>
                 <animations:OpacityAnimation Duration="0:0:0.8" From="0.0" To="1.0" />
@@ -56,7 +65,7 @@
 
         <Grid x:Name="AppTitleBar" VerticalAlignment="Top" Margin="60,0,0,0" Height="42">
             <Grid.ColumnDefinitions>
-                <ColumnDefinition x:Name="LeftDragColumn" Width="2*" />
+                <ColumnDefinition x:Name="LeftDragColumn" Width="1.2*" />
                 <ColumnDefinition x:Name="SearchColumn" Width="Auto" />
                 <ColumnDefinition x:Name="RightDragColumn" Width="*"/>
                 <ColumnDefinition x:Name="RightPaddingColumn" Width="0"/>

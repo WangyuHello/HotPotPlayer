@@ -1,8 +1,10 @@
-﻿using Microsoft.UI;
+﻿using HotPotPlayer.Services;
+using Microsoft.UI;
 using Microsoft.UI.Windowing;
 using Microsoft.UI.Xaml;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -27,6 +29,7 @@ namespace HotPotPlayer
                 titleBar.ButtonForegroundColor = Colors.Black;
                 AppTitleBar.Loaded += AppTitleBar_Loaded;
                 AppTitleBar.SizeChanged += AppTitleBar_SizeChanged;
+                MusicPlayer.PropertyChanged += MusicPlayer_PropertyChanged;
             }
             else
             {
@@ -37,6 +40,22 @@ namespace HotPotPlayer
 
                 // Show alternative UI for any functionality in
                 // the title bar, such as search.
+            }
+        }
+
+        private void MusicPlayer_PropertyChanged(object sender, PropertyChangedEventArgs e)
+        {
+            if (e.PropertyName == "IsPlayListBarVisible")
+            {
+                var musicPlayer = (MusicPlayer)sender;
+                if (musicPlayer.IsPlayListBarVisible)
+                {
+                    m_AppWindow.TitleBar.ButtonForegroundColor = Colors.White;
+                }
+                else
+                {
+                    m_AppWindow.TitleBar.ButtonForegroundColor = Colors.Black;
+                }
             }
         }
 
