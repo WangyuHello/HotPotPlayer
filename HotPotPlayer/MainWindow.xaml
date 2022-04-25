@@ -54,7 +54,7 @@
             </animations:Implicit.HideAnimations>        
         </controls:Toast>
 
-        <Grid x:FieldModifier="public" x:Name="AppTitleBar" VerticalAlignment="Top" Margin="60,0,0,0" Height="42">
+        <Grid x:Name="AppTitleBar" VerticalAlignment="Top" Margin="60,0,0,0" Height="42">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition x:Name="LeftDragColumn" Width="2*" />
                 <ColumnDefinition x:Name="SearchColumn" Width="Auto" />
