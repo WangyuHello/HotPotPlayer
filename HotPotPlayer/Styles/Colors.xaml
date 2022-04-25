@@ -23,6 +23,17 @@
     <SolidColorBrush x:Key="MainPlayBackgroundPointOver" Color="#576CCF" />
     <SolidColorBrush x:Key="MainPlayBackgroundPressed" Color="#576CCF" />
 
-    <media2:AcrylicBrush x:Key="PopupBackground" TintOpacity="0.8" TintLuminosityOpacity="0.8" TintColor="LightGray" FallbackColor="SkyBlue" />
+    <!--<media2:AcrylicBrush x:Key="PopupBackground" TintOpacity="0.8" TintLuminosityOpacity="0.8" TintColor="LightGray" FallbackColor="SkyBlue" />-->
+    <LinearGradientBrush x:Name="PopupBackground" StartPoint="0,0" EndPoint="1,1">
+        <GradientStop Color="#E8E9F2" Offset="0.0" />
+        <GradientStop Color="#D8D7E6" Offset="1.0" />
+    </LinearGradientBrush>
+
+    <LinearGradientBrush x:Name="PlayListBarBackground" StartPoint="0,0" EndPoint="1,1">
+        <GradientStop Color="#F17799" Offset="0.0" />
+        <GradientStop Color="#CE71E2" Offset="0.25" />
+        <GradientStop Color="#B179F2" Offset="0.75" />
+        <GradientStop Color="#7FABF9" Offset="1.0" />
+    </LinearGradientBrush>
 
 </ResourceDictionary>

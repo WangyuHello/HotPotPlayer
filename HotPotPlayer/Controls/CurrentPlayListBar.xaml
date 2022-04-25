@@ -39,12 +39,7 @@
             <Setter Property="Margin" Value="0" />
         </Style>
         
-        <LinearGradientBrush x:Name="PlayListBarBackground" StartPoint="0,0" EndPoint="1,1">
-            <GradientStop Color="#F17799" Offset="0.0" />
-            <GradientStop Color="#CE71E2" Offset="0.25" />
-            <GradientStop Color="#B179F2" Offset="0.75" />
-            <GradientStop Color="#7FABF9" Offset="1.0" />
-        </LinearGradientBrush>
+
     </UserControl.Resources>
 
     <Grid x:Name="Root" Tapped="RootTapped" Background="#00000000" >
