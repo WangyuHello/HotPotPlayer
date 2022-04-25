@@ -32,6 +32,15 @@
             <Frame x:Name="MainFrame" Grid.Column="1" Navigated="MainFrame_Navigated"/>
         </Grid>
 
+        <controls:PlayScreen x:Name="PlayScreen" Visibility="{x:Bind MusicPlayer.IsPlayScreenVisible, Mode=OneWay}" >
+            <animations:Implicit.ShowAnimations>
+                <animations:OpacityAnimation Duration="0:0:0.4" From="0.0" To="1.0" />
+            </animations:Implicit.ShowAnimations>
+            <animations:Implicit.HideAnimations>
+                <animations:OpacityAnimation Duration="0:0:0.4" From="1.0" To="0.0" />
+            </animations:Implicit.HideAnimations>
+        </controls:PlayScreen>
+        
         <controls:CurrentPlayListBar x:Name="CurrentPlayListBar" Visibility="{x:Bind MusicPlayer.IsPlayListBarVisible, Mode=OneWay}" >
             <animations:Implicit.ShowAnimations>
                 <animations:TranslationAnimation Duration="0:0:0.4" From="400,0,0" To="0,0,0" EasingMode="EaseOut"/>
@@ -40,7 +49,7 @@
                 <animations:TranslationAnimation Duration="0:0:0.4" From="0,0,0" To="400,0,0" />
             </animations:Implicit.HideAnimations>
         </controls:CurrentPlayListBar>
-
+        
         <controls:PlayBar x:Name="PlayBar" VerticalAlignment="Bottom" HorizontalAlignment="Stretch" Margin="80,0,24,16" Visibility="{x:Bind MusicPlayer.IsPlayBarVisible, Mode=OneWay}" >
             <animations:Implicit.ShowAnimations>
                 <animations:OpacityAnimation Duration="0:0:0.8" From="0.0" To="1.0" />
@@ -70,7 +79,7 @@
                 <ColumnDefinition x:Name="RightDragColumn" Width="*"/>
                 <ColumnDefinition x:Name="RightPaddingColumn" Width="0"/>
             </Grid.ColumnDefinitions>
-            <AutoSuggestBox Grid.Column="1" QueryIcon="Find" PlaceholderText="搜索" VerticalAlignment="Center" Width="260" />
+            <AutoSuggestBox Grid.Column="1" QueryIcon="Find" PlaceholderText="搜索" VerticalAlignment="Center" Width="260" Visibility="{x:Bind GetTitleBarSearchVisible(MusicPlayer.IsPlayScreenVisible), Mode=OneWay}"/>
         </Grid>
     </Grid>
 </Window>

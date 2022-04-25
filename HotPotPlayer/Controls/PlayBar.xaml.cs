@@ -84,6 +84,16 @@ namespace HotPotPlayer.Controls
             };
         }
 
+        Visibility GetCoverVisibility(bool isPlayScreenVisible)
+        {
+            return isPlayScreenVisible ? Visibility.Collapsed : Visibility.Visible; 
+        }
+
+        bool GetCoverLoad(bool isPlayScreenVisible)
+        {
+            return !isPlayScreenVisible;
+        }
+
         private void PlayButtonClick(object sender, RoutedEventArgs e)
         {
             MusicPlayer.PlayOrPause();

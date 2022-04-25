@@ -18,7 +18,7 @@
         <convs:SliderVolumeConverter x:Key="SliderVolumeConverter" />
         <convs:ColorConverter x:Key="ColorConverter" />
 
-        <me:AcrylicBrushFromImage x:Key="PlayBarBackground" TintOpacity="0.8" TintLuminosityOpacity="0.3" ImageSource="{x:Bind MusicPlayer.CurrentPlaying.Cover, Mode=OneWay}" FallbackColor="SkyBlue" />
+        <me:AcrylicBrushFromImage x:Key="PlayBarBackground" TintOpacity="0.8" TintLuminosityOpacity="0.3" ImageSource="{x:Bind MusicPlayer.CurrentPlaying.Cover, Mode=OneWay}" FallbackColor="Transparent" AlwaysUseFallback="{x:Bind MusicPlayer.IsPlayScreenVisible, Mode=OneWay}"/>
 
         <Style x:Key="VolumePopupStyle" TargetType="FlyoutPresenter">
             <Setter Property="MinWidth" Value="160" />
@@ -36,7 +36,7 @@
 
     </UserControl.Resources>
 
-    <Grid Background="{ThemeResource PlayBarBackground}" CornerRadius="8">
+    <Grid Background="{ThemeResource PlayBarBackground}" CornerRadius="8" Height="80">
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="*" />
             <ColumnDefinition Width="1*" />
@@ -49,7 +49,7 @@
                 <ColumnDefinition Width="*" />
             </Grid.ColumnDefinitions>
 
-            <cont:ImageEx2 Style="{StaticResource PlayBarImageStyle}" Source="{x:Bind MusicPlayer.CurrentPlaying.Cover, Mode=OneWay}"/>
+            <cont:ImageEx2 x:Name="Cover" Style="{StaticResource PlayBarImageStyle}" Source="{x:Bind MusicPlayer.CurrentPlaying.Cover, Mode=OneWay}" Tapped="{x:Bind MusicPlayer.ToggleShowPlayScreen}" x:Load="{x:Bind GetCoverLoad(MusicPlayer.IsPlayScreenVisible), Mode=OneWay}" Visibility="{x:Bind GetCoverVisibility(MusicPlayer.IsPlayScreenVisible), Mode=OneWay}"/>
             <StackPanel Grid.Column="1" Margin="8,4" VerticalAlignment="Center" Spacing="4">
                 <TextBlock MaxLines="2" TextWrapping="Wrap" TextTrimming="CharacterEllipsis" FontSize="18" FontWeight="Medium" Text="{x:Bind MusicPlayer.CurrentPlaying.Title, Mode=OneWay}"></TextBlock>
                 <Button Style="{StaticResource TextButton}" Click="SubtitleClick">

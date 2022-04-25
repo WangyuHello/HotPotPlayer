@@ -46,7 +46,7 @@
         </LinearGradientBrush>
     </UserControl.Resources>
 
-    <Grid Tapped="RootTapped" Background="#00000000">
+    <Grid x:Name="Root" Tapped="RootTapped" Background="#00000000" >
         <Grid Background="{StaticResource PlayListBarBackground}" Padding="0,36,0,0" Width="400" HorizontalAlignment="Right" Tapped="InnerTapped">
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto" />
@@ -69,7 +69,7 @@
                 </Button>
             </Grid>
 
-            <ListView Grid.Row="1" SelectionMode="Single" ItemsSource="{x:Bind MusicPlayer.CurrentPlayList, Mode=OneWay}" ItemTemplate="{StaticResource PlayListBarListTemplate}" ItemContainerStyle="{StaticResource PlayListBarListContainerStyle}" SelectedIndex="{x:Bind MusicPlayer.CurrentPlayingIndex, Mode=OneWay}" >
+            <ListView x:Name="PlayList" Grid.Row="1" SelectionMode="Single" ItemsSource="{x:Bind MusicPlayer.CurrentPlayList, Mode=OneWay}" ItemTemplate="{StaticResource PlayListBarListTemplate}" ItemContainerStyle="{StaticResource PlayListBarListContainerStyle}" SelectedIndex="{x:Bind MusicPlayer.CurrentPlayingIndex, Mode=OneWay}" x:Load="{x:Bind MusicPlayer.IsPlayListBarVisible, Mode=OneWay}">
                 <ListView.Footer>
                     <Grid Height="100"/>
                 </ListView.Footer>

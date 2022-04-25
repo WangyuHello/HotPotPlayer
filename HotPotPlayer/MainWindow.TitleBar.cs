@@ -146,5 +146,10 @@ namespace HotPotPlayer
                 appWindow.TitleBar.SetDragRectangles(dragRects);
             }
         }
+
+        Visibility GetTitleBarSearchVisible(bool isPlayScreenVisible)
+        {
+            return isPlayScreenVisible ? Visibility.Collapsed : Visibility.Visible;
+        }
     }
 }

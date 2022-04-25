@@ -128,6 +128,14 @@ namespace HotPotPlayer.Services
             set => Set(ref _isPlayListBarVisible, value);
         }
 
+        private bool _isPlayScreenVisible;
+
+        public bool IsPlayScreenVisible
+        {
+            get => _isPlayScreenVisible;
+            set => Set(ref _isPlayScreenVisible, value);
+        }
+
         public float Volume
         {
             get
@@ -532,6 +540,21 @@ namespace HotPotPlayer.Services
         public void HidePlayBar()
         {
             IsPlayBarVisible = false;
+        }
+
+        public void ToggleShowPlayScreen()
+        {
+            IsPlayScreenVisible = !IsPlayScreenVisible;
+        }
+
+        public void ShowPlayScreen()
+        {
+            IsPlayScreenVisible = true;
+        }
+
+        public void HidePlayScreen()
+        {
+            IsPlayScreenVisible = false;
         }
 
         public override void Dispose()
