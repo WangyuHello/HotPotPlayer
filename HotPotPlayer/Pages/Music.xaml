@@ -160,7 +160,7 @@
 
     </Page.Resources>
 
-    <Grid x:Name="Root" Background="White" Padding="36,0,0,0">
+    <Grid x:Name="Root" Background="White" Padding="36,28,0,0">
         <Pivot x:Name="RootPivot" >
             <PivotItem Header="专辑" Margin="0">
                 <SemanticZoom>

@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace HotPotPlayer
 {
-    public partial class MainWindow
+    public sealed partial class MainWindow
     {
         private Visibility _toastVisible = Visibility.Collapsed;
 

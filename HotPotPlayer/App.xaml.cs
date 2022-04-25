@@ -20,6 +20,7 @@ using Windows.ApplicationModel.Activation;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
 using WinUIEx;
+using Microsoft.UI.Windowing;
 
 // To learn more about WinUI, the WinUI project structure,
 // and more about our project templates, see: http://aka.ms/winui-project-info.
@@ -47,10 +48,7 @@ namespace HotPotPlayer
         /// <param name="args">Details about the launch request and process.</param>
         protected override void OnLaunched(Microsoft.UI.Xaml.LaunchActivatedEventArgs args)
         {
-            MainWindow = new MainWindow
-            {
-                ExtendsContentIntoTitleBar = true
-            };
+            MainWindow = new MainWindow();
             InitMainWindow(args);
             MainWindow.Activate();
         }
@@ -63,7 +61,6 @@ namespace HotPotPlayer
         private void InitMainWindow(Microsoft.UI.Xaml.LaunchActivatedEventArgs args)
         {
             MainWindow.Title = "HotPotPlayer";
-            MainWindow.SetTitleBar(MainWindow.CustomTitleBar);
             MainWindow.CenterOnScreen(1070, 760);
             MainWindow.Closed += MainWindow_Closed;
 

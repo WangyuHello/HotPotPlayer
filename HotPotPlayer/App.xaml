@@ -16,10 +16,6 @@
                 <!-- Other merged dictionaries here -->
             </ResourceDictionary.MergedDictionaries>
             <!-- Other app resources here -->
-            <SolidColorBrush x:Key="WindowCaptionBackground">White</SolidColorBrush>
-            <SolidColorBrush x:Key="WindowCaptionBackgroundDisabled">White</SolidColorBrush>
-            <!--<SolidColorBrush x:Key="WindowCaptionForeground">Black</SolidColorBrush>-->
-            <!--<SolidColorBrush x:Key="WindowCaptionForegroundDisabled">White</SolidColorBrush>-->
         </ResourceDictionary>
 
     </Application.Resources>

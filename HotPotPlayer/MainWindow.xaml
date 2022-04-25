@@ -29,7 +29,7 @@
                 </animations:Implicit.ShowAnimations>
                 
             </controls:MainSidebar>
-            <Frame x:Name="MainFrame" Margin="0,28,0,0" Grid.Column="1" Navigated="MainFrame_Navigated"/>
+            <Frame x:Name="MainFrame" Grid.Column="1" Navigated="MainFrame_Navigated"/>
         </Grid>
 
         <controls:PlayBar VerticalAlignment="Bottom" HorizontalAlignment="Stretch" Margin="80,0,24,16" Visibility="{x:Bind MusicPlayer.IsPlayBarVisible, Mode=OneWay}">
@@ -54,11 +54,14 @@
             </animations:Implicit.HideAnimations>        
         </controls:Toast>
 
-        <Grid x:FieldModifier="public" x:Name="CustomTitleBar" 
-              VerticalAlignment="Top"
-              Margin="60,0,0,0"
-              Height="28" >
-
+        <Grid x:FieldModifier="public" x:Name="AppTitleBar" VerticalAlignment="Top" Margin="60,0,0,0" Height="42">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition x:Name="LeftDragColumn" Width="2*" />
+                <ColumnDefinition x:Name="SearchColumn" Width="Auto" />
+                <ColumnDefinition x:Name="RightDragColumn" Width="*"/>
+                <ColumnDefinition x:Name="RightPaddingColumn" Width="0"/>
+            </Grid.ColumnDefinitions>
+            <AutoSuggestBox Grid.Column="1" QueryIcon="Find" PlaceholderText="搜索" VerticalAlignment="Center" Width="260" />
         </Grid>
     </Grid>
 </Window>

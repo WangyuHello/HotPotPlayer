@@ -86,10 +86,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Include="MainWindow.Navigation.cs" />
-  </ItemGroup>
-
-  <ItemGroup>
     <ProjectReference Include="..\HotPotPlayer.Common\HotPotPlayer.Common.csproj" />
     <ProjectReference Include="..\HotPotPlayer.VideoHost\HotPotPlayer.VideoHost.csproj" />
     <ProjectReference Include="..\NeteaseCloudMusicApi\NeteaseCloudMusicApi\NeteaseCloudMusicApi.csproj" />

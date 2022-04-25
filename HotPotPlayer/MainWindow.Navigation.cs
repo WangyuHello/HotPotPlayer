@@ -12,7 +12,7 @@ using System.Threading.Tasks;
 
 namespace HotPotPlayer
 {
-    public sealed partial class MainWindow : Window
+    public sealed partial class MainWindow
     {
         public string InitPageName { get; set; }
 

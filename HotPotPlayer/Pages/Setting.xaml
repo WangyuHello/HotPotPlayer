@@ -54,7 +54,7 @@
         </Style>
     </Page.Resources>
     
-    <Grid Background="White">
+    <Grid Background="White" Padding="0,28,0,0">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />

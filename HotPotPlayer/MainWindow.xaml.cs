@@ -34,6 +34,7 @@ namespace HotPotPlayer
         public MainWindow()
         {
             this.InitializeComponent();
+            SetAppTitleBar();
         }
 
         public event PropertyChangedEventHandler PropertyChanged;
