@@ -11,7 +11,7 @@
     mc:Ignorable="d"
     >
 
-    <Grid x:Name="Root" Loaded="MainWindow_Loaded" PointerReleased="MainWindow_PointerReleased">
+    <Grid x:Name="Root" Loaded="MainWindow_Loaded" PointerReleased="MainWindow_PointerReleased" >
         <Grid>
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="60" />
@@ -29,7 +29,7 @@
                 </animations:Implicit.ShowAnimations>
                 
             </controls:MainSidebar>
-            <Frame x:Name="MainFrame" Grid.Column="1" Navigated="MainFrame_Navigated"/>
+            <Frame x:Name="MainFrame" Grid.Column="1" Navigated="MainFrame_Navigated" />
         </Grid>
 
         <controls:PlayScreen x:Name="PlayScreen" Visibility="{x:Bind MusicPlayer.IsPlayScreenVisible, Mode=OneWay}" >

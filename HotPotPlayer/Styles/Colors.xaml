@@ -9,6 +9,16 @@
     <SolidColorBrush x:Key="MainNavForeground" Color="#A6A8B5" />
     <SolidColorBrush x:Key="MainNavSelectedForeground" Color="#5843BE" />
 
+    <SolidColorBrush x:Key="MainButtonForeground" Color="#967acc" />
+    <SolidColorBrush x:Key="MainButtonForegroundPointOver" Color="#825fc6" />
+    <SolidColorBrush x:Key="MainButtonForegroundPressed" Color="#8762cf" />
+    <SolidColorBrush x:Key="SecondaryButtonForeground" Color="#ababba" />
+    <SolidColorBrush x:Key="SecondaryButtonForegroundPointOver" Color="#9090a9" />
+    <SolidColorBrush x:Key="SecondaryButtonForegroundPressed" Color="#8989a3" />
+
+    <SolidColorBrush x:Key="ProgressBarForeground" Color="#b199e0" />
+    <SolidColorBrush x:Key="ProgressBarBackground" Color="#dad7e0" />
+
     <SolidColorBrush x:Key="MainPlayBackground" Color="#6982F9" />
     <SolidColorBrush x:Key="MainPlayBackgroundPointOver" Color="#576CCF" />
     <SolidColorBrush x:Key="MainPlayBackgroundPressed" Color="#576CCF" />
