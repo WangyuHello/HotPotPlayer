@@ -90,18 +90,6 @@ namespace HotPotPlayer
             }
         }
 
-        private void MainFrame_Navigated(object sender, NavigationEventArgs e)
-        {
-            var navPageName = e.SourcePageType.FullName.Replace("HotPotPlayer.Pages.", "");
-            if (navPageName.StartsWith("Music"))
-            {
-                MusicPlayer.ShowPlayBar();
-            }
-            else
-            {
-                MusicPlayer.HidePlayBar();
-            }
-        }
 
         //private void Tray_TrayIconLeftMouseDown(object sender, EventArgs e)
         //{

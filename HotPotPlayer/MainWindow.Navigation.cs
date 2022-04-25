@@ -2,6 +2,7 @@
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Media.Animation;
+using Microsoft.UI.Xaml.Navigation;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -54,6 +55,20 @@ namespace HotPotPlayer
         {
             MainFrame.Navigate(Type.GetType("HotPotPlayer.Pages." + name), parameter, new DrillInNavigationTransitionInfo());
             SelectedPageName = name;
+        }
+
+        private void MainFrame_Navigated(object sender, NavigationEventArgs e)
+        {
+            var navPageName = e.SourcePageType.FullName.Replace("HotPotPlayer.Pages.", "");
+            if (navPageName.StartsWith("Music"))
+            {
+                MusicPlayer.ShowPlayBar();
+            }
+            else
+            {
+                MusicPlayer.HidePlayBar();
+                MusicPlayer.IsPlayListBarVisible = false;
+            }
         }
     }
 }
