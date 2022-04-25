@@ -6,6 +6,7 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:model="using:HotPotPlayer.Models"
+    xmlns:helper="using:HotPotPlayer.Pages.Helper"
     mc:Ignorable="d">
 
     <UserControl.Resources>
@@ -17,7 +18,7 @@
                     <ColumnDefinition Width="Auto" />
                     <ColumnDefinition Width="Auto" />
                 </Grid.ColumnDefinitions>
-                <Button Style="{StaticResource TransparentButton}" Height="32" Width="32" Tag="{x:Bind }" Click="PlayBarListClick">
+                <Button Style="{StaticResource TransparentButton}" Height="32" Width="32" Tag="{x:Bind }" Click="{x:Bind helper:AlbumHelper.MusicItemClick}">
                     <FontIcon FontFamily="Segoe UI Emoji" Glyph="&#x1F3B5;" />
                 </Button>
                 <StackPanel Grid.Column="1" Margin="8,0,0,0">
@@ -25,7 +26,7 @@
                     <TextBlock Foreground="WhiteSmoke" Text="{x:Bind GetArtists()}" FontSize="12" TextTrimming="CharacterEllipsis"/>
                 </StackPanel>
                 <TextBlock Grid.Column="2" Foreground="White" Margin="16,0,0,0" Text="{x:Bind Duration.ToString('mm\\\\:ss')}" VerticalAlignment="Center"/>
-                <Button Grid.Column="3" Foreground="White" Style="{StaticResource TransparentButton}" Margin="8,0,0,0" Padding="4" CornerRadius="8" Tag="{x:Bind }" >
+                <Button Grid.Column="3" Foreground="White" Style="{StaticResource TransparentButton}" Margin="8,0,0,0" Padding="4" CornerRadius="8" Tag="{x:Bind }" Click="{x:Bind helper:AlbumHelper.MusicClick2}">
                     <SymbolIcon Symbol="More" />
                 </Button>
             </Grid>

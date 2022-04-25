@@ -194,6 +194,70 @@ namespace HotPotPlayer.Pages.Helper
             button.ContextFlyout.ShowAt(button);
         }
 
+        internal static void MusicClick2(object sender, RoutedEventArgs e)
+        {
+            var button = (Button)sender;
+            var music = (MusicItem)button.Tag;
+
+            if (button.ContextFlyout == null)
+            {
+                var flyout = new MenuFlyout();
+                var sub = new MenuFlyoutSubItem
+                {
+                    Text = "添加到",
+                    Icon = new SymbolIcon { Symbol = Symbol.Add },
+                };
+                var i = new MenuFlyoutItem
+                {
+                    Text = "当前列表",
+                    Icon = new SymbolIcon { Symbol = Symbol.MusicInfo },
+                };
+                i.Click += (s, e) => Player.AddToPlayListLast(music);
+                sub.Items.Add(i);
+                sub.Items.Add(new MenuFlyoutSeparator());
+                i = new MenuFlyoutItem
+                {
+                    Text = "新建播放队列",
+                    Icon = new SymbolIcon { Symbol = Symbol.Add },
+                };
+                sub.Items.Add(i);
+
+                foreach (var item in MusicService.LocalPlayListList)
+                {
+                    i = new MenuFlyoutItem
+                    {
+                        Text = item.Title,
+                    };
+                    i.Click += (s, e) => MusicAddToPlayList(item.Title, music);
+                    sub.Items.Add(i);
+                }
+                flyout.Items.Add(sub);
+                i = new MenuFlyoutItem
+                {
+                    Text = "属性",
+                    Icon = new FontIcon { FontFamily = new FontFamily("Segoe Fluent Icons"), Glyph = "\uE946" },
+                };
+                flyout.Items.Add(i);
+                flyout.Items.Add(new MenuFlyoutSeparator());
+                i = new MenuFlyoutItem
+                {
+                    Text = "选择",
+                    Icon = new FontIcon { FontFamily = new FontFamily("Segoe Fluent Icons"), Glyph = "\uE762" },
+                };
+                flyout.Items.Add(i);
+
+                button.ContextFlyout = flyout;
+            }
+            button.ContextFlyout.ShowAt(button);
+        }
+
+        internal static void MusicItemClick(object sender, RoutedEventArgs e)
+        {
+            var button = (Button)sender;
+            var music = (MusicItem)button.Tag;
+            Player.PlayNextContinue(music);
+        }
+
         internal static void PlayListMusicClick(object sender, RoutedEventArgs e)
         {
             var button = (Button)sender;

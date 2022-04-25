@@ -29,13 +29,6 @@ namespace HotPotPlayer.Controls
 
         MusicPlayer MusicPlayer => ((App)Application.Current).MusicPlayer;
 
-        private void PlayBarListClick(object sender, RoutedEventArgs e)
-        {
-            var button = (Button)sender;
-            var music = (MusicItem)button.Tag;
-            MusicPlayer.PlayNextContinue(music);
-        }
-
         private void RootTapped(object sender, TappedRoutedEventArgs e)
         {
             MusicPlayer.IsPlayListBarVisible = false;
@@ -50,5 +43,6 @@ namespace HotPotPlayer.Controls
         {
             e.Handled = true;
         }
+
     }
 }
