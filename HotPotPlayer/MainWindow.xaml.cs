@@ -90,7 +90,6 @@ namespace HotPotPlayer
             }
         }
 
-
         //private void Tray_TrayIconLeftMouseDown(object sender, EventArgs e)
         //{
         //    this.Show();

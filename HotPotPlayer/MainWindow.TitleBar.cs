@@ -57,6 +57,11 @@ namespace HotPotPlayer
                     m_AppWindow.TitleBar.ButtonForegroundColor = Colors.Black;
                 }
             }
+            else if(e.PropertyName == "IsPlayScreenVisible")
+            {
+                var musicPlayer = (MusicPlayer)sender;
+                SetDragRegionForCustomTitleBar(m_AppWindow, !musicPlayer.IsPlayScreenVisible);
+            }
         }
 
         private void AppTitleBar_SizeChanged(object sender, SizeChangedEventArgs e)
@@ -114,7 +119,7 @@ namespace HotPotPlayer
             }
         }
 
-        private void SetDragRegionForCustomTitleBar(AppWindow appWindow)
+        private void SetDragRegionForCustomTitleBar(AppWindow appWindow, bool isSearchVisible = true)
         {
             if (AppWindowTitleBar.IsCustomizationSupported()
                 && appWindow.TitleBar.ExtendsContentIntoTitleBar)
@@ -125,21 +130,34 @@ namespace HotPotPlayer
 
                 List<Windows.Graphics.RectInt32> dragRectsList = new();
 
-                Windows.Graphics.RectInt32 dragRectL;
-                dragRectL.X = (int)(60 * scaleAdjustment);
-                dragRectL.Y = 0;
-                dragRectL.Height = (int)(AppTitleBar.ActualHeight * scaleAdjustment);
-                dragRectL.Width = (int)(LeftDragColumn.ActualWidth * scaleAdjustment);
-                dragRectsList.Add(dragRectL);
+                if (isSearchVisible)
+                {
+                    Windows.Graphics.RectInt32 dragRectL;
+                    dragRectL.X = (int)(60 * scaleAdjustment);
+                    dragRectL.Y = 0;
+                    dragRectL.Height = (int)(AppTitleBar.ActualHeight * scaleAdjustment);
+                    dragRectL.Width = (int)(LeftDragColumn.ActualWidth * scaleAdjustment);
+                    dragRectsList.Add(dragRectL);
 
-                Windows.Graphics.RectInt32 dragRectR;
-                dragRectR.X = (int)((60
-                                    + LeftDragColumn.ActualWidth
-                                    + SearchColumn.ActualWidth) * scaleAdjustment);
-                dragRectR.Y = 0;
-                dragRectR.Height = (int)(AppTitleBar.ActualHeight * scaleAdjustment);
-                dragRectR.Width = (int)(RightDragColumn.ActualWidth * scaleAdjustment);
-                dragRectsList.Add(dragRectR);
+                    Windows.Graphics.RectInt32 dragRectR;
+                    dragRectR.X = (int)((60
+                                        + LeftDragColumn.ActualWidth
+                                        + SearchColumn.ActualWidth) * scaleAdjustment);
+                    dragRectR.Y = 0;
+                    dragRectR.Height = (int)(AppTitleBar.ActualHeight * scaleAdjustment);
+                    dragRectR.Width = (int)(RightDragColumn.ActualWidth * scaleAdjustment);
+                    dragRectsList.Add(dragRectR);
+                }
+                else
+                {
+                    Windows.Graphics.RectInt32 dragRectL;
+                    dragRectL.X = (int)(60 * scaleAdjustment);
+                    dragRectL.Y = 0;
+                    dragRectL.Height = (int)(AppTitleBar.ActualHeight * scaleAdjustment);
+                    dragRectL.Width = (int)(AppTitleBar.ActualWidth * scaleAdjustment - appWindow.TitleBar.RightInset);
+                    dragRectsList.Add(dragRectL);
+                }
+                
 
                 Windows.Graphics.RectInt32[] dragRects = dragRectsList.ToArray();
 
@@ -147,9 +165,9 @@ namespace HotPotPlayer
             }
         }
 
-        Visibility GetTitleBarSearchVisible(bool isPlayScreenVisible)
+        double GetTitleBarSearchVisible(bool isPlayScreenVisible)
         {
-            return isPlayScreenVisible ? Visibility.Collapsed : Visibility.Visible;
+            return isPlayScreenVisible ? 0 : 1;
         }
     }
 }

@@ -79,7 +79,7 @@
                 <ColumnDefinition x:Name="RightDragColumn" Width="*"/>
                 <ColumnDefinition x:Name="RightPaddingColumn" Width="0"/>
             </Grid.ColumnDefinitions>
-            <AutoSuggestBox Grid.Column="1" QueryIcon="Find" PlaceholderText="搜索" VerticalAlignment="Center" Width="260" Visibility="{x:Bind GetTitleBarSearchVisible(MusicPlayer.IsPlayScreenVisible), Mode=OneWay}"/>
+            <AutoSuggestBox Grid.Column="1" QueryIcon="Find" PlaceholderText="搜索" VerticalAlignment="Center" Width="260" Opacity="{x:Bind GetTitleBarSearchVisible(MusicPlayer.IsPlayScreenVisible), Mode=OneWay}" />
         </Grid>
     </Grid>
 </Window>
