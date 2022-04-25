@@ -90,8 +90,6 @@ namespace HotPotPlayer.Pages
             return state == LocalMusicService.LocalMusicState.Loading ? Visibility.Visible : Visibility.Collapsed;
         }
 
-
-
         private void AlbumClick(object sender, RoutedEventArgs e)
         {
             var album = ((Button)sender).Tag as AlbumItem;

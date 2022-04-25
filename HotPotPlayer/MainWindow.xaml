@@ -32,7 +32,7 @@
             <Frame x:Name="MainFrame" Grid.Column="1" Navigated="MainFrame_Navigated"/>
         </Grid>
 
-        <controls:CurrentPlayListBar x:Name="CurrentPlayListBar" HorizontalAlignment="Right" Width="400" Visibility="{x:Bind MusicPlayer.IsPlayListBarVisible, Mode=OneWay}" >
+        <controls:CurrentPlayListBar x:Name="CurrentPlayListBar" Visibility="{x:Bind MusicPlayer.IsPlayListBarVisible, Mode=OneWay}" >
             <animations:Implicit.ShowAnimations>
                 <animations:TranslationAnimation Duration="0:0:0.4" From="400,0,0" To="0,0,0" EasingMode="EaseOut"/>
             </animations:Implicit.ShowAnimations>

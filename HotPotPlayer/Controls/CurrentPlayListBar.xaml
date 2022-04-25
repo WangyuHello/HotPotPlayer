@@ -46,32 +46,35 @@
         </LinearGradientBrush>
     </UserControl.Resources>
 
-    <Grid Background="{StaticResource PlayListBarBackground}" Padding="0,36,0,0">
-        <Grid.RowDefinitions>
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="*" />
-        </Grid.RowDefinitions>
+    <Grid Tapped="RootTapped" Background="#00000000">
+        <Grid Background="{StaticResource PlayListBarBackground}" Padding="0,36,0,0" Width="400" HorizontalAlignment="Right" Tapped="InnerTapped">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
 
-        <Grid>
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="Auto" />
-                <ColumnDefinition Width="*" />
-                <ColumnDefinition Width="Auto" />
-            </Grid.ColumnDefinitions>
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
 
-            <Button Width="40" Height="40" Style="{StaticResource TransparentButton}" Foreground="White">
-                <SymbolIcon Symbol="Back" />
-            </Button>
-            <TextBlock Grid.Column="1" Text="正在播放" VerticalAlignment="Center" FontSize="18" Foreground="White"/>
-            <Button Grid.Column="2" Width="40" Height="40" Style="{StaticResource TransparentButton}" ToolTipService.ToolTip="清空" Foreground="White">
-                <FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="&#xE10A;" />
-            </Button>
+                <Button Width="40" Height="40" Style="{StaticResource TransparentButton}" Foreground="White" Click="BackClick">
+                    <SymbolIcon Symbol="Back" />
+                </Button>
+                <TextBlock Grid.Column="1" Text="正在播放" VerticalAlignment="Center" FontSize="18" Foreground="White"/>
+                <Button Grid.Column="2" Width="40" Height="40" Style="{StaticResource TransparentButton}" ToolTipService.ToolTip="清空" Foreground="White">
+                    <FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="&#xE10A;" />
+                </Button>
+            </Grid>
+
+            <ListView Grid.Row="1" SelectionMode="Single" ItemsSource="{x:Bind MusicPlayer.CurrentPlayList, Mode=OneWay}" ItemTemplate="{StaticResource PlayListBarListTemplate}" ItemContainerStyle="{StaticResource PlayListBarListContainerStyle}" SelectedIndex="{x:Bind MusicPlayer.CurrentPlayingIndex, Mode=OneWay}" >
+                <ListView.Footer>
+                    <Grid Height="100"/>
+                </ListView.Footer>
+            </ListView>
         </Grid>
-
-        <ListView Grid.Row="1" SelectionMode="Single" ItemsSource="{x:Bind MusicPlayer.CurrentPlayList, Mode=OneWay}" ItemTemplate="{StaticResource PlayListBarListTemplate}" ItemContainerStyle="{StaticResource PlayListBarListContainerStyle}" SelectedIndex="{x:Bind MusicPlayer.CurrentPlayingIndex, Mode=OneWay}" >
-            <ListView.Footer>
-                <Grid Height="100"/>
-            </ListView.Footer>
-        </ListView>
     </Grid>
+
 </UserControl>

@@ -35,5 +35,20 @@ namespace HotPotPlayer.Controls
             var music = (MusicItem)button.Tag;
             MusicPlayer.PlayNextContinue(music);
         }
+
+        private void RootTapped(object sender, TappedRoutedEventArgs e)
+        {
+            MusicPlayer.IsPlayListBarVisible = false;
+        }
+
+        private void BackClick(object sender, RoutedEventArgs e)
+        {
+            MusicPlayer.IsPlayListBarVisible = false;
+        }
+
+        private void InnerTapped(object sender, TappedRoutedEventArgs e)
+        {
+            e.Handled = true;
+        }
     }
 }
