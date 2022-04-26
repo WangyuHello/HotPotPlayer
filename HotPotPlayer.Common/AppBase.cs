@@ -1,4 +1,5 @@
-﻿using HotPotPlayer.Models;
+﻿using HotPotPlayer.Helpers;
+using HotPotPlayer.Models;
 using HotPotPlayer.Services;
 using Microsoft.UI.Dispatching;
 using Microsoft.UI.Xaml;
@@ -33,5 +34,10 @@ namespace HotPotPlayer
         public MusicPlayer MusicPlayer => musicPlayer ??= new MusicPlayer(Config, UIQueue, this);
 
         public abstract void ShowToast(ToastInfo toast);
+
+        public abstract IntPtr MainWindowHandle { get; }
+
+        TaskbarHelper _taskbar;
+        public TaskbarHelper Taskbar => _taskbar ??= new TaskbarHelper(MainWindowHandle);
     }
 }

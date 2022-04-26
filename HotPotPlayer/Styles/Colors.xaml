@@ -36,4 +36,10 @@
         <GradientStop Color="#7FABF9" Offset="1.0" />
     </LinearGradientBrush>
 
+    <LinearGradientBrush x:Name="PlayScreenBackground" StartPoint="0.3,0" EndPoint="0.8,1">
+        <GradientStop Color="#BEC2E5" Offset="0.0" />
+        <GradientStop Color="#C0C6E9" Offset="0.1" />
+        <GradientStop Color="#C0C6E9" Offset="0.4" />
+        <GradientStop Color="#CFD4FC" Offset="1.0" />
+    </LinearGradientBrush>
 </ResourceDictionary>

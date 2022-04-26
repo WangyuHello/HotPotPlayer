@@ -11,7 +11,7 @@
     PointerReleased="PlayScreen_PointerReleased"
     >
 
-    <Grid x:Name="Root" Background="LightGray" x:Load="{x:Bind MusicPlayer.IsPlayScreenVisible, Mode=OneWay}">
+    <Grid x:Name="Root" Background="{StaticResource PlayScreenBackground}" x:Load="{x:Bind MusicPlayer.IsPlayScreenVisible, Mode=OneWay}">
         <Button VerticalAlignment="Top" HorizontalAlignment="Left" Margin="52,40" Click="{x:Bind MusicPlayer.ToggleShowPlayScreen}">
             <SymbolIcon Symbol="Clear" />
         </Button>

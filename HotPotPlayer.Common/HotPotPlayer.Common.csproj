@@ -8,12 +8,22 @@
     <Platforms>x64</Platforms>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
+  <ItemGroup>
+    <None Remove="NativeMethods.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <AdditionalFiles Include="NativeMethods.txt" />
+  </ItemGroup>
 
   <ItemGroup>
       <PackageReference Include="CommunityToolkit.Common" Version="7.1.2" />
       <PackageReference Include="CommunityToolkit.WinUI" Version="7.1.2" />
       <PackageReference Include="CommunityToolkit.WinUI.UI" Version="7.1.2" />
       <PackageReference Include="CommunityToolkit.WinUI.UI.Controls.Core" Version="7.1.2" />
+      <PackageReference Include="Microsoft.Windows.CsWin32" Version="0.1.647-beta">
+        <PrivateAssets>all</PrivateAssets>
+        <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+      </PackageReference>
 	  <PackageReference Include="Microsoft.WindowsAppSDK" Version="1.1.0-preview2" />
 	  <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
       <PackageReference Include="System.Management" Version="6.0.0" />

@@ -81,6 +81,6 @@ namespace HotPotPlayer
         }
 
         public MainWindow MainWindow;
-        public IntPtr MainWindowHandle => MainWindow.GetWindowHandle();
+        public override IntPtr MainWindowHandle => MainWindow.GetWindowHandle();
     }
 }

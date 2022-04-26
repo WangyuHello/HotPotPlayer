@@ -201,6 +201,8 @@ namespace HotPotPlayer.Services
             smtc.IsPreviousEnabled = true;
             smtc.PlaybackStatus = MediaPlaybackStatus.Closed;
 
+            App?.Taskbar.AddPlayButtons();
+
             return smtc;
         }
 
