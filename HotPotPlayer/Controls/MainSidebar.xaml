@@ -12,7 +12,7 @@
         <BitmapImage x:Key="Bilibili" UriSource="ms-appx:///Assets/bilibili.svg" />
     </UserControl.Resources>
 
-    <Grid Background="{StaticResource MainNavBackground}" >
+    <Grid Background="{StaticResource MainNavBackground}" SizeChanged="Root_SizeChanged">
         <Grid.RowDefinitions>
             <RowDefinition Height="60" />
             <RowDefinition Height="*" />

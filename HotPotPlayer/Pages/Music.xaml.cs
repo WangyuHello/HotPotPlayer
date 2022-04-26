@@ -85,9 +85,9 @@ namespace HotPotPlayer.Pages
             }
         }
 
-        Visibility GetLoadingVisibility(LocalMusicService.LocalMusicState state)
+        Visibility GetLoadingVisibility(LocalServiceState state)
         {
-            return state == LocalMusicService.LocalMusicState.Loading ? Visibility.Visible : Visibility.Collapsed;
+            return state == LocalServiceState.Loading ? Visibility.Visible : Visibility.Collapsed;
         }
 
         private void AlbumClick(object sender, RoutedEventArgs e)

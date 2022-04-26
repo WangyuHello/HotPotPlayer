@@ -50,6 +50,7 @@
     <None Remove="Pages\Bilibili.xaml" />
     <None Remove="Pages\CloudMusic.xaml" />
     <None Remove="Pages\Music.xaml" />
+    <None Remove="Pages\MusicSub\Info.xaml" />
     <None Remove="Pages\Setting.xaml" />
     <None Remove="Pages\Video.xaml" />
     <None Remove="Styles\Buttons.xaml" />
@@ -102,6 +103,12 @@
     <ProjectReference Include="..\HotPotPlayer.VideoHost\HotPotPlayer.VideoHost.csproj" />
     <ProjectReference Include="..\NeteaseCloudMusicApi\NeteaseCloudMusicApi\NeteaseCloudMusicApi.csproj" />
     <ProjectReference Include="..\WinUIEx\src\WinUIEx\WinUIEx.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Page Update="Pages\MusicSub\Info.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
   </ItemGroup>
 
   <ItemGroup>

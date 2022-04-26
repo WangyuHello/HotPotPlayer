@@ -49,7 +49,7 @@ namespace HotPotPlayer.Controls
         {
             var sidbar = (MainSidebar)d;
             var newPageName = e.NewValue as string;
-            var button = newPageName switch
+            sidbar._selectedButton = newPageName switch
             {
                 string n when n.StartsWith("Music") => sidbar.Music,
                 string n when n.StartsWith("Video") => sidbar.Video,
@@ -58,12 +58,13 @@ namespace HotPotPlayer.Controls
                 string n when n.StartsWith("Setting") => sidbar.Setting,
                 _ => null,
             };
-            if (button != null)
+            if (sidbar._selectedButton != null)
             {
-                sidbar.StartPopAnimation(button);
+                sidbar.StartMoveAnimation(sidbar._selectedButton);
             }
         }
 
+        Button _selectedButton;
         public event Action<string> SelectedPageNameChanged;
         public event Action OnBackClick;
 
@@ -99,27 +100,26 @@ namespace HotPotPlayer.Controls
             OnBackClick?.Invoke();
         }
 
-        ExpressionAnimation popMoveAnimation;
-        SpringScalarNaturalMotionAnimation popMoveAnimation2;
+        SpringScalarNaturalMotionAnimation moveAnime;
         readonly Compositor _compositor = CompositionTarget.GetCompositorForCurrentThread();
 
-        private void StartPopAnimation(Button targetButton)
+        private void StartMoveAnimation(Button targetButton)
         {
-            if (popMoveAnimation == null)
+            if (moveAnime == null)
             {
-                popMoveAnimation = _compositor.CreateExpressionAnimation();
-                popMoveAnimation.Expression = "Vector3(0, source.ActualOffset.Y - 12, 0)";
-                popMoveAnimation.Target = "Translation";
+                moveAnime = _compositor.CreateSpringScalarAnimation();
+                moveAnime.Target = "Translation.Y";
             }
-            if (popMoveAnimation2 == null)
+            moveAnime.FinalValue = targetButton.ActualOffset.Y - 12;
+            ButtonPop.StartAnimation(moveAnime);
+        }
+
+        private void Root_SizeChanged(object sender, SizeChangedEventArgs e)
+        {
+            if (_selectedButton != null)
             {
-                popMoveAnimation2 = _compositor.CreateSpringScalarAnimation();
-                popMoveAnimation2.Target = "Translation.Y";
+                StartMoveAnimation(_selectedButton);
             }
-            popMoveAnimation2.FinalValue = targetButton.ActualOffset.Y - 12;
-            popMoveAnimation.SetExpressionReferenceParameter("source", targetButton);
-            ButtonPop.StartAnimation(popMoveAnimation2);
-            //ButtonPop.StartAnimation(popMoveAnimation);
         }
     }
 }

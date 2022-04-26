@@ -14,23 +14,25 @@ using System.Xml.Linq;
 
 namespace HotPotPlayer.Services
 {
+    public enum LocalServiceState
+    {
+        Idle,
+        Loading,
+        InitComplete,
+        Complete,
+        NoLibraryAccess
+    }
+
     public class LocalMusicService: ServiceBaseWithConfig
     {
         public LocalMusicService(ConfigBase config, DispatcherQueue uiQueue = null, AppBase app = null) : base(config, uiQueue, app) { }
         
         #region State
-        public enum LocalMusicState
-        {
-            Idle,
-            Loading,
-            InitComplete,
-            Complete,
-            NoLibraryAccess
-        }
 
-        private LocalMusicState _state = LocalMusicState.Idle;
 
-        public LocalMusicState State
+        private LocalServiceState _state = LocalServiceState.Idle;
+
+        public LocalServiceState State
         {
             get => _state;
             set => Set(ref _state, value);
@@ -130,10 +132,10 @@ namespace HotPotPlayer.Services
 
         void LoadLocalCompleted(object sender, RunWorkerCompletedEventArgs e)
         {
-            State = LocalMusicState.Complete;
+            State = LocalServiceState.Complete;
         }
 
-        void EnqueueChangeState(LocalMusicState newState)
+        void EnqueueChangeState(LocalServiceState newState)
         {
             UIQueue?.TryEnqueue(() =>
             {
@@ -148,7 +150,7 @@ namespace HotPotPlayer.Services
             var libs = Config.MusicLibrary;
             if (libs == null)
             {
-                EnqueueChangeState(LocalMusicState.NoLibraryAccess);
+                EnqueueChangeState(LocalServiceState.NoLibraryAccess);
                 return;
             }
 
@@ -177,7 +179,7 @@ namespace HotPotPlayer.Services
                     _localAlbumGroup.AddGroup(item.Key, item);
                 }
                 LocalPlayListList = new(dbPlayListList);
-                State = LocalMusicState.InitComplete;
+                State = LocalServiceState.InitComplete;
             });
 
         CheckLocalUpdate:
@@ -192,17 +194,17 @@ namespace HotPotPlayer.Services
             ObservableCollection<PlayListItem> newPlayListList = null;
             if (addOrUpdateList != null && addOrUpdateList.Any())
             {
-                EnqueueChangeState(LocalMusicState.Loading);
+                EnqueueChangeState(LocalServiceState.Loading);
                 newAlbumGroup = AddOrUpdateMusicAndSave(db, addOrUpdateList);
             }
             if (removeList != null && removeList.Any())
             {
-                EnqueueChangeState(LocalMusicState.Loading);
+                EnqueueChangeState(LocalServiceState.Loading);
                 newAlbumGroup = RemoveMusicAndSave(db, removeList);
             }
             if (playListHasUpdate)
             {
-                EnqueueChangeState(LocalMusicState.Loading);
+                EnqueueChangeState(LocalServiceState.Loading);
                 var l = ScanAllPlayList(db, localPlayListFiles);
                 SetPlayListRef(l);
                 newPlayListList = new(l);
