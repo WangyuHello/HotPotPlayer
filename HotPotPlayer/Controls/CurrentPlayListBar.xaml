@@ -65,7 +65,7 @@
                 </Button>
             </Grid>
 
-            <ListView x:Name="PlayList" Grid.Row="1" SelectionMode="Single" ItemsSource="{x:Bind MusicPlayer.CurrentPlayList, Mode=OneWay}" ItemTemplate="{StaticResource PlayListBarListTemplate}" ItemContainerStyle="{StaticResource PlayListBarListContainerStyle}" SelectedIndex="{x:Bind MusicPlayer.CurrentPlayingIndex, Mode=OneWay}" x:Load="{x:Bind MusicPlayer.IsPlayListBarVisible, Mode=OneWay}">
+            <ListView x:Name="PlayList" Grid.Row="1" SelectionMode="Single" ItemsSource="{x:Bind MusicPlayer.CurrentPlayList, Mode=OneWay}" ItemTemplate="{StaticResource PlayListBarListTemplate}" ItemContainerStyle="{StaticResource PlayListBarListContainerStyle}" SelectedIndex="{x:Bind MusicPlayer.CurrentPlayingIndex, Mode=OneWay}" >
                 <ListView.Footer>
                     <Grid Height="100"/>
                 </ListView.Footer>
