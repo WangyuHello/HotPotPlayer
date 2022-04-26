@@ -22,10 +22,10 @@
                     <FontIcon FontFamily="Segoe UI Emoji" Glyph="&#x1F3B5;" />
                 </Button>
                 <StackPanel Grid.Column="1" Margin="8,0,0,0">
-                    <TextBlock Foreground="White" Text="{x:Bind Title}" FontSize="14" TextTrimming="CharacterEllipsis"/>
-                    <TextBlock Foreground="WhiteSmoke" Text="{x:Bind GetArtists()}" FontSize="12" TextTrimming="CharacterEllipsis"/>
+                    <TextBlock Foreground="White" Text="{x:Bind Title}" FontSize="14" TextTrimming="CharacterEllipsis" FontFamily="{ThemeResource MiSansRegular}"/>
+                    <TextBlock Foreground="WhiteSmoke" Text="{x:Bind GetArtists()}" FontSize="12" TextTrimming="CharacterEllipsis" FontFamily="{ThemeResource MiSansRegular}"/>
                 </StackPanel>
-                <TextBlock Grid.Column="2" Foreground="White" Margin="16,0,0,0" Text="{x:Bind Duration.ToString('mm\\\\:ss')}" VerticalAlignment="Center"/>
+                <TextBlock Grid.Column="2" Foreground="White" Margin="16,0,0,0" Text="{x:Bind Duration.ToString('mm\\\\:ss')}" VerticalAlignment="Center" FontFamily="{ThemeResource MiSansRegular}"/>
                 <Button Grid.Column="3" Foreground="White" Style="{StaticResource TransparentButton}" Margin="8,0,0,0" Padding="4" CornerRadius="8" Tag="{x:Bind }" Click="{x:Bind helper:AlbumHelper.MusicClick2}">
                     <SymbolIcon Symbol="More" />
                 </Button>
@@ -59,7 +59,7 @@
                 <Button Width="40" Height="40" Style="{StaticResource TransparentButton}" Foreground="White" Click="BackClick">
                     <SymbolIcon Symbol="Back" />
                 </Button>
-                <TextBlock Grid.Column="1" Text="正在播放" VerticalAlignment="Center" FontSize="18" Foreground="White"/>
+                <TextBlock Grid.Column="1" Text="正在播放" VerticalAlignment="Center" FontSize="18" Foreground="White" FontFamily="{ThemeResource MiSansRegular}"/>
                 <Button Grid.Column="2" Width="40" Height="40" Style="{StaticResource TransparentButton}" ToolTipService.ToolTip="清空" Foreground="White">
                     <FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="&#xE10A;" />
                 </Button>

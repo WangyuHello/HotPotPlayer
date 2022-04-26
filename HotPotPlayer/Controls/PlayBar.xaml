@@ -51,9 +51,9 @@
 
             <cont:ImageEx2 x:Name="Cover" Style="{StaticResource PlayBarImageStyle}" Source="{x:Bind MusicPlayer.CurrentPlaying.Cover, Mode=OneWay}" Tapped="{x:Bind MusicPlayer.ToggleShowPlayScreen}" x:Load="{x:Bind GetCoverLoad(MusicPlayer.IsPlayScreenVisible), Mode=OneWay}" Visibility="{x:Bind GetCoverVisibility(MusicPlayer.IsPlayScreenVisible), Mode=OneWay}"/>
             <StackPanel Grid.Column="1" Margin="8,4" VerticalAlignment="Center" Spacing="4">
-                <TextBlock MaxLines="2" TextWrapping="Wrap" TextTrimming="CharacterEllipsis" FontSize="18" FontWeight="Medium" Text="{x:Bind MusicPlayer.CurrentPlaying.Title, Mode=OneWay}"></TextBlock>
+                <TextBlock MaxLines="2" TextWrapping="Wrap" TextTrimming="CharacterEllipsis" FontSize="18" Text="{x:Bind MusicPlayer.CurrentPlaying.Title, Mode=OneWay}" FontFamily="{ThemeResource MiSansMedium}" />
                 <Button Style="{StaticResource TextButton}" Click="SubtitleClick">
-                    <TextBlock FontSize="12" Foreground="DimGray" TextTrimming="CharacterEllipsis" Text="{x:Bind GetSubtitle(MusicPlayer.CurrentPlaying), Mode=OneWay}"/>
+                    <TextBlock FontSize="12" Foreground="DimGray" TextTrimming="CharacterEllipsis" Text="{x:Bind GetSubtitle(MusicPlayer.CurrentPlaying), Mode=OneWay}" FontFamily="{ThemeResource MiSansRegular}"/>
                 </Button>
             </StackPanel>
         </Grid>
@@ -86,10 +86,10 @@
                     <SymbolIcon Symbol="Refresh" />
                 </Button>
             </StackPanel>
-            <TextBlock Grid.Row="1" Margin="0,0,8,0" VerticalAlignment="Center" Text="{x:Bind MusicPlayer.CurrentTime.ToString('mm\\\\:ss'), Mode=OneWay}"></TextBlock>
+            <TextBlock Grid.Row="1" Margin="0,0,8,-3" VerticalAlignment="Center" Text="{x:Bind MusicPlayer.CurrentTime.ToString('mm\\\\:ss'), Mode=OneWay}" FontFamily="{ThemeResource MiSansRegular}" FontSize="12"/>
             <Slider x:Name="PlaySlider" Grid.Row="1" Grid.Column="1" Translation="0,2,0" Style="{StaticResource PlaySliderStyle}" Value="{x:Bind GetSliderValue(MusicPlayer.CurrentTime, MusicPlayer.CurrentPlayingDuration), Mode=OneWay}" ThumbToolTipValueConverter="{StaticResource SliderThumbConverter}" >
             </Slider>
-            <TextBlock Grid.Row="1" Grid.Column="2" Margin="8,0,0,0" VerticalAlignment="Center" Text="{x:Bind GetDuration(MusicPlayer.CurrentPlayingDuration), Mode=OneWay}"></TextBlock>
+            <TextBlock Grid.Row="1" Grid.Column="2" Margin="8,0,0,-3" VerticalAlignment="Center" Text="{x:Bind GetDuration(MusicPlayer.CurrentPlayingDuration), Mode=OneWay}" FontFamily="{ThemeResource MiSansRegular}" FontSize="12"/>
         </Grid>
 
         <StackPanel Grid.Column="2" Margin="8,0" Orientation="Horizontal" Spacing="8" HorizontalAlignment="Right">

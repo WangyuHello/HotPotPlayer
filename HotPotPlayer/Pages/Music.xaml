@@ -28,8 +28,8 @@
             <Button Style="{StaticResource AlbumGroupButton}" Click="AlbumClick" Tag="{x:Bind }" x:Name="AlbumConnectedElement" >
                 <StackPanel Spacing="8" Margin="0,0,0,12">
                     <cont2:ImageEx2 Source="{x:Bind Cover}" Style="{StaticResource LocalMusicImageStyle}" x:Phase="2" />
-                    <TextBlock Margin="8,0" Text="{x:Bind Title}" FontWeight="Bold" LineStackingStrategy="BaselineToBaseline" FontSize="14" MaxLines="2" TextTrimming="CharacterEllipsis" TextWrapping="Wrap" Height="40" ToolTipService.ToolTip="{x:Bind Title}" x:Phase="0"/>
-                    <TextBlock Margin="8,0" Text="{x:Bind GetArtists()}" Foreground="Gray" ToolTipService.ToolTip="{x:Bind GetArtists()}" x:Phase="1"/>
+                    <TextBlock Margin="8,0" Text="{x:Bind Title}" LineStackingStrategy="BaselineToBaseline" FontSize="14" MaxLines="2" TextTrimming="CharacterEllipsis" TextWrapping="Wrap" Height="40" ToolTipService.ToolTip="{x:Bind Title}" x:Phase="0" FontFamily="{ThemeResource MiSansBold}"/>
+                    <TextBlock Margin="8,0" Text="{x:Bind GetArtists()}" Foreground="Gray" ToolTipService.ToolTip="{x:Bind GetArtists()}" x:Phase="1" FontFamily="{ThemeResource MiSansRegular}"/>
                 </StackPanel>
             </Button>
         </DataTemplate>
@@ -38,7 +38,7 @@
             <Button Style="{StaticResource AlbumGroupButton}" Click="PlayListClick" Tag="{x:Bind }" x:Name="PlayListConnectedElement">
                 <StackPanel Spacing="8" Margin="0,0,0,12">
                     <cont2:ImageEx2 Source="{x:Bind Cover}" Style="{StaticResource LocalMusicImageStyle}" x:Phase="1"/>
-                    <TextBlock Margin="8,0" Text="{x:Bind Title}" FontWeight="Medium" LineStackingStrategy="BaselineToBaseline" FontSize="18" TextTrimming="CharacterEllipsis" TextWrapping="Wrap" ToolTipService.ToolTip="{x:Bind Title}"/>
+                    <TextBlock Margin="8,0" Text="{x:Bind Title}" LineStackingStrategy="BaselineToBaseline" FontSize="18" TextTrimming="CharacterEllipsis" TextWrapping="Wrap" ToolTipService.ToolTip="{x:Bind Title}" FontFamily="{ThemeResource MiSansMedium}"/>
                 </StackPanel>
             </Button>
         </DataTemplate>
@@ -48,11 +48,11 @@
         </Style>
 
         <DataTemplate x:Key="LocalAlbumZoomedInGroupHeaderTemplate" x:DataType="collection:IReadOnlyObservableGroup">
-            <TextBlock Text="{x:Bind Key.ToString()}" Foreground="{ThemeResource ApplicationForegroundThemeBrush}" Style="{StaticResource SubtitleTextBlockStyle}"/>
+            <TextBlock Text="{x:Bind Key.ToString()}" Foreground="{ThemeResource ApplicationForegroundThemeBrush}" Style="{StaticResource SubtitleTextBlockStyle}" FontFamily="{ThemeResource MiSansRegular}"/>
         </DataTemplate>
 
         <DataTemplate x:Key="LocalAlbumZoomedOutTemplate" x:DataType="muxdata:ICollectionViewGroup">
-            <TextBlock Margin="8" Text="{x:Bind ((collection:IReadOnlyObservableGroup)Group).Key.ToString()}" FontSize="20" TextWrapping="Wrap"/>
+            <TextBlock Margin="8" Text="{x:Bind ((collection:IReadOnlyObservableGroup)Group).Key.ToString()}" FontSize="20" TextWrapping="Wrap" FontFamily="{ThemeResource MiSansRegular}"/>
         </DataTemplate>
 
         <local:EvenOldTemplateSelector x:Key="EvenOldAlbumPopupTemplate" >
@@ -67,10 +67,10 @@
                                 <ColumnDefinition Width="Auto" />
                                 <ColumnDefinition Width="Auto" />
                             </Grid.ColumnDefinitions>
-                            <TextBlock Text="{x:Bind Track}" Margin="0,0,8,0" VerticalAlignment="Center"/>
-                            <TextBlock Grid.Column="1" Text="{x:Bind Title}" TextTrimming="CharacterEllipsis" VerticalAlignment="Center"/>
-                            <HyperlinkButton Grid.Column="2" Content="{x:Bind GetArtists()}" VerticalAlignment="Center" Click="{x:Bind helper:AlbumHelper.ArtistClick}" Tag="{x:Bind }"/>
-                            <TextBlock Grid.Column="3" Margin="8,0,0,0" Text="{x:Bind Duration.ToString('mm\\\\:ss')}" VerticalAlignment="Center"/>
+                            <TextBlock Text="{x:Bind Track}" Margin="0,0,8,0" VerticalAlignment="Center" FontFamily="{ThemeResource MiSansRegular}"/>
+                            <TextBlock Grid.Column="1" Text="{x:Bind Title}" TextTrimming="CharacterEllipsis" VerticalAlignment="Center" FontFamily="{ThemeResource MiSansRegular}"/>
+                            <HyperlinkButton Grid.Column="2" Content="{x:Bind GetArtists()}" VerticalAlignment="Center" Click="{x:Bind helper:AlbumHelper.ArtistClick}" Tag="{x:Bind }" FontFamily="{ThemeResource MiSansRegular}"/>
+                            <TextBlock Grid.Column="3" Margin="8,0,0,0" Text="{x:Bind Duration.ToString('mm\\\\:ss')}" VerticalAlignment="Center" FontFamily="{ThemeResource MiSansRegular}"/>
                             <Button Grid.Column="4" Style="{StaticResource TransparentButton}" Margin="16,0,0,0" CornerRadius="4" Padding="4" Tag="{x:Bind }" Click="{x:Bind helper:AlbumHelper.MusicClick}">
                                 <SymbolIcon Symbol="More" />
                             </Button>
@@ -89,10 +89,10 @@
                                 <ColumnDefinition Width="Auto" />
                                 <ColumnDefinition Width="Auto" />
                             </Grid.ColumnDefinitions>
-                            <TextBlock Text="{x:Bind Track}" Margin="0,0,8,0" VerticalAlignment="Center"/>
-                            <TextBlock Grid.Column="1" Text="{x:Bind Title}" TextTrimming="CharacterEllipsis" VerticalAlignment="Center"/>
-                            <HyperlinkButton Grid.Column="2" Content="{x:Bind GetArtists()}" VerticalAlignment="Center" Click="{x:Bind helper:AlbumHelper.ArtistClick}" Tag="{x:Bind }"/>
-                            <TextBlock Grid.Column="3" Margin="8,0,0,0" Text="{x:Bind Duration.ToString('mm\\\\:ss')}" VerticalAlignment="Center"/>
+                            <TextBlock Text="{x:Bind Track}" Margin="0,0,8,0" VerticalAlignment="Center" FontFamily="{ThemeResource MiSansRegular}"/>
+                            <TextBlock Grid.Column="1" Text="{x:Bind Title}" TextTrimming="CharacterEllipsis" VerticalAlignment="Center" FontFamily="{ThemeResource MiSansRegular}"/>
+                            <HyperlinkButton Grid.Column="2" Content="{x:Bind GetArtists()}" VerticalAlignment="Center" Click="{x:Bind helper:AlbumHelper.ArtistClick}" Tag="{x:Bind }" FontFamily="{ThemeResource MiSansRegular}"/>
+                            <TextBlock Grid.Column="3" Margin="8,0,0,0" Text="{x:Bind Duration.ToString('mm\\\\:ss')}" VerticalAlignment="Center" FontFamily="{ThemeResource MiSansRegular}"/>
                             <Button Grid.Column="4" Style="{StaticResource TransparentButton}" Margin="16,0,0,0" CornerRadius="4" Padding="4" Tag="{x:Bind }" Click="{x:Bind helper:AlbumHelper.MusicClick}">
                                 <SymbolIcon Symbol="More" />
                             </Button>
@@ -114,10 +114,10 @@
                                 <ColumnDefinition Width="Auto" />
                                 <ColumnDefinition Width="Auto" />
                             </Grid.ColumnDefinitions>
-                            <TextBlock Grid.Column="0" Text="{x:Bind Title}" TextTrimming="CharacterEllipsis" VerticalAlignment="Center"/>
-                            <HyperlinkButton Grid.Column="1" Content="{x:Bind GetArtists()}" VerticalAlignment="Center" Click="{x:Bind helper:AlbumHelper.ArtistClick}" Tag="{x:Bind }"/>
-                            <HyperlinkButton Grid.Column="2" Content="{x:Bind Album}" VerticalAlignment="Center" Click="{x:Bind helper:AlbumHelper.AlbumInfoClick}" Tag="{x:Bind }"/>
-                            <TextBlock Grid.Column="3" Text="{x:Bind Duration.ToString('mm\\\\:ss')}" VerticalAlignment="Center"/>
+                            <TextBlock Grid.Column="0" Text="{x:Bind Title}" TextTrimming="CharacterEllipsis" VerticalAlignment="Center" FontFamily="{ThemeResource MiSansRegular}"/>
+                            <HyperlinkButton Grid.Column="1" Content="{x:Bind GetArtists()}" VerticalAlignment="Center" Click="{x:Bind helper:AlbumHelper.ArtistClick}" Tag="{x:Bind }" FontFamily="{ThemeResource MiSansRegular}"/>
+                            <HyperlinkButton Grid.Column="2" Content="{x:Bind Album}" VerticalAlignment="Center" Click="{x:Bind helper:AlbumHelper.AlbumInfoClick}" Tag="{x:Bind }" FontFamily="{ThemeResource MiSansRegular}"/>
+                            <TextBlock Grid.Column="3" Text="{x:Bind Duration.ToString('mm\\\\:ss')}" VerticalAlignment="Center" FontFamily="{ThemeResource MiSansRegular}"/>
                             <Button Grid.Column="4" Style="{StaticResource TransparentButton}" Margin="16,0,0,0" CornerRadius="4" Padding="4" Tag="{x:Bind }" Click="{x:Bind helper:AlbumHelper.PlayListMusicClick}">
                                 <SymbolIcon Symbol="More" />
                             </Button>
@@ -136,10 +136,10 @@
                                 <ColumnDefinition Width="Auto" />
                                 <ColumnDefinition Width="Auto" />
                             </Grid.ColumnDefinitions>
-                            <TextBlock Grid.Column="0" Text="{x:Bind Title}" TextTrimming="CharacterEllipsis" VerticalAlignment="Center"/>
-                            <HyperlinkButton Grid.Column="1" Margin="0,0,16,0" Content="{x:Bind GetArtists()}" VerticalAlignment="Center" Click="{x:Bind helper:AlbumHelper.ArtistClick}" Tag="{x:Bind }"/>
-                            <HyperlinkButton Grid.Column="2" Margin="0,0,16,0" Content="{x:Bind Album}" VerticalAlignment="Center" Click="{x:Bind helper:AlbumHelper.AlbumInfoClick}" Tag="{x:Bind }"/>
-                            <TextBlock Grid.Column="3" Text="{x:Bind Duration.ToString('mm\\\\:ss')}" VerticalAlignment="Center"/>
+                            <TextBlock Grid.Column="0" Text="{x:Bind Title}" TextTrimming="CharacterEllipsis" VerticalAlignment="Center" FontFamily="{ThemeResource MiSansRegular}"/>
+                            <HyperlinkButton Grid.Column="1" Margin="0,0,16,0" Content="{x:Bind GetArtists()}" VerticalAlignment="Center" Click="{x:Bind helper:AlbumHelper.ArtistClick}" Tag="{x:Bind }" FontFamily="{ThemeResource MiSansRegular}"/>
+                            <HyperlinkButton Grid.Column="2" Margin="0,0,16,0" Content="{x:Bind Album}" VerticalAlignment="Center" Click="{x:Bind helper:AlbumHelper.AlbumInfoClick}" Tag="{x:Bind }" FontFamily="{ThemeResource MiSansRegular}"/>
+                            <TextBlock Grid.Column="3" Text="{x:Bind Duration.ToString('mm\\\\:ss')}" VerticalAlignment="Center" FontFamily="{ThemeResource MiSansRegular}"/>
                             <Button Grid.Column="4" Style="{StaticResource TransparentButton}" Margin="16,0,0,0" CornerRadius="4" Padding="4" Tag="{x:Bind }" Click="{x:Bind helper:AlbumHelper.PlayListMusicClick}">
                                 <SymbolIcon Symbol="More" />
                             </Button>
@@ -161,8 +161,8 @@
     </Page.Resources>
 
     <Grid x:Name="Root" Background="White" Padding="36,28,0,0">
-        <Pivot x:Name="RootPivot" >
-            <PivotItem Header="专辑" Margin="0">
+        <Pivot x:Name="RootPivot" FontFamily="{ThemeResource MiSansRegular}">
+            <PivotItem Header="专辑" Margin="0" FontFamily="{ThemeResource MiSansRegular}">
                 <SemanticZoom>
                     <SemanticZoom.ZoomedInView>
                         <GridView x:Name="AlbumGridView" ItemsSource="{x:Bind LocalAlbumGroups.View}" ScrollViewer.IsHorizontalScrollChainingEnabled="False" SelectionMode="None" ItemTemplate="{StaticResource LocalAlbumZoomedInTemplate}" ItemContainerStyle="{StaticResource LocalAlbumContainerStyle}" ShowsScrollingPlaceholders="True" ContainerContentChanging="AlbumGridView_ContainerContentChanging">
@@ -179,7 +179,7 @@
                     </SemanticZoom.ZoomedOutView>
                 </SemanticZoom>
             </PivotItem>
-            <PivotItem Header="播放列表" Margin="0">
+            <PivotItem Header="播放列表" Margin="0" FontFamily="{ThemeResource MiSansRegular}">
                 <GridView x:Name="PlayListGridView" ItemsSource="{x:Bind MusicService.LocalPlayListList, Mode=OneWay}" ScrollViewer.IsHorizontalScrollChainingEnabled="False" SelectionMode="None" ItemTemplate="{StaticResource LocalPlayListTemplate}" ItemContainerStyle="{StaticResource LocalAlbumContainerStyle}" >
                     <GridView.Footer>
                         <Grid Height="100"/>
@@ -219,13 +219,13 @@
 
                     <cont2:ImageEx2  Source="{x:Bind SelectedAlbum.Cover, Mode=OneWay}" Style="{StaticResource LocalAlbumPopupImageStyle}" />
                     <StackPanel Grid.Column="1" Margin="16,0,0,0" >
-                        <TextBlock Text="{x:Bind SelectedAlbum.Title, Mode=OneWay}" MaxLines="2" FontSize="32" TextWrapping="Wrap" FontWeight="Medium" TextTrimming="CharacterEllipsis" >
+                        <TextBlock Text="{x:Bind SelectedAlbum.Title, Mode=OneWay}" MaxLines="2" FontSize="32" TextWrapping="Wrap" TextTrimming="CharacterEllipsis" FontFamily="{ThemeResource MiSansMedium}">
 
                         </TextBlock>
-                        <TextBlock Text="{x:Bind SelectedAlbum.Year, Mode=OneWay}" FontSize="18" Margin="0,4,0,0">
+                        <TextBlock Text="{x:Bind SelectedAlbum.Year, Mode=OneWay}" FontSize="18" Margin="0,4,0,0" FontFamily="{ThemeResource MiSansRegular}">
 
                         </TextBlock>
-                        <HyperlinkButton Content="{x:Bind SelectedAlbum.GetArtists(), Mode=OneWay}" Padding="0,4" FontSize="18" Margin="0,4,0,0" Click="{x:Bind helper:AlbumHelper.ArtistClick2}">
+                        <HyperlinkButton Content="{x:Bind SelectedAlbum.GetArtists(), Mode=OneWay}" Padding="0,4" FontSize="18" Margin="0,4,0,0" Click="{x:Bind helper:AlbumHelper.ArtistClick2}" FontFamily="{ThemeResource MiSansRegular}">
 
                         </HyperlinkButton>
                         <Grid Margin="0,12,0,0">
@@ -286,7 +286,7 @@
 
                     <cont2:ImageEx2 Source="{x:Bind SelectedPlayList.Cover, Mode=OneWay}" Style="{StaticResource LocalMusicImageStyle}"/>
                     <StackPanel Grid.Column="1" Margin="16,0,0,0">
-                        <TextBlock Text="{x:Bind SelectedPlayList.Title, Mode=OneWay}" MaxLines="2" FontSize="32" TextWrapping="Wrap" FontWeight="Medium" TextTrimming="CharacterEllipsis" />
+                        <TextBlock Text="{x:Bind SelectedPlayList.Title, Mode=OneWay}" MaxLines="2" FontSize="32" TextWrapping="Wrap" FontWeight="Medium" TextTrimming="CharacterEllipsis" FontFamily="{ThemeResource MiSansRegular}"/>
                         <StackPanel Orientation="Horizontal" Margin="0,12,0,0" Spacing="8">
                             <Button Style="{StaticResource AlbumPlayButton}" Click="PlayListPlay">
                                 <SymbolIcon Symbol="Play" />

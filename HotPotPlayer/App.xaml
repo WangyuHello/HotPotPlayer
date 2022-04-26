@@ -16,7 +16,14 @@
                 <!-- Other merged dictionaries here -->
             </ResourceDictionary.MergedDictionaries>
             <!-- Other app resources here -->
+            <ResourceDictionary.ThemeDictionaries>
+                <ResourceDictionary x:Key="Default">
+                    <FontFamily x:Key="MiSansNormal">ms-appx:///Assets/Font/MiSans-Normal.ttf#MiSans</FontFamily>
+                    <FontFamily x:Key="MiSansRegular">ms-appx:///Assets/Font/MiSans-Regular.ttf#MiSans</FontFamily>
+                    <FontFamily x:Key="MiSansMedium">ms-appx:///Assets/Font/MiSans-Medium.ttf#MiSans</FontFamily>
+                    <FontFamily x:Key="MiSansBold">ms-appx:///Assets/Font/MiSans-Bold.ttf#MiSans</FontFamily>
+                </ResourceDictionary>
+            </ResourceDictionary.ThemeDictionaries>
         </ResourceDictionary>
-
     </Application.Resources>
 </root:AppBase>
