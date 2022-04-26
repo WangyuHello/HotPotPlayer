@@ -132,7 +132,7 @@ namespace HotPotPlayer.Services
 
         void LoadLocalCompleted(object sender, RunWorkerCompletedEventArgs e)
         {
-            State = LocalServiceState.Complete;
+            EnqueueChangeState(LocalServiceState.Complete);
         }
 
         void EnqueueChangeState(LocalServiceState newState)
