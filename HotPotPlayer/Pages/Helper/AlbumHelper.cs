@@ -5,6 +5,7 @@ using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Media;
+using Microsoft.UI.Xaml.Media.Animation;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -185,7 +186,7 @@ namespace HotPotPlayer.Pages.Helper
                     Text = "属性",
                     Icon = new FontIcon { FontFamily = new FontFamily("Segoe Fluent Icons"), Glyph = "\uE946" },
                 };
-                i.Click += (s , e) => MainWindow.NavigateTo("MusicSub.Info", music);
+                i.Click += (s , e) => MainWindow.NavigateTo("MusicSub.Info", music, new SlideNavigationTransitionInfo() { Effect = SlideNavigationTransitionEffect.FromRight });
                 flyout.Items.Add(i);
                 flyout.Items.Add(new MenuFlyoutSeparator());
                 i = new MenuFlyoutItem
@@ -243,7 +244,7 @@ namespace HotPotPlayer.Pages.Helper
                     Text = "属性",
                     Icon = new FontIcon { FontFamily = new FontFamily("Segoe Fluent Icons"), Glyph = "\uE946" },
                 };
-                i.Click += (s, e) => MainWindow.NavigateTo("MusicSub.Info", music);
+                i.Click += (s, e) => MainWindow.NavigateTo("MusicSub.Info", music, new SlideNavigationTransitionInfo() { Effect = SlideNavigationTransitionEffect.FromRight });
                 flyout.Items.Add(i);
                 flyout.Items.Add(new MenuFlyoutSeparator());
                 i = new MenuFlyoutItem
@@ -344,7 +345,7 @@ namespace HotPotPlayer.Pages.Helper
                     Text = "属性",
                     Icon = new FontIcon { FontFamily = new FontFamily("Segoe Fluent Icons"), Glyph = "\uE946" },
                 };
-                i.Click += (s, e) => MainWindow.NavigateTo("MusicSub.Info", music);
+                i.Click += (s, e) => MainWindow.NavigateTo("MusicSub.Info", music, new SlideNavigationTransitionInfo() { Effect = SlideNavigationTransitionEffect.FromRight });
                 flyout.Items.Add(i);
                 flyout.Items.Add(new MenuFlyoutSeparator());
                 i = new MenuFlyoutItem
