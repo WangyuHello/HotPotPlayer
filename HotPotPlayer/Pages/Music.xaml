@@ -58,7 +58,7 @@
         <local:EvenOldTemplateSelector x:Key="EvenOldAlbumPopupTemplate" >
             <local:EvenOldTemplateSelector.EvenTemplate>
                 <DataTemplate x:DataType="models:MusicItem">
-                    <Button Style="{StaticResource AlbumPopupListButton}" Background="#40F4F7FE" Click="AlbumPopupListClick" Tag="{x:Bind }">
+                    <Button Style="{StaticResource AlbumPopupListButton}" Background="#40F4F7FE" Click="AlbumPopupListClick" RightTapped="{x:Bind helper:AlbumHelper.MusicClick}" Tag="{x:Bind }">
                         <Grid>
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="Auto" />

@@ -194,6 +194,7 @@ namespace HotPotPlayer.Pages
         {
 
         }
+
     }
 
     public class EvenOldTemplateSelector : DataTemplateSelector
