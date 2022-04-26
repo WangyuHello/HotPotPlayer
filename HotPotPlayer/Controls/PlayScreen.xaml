@@ -7,7 +7,9 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:me="using:HotPotPlayer.Media"
     xmlns:cont="using:HotPotPlayer.UI.Controls"
-    mc:Ignorable="d">
+    mc:Ignorable="d"
+    PointerReleased="PlayScreen_PointerReleased"
+    >
 
     <Grid x:Name="Root" Background="LightGray" x:Load="{x:Bind MusicPlayer.IsPlayScreenVisible, Mode=OneWay}">
         <Button VerticalAlignment="Top" HorizontalAlignment="Left" Margin="52,40" Click="{x:Bind MusicPlayer.ToggleShowPlayScreen}">

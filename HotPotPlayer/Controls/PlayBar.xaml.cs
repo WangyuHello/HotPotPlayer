@@ -156,6 +156,7 @@ namespace HotPotPlayer.Controls
                 item.Click += AlbumHelper.ArtistClick;
                 flyout.Items.Add(item);
             }
+            flyout.Items.Add(new MenuFlyoutSeparator());
             var item2 = new MenuFlyoutItem
             {
                 Text = MusicPlayer.CurrentPlaying.Album,

@@ -1,4 +1,5 @@
 ﻿using HotPotPlayer.Services;
+using Microsoft.UI.Input;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Controls.Primitives;
@@ -28,5 +29,18 @@ namespace HotPotPlayer.Controls
 
         MusicPlayer MusicPlayer => ((App)Application.Current).MusicPlayer;
 
+        private void PlayScreen_PointerReleased(object sender, PointerRoutedEventArgs e)
+        {
+            PointerPoint currentPoint = e.GetCurrentPoint(Root);
+            if (currentPoint.PointerDeviceType == PointerDeviceType.Mouse)
+            {
+                PointerPointProperties pointerProperties = currentPoint.Properties;
+                if (pointerProperties.PointerUpdateKind == PointerUpdateKind.XButton1Released)
+                {
+                    MusicPlayer.HidePlayScreen();
+                }
+            }
+            e.Handled = true;
+        }
     }
 }

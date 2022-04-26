@@ -48,6 +48,7 @@ namespace HotPotPlayer.Pages.Helper
 
         internal static void AlbumInfoClick(object sender, RoutedEventArgs e)
         {
+            Player.HidePlayScreen();
             var el = sender as FrameworkElement;
             var music = el.Tag as MusicItem;
             MainWindow.NavigateTo("MusicSub.Album", music);
@@ -62,6 +63,7 @@ namespace HotPotPlayer.Pages.Helper
 
         internal static void ArtistClick(object sender, RoutedEventArgs e)
         {
+            Player.HidePlayScreen();
             if (sender is HyperlinkButton button)
             {
                 var artist = (string)button.Content;
