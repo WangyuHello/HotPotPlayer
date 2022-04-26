@@ -151,6 +151,7 @@ namespace HotPotPlayer.Controls
                 var item = new MenuFlyoutItem
                 {
                     Text = a,
+                    Icon = new SymbolIcon { Symbol = Symbol.Contact }
                 };
                 item.Click += AlbumHelper.ArtistClick;
                 flyout.Items.Add(item);
@@ -158,7 +159,8 @@ namespace HotPotPlayer.Controls
             var item2 = new MenuFlyoutItem
             {
                 Text = MusicPlayer.CurrentPlaying.Album,
-                Tag = MusicPlayer.CurrentPlaying
+                Tag = MusicPlayer.CurrentPlaying,
+                Icon = new FontIcon { FontFamily = new FontFamily("Segoe Fluent Icons"), Glyph = "\uE93C" }
             };
             item2.Click += AlbumHelper.AlbumInfoClick;
             flyout.Items.Add(item2);
