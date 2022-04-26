@@ -407,7 +407,7 @@ namespace HotPotPlayer.Services
         readonly Timer _playerTimer;
         bool _isMusicSwitching;
 
-        public MusicPlayer(ConfigBase config, DispatcherQueue queue): base(config, queue)
+        public MusicPlayer(ConfigBase config, DispatcherQueue queue, AppBase app): base(config, queue, app)
         {
             _playerStarter = new BackgroundWorker
             {
@@ -488,7 +488,7 @@ namespace HotPotPlayer.Services
             }
             catch (Exception ex)
             {
-                _playerStarter.ReportProgress((int)PlayerState.Error, ex);
+                e.Result = ex;
             }
 
             _isMusicSwitching = false;
@@ -511,11 +511,10 @@ namespace HotPotPlayer.Services
         private void PlayerStarterCompleted(object sender, RunWorkerCompletedEventArgs e)
         {
             IsPlayBarVisible = true;
-            if (e.Result != null)
+            if (e.Result is int index)
             {
                 HasError = false;
                 IsPlaying = true;
-                var index = (int)e.Result;
                 var music = CurrentPlayList[index];
                 CurrentPlaying = music;
                 CurrentPlayingIndex = index;
@@ -523,8 +522,9 @@ namespace HotPotPlayer.Services
                 RaisePropertyChanged(nameof(Volume));
                 RaisePropertyChanged(nameof(CurrentPlayingDuration));
             }
-            else
+            else if(e.Result is Exception _playException)
             {
+                App?.ShowToast(new ToastInfo { Text = "播放错误 " + _playException.Message });
                 HasError = true;
             }
         }
