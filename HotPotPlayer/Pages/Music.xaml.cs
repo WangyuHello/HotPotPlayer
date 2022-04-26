@@ -143,7 +143,7 @@ namespace HotPotPlayer.Pages
             var flyout = new MenuFlyout();
             var i1 = new MenuFlyoutItem 
             { 
-                Text = "播放队列",
+                Text = "当前列表",
                 Icon = new SymbolIcon { Symbol = Symbol.MusicInfo },
             };
             i1.Click += (s, a) => AlbumHelper.AlbumAddOne(SelectedAlbum);
@@ -152,7 +152,7 @@ namespace HotPotPlayer.Pages
             flyout.Items.Add(i2);
             i1 = new MenuFlyoutItem
             {
-                Text = "新建播放列表",
+                Text = "新建播放队列",
                 Icon = new SymbolIcon { Symbol = Symbol.Add },
             };
             flyout.Items.Add(i1);

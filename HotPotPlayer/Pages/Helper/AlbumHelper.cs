@@ -83,6 +83,7 @@ namespace HotPotPlayer.Pages.Helper
                             var item = new MenuFlyoutItem
                             {
                                 Text = a,
+                                Icon = new SymbolIcon { Symbol = Symbol.Contact }
                             };
                             item.Click += ArtistClick;
                             flyout.Items.Add(item);
@@ -116,6 +117,7 @@ namespace HotPotPlayer.Pages.Helper
                     var item = new MenuFlyoutItem
                     {
                         Text = a,
+                        Icon = new SymbolIcon { Symbol = Symbol.Contact }
                     };
                     item.Click += ArtistClick;
                     flyout.Items.Add(item);
