@@ -8,7 +8,8 @@
     mc:Ignorable="d"
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
 
-    <Grid>
+    <StackPanel Padding="0,48,0,0">
         <TextBlock Text="{x:Bind Music.Title, Mode=OneWay}" FontFamily="{ThemeResource MiSansRegular}"/>
-    </Grid>
+        <Button Click="OpenFileClick" >打开所在文件夹</Button>
+    </StackPanel>
 </Page>

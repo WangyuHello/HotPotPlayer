@@ -15,6 +15,7 @@ using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices.WindowsRuntime;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
+using Windows.System;
 
 // To learn more about WinUI, the WinUI project structure,
 // and more about our project templates, see: http://aka.ms/winui-project-info.
@@ -53,6 +54,12 @@ namespace HotPotPlayer.Pages.MusicSub
         {
             Music = e.Parameter as MusicItem;
             base.OnNavigatedTo(e);
+        }
+
+        private async void OpenFileClick(object sender, RoutedEventArgs e)
+        {
+            var path = Music.Source.Directory;
+            await Launcher.LaunchFolderPathAsync(path.FullName);
         }
     }
 }
