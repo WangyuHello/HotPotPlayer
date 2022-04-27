@@ -5,11 +5,12 @@
     xmlns:local="using:HotPotPlayer.Pages"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:v="using:HotPotPlayer.Video"
     mc:Ignorable="d"
     NavigationCacheMode="Enabled"
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
 
-    <Grid Background="White">
-        <TextBlock Text="CloudMusic" />
+    <Grid>
+        <v:SoftwareVideoHost x:Name="VideoHost" Loaded="VideoHost_Loaded" />
     </Grid>
 </Page>

@@ -27,5 +27,10 @@ namespace HotPotPlayer.Pages
         {
             this.InitializeComponent();
         }
+
+        private void VideoHost_Loaded(object sender, RoutedEventArgs e)
+        {
+            VideoHost.Source = new FileInfo(@"D:\视频\TV动画《四月是你的谎言》片尾曲【オレンジ】.mkv");
+        }
     }
 }

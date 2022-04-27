@@ -8,39 +8,28 @@
     <Platforms>x64</Platforms>
   </PropertyGroup>
   <ItemGroup>
-    <None Remove="VideoControl.xaml" />
-    <None Remove="VideoControl2.xaml" />
-    <None Remove="VideoControlVLC.xaml" />
+    <None Remove="SoftwareVideoHost.xaml" />
   </ItemGroup>
 
   <ItemGroup>
-      <PackageReference Include="Microsoft.WindowsAppSDK" Version="1.0.0" />
-      <PackageReference Include="Avalonia.Angle.Windows.Natives" Version="2.1.0.2020091801" />
-      <PackageReference Include="OpenTK" Version="5.0.0-pre.6" />
-      <PackageReference Include="SharpDX" Version="4.2.0" />
-      <PackageReference Include="SharpDX.Direct3D11" Version="4.2.0" />
-      <PackageReference Include="Silk.NET" Version="2.12.0" />
-      <PackageReference Include="Silk.NET.OpenGLES" Version="2.12.0" />
-      <PackageReference Include="Silk.NET.OpenGLES.Extensions.ANGLE" Version="2.12.0" />
-      <PackageReference Include="SkiaSharp.Views.WinUI" Version="2.88.0-preview.179" />
-      <PackageReference Include="VideoLAN.LibVLC.Windows" Version="3.0.16" />
+	  <PackageReference Include="Microsoft.Graphics.Win2D" Version="1.0.1" />
+	  <PackageReference Include="Microsoft.WindowsAppSDK" Version="1.1.0-preview2" />
+	  <PackageReference Include="FFmpeg.AutoGen" Version="5.0.0" />
+	  <PackageReference Include="Microsoft.Windows.CsWin32" Version="0.1.647-beta">
+		  <PrivateAssets>all</PrivateAssets>
+		  <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+	  </PackageReference>
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\HotPotPlayer.Common\HotPotPlayer.Common.csproj" />
     <ProjectReference Include="..\HotPotPlayer.Native\HotPotPlayer.Native.csproj" />
-    <ProjectReference Include="..\libvlcsharp\src\LibVLCSharp\LibVLCSharp.csproj" />
-    <ProjectReference Include="..\Mpv.NET-lib-\src\Mpv.NET\Mpv.NET.csproj" />
   </ItemGroup>
 
   <ItemGroup>
-    <Page Update="VideoControl.xaml">
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Update="VideoControl2.xaml">
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Update="VideoControlVLC.xaml">
+    <Page Update="SoftwareVideoHost.xaml">
       <Generator>MSBuild:Compile</Generator>
     </Page>
   </ItemGroup>
+
 </Project>
