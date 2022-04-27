@@ -9,13 +9,8 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\HotPotPlayer.Native\HotPotPlayer.Native.csproj" />
     <ProjectReference Include="..\Mpv.NET-lib-\src\Mpv.NET\Mpv.NET.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <None Update="NativeLibs\mpv-2.dll">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
   </ItemGroup>
 
 </Project>

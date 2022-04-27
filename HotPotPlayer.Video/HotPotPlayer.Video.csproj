@@ -27,6 +27,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\HotPotPlayer.Native\HotPotPlayer.Native.csproj" />
     <ProjectReference Include="..\libvlcsharp\src\LibVLCSharp\LibVLCSharp.csproj" />
     <ProjectReference Include="..\Mpv.NET-lib-\src\Mpv.NET\Mpv.NET.csproj" />
   </ItemGroup>
@@ -41,17 +42,5 @@
     <Page Update="VideoControlVLC.xaml">
       <Generator>MSBuild:Compile</Generator>
     </Page>
-  </ItemGroup>
-
-  <ItemGroup>
-    <None Update="NativeLibs\libEGL.dll">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Update="NativeLibs\libGLESv2.dll">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Update="NativeLibs\mpv-2.dll">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
   </ItemGroup>
 </Project>
