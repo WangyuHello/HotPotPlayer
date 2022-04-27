@@ -19,3 +19,6 @@
 [submodule "taglib-sharp"]
 	path = taglib-sharp
 	url = git@github.com:WangyuHello/taglib-sharp.git
+[submodule "WindowsCompositionSamples"]
+	path = WindowsCompositionSamples
+	url = git@github.com:microsoft/WindowsCompositionSamples.git
