@@ -21,4 +21,4 @@
 	url = git@github.com:WangyuHello/taglib-sharp.git
 [submodule "WindowsCompositionSamples"]
 	path = WindowsCompositionSamples
-	url = git@github.com:microsoft/WindowsCompositionSamples.git
+	url = git@github.com:WangyuHello/WindowsCompositionSamples.git
