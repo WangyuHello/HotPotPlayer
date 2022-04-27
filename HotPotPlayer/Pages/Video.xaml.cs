@@ -21,6 +21,7 @@ using System.Collections.ObjectModel;
 using HotPotPlayer.Controls;
 using System.Text;
 using Microsoft.UI.Xaml.Media.Animation;
+using HotPotPlayer.Services;
 
 // To learn more about WinUI, the WinUI project structure,
 // and more about our project templates, see: http://aka.ms/winui-project-info.
@@ -35,22 +36,6 @@ namespace HotPotPlayer.Pages
         public Video()
         {
             this.InitializeComponent();
-        }
-
-        public ObservableCollection<SeriesItem> LocalSeries { get; set; } = new();
-        public ObservableCollection<SingleVideoItemsGroup> LocalVideo { get; set; } = new();
-        
-        private bool _isFirstLoading;
-        public bool IsFirstLoading
-        {
-            get => _isFirstLoading;
-            set => Set(ref _isFirstLoading, value);
-        }
-        private bool _isNonFirstLoading;
-        public bool IsNonFirstLoading
-        {
-            get => _isNonFirstLoading;
-            set => Set(ref _isNonFirstLoading, value);
         }
 
         private SeriesItem _selectedSeries;
@@ -92,6 +77,8 @@ namespace HotPotPlayer.Pages
             App.PlayVideo(video.Source);
         }
 
+        LocalVideoService VideoService => ((App)Application.Current).LocalVideoService;
+
         bool IsFirstNavigate = true;
 
         protected override void OnNavigatedTo(NavigationEventArgs e)
@@ -100,31 +87,7 @@ namespace HotPotPlayer.Pages
             if (IsFirstNavigate)
             {
                 IsFirstNavigate = false;
-                InitializeVideo();
-            }
-        }
-
-        private void InitializeVideo()
-        {
-            var videoService = ((App)Application.Current).LocalVideoService;
-            videoService.OnVideoChanged += VideoService_OnVideoChanged;
-            videoService.OnFirstLoadingStarted += () => IsFirstLoading = true;
-            videoService.OnNonFirstLoadingStarted += () => IsNonFirstLoading = true;
-            videoService.OnLoadingEnded += () => { IsFirstLoading = false; IsNonFirstLoading = false; };
-            videoService.StartLoadLocalVideo();
-        }
-
-        private void VideoService_OnVideoChanged(List<SingleVideoItemsGroup> l, List<SeriesItem> s)
-        {
-            LocalVideo.Clear();
-            foreach (var i in l)
-            {
-                LocalVideo.Add(i);
-            }
-            LocalSeries.Clear();
-            foreach (var i in s)
-            {
-                LocalSeries.Add(i);
+                VideoService.StartLoadLocalVideo();
             }
         }
 
@@ -136,6 +99,11 @@ namespace HotPotPlayer.Pages
                 oldValue = newValue;
                 PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
             }
+        }
+
+        Visibility GetLoadingVisibility(LocalServiceState state)
+        {
+            return state == LocalServiceState.Loading ? Visibility.Visible : Visibility.Collapsed;
         }
 
         private void SeriesOverlayTarget_Tapped(object sender, TappedRoutedEventArgs e)

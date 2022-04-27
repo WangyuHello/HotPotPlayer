@@ -12,9 +12,12 @@ namespace HotPotPlayer.Extensions
         public static string GetLocalPath(this Uri uri)
         {
             var origin = uri.OriginalString;
-            var s = origin[8..]; //去掉file:///
+            if (origin.StartsWith("file"))
+            {
+                origin = origin[8..]; //去掉file:///
+            }
             //s = Regex.Unescape(s);
-            return s;
+            return origin;
         }
     }
 }

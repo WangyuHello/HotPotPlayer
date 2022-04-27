@@ -58,7 +58,6 @@ namespace HotPotPlayer.Pages
             get => _albumAddFlyout;
             set => Set(ref _albumAddFlyout, value);
         }
-
         LocalMusicService MusicService => ((App)Application.Current).LocalMusicService;
 
         bool IsFirstNavigate = true;

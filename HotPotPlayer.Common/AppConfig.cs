@@ -108,5 +108,8 @@ namespace HotPotPlayer
                 return _videoLibrary;
             }
         }
+
+        public override string[] AudioSupportedExt => new[] { ".flac", ".wav", ".m4a", ".mp3", ".opus", ".ogg" };
+        public override string[] VideoSupportedExt => new[] { ".mkv", ".mp4" };
     }
 }

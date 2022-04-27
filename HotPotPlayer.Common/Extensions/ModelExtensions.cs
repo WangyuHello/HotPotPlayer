@@ -65,7 +65,7 @@ namespace HotPotPlayer.Extensions
                 Title = i.Title,
                 Artists = string.Join(',', i.Artists),
                 Year = i.Year,
-                Cover = i.Cover.ToString(),
+                Cover = i.Cover.GetLocalPath(),
                 MainColor = i.MainColor.ToInt(),
                 AllArtists = string.Join(',', i.AllArtists),
             };
@@ -123,7 +123,7 @@ namespace HotPotPlayer.Extensions
                 Source = i.Source.FullName,
                 Title = i.Title,
                 Duration = i.Duration.Ticks,
-                Cover = i.Cover,
+                Cover = i.Cover.GetLocalPath(),
                 LastWriteTime = i.LastWriteTime.ToBinary()
             };
         }
@@ -135,7 +135,7 @@ namespace HotPotPlayer.Extensions
                 Source = new FileInfo(i.Source),
                 Title = i.Title,
                 Duration = TimeSpan.FromTicks(i.Duration),
-                Cover = i.Cover,
+                Cover = new Uri(i.Cover),
                 LastWriteTime = DateTime.FromBinary(i.LastWriteTime)
             };
         }
@@ -146,7 +146,8 @@ namespace HotPotPlayer.Extensions
             {
                 Source = i.Source.FullName,
                 Title = i.Title,
-                Cover = i.Cover,
+                Cover = i.Cover.GetLocalPath(),
+                Year = i.Year,
             };
             foreach (var item in i.Videos)
             {
@@ -161,7 +162,8 @@ namespace HotPotPlayer.Extensions
             {
                 Source = new DirectoryInfo(i.Source),
                 Title = i.Title,
-                Cover = i.Cover,
+                Cover = new(i.Cover),
+                Year= i.Year,
                 Videos = i.Videos.Select(s => s.ToOrigin()).ToList()
             };
         }

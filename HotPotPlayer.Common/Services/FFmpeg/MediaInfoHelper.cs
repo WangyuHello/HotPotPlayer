@@ -33,12 +33,6 @@ namespace HotPotPlayer.Services.FFmpeg
                 return (AVHWDeviceType)_hwDevice;
             }
         }
-        static readonly MD5 md5 = MD5.Create();
-
-        public static string SaveVideoThumbnail(FileInfo file, ConfigBase config)
-        {
-            return DecodeOneFrame(file.FullName, config);
-        }
 
         static AVHWDeviceType ConfigureHWDecoder()
         {
@@ -69,7 +63,7 @@ namespace HotPotPlayer.Services.FFmpeg
             return HWtype;
         }
 
-        static unsafe string DecodeOneFrame(string url, ConfigBase config)
+        public static unsafe MemoryStream DecodeOneFrame(string url)
         {
             using var vsd = new VideoStreamDecoder(url, HWDevice);
             var info = vsd.GetContextInfo();
@@ -89,31 +83,16 @@ namespace HotPotPlayer.Services.FFmpeg
                 var ptr = (IntPtr)convertedFrame.data[0];
                 var data = new Span<byte>((byte*)ptr, convertedFrame.linesize[0] * convertedFrame.height);
 
-                var baseDir = config.LocalFolder;
-                var videoCoverDir = Path.Combine(baseDir, "VideoCover");
-                if (!Directory.Exists(videoCoverDir))
-                {
-                    Directory.CreateDirectory(videoCoverDir);
-                }
-
                 Image<Bgr24> image = Image.LoadPixelData<Bgr24>(data, convertedFrame.width, convertedFrame.height);
-
-                var buffer = md5.ComputeHash(data.ToArray());
-                var hashName = Convert.ToHexString(buffer);
-                var videoThumbName = Path.Combine(videoCoverDir, hashName);
-
-                var width = image.Width;
-                var height = image.Height;
-                image.Mutate(x => x.Resize(400, 400 * height / width));
-                image.SaveAsPng(videoThumbName);
-
-                return videoThumbName;
+                var stream = new MemoryStream();
+                image.SaveAsPng(stream);
+                return stream;
             }
             catch (Exception)
             {
 
             }
-            return string.Empty;
+            return null;
         }
 
         private static AVPixelFormat GetHWPixelFormat(AVHWDeviceType hWDevice)

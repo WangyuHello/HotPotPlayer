@@ -11,28 +11,31 @@
     xmlns:animations="using:CommunityToolkit.WinUI.UI.Animations"
     mc:Ignorable="d"
     NavigationCacheMode="Enabled"
+    xmlns:cont2="using:HotPotPlayer.UI.Controls"
+    xmlns:collection="using:CommunityToolkit.Common.Collections"
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
 
     <Page.Resources>
 
-        <CollectionViewSource x:Name="LocalSingleVideosGroups" Source="{x:Bind LocalVideo}" IsSourceGrouped="True" ItemsPath="Items" />
+        <CollectionViewSource x:Name="LocalSingleVideosGroups" Source="{x:Bind VideoService.LocalVideoGroup}" IsSourceGrouped="True" />
+        <CollectionViewSource x:Name="LocalSeriesGroups" Source="{x:Bind VideoService.LocalSeriesGroup}" IsSourceGrouped="True" />
 
         <DataTemplate x:Key="LocalSingleVideosZoomedInTemplate" x:DataType="models:VideoItem">
             <Button Style="{StaticResource VideoButton}" Click="VideoClick" Tag="{x:Bind }">
                 <StackPanel Spacing="8" Margin="0,0,0,12">
-                    <controls:ImageEx Source="{x:Bind Cover}" Style="{StaticResource LocalVideoImageStyle}"/>
-                    <TextBlock Margin="8,0" Text="{x:Bind Title}" FontWeight="Medium" LineStackingStrategy="BaselineToBaseline" FontSize="14" MaxLines="2" TextTrimming="CharacterEllipsis" TextWrapping="Wrap" Height="40" ToolTipService.ToolTip="{x:Bind Title}"/>
-                    <TextBlock Margin="8,0" Text="{x:Bind GetDuration()}" Foreground="Gray" />
+                    <cont2:ImageEx2 Source="{x:Bind Cover}" Style="{StaticResource LocalVideoImageStyle}"/>
+                    <TextBlock Margin="8,0" Text="{x:Bind Title}" LineStackingStrategy="BaselineToBaseline" FontSize="14" MaxLines="2" TextTrimming="CharacterEllipsis" TextWrapping="Wrap" Height="40" ToolTipService.ToolTip="{x:Bind Title}" FontFamily="{ThemeResource MiSansMedium}"/>
+                    <TextBlock Margin="8,0" Text="{x:Bind GetDuration()}" Foreground="Gray" FontFamily="{ThemeResource MiSansRegular}"/>
                 </StackPanel>
             </Button>
         </DataTemplate>
 
-        <DataTemplate x:Key="LocalSingleVideosZoomedInGroupHeaderTemplate" x:DataType="models:SingleVideoItemsGroup">
-            <TextBlock Text="{x:Bind Year}" Foreground="{ThemeResource ApplicationForegroundThemeBrush}" Style="{StaticResource SubtitleTextBlockStyle}"/>
+        <DataTemplate x:Key="LocalSingleVideosZoomedInGroupHeaderTemplate" x:DataType="collection:IReadOnlyObservableGroup">
+            <TextBlock Text="{x:Bind Key.ToString()}" Foreground="{ThemeResource ApplicationForegroundThemeBrush}" Style="{StaticResource SubtitleTextBlockStyle}" FontFamily="{ThemeResource MiSansRegular}"/>
         </DataTemplate>
 
         <DataTemplate x:Key="LocalSingleVideosZoomedOutTemplate" x:DataType="muxdata:ICollectionViewGroup">
-            <TextBlock Margin="8" Text="{x:Bind ((models:SingleVideoItemsGroup)Group).Year}" FontSize="20" TextWrapping="Wrap"/>
+            <TextBlock Margin="8" Text="{x:Bind ((collection:IReadOnlyObservableGroup)Group).Key.ToString()}" FontSize="20" TextWrapping="Wrap" FontFamily="{ThemeResource MiSansRegular}"/>
         </DataTemplate>
 
         <Style x:Key="LocalSeriesContainerStyle" TargetType="GridViewItem" >
@@ -43,11 +46,11 @@
             <Setter Property="Margin" Value="8" />
         </Style>
 
-        <DataTemplate x:Key="LocalSeriesTemplate" x:DataType="models:SeriesItem">
+        <DataTemplate x:Key="LocalSeriesZoomedInTemplate" x:DataType="models:SeriesItem">
             <Button Style="{StaticResource SeriesButton}" Click="SeriesClick" Tag="{x:Bind }" x:Name="SeriesConnectedElement">
                 <StackPanel Spacing="8" Margin="0,0,0,12">
-                    <controls:ImageEx Source="{x:Bind Cover}" Style="{StaticResource SeriesImageStyle}" />
-                    <TextBlock Margin="8,0" Text="{x:Bind Title}" FontWeight="Medium" LineStackingStrategy="BaselineToBaseline" FontSize="14" MaxLines="2" TextTrimming="CharacterEllipsis" TextWrapping="Wrap" Height="40" ToolTipService.ToolTip="{x:Bind Title}"/>
+                    <cont2:ImageEx2 Source="{x:Bind Cover}" Style="{StaticResource SeriesImageStyle}" />
+                    <TextBlock Margin="8,0" Text="{x:Bind Title}" LineStackingStrategy="BaselineToBaseline" FontSize="14" MaxLines="2" TextTrimming="CharacterEllipsis" TextWrapping="Wrap" Height="40" ToolTipService.ToolTip="{x:Bind Title}" FontFamily="{ThemeResource MiSansMedium}"/>
                 </StackPanel>
             </Button>
         </DataTemplate>
@@ -61,8 +64,8 @@
                                 <ColumnDefinition Width="*" />
                                 <ColumnDefinition Width="Auto" />
                             </Grid.ColumnDefinitions>
-                            <TextBlock Grid.Column="0" Text="{x:Bind Title}" TextTrimming="CharacterEllipsis" VerticalAlignment="Center"/>
-                            <TextBlock Grid.Column="1" Text="{x:Bind Duration.ToString('mm\\\\:ss')}" VerticalAlignment="Center"/>
+                            <TextBlock Grid.Column="0" Text="{x:Bind Title}" TextTrimming="CharacterEllipsis" VerticalAlignment="Center" FontFamily="{ThemeResource MiSansRegular}"/>
+                            <TextBlock Grid.Column="1" Text="{x:Bind Duration.ToString('mm\\\\:ss')}" VerticalAlignment="Center" FontFamily="{ThemeResource MiSansRegular}"/>
                         </Grid>
                     </Button>
                 </DataTemplate>
@@ -75,8 +78,8 @@
                                 <ColumnDefinition Width="*" />
                                 <ColumnDefinition Width="Auto" />
                             </Grid.ColumnDefinitions>
-                            <TextBlock Grid.Column="0" Text="{x:Bind Title}" TextTrimming="CharacterEllipsis" VerticalAlignment="Center"/>
-                            <TextBlock Grid.Column="1" Text="{x:Bind Duration.ToString('mm\\\\:ss')}" VerticalAlignment="Center"/>
+                            <TextBlock Grid.Column="0" Text="{x:Bind Title}" TextTrimming="CharacterEllipsis" VerticalAlignment="Center" FontFamily="{ThemeResource MiSansRegular}"/>
+                            <TextBlock Grid.Column="1" Text="{x:Bind Duration.ToString('mm\\\\:ss')}" VerticalAlignment="Center" FontFamily="{ThemeResource MiSansRegular}"/>
                         </Grid>
                     </Button>
                 </DataTemplate>
@@ -90,10 +93,14 @@
             <Setter Property="Margin" Value="0" />
             <Setter Property="Height" Value="40" />
         </Style>
+
+        <DataTemplate x:Key="VideoPivotHeaderTemplate">
+            <TextBlock Text="{Binding }" FontSize="24" FontWeight="Medium" FontFamily="{ThemeResource MiSansRegular}"/>
+        </DataTemplate>
     </Page.Resources>
 
     <Grid Background="White" Padding="36,28,0,0">
-        <Pivot >
+        <Pivot HeaderTemplate="{StaticResource VideoPivotHeaderTemplate}">
             <PivotItem Header="视频列表" Margin="0">
                 <SemanticZoom>
                     <SemanticZoom.ZoomedInView>
@@ -112,21 +119,25 @@
                 </SemanticZoom>
             </PivotItem>
             <PivotItem Header="番剧" Margin="0">
-                <GridView x:Name="SeriesGridView" ItemsSource="{x:Bind LocalSeries}" ScrollViewer.IsHorizontalScrollChainingEnabled="False" SelectionMode="None" ItemTemplate="{StaticResource LocalSeriesTemplate}" ItemContainerStyle="{StaticResource LocalSingleVideosContainerStyle}" >
-                    <GridView.Footer>
-                        <Grid Height="100"/>
-                    </GridView.Footer>
-                </GridView>
+                <SemanticZoom>
+                    <SemanticZoom.ZoomedInView>
+                        <GridView x:Name="SeriesGridView" ItemsSource="{x:Bind LocalSeriesGroups.View}" ScrollViewer.IsHorizontalScrollChainingEnabled="False" SelectionMode="None" ItemTemplate="{StaticResource LocalSeriesZoomedInTemplate}" ItemContainerStyle="{StaticResource LocalSingleVideosContainerStyle}" >
+                            <GridView.GroupStyle>
+                                <GroupStyle HeaderTemplate="{StaticResource LocalSingleVideosZoomedInGroupHeaderTemplate}" />
+                            </GridView.GroupStyle>
+                            <GridView.Footer>
+                                <Grid Height="100"/>
+                            </GridView.Footer>
+                        </GridView>
+                    </SemanticZoom.ZoomedInView>
+                    <SemanticZoom.ZoomedOutView>
+                        <GridView ItemsSource="{x:Bind LocalSeriesGroups.View.CollectionGroups}" SelectionMode="None" ItemTemplate="{StaticResource LocalSingleVideosZoomedOutTemplate}" Padding="24" VerticalAlignment="Center"/>
+                    </SemanticZoom.ZoomedOutView>
+                </SemanticZoom>
             </PivotItem>
         </Pivot>
-        
 
-        <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center" Spacing="20" Visibility="{x:Bind IsFirstLoading, Mode=OneWay}" Translation="-24,0,0">
-            <ProgressRing IsActive="True" Height="60" Width="60"/>
-            <TextBlock FontSize="20">正在扫描视频库</TextBlock>
-        </StackPanel>
-
-        <StackPanel VerticalAlignment="Top" HorizontalAlignment="Right" Spacing="8" Orientation="Horizontal" Margin="0,16,24,0" Visibility="{x:Bind IsNonFirstLoading, Mode=OneWay}">
+        <StackPanel VerticalAlignment="Top" HorizontalAlignment="Right" Spacing="8" Orientation="Horizontal" Margin="0,16,24,0" Visibility="{x:Bind GetLoadingVisibility(VideoService.State), Mode=OneWay}">
             <ProgressRing IsActive="True" Height="20" Width="20"/>
             <TextBlock FontSize="14">正在扫描视频库</TextBlock>
         </StackPanel>
@@ -155,7 +166,7 @@
                         <ColumnDefinition Width="*" />
                     </Grid.ColumnDefinitions>
 
-                    <controls:ImageEx  Source="{x:Bind SelectedSeries.Cover, Mode=OneWay}" Style="{StaticResource LocalAlbumPopupImageStyle}" />
+                    <cont2:ImageEx2 Source="{x:Bind SelectedSeries.Cover, Mode=OneWay}" Style="{StaticResource LocalAlbumPopupImageStyle}" />
                     <StackPanel Grid.Column="1" Margin="16,0,0,0" >
                         <TextBlock Text="{x:Bind SelectedSeries.Title, Mode=OneWay}" MaxLines="2" FontSize="32" TextWrapping="Wrap" FontWeight="Medium" TextTrimming="CharacterEllipsis" >
 

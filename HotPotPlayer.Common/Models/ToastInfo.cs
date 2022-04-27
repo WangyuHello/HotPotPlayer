@@ -6,6 +6,13 @@ using System.Threading.Tasks;
 
 namespace HotPotPlayer.Models
 {
+    public enum ToastInfoType
+    {
+        Info,
+        Error,
+        Warning
+    }
+
     public class ToastInfo
     {
         public string Text { get; set; }

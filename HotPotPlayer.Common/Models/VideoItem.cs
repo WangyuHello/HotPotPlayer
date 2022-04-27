@@ -14,7 +14,7 @@ namespace HotPotPlayer.Models
         public FileInfo Source { get; set; }
         public string Title { get; set; }
         public TimeSpan Duration { get; set; }
-        public string Cover { get; set; }
+        public Uri Cover { get; set; }
         public DateTime LastWriteTime { get; set; }
 
         public string GetDuration()

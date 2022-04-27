@@ -14,22 +14,11 @@ using System.Xml.Linq;
 
 namespace HotPotPlayer.Services
 {
-    public enum LocalServiceState
-    {
-        Idle,
-        Loading,
-        InitComplete,
-        Complete,
-        NoLibraryAccess
-    }
-
     public class LocalMusicService: ServiceBaseWithConfig
     {
         public LocalMusicService(ConfigBase config, DispatcherQueue uiQueue = null, AppBase app = null) : base(config, uiQueue, app) { }
         
         #region State
-
-
         private LocalServiceState _state = LocalServiceState.Idle;
 
         public LocalServiceState State
@@ -166,12 +155,12 @@ namespace HotPotPlayer.Services
             var dbPlayLists = db.All<PlayListItemDb>();
 
             // 转换为非数据库类型
-            var dbAlbumList_ = dbAlbums.AsEnumerable().Select(d => d.ToOrigin()).ToList();
+            var dbAlbumList = dbAlbums.AsEnumerable().Select(d => d.ToOrigin()).ToList();
             var dbPlayListList = dbPlayLists.AsEnumerable().Select(d => d.ToOrigin()).ToList();
             SetPlayListRef(dbPlayListList);
 
             // Album分组
-            var dbAlbumGroups = GroupAllAlbumByYear(dbAlbumList_);
+            var dbAlbumGroups = GroupAllAlbumByYear(dbAlbumList);
             UIQueue?.TryEnqueue(() =>
             {
                 foreach (var item in dbAlbumGroups)
@@ -317,7 +306,6 @@ namespace HotPotPlayer.Services
             var groups = GroupAllAlbumByYear(albums);
             return groups;
         }
-
 
         sealed class PlayListItemComparer : EqualityComparer<PlayListItemDb>
         {

@@ -130,7 +130,8 @@ namespace HotPotPlayer
             });
         }
 
-        public readonly string[] SupportedExt = new[] { ".flac", ".wav", ".m4a", ".mp3", ".opus", ".ogg" };
+        public abstract string[] AudioSupportedExt { get; }
+        public abstract string[] VideoSupportedExt { get; }
 
         public List<FileInfo> GetMusicFilesFromLibrary()
         {
@@ -139,7 +140,8 @@ namespace HotPotPlayer
             foreach (var lib in libs)
             {
                 var di = new DirectoryInfo(lib);
-                files.AddRange(di.GetFiles("*.*", SearchOption.AllDirectories).Where(f => SupportedExt.Contains(f.Extension)));
+                if (!di.Exists) continue;
+                files.AddRange(di.GetFiles("*.*", SearchOption.AllDirectories).Where(f => AudioSupportedExt.Contains(f.Extension)));
             }
 
             return files;
@@ -155,6 +157,20 @@ namespace HotPotPlayer
                 if (!di.Exists) continue;
                 files.AddRange(di.GetFiles("*.m3u8", SearchOption.AllDirectories));
             }
+            return files;
+        }
+
+        public List<FileInfo> GetVideoFilesFromLibrary()
+        {
+            var libs = VideoLibrary.Select(s => s.Path);
+            List<FileInfo> files = new();
+            foreach (var lib in libs)
+            {
+                var di = new DirectoryInfo(lib);
+                if (!di.Exists) continue;
+                files.AddRange(di.GetFiles("*.*", SearchOption.AllDirectories).Where(f => VideoSupportedExt.Contains(f.Extension)));
+            }
+
             return files;
         }
     }

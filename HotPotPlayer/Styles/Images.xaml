@@ -113,10 +113,9 @@
         <Setter Property="Height" Value="200" />
     </Style>
 
-    <Style x:Key="SeriesImageStyle" TargetType="controls:ImageEx">
+    <Style x:Key="SeriesImageStyle" TargetType="cont:ImageEx2" BasedOn="{StaticResource ImageEx2BaseStyle}">
         <Setter Property="IsCacheEnabled" Value="True" />
         <Setter Property="EnableLazyLoading" Value="True" />
-        <Setter Property="PlaceholderStretch" Value="UniformToFill" />
         <Setter Property="HorizontalAlignment" Value="Center" />
         <Setter Property="VerticalAlignment" Value="Center" />
         <Setter Property="Width" Value="170" />
@@ -134,11 +133,9 @@
         <Setter Property="Height" Value="200" />
     </Style>
 
-    <Style x:Key="LocalVideoImageStyle" TargetType="controls:ImageEx">
-        <Setter Property="IsCacheEnabled" Value="False" />
+    <Style x:Key="LocalVideoImageStyle" TargetType="cont:ImageEx2" BasedOn="{StaticResource ImageEx2BaseStyle}">
+        <Setter Property="IsCacheEnabled" Value="True" />
         <Setter Property="EnableLazyLoading" Value="True" />
-        <Setter Property="Stretch" Value="UniformToFill" />
-        <Setter Property="PlaceholderStretch" Value="UniformToFill" />
         <Setter Property="HorizontalAlignment" Value="Center" />
         <Setter Property="VerticalAlignment" Value="Center" />
         <Setter Property="Width" Value="300" />

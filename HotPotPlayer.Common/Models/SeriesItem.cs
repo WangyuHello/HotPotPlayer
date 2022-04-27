@@ -12,7 +12,8 @@ namespace HotPotPlayer.Models
     {
         public DirectoryInfo Source { get; set; }
         public string Title { get; set; }
-        public string Cover { get; set; }
+        public Uri Cover { get; set; }
+        public int Year { get; set; }
 
         public List<VideoItem> Videos { get; set; }
     }
@@ -23,6 +24,7 @@ namespace HotPotPlayer.Models
         public string Source { get; set; }
         public string Title { get; set; }
         public string Cover { get; set; }
+        public int Year { get; set; }
 
         public IList<VideoItemDb> Videos { get; }
     }

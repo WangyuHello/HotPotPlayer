@@ -33,6 +33,7 @@ namespace HotPotPlayer.Helpers
         /// </summary>
         public DispatcherQueue DispatcherQueue { get; set; }
 
+
         /// <summary>
         /// Initializes a new instance of the <see cref="ImageCache"/> class.
         /// </summary>
@@ -134,5 +135,12 @@ namespace HotPotPlayer.Helpers
 
             return properties.Size == 0 || DateTime.Now.Subtract(properties.DateModified.DateTime) > duration;
         }
+
+
+        string[] _videoExt = new[] { ".mkv", ".mp4" };
+        string[] _audioExt = new[] { ".flac", ".wav", ".m4a", ".mp3", ".opus", ".ogg" };
+        protected override string[] VideoExt => _videoExt;
+
+        protected override string[] AudioExt => _audioExt;
     }
 }
