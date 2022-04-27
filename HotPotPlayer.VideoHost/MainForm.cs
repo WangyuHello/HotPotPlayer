@@ -23,9 +23,6 @@ namespace HotPotPlayer.VideoHost
             mpv.API.SetPropertyString("vo", "gpu");
             mpv.API.SetPropertyString("gpu-context", "d3d11");
             mpv.API.SetPropertyString("hwdec", "d3d11va");
-#if DEBUG
-            mpv.API.Command("script-binding", "stats/display-stats-toggle");
-#endif
         }
 
         private void MainForm_Shown(object sender, EventArgs e)
@@ -57,6 +54,31 @@ namespace HotPotPlayer.VideoHost
         private void MainForm_FormClosing(object sender, FormClosingEventArgs e)
         {
             mpv.Dispose();
+        }
+
+        private void MainForm_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.I)
+            {
+                mpv.API.Command("script-binding", "stats/display-stats-toggle");
+            }
+            else if(e.KeyCode == Keys.Right)
+            {
+                var pos = mpv.API.GetPropertyLong("time-pos");
+                pos += 3;
+                mpv.API.SetPropertyLong("time-pos", pos);
+            }
+            else if (e.KeyCode == Keys.Left)
+            {
+                var pos = mpv.API.GetPropertyLong("time-pos");
+                pos -= 3;
+                mpv.API.SetPropertyLong("time-pos", pos);
+            }
+            else if (e.KeyCode == Keys.Space)
+            {
+                
+
+            }
         }
     }
 }
