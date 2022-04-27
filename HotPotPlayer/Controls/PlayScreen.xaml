@@ -12,7 +12,7 @@
     >
 
     <Grid x:Name="Root" Background="{StaticResource PlayScreenBackground}" x:Load="{x:Bind MusicPlayer.IsPlayScreenVisible, Mode=OneWay}">
-        <Button VerticalAlignment="Top" HorizontalAlignment="Left" Margin="52,40" Click="{x:Bind MusicPlayer.ToggleShowPlayScreen}">
+        <Button VerticalAlignment="Top" HorizontalAlignment="Left" Margin="52,40" Style="{StaticResource PlayOtherButton}" Click="{x:Bind MusicPlayer.ToggleShowPlayScreen}">
             <SymbolIcon Symbol="Clear" />
         </Button>
 
