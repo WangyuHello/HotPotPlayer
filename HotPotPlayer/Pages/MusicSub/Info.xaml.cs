@@ -1,4 +1,5 @@
 ﻿using HotPotPlayer.Models;
+using HotPotPlayer.Services.FFmpeg;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Controls.Primitives;
@@ -13,6 +14,7 @@ using System.IO;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices.WindowsRuntime;
+using System.Threading.Tasks;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
 using Windows.System;
@@ -50,10 +52,23 @@ namespace HotPotPlayer.Pages.MusicSub
             get => _music;
             set => Set(ref _music, value);
         }
-        protected override void OnNavigatedTo(NavigationEventArgs e)
+
+        private string _mediaInfo;
+
+        public string MediaInfo
+        {
+            get => _mediaInfo;
+            set => Set(ref _mediaInfo, value);
+        }
+
+        protected override async void OnNavigatedTo(NavigationEventArgs e)
         {
             Music = e.Parameter as MusicItem;
             base.OnNavigatedTo(e);
+            MediaInfo = await Task.Run(() =>
+            {
+                return MediaInfoHelper.GetAudioInfo(Music.Source);
+            });
         }
 
         private async void OpenFileClick(object sender, RoutedEventArgs e)

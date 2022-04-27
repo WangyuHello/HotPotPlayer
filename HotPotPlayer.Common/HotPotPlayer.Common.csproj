@@ -31,7 +31,7 @@
       <PackageReference Include="SixLabors.ImageSharp" Version="1.0.4" />
       <PackageReference Include="SixLabors.ImageSharp.Drawing" Version="1.0.0-beta13" />
       <PackageReference Include="NAudio" Version="2.0.1" />
-      <PackageReference Include="FFmpeg.AutoGen" Version="4.4.1.1" />
+      <PackageReference Include="FFmpeg.AutoGen" Version="5.0.0" />
   </ItemGroup>
 
   <ItemGroup>

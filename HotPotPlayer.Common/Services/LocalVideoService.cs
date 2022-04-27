@@ -1,6 +1,6 @@
 ﻿using HotPotPlayer.Extensions;
 using HotPotPlayer.Models;
-using HotPotPlayer.Services.Video;
+using HotPotPlayer.Services.FFmpeg;
 using Microsoft.UI.Xaml;
 using Realms;
 using System;
@@ -208,7 +208,7 @@ namespace HotPotPlayer.Services
 
                 f.Title = title;
                 f.Duration = tfile.Properties.Duration;
-                f.Cover = VideoInfoHelper.SaveVideoThumbnail(f.Source, Config);
+                f.Cover = MediaInfoHelper.SaveVideoThumbnail(f.Source, Config);
             });
             return s;
         }
