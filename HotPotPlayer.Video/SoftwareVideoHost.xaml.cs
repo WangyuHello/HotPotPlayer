@@ -116,7 +116,14 @@ namespace HotPotPlayer.Video
         {
             if (_player != null && _player.Buffer != null)
             {
-                _bitmap = CanvasBitmap.CreateFromBytes(sender, _player.Buffer, _player.Width, _player.Height, DirectXPixelFormat.B8G8R8A8UIntNormalized);
+                if (_bitmap == null)
+                {
+                    _bitmap = CanvasBitmap.CreateFromBytes(sender, _player.Buffer, _player.Width, _player.Height, DirectXPixelFormat.B8G8R8A8UIntNormalized);
+                }
+                else
+                {
+                    _bitmap.SetPixelBytes(_player.Buffer, 0, 0, _player.Width, _player.Height);
+                }
                 var hostWidth = Host.ActualWidth;
                 var hostHeight = Host.ActualHeight;
 
@@ -131,7 +138,6 @@ namespace HotPotPlayer.Video
                 var x = wide ? 0 : (hostWidth - _player.Width * ratio) / 2;
                 var y = wide ? (hostHeight - _player.Height * ratio) / 2 : 0;
                 args.DrawingSession.DrawImage(effect, (float)x , (float)y);
-                _bitmap.Dispose();
                 effect.Dispose();
             }
         }
