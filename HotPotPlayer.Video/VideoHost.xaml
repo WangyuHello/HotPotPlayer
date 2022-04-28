@@ -9,6 +9,6 @@
     mc:Ignorable="d">
 
     <Grid>
-        <canvas:CanvasSwapChainPanel x:Name="Host" />
+        <canvas:CanvasSwapChainPanel x:Name="Host" Loaded="Host_Loaded"/>
     </Grid>
 </UserControl>

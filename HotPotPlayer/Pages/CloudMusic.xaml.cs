@@ -31,6 +31,8 @@ namespace HotPotPlayer.Pages
         private void VideoHost_Loaded(object sender, RoutedEventArgs e)
         {
             VideoHost.Source = new FileInfo(@"D:\视频\TV动画《四月是你的谎言》片尾曲【オレンジ】.mkv");
+            //VideoHost.Source = new FileInfo(@"D:\视频\【Animenz】Bios（10周年版）-_罪恶王冠_OST.459129031.mkv");
+            //VideoHost.Source = new FileInfo(@"D:\视频\【8_15.生肉】紫罗兰永恒花园_交响音乐会_2021.389701874.mkv");
         }
     }
 }
