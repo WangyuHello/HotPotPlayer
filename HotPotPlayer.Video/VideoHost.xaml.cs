@@ -118,10 +118,11 @@ namespace HotPotPlayer.Video
                 _buffer = new byte[_bufferSize];
 
                 _bitmap = CanvasBitmap.CreateFromBytes(_device, _buffer, VideoWidth, VideoHeight, DirectXPixelFormat.B8G8R8A8UIntNormalized, (float)(96 * _scale), CanvasAlphaMode.Ignore);
+                GC.TryStartNoGCRegion(_bufferSize * 2);
 
                 Mpv.API.RenderContextSetUpdateCallback(OnMpvRenderUpdate, IntPtr.Zero);
 
-                //Mpv.API.SetPropertyString("gpu-context", "d3d11");
+                Mpv.API.SetPropertyString("gpu-context", "d3d11");
                 Mpv.API.SetPropertyString("hwdec", "d3d11va");
 #if DEBUG
                 Mpv.API.Command("script-binding", "stats/display-stats-toggle");
