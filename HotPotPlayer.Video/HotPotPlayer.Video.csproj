@@ -10,6 +10,7 @@
   <ItemGroup>
     <None Remove="NativeMethods.txt" />
     <None Remove="SoftwareVideoHost.xaml" />
+    <None Remove="VideoControl.xaml" />
   </ItemGroup>
   <ItemGroup>
     <AdditionalFiles Include="NativeMethods.txt" />
@@ -23,11 +24,19 @@
 		  <PrivateAssets>all</PrivateAssets>
 		  <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
 	  </PackageReference>
+	  <PackageReference Include="Silk.NET.Direct3D11" Version="2.15.0" />
+	  <PackageReference Include="Silk.NET.DXGI" Version="2.15.0" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\HotPotPlayer.Common\HotPotPlayer.Common.csproj" />
     <ProjectReference Include="..\HotPotPlayer.Native\HotPotPlayer.Native.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Page Update="VideoControl.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
   </ItemGroup>
 
   <ItemGroup>

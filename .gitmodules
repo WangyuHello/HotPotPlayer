@@ -7,15 +7,6 @@
 [submodule "NeteaseCloudMusicApi"]
 	path = NeteaseCloudMusicApi
 	url = git@github.com:WangyuHello/NeteaseCloudMusicApi.git
-[submodule "mpv"]
-	path = mpv
-	url = https://github.com/WangyuHello/mpv
-[submodule "libvlcsharp"]
-	path = libvlcsharp
-	url = git@github.com:WangyuHello/libvlcsharp.git
-[submodule "mpv-winbuild-cmake"]
-	path = mpv-winbuild-cmake
-	url = git@github.com:WangyuHello/mpv-winbuild-cmake.git
 [submodule "taglib-sharp"]
 	path = taglib-sharp
 	url = git@github.com:WangyuHello/taglib-sharp.git
