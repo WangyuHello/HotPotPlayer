@@ -62,6 +62,7 @@ namespace HotPotPlayer.Video
         CanvasDevice _device;
         double _scale;
         CanvasBitmap _bitmap;
+        bool _swapSizeChanged;
 
         MpvPlayer _mpv;
         MpvPlayer Mpv
@@ -88,6 +89,11 @@ namespace HotPotPlayer.Video
                 var flags = Mpv.API.RenderContextUpdate();
                 if (flags == MpvRenderUpdateFlag.MPV_RENDER_UPDATE_FRAME)
                 {
+                    if (_swapSizeChanged)
+                    {
+                        _bufferSize = 4 * VideoWidth * VideoHeight;
+                        _buffer = new byte[_bufferSize];
+                    }
                     // 进行视频渲染 BGR0格式
                     fixed(byte* renderTargetPtr = _buffer)
                     {
@@ -96,7 +102,16 @@ namespace HotPotPlayer.Video
                     // 绘图
                     using (var ds = _swapChain.CreateDrawingSession(Colors.White))
                     {
-                        _bitmap.SetPixelBytes(_buffer, 0, 0, VideoWidth, VideoHeight);
+                        if (_swapSizeChanged)
+                        {
+                            _bitmap.Dispose();
+                            _bitmap = CanvasBitmap.CreateFromBytes(_device, _buffer, VideoWidth, VideoHeight, DirectXPixelFormat.B8G8R8A8UIntNormalized, (float)(96 * _scale), CanvasAlphaMode.Ignore);
+                            _swapSizeChanged = false;
+                        }
+                        else
+                        {
+                            _bitmap.SetPixelBytes(_buffer, 0, 0, VideoWidth, VideoHeight);
+                        }
                         ds.DrawImage(_bitmap);
                     }
                     _swapChain.Present();
@@ -134,11 +149,20 @@ namespace HotPotPlayer.Video
         private void Host_Loaded(object sender, RoutedEventArgs e)
         {
             _scale = XamlRoot.RasterizationScale;
-            _device = new CanvasDevice();
+            _device = CanvasDevice.GetSharedDevice();
             _swapChain = new CanvasSwapChain(_device, (float)Host.ActualWidth, (float)Host.ActualHeight, (float)(96 * _scale), DirectXPixelFormat.B8G8R8A8UIntNormalized, 3, CanvasAlphaMode.Ignore);
             Host.SwapChain = _swapChain;
             VideoWidth = (int)(_scale * Host.ActualWidth);
             VideoHeight = (int)(_scale * Host.ActualHeight);
+        }
+
+        private void Host_SizeChanged(object sender, SizeChangedEventArgs e)
+        {
+            //_swapChain?.ResizeBuffers(e.NewSize);
+            //_scale = XamlRoot.RasterizationScale;
+            //VideoWidth = (int)(_scale * Host.ActualWidth);
+            //VideoHeight = (int)(_scale * Host.ActualHeight);
+            //_swapSizeChanged = true;
         }
     }
 }
