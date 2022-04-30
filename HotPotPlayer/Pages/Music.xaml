@@ -58,20 +58,20 @@
         <local:EvenOldTemplateSelector x:Key="EvenOldAlbumPopupTemplate" >
             <local:EvenOldTemplateSelector.EvenTemplate>
                 <DataTemplate x:DataType="models:MusicItem">
-                    <Button Style="{StaticResource AlbumPopupListButton}" Background="#40F4F7FE" Click="AlbumPopupListClick" Tag="{x:Bind }" RightTapped="{x:Bind helper:AlbumHelper.MusicClick}" >
+                    <Button Style="{StaticResource AlbumPopupListButton}" Background="#40F4F7FE" Click="AlbumPopupListClick" Tag="{x:Bind }" RightTapped="{x:Bind helper:AlbumHelper.MusicClick}"  FontFamily="{ThemeResource MiSansRegular}">
                         <Grid>
                             <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="12" />
                                 <ColumnDefinition Width="*" />
                                 <ColumnDefinition Width="180" />
-                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="38" />
                                 <ColumnDefinition Width="Auto" />
                             </Grid.ColumnDefinitions>
-                            <TextBlock Text="{x:Bind Track}" Margin="0,0,8,0" VerticalAlignment="Center" FontFamily="{ThemeResource MiSansRegular}"/>
-                            <TextBlock Grid.Column="1" Text="{x:Bind Title}" TextTrimming="CharacterEllipsis" VerticalAlignment="Center" FontFamily="{ThemeResource MiSansRegular}"/>
-                            <HyperlinkButton Grid.Column="2" Content="{x:Bind GetArtists()}" VerticalAlignment="Center" Click="{x:Bind helper:AlbumHelper.ArtistClick}" Tag="{x:Bind }" FontFamily="{ThemeResource MiSansRegular}"/>
-                            <TextBlock Grid.Column="3" Margin="8,0,0,0" Text="{x:Bind Duration.ToString('mm\\\\:ss')}" VerticalAlignment="Center" FontFamily="{ThemeResource MiSansRegular}"/>
-                            <Button Grid.Column="4" Style="{StaticResource TransparentButton}" Margin="16,0,0,0" CornerRadius="4" Padding="4" Tag="{x:Bind }" Click="{x:Bind helper:AlbumHelper.MusicClick}">
+                            <TextBlock Text="{x:Bind Track}" VerticalAlignment="Center"/>
+                            <TextBlock Grid.Column="1" Text="{x:Bind Title}" TextTrimming="CharacterEllipsis" VerticalAlignment="Center" />
+                            <HyperlinkButton Grid.Column="2" Content="{x:Bind GetArtists()}" VerticalAlignment="Center" Click="{x:Bind helper:AlbumHelper.ArtistClick}" Tag="{x:Bind }"  FontFamily="{ThemeResource MiSansRegular}"/>
+                            <TextBlock Grid.Column="3" Text="{x:Bind Duration.ToString('mm\\\\:ss')}" VerticalAlignment="Center" />
+                            <Button Grid.Column="4" Style="{StaticResource TransparentButton}" Margin="16,0,0,0" CornerRadius="4" Padding="4" Tag="{x:Bind }" Click="{x:Bind helper:AlbumHelper.MusicClick}" >
                                 <SymbolIcon Symbol="More" />
                             </Button>
                         </Grid>
@@ -80,19 +80,19 @@
             </local:EvenOldTemplateSelector.EvenTemplate>
             <local:EvenOldTemplateSelector.OddTemplate>
                 <DataTemplate x:DataType="models:MusicItem">
-                    <Button Style="{StaticResource AlbumPopupListButton}" Click="AlbumPopupListClick" Tag="{x:Bind }" RightTapped="{x:Bind helper:AlbumHelper.MusicClick}">
+                    <Button Style="{StaticResource AlbumPopupListButton}" Click="AlbumPopupListClick" Tag="{x:Bind }" RightTapped="{x:Bind helper:AlbumHelper.MusicClick}"  FontFamily="{ThemeResource MiSansRegular}">
                         <Grid>
                             <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="12" />
                                 <ColumnDefinition Width="*" />
                                 <ColumnDefinition Width="180" />
-                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="38" />
                                 <ColumnDefinition Width="Auto" />
                             </Grid.ColumnDefinitions>
-                            <TextBlock Text="{x:Bind Track}" Margin="0,0,8,0" VerticalAlignment="Center" FontFamily="{ThemeResource MiSansRegular}"/>
-                            <TextBlock Grid.Column="1" Text="{x:Bind Title}" TextTrimming="CharacterEllipsis" VerticalAlignment="Center" FontFamily="{ThemeResource MiSansRegular}"/>
-                            <HyperlinkButton Grid.Column="2" Content="{x:Bind GetArtists()}" VerticalAlignment="Center" Click="{x:Bind helper:AlbumHelper.ArtistClick}" Tag="{x:Bind }" FontFamily="{ThemeResource MiSansRegular}"/>
-                            <TextBlock Grid.Column="3" Margin="8,0,0,0" Text="{x:Bind Duration.ToString('mm\\\\:ss')}" VerticalAlignment="Center" FontFamily="{ThemeResource MiSansRegular}"/>
+                            <TextBlock Text="{x:Bind Track}" VerticalAlignment="Center" />
+                            <TextBlock Grid.Column="1" Text="{x:Bind Title}" TextTrimming="CharacterEllipsis" VerticalAlignment="Center" />
+                            <HyperlinkButton Grid.Column="2" Content="{x:Bind GetArtists()}" VerticalAlignment="Center" Click="{x:Bind helper:AlbumHelper.ArtistClick}" Tag="{x:Bind }"  FontFamily="{ThemeResource MiSansRegular}"/>
+                            <TextBlock Grid.Column="3" Text="{x:Bind Duration.ToString('mm\\\\:ss')}" VerticalAlignment="Center" />
                             <Button Grid.Column="4" Style="{StaticResource TransparentButton}" Margin="16,0,0,0" CornerRadius="4" Padding="4" Tag="{x:Bind }" Click="{x:Bind helper:AlbumHelper.MusicClick}">
                                 <SymbolIcon Symbol="More" />
                             </Button>

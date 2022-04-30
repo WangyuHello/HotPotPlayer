@@ -44,6 +44,12 @@ namespace HotPotPlayer.Services.FFmpeg
             return sb.ToString();
         }
 
+        public TimeSpan GetDuration()
+        {
+            var seconds = _pFormatContext->duration / ffmpeg.AV_TIME_BASE;
+            return TimeSpan.FromSeconds(seconds);
+        }
+
         public void Dispose()
         {
             var pFormatContext = _pFormatContext;

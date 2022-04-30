@@ -72,6 +72,10 @@ namespace HotPotPlayer.Services.FFmpeg
             return dec.GetInfo();
         }
 
-
+        public static TimeSpan GetAudioDuration(FileInfo file)
+        {
+            using var dec = new AudioStreamDecoder(file);
+            return dec.GetDuration();
+        }
     }
 }

@@ -1,4 +1,5 @@
 ﻿using HotPotPlayer.Models;
+using HotPotPlayer.Services.FFmpeg;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -14,6 +15,7 @@ namespace HotPotPlayer.Extensions
         {
             using var tfile = TagLib.File.Create(f.FullName, TagLib.ReadStyle.PictureLazy);
             //var duration = await GetMusicDurationAsync(f);
+            var duration = MediaInfoHelper.GetAudioDuration(f);
             var item = new MusicItem
             {
                 Source = f,
@@ -22,7 +24,7 @@ namespace HotPotPlayer.Extensions
                 Album = tfile.Tag.Album,
                 Year = (int)tfile.Tag.Year,
                 Cover = new Uri(f.FullName),
-                //Duration = duration,
+                Duration = duration,
                 //Duration = tfile.Properties.Duration,
                 Track = (int)tfile.Tag.Track,
                 LastWriteTime = f.LastWriteTime,

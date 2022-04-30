@@ -203,10 +203,22 @@ namespace HotPotPlayer.Pages.Helper
 
         internal static void MusicClick2(object sender, RoutedEventArgs e)
         {
-            var button = (Button)sender;
-            var music = (MusicItem)button.Tag;
+            FrameworkElement target = null;
+            MusicItem music = null;
+            if (sender is Button button)
+            {
+                music = (MusicItem)button.Tag;
+                target = button;
+            }
+            else if(sender is Grid g)
+            {
+                var e2 = e as RightTappedRoutedEventArgs;
+                music = ((FrameworkElement)e2.OriginalSource).DataContext as MusicItem;
+                target = g;
+            }
+            if (target == null || music == null) return;
 
-            if (button.ContextFlyout == null)
+            if (target.ContextFlyout == null)
             {
                 var flyout = new MenuFlyout();
                 var sub = new MenuFlyoutSubItem
@@ -254,16 +266,25 @@ namespace HotPotPlayer.Pages.Helper
                 };
                 flyout.Items.Add(i);
 
-                button.ContextFlyout = flyout;
+                target.ContextFlyout = flyout;
             }
-            button.ContextFlyout.ShowAt(button);
+            target.ContextFlyout.ShowAt(target);
         }
 
         internal static void MusicItemClick(object sender, RoutedEventArgs e)
         {
-            var button = (Button)sender;
-            var music = (MusicItem)button.Tag;
-            Player.PlayNextContinue(music);
+            if (sender is Button button)
+            {
+                var music = (MusicItem)button.Tag;
+                Player.PlayNextContinue(music);
+            }
+            else if(sender is ListView l)
+            {
+                var e2 = e as ItemClickEventArgs;
+                var music = e2.ClickedItem as MusicItem;
+                Player.PlayNextContinue(music);
+            }
+
         }
 
         internal static void PlayListMusicClick(object sender, RoutedEventArgs e)

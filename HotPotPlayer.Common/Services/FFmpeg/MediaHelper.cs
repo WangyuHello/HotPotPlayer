@@ -19,12 +19,9 @@ namespace HotPotPlayer.Services.FFmpeg
         {
             ffmpeg.RootPath = "NativeLibs";
             _file = file;
-            _hwDevice = FFmpegHelper.ConfigureHWDecoder();
+            _hwDevice = FFmpegHelper.PreferredHWDevice;
 
             vsd = new VideoStreamDecoder(_file.FullName, _hwDevice);
-
-            var info = vsd.GetContextInfo();
-            info.ToList().ForEach(x => Console.WriteLine($"{x.Key} = {x.Value}"));
 
             var sourceSize = vsd.FrameSize;
             var sourcePixelFormat = _hwDevice == AVHWDeviceType.AV_HWDEVICE_TYPE_NONE

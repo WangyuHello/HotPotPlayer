@@ -11,26 +11,45 @@
 
     <UserControl.Resources>
         <DataTemplate x:Key="PlayListBarListTemplate" x:DataType="model:MusicItem">
-            <Grid>
+            <Grid RightTapped="{x:Bind helper:AlbumHelper.MusicClick2}">
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="32" />
                     <ColumnDefinition Width="*" />
                     <ColumnDefinition Width="Auto" />
                     <ColumnDefinition Width="Auto" />
                 </Grid.ColumnDefinitions>
-                <Button Style="{StaticResource TransparentButton}" Height="32" Width="32" Tag="{x:Bind }" Click="{x:Bind helper:AlbumHelper.MusicItemClick}">
-                    <FontIcon FontFamily="Segoe UI Emoji" Glyph="&#x1F3B5;" />
-                </Button>
                 <StackPanel Grid.Column="1" Margin="8,0,0,0">
                     <TextBlock Foreground="White" Text="{x:Bind Title}" FontSize="14" TextTrimming="CharacterEllipsis" FontFamily="{ThemeResource MiSansRegular}"/>
                     <TextBlock Foreground="WhiteSmoke" Text="{x:Bind GetArtists()}" FontSize="12" TextTrimming="CharacterEllipsis" FontFamily="{ThemeResource MiSansRegular}"/>
                 </StackPanel>
                 <TextBlock Grid.Column="2" Foreground="White" Margin="16,0,0,0" Text="{x:Bind Duration.ToString('mm\\\\:ss')}" VerticalAlignment="Center" FontFamily="{ThemeResource MiSansRegular}"/>
-                <Button Grid.Column="3" Foreground="White" Style="{StaticResource TransparentButton}" Margin="8,0,0,0" Padding="4" CornerRadius="8" Tag="{x:Bind }" Click="{x:Bind helper:AlbumHelper.MusicClick2}">
+                <Button Grid.Column="3" Foreground="White" Style="{StaticResource TransparentWhiteButton}" Margin="8,0,0,0" Padding="4" CornerRadius="8" Tag="{x:Bind }" Click="{x:Bind helper:AlbumHelper.MusicClick2}">
                     <SymbolIcon Symbol="More" />
                 </Button>
             </Grid>
         </DataTemplate>
+
+        <DataTemplate x:Key="PlayListBarListSelectedTemplate" x:DataType="model:MusicItem">
+            <Grid RightTapped="{x:Bind helper:AlbumHelper.MusicClick2}">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="32" />
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+                <FontIcon FontFamily="Segoe Fluent Icons" Glyph="&#xE013;" VerticalAlignment="Center" HorizontalAlignment="Center" Foreground="White"/>
+                <StackPanel Grid.Column="1" Margin="8,0,0,0">
+                    <TextBlock Foreground="White" Text="{x:Bind Title}" FontSize="14" TextTrimming="CharacterEllipsis" FontFamily="{ThemeResource MiSansRegular}"/>
+                    <TextBlock Foreground="WhiteSmoke" Text="{x:Bind GetArtists()}" FontSize="12" TextTrimming="CharacterEllipsis" FontFamily="{ThemeResource MiSansRegular}"/>
+                </StackPanel>
+                <TextBlock Grid.Column="2" Foreground="White" Margin="16,0,0,0" Text="{x:Bind Duration.ToString('mm\\\\:ss')}" VerticalAlignment="Center" FontFamily="{ThemeResource MiSansRegular}"/>
+                <Button Grid.Column="3" Foreground="White" Style="{StaticResource TransparentWhiteButton}" Margin="8,0,0,0" Padding="4" CornerRadius="8" Tag="{x:Bind }" Click="{x:Bind helper:AlbumHelper.MusicClick2}">
+                    <SymbolIcon Symbol="More" />
+                </Button>
+            </Grid>
+        </DataTemplate>
+
+        <local:SelectedTemplateSelector x:Key="PlayListBarListTemplateSelector" NormalTemplate="{StaticResource PlayListBarListTemplate}" SelectedTemplate="{StaticResource PlayListBarListSelectedTemplate}"/>
 
         <Style x:Key="PlayListBarListContainerStyle" TargetType="ListViewItem">
             <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
@@ -56,16 +75,16 @@
                     <ColumnDefinition Width="Auto" />
                 </Grid.ColumnDefinitions>
 
-                <Button Width="40" Height="40" Style="{StaticResource TransparentButton}" Foreground="White" Click="BackClick">
+                <Button Width="40" Height="40" Style="{StaticResource TransparentWhiteButton}" Foreground="White" Click="BackClick">
                     <SymbolIcon Symbol="Back" />
                 </Button>
-                <TextBlock Grid.Column="1" Text="正在播放" VerticalAlignment="Center" FontSize="18" Foreground="White" FontFamily="{ThemeResource MiSansRegular}"/>
-                <Button Grid.Column="2" Width="40" Height="40" Style="{StaticResource TransparentButton}" ToolTipService.ToolTip="清空" Foreground="White">
+                <TextBlock Grid.Column="1" Text="正在播放" Margin="0,-2,0,0" VerticalAlignment="Center" FontSize="22" Foreground="White" FontFamily="{ThemeResource MiSansMedium}"/>
+                <Button Grid.Column="2" Width="40" Height="40" Style="{StaticResource TransparentWhiteButton}" ToolTipService.ToolTip="清空" Foreground="White">
                     <FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="&#xE10A;" />
                 </Button>
             </Grid>
 
-            <ListView x:Name="PlayList" Grid.Row="1" SelectionMode="Single" ItemsSource="{x:Bind MusicPlayer.CurrentPlayList, Mode=OneWay}" ItemTemplate="{StaticResource PlayListBarListTemplate}" ItemContainerStyle="{StaticResource PlayListBarListContainerStyle}" SelectedIndex="{x:Bind MusicPlayer.CurrentPlayingIndex, Mode=OneWay}" >
+            <ListView x:Name="PlayList" Grid.Row="1" SelectionMode="Single" ItemsSource="{x:Bind MusicPlayer.CurrentPlayList, Mode=OneWay}" ItemTemplateSelector="{StaticResource PlayListBarListTemplateSelector}" ItemContainerStyle="{StaticResource PlayListBarListContainerStyle}" SelectedIndex="{x:Bind MusicPlayer.CurrentPlayingIndex, Mode=OneWay}" IsItemClickEnabled="True" ItemClick="{x:Bind helper:AlbumHelper.MusicItemClick}">
                 <ListView.Footer>
                     <Grid Height="100"/>
                 </ListView.Footer>

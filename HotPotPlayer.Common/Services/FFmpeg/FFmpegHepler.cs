@@ -44,6 +44,9 @@ namespace HotPotPlayer.Services.FFmpeg
             };
         }
 
+        private static AVHWDeviceType? _preferredHWDevice;
+        public static AVHWDeviceType PreferredHWDevice => _preferredHWDevice ??= ConfigureHWDecoder();
+
         public static AVHWDeviceType ConfigureHWDecoder()
         {
             var HWtype = AVHWDeviceType.AV_HWDEVICE_TYPE_NONE;
@@ -61,7 +64,11 @@ namespace HotPotPlayer.Services.FFmpeg
                 return HWtype;
             }
 
-            if (availableHWDecoders.Contains(AVHWDeviceType.AV_HWDEVICE_TYPE_DXVA2))
+            if (availableHWDecoders.Contains(AVHWDeviceType.AV_HWDEVICE_TYPE_D3D11VA))
+            {
+                HWtype = AVHWDeviceType.AV_HWDEVICE_TYPE_D3D11VA;
+            }
+            else if (availableHWDecoders.Contains(AVHWDeviceType.AV_HWDEVICE_TYPE_DXVA2))
             {
                 HWtype = AVHWDeviceType.AV_HWDEVICE_TYPE_DXVA2;
             }
