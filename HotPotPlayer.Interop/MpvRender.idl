@@ -1,9 +1,0 @@
-namespace HotPotPlayer_Interop
-{
-    [default_interface]
-    runtimeclass MpvRender
-    {
-        MpvRender();
-        Int32 Render(Int32 ds);
-    }
-}
