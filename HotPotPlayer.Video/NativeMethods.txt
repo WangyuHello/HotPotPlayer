@@ -1,4 +1,1 @@
-﻿IBufferByteAccess
-ID2D1DeviceContext
-ID2D1Image
-ID2D1Bitmap1
+﻿
