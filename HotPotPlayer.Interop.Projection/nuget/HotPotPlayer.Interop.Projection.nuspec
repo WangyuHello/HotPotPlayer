@@ -10,9 +10,9 @@
 		</dependencies>
 	</metadata>
 	<files>
-		<!--Support .NET 6, .NET Core 3, UAP, .NET Framework 4.6, C++ -->
 		<!--Architecture-netural assemblies-->
 		<file src="..\..\_build\x64\Debug\HotPotPlayer.Interop.Projection\bin\HotPotPlayer.Interop.Projection.dll" target="lib\net6.0-windows10.0.19041.0\HotPotPlayer.Interop.Projection.dll" />
+
 		<!--Architecture-specific implementation DLLs should be copied into RID-relative folders-->
 		<file src="..\..\_build\x64\Debug\HotPotPlayer.Interop\bin\HotPotPlayer.Interop\HotPotPlayer.Interop.dll" target="runtimes\win10-x64\native\HotPotPlayer.Interop.dll" />
 	</files>
