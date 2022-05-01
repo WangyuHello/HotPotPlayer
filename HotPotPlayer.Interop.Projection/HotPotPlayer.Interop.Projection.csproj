@@ -9,7 +9,6 @@
     <PropertyGroup>
 		<CsWinRTIncludes>
 			HotPotPlayer_Interop;
-			Microsoft.Graphics.Canvas;
 		</CsWinRTIncludes>
         <CsWinRTGeneratedFilesDir>$(OutDir)</CsWinRTGeneratedFilesDir>
     </PropertyGroup>

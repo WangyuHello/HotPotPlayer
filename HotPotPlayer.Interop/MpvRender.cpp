@@ -4,16 +4,8 @@
 
 namespace winrt::HotPotPlayer_Interop::implementation
 {
-    using namespace winrt;
-    using namespace Microsoft::Graphics::Canvas;
-    using namespace Windows::Foundation::Numerics;
-    using namespace Windows::UI;
-
-    int32_t MpvRender::Render(CanvasDrawingSession const& ds)
+    int32_t MpvRender::Render(int32_t ds)
     {
-        float2 center = { 50,50 };
-        Color c = Colors::AliceBlue();
-        ds.DrawCircle(center, 20, c);
-        return 0;
+        return ds + 10;
     }
 }

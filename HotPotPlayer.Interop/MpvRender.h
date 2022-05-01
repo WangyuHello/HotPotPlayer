@@ -10,7 +10,7 @@ namespace winrt::HotPotPlayer_Interop::implementation
     {
         MpvRender() = default;
 
-        int32_t Render(winrt::Microsoft::Graphics::Canvas::CanvasDrawingSession const& ds);
+        int32_t Render(int32_t ds);
     };
 }
 namespace winrt::HotPotPlayer_Interop::factory_implementation

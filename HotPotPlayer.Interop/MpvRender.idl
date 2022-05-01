@@ -4,6 +4,6 @@ namespace HotPotPlayer_Interop
     runtimeclass MpvRender
     {
         MpvRender();
-        Int32 Render(Microsoft.Graphics.Canvas.CanvasDrawingSession ds);
+        Int32 Render(Int32 ds);
     }
 }
