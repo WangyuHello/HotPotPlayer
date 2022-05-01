@@ -14,8 +14,7 @@ namespace HotPotPlayer.Extensions
         public static MusicItem ToMusicItem(this FileInfo f)
         {
             using var tfile = TagLib.File.Create(f.FullName, TagLib.ReadStyle.PictureLazy);
-            //var duration = await GetMusicDurationAsync(f);
-            var duration = MediaInfoHelper.GetAudioDuration(f);
+            var (duration, bitrate, sampleRate, bitDepth) = MediaInfoHelper.GetAudioAdditionalInfo(f);
             var item = new MusicItem
             {
                 Source = f,
@@ -25,7 +24,10 @@ namespace HotPotPlayer.Extensions
                 Year = (int)tfile.Tag.Year,
                 Cover = new Uri(f.FullName),
                 Duration = duration,
-                //Duration = tfile.Properties.Duration,
+                Genre = tfile.Tag.JoinedGenres,
+                BitRate = bitrate,
+                SampleRate = sampleRate,
+                BitDepth = bitDepth,
                 Track = (int)tfile.Tag.Track,
                 LastWriteTime = f.LastWriteTime,
                 AlbumArtists = tfile.Tag.AlbumArtists,

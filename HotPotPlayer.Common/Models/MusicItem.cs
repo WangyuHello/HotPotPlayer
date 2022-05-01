@@ -20,6 +20,11 @@ namespace HotPotPlayer.Models
         public int Year { get; set; }
         public TimeSpan Duration { get; set; }
         public int Track { get; set; }
+        public string Genre { get; set; }
+        public long BitRate { get; set; }
+        public int SampleRate { get; set; }
+        public int BitDepth { get; set; }
+
         public Uri Cover { get; set; }
         public Color MainColor { get; set; }
         public DateTime LastWriteTime { get; set; }
@@ -37,6 +42,15 @@ namespace HotPotPlayer.Models
         {
             return string.Join(", ", Artists);
         }
+        public string GetAlbumArtists()
+        {
+            return string.Join(", ", AlbumArtists);
+        }
+
+        public string GetBitRate()
+        {
+            return ((double)BitRate / 1000) + " kb/s";
+        }
     }
 
     public class MusicItemDb: RealmObject
@@ -52,6 +66,11 @@ namespace HotPotPlayer.Models
         public int Year { get; set; }
         public long Duration { get; set; }
         public int Track { get; set; }
+        public string Genre { get; set; }
+        public long BitRate { get; set; }
+        public int SampleRate { get; set; }
+        public int BitDepth { get; set; }
+
         public string Cover { get; set; }
         public int MainColor { get; set; }
         public long LastWriteTime { get; set; }

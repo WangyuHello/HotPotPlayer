@@ -53,22 +53,10 @@ namespace HotPotPlayer.Pages.MusicSub
             set => Set(ref _music, value);
         }
 
-        private string _mediaInfo;
-
-        public string MediaInfo
-        {
-            get => _mediaInfo;
-            set => Set(ref _mediaInfo, value);
-        }
-
-        protected override async void OnNavigatedTo(NavigationEventArgs e)
+        protected override void OnNavigatedTo(NavigationEventArgs e)
         {
             Music = e.Parameter as MusicItem;
             base.OnNavigatedTo(e);
-            MediaInfo = await Task.Run(() =>
-            {
-                return MediaInfoHelper.GetAudioInfo(Music.Source);
-            });
         }
 
         private async void OpenFileClick(object sender, RoutedEventArgs e)

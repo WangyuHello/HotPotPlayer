@@ -8,11 +8,67 @@
     mc:Ignorable="d"
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
 
-    <StackPanel Padding="0,48,0,0">
-        <TextBlock Text="{x:Bind Music.Title, Mode=OneWay}" FontFamily="{ThemeResource MiSansRegular}"/>
-        <Button Click="OpenFileClick" >打开所在文件夹</Button>
-        <TextBlock Text="{x:Bind MediaInfo, Mode=OneWay}"/>
+    <Grid Padding="36,48,0,0">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="*" />
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+        
+        <TextBlock FontSize="24" FontFamily="{ThemeResource MiSansMedium}">属性</TextBlock>
 
+        <StackPanel Grid.Row="1" >
+            <TextBlock Margin="0,16,0,0" Foreground="Gray" FontFamily="{ThemeResource MiSansRegular}">标题</TextBlock>
+            <TextBlock FontSize="15" Text="{x:Bind Music.Title, Mode=OneWay}" FontFamily="{ThemeResource MiSansRegular}" IsTextSelectionEnabled="True" MaxLines="3" TextWrapping="Wrap"/>
 
-    </StackPanel>
+            <TextBlock Margin="0,16,0,0" Foreground="Gray" FontFamily="{ThemeResource MiSansRegular}">专辑艺术家</TextBlock>
+            <TextBlock FontSize="15" Text="{x:Bind Music.GetAlbumArtists(), Mode=OneWay}" FontFamily="{ThemeResource MiSansRegular}" IsTextSelectionEnabled="True" MaxLines="3" TextWrapping="Wrap"/>
+
+            <TextBlock Margin="0,16,0,0" Foreground="Gray" FontFamily="{ThemeResource MiSansRegular}">流派</TextBlock>
+            <TextBlock FontSize="15" Text="{x:Bind Music.Genre, Mode=OneWay}" FontFamily="{ThemeResource MiSansRegular}" IsTextSelectionEnabled="True"/>
+
+            <TextBlock Margin="0,16,0,0" Foreground="Gray" FontFamily="{ThemeResource MiSansRegular}">采样频率</TextBlock>
+            <TextBlock FontSize="15" Text="{x:Bind Music.SampleRate, Mode=OneWay}" FontFamily="{ThemeResource MiSansRegular}" IsTextSelectionEnabled="True"/>
+        </StackPanel>
+
+        <StackPanel Grid.Column="1" Grid.Row="1" Margin="24,0,0,0">
+            <TextBlock Margin="0,16,0,0" Foreground="Gray" FontFamily="{ThemeResource MiSansRegular}">专辑</TextBlock>
+            <TextBlock FontSize="15" Text="{x:Bind Music.Album, Mode=OneWay}" FontFamily="{ThemeResource MiSansRegular}" IsTextSelectionEnabled="True" MaxLines="3" TextWrapping="Wrap" />
+
+            <TextBlock Margin="0,16,0,0" Foreground="Gray" FontFamily="{ThemeResource MiSansRegular}">曲目</TextBlock>
+            <TextBlock FontSize="15" Text="{x:Bind Music.Track, Mode=OneWay}" FontFamily="{ThemeResource MiSansRegular}" IsTextSelectionEnabled="True"/>
+
+            <TextBlock Margin="0,16,0,0" Foreground="Gray" FontFamily="{ThemeResource MiSansRegular}">年份</TextBlock>
+            <TextBlock FontSize="15" Text="{x:Bind Music.Year, Mode=OneWay}" FontFamily="{ThemeResource MiSansRegular}" IsTextSelectionEnabled="True"/>
+
+            <TextBlock Margin="0,16,0,0" Foreground="Gray" FontFamily="{ThemeResource MiSansRegular}">采样深度</TextBlock>
+            <TextBlock FontSize="15" Text="{x:Bind Music.BitDepth, Mode=OneWay}" FontFamily="{ThemeResource MiSansRegular}" IsTextSelectionEnabled="True"/>
+        </StackPanel>
+
+        <StackPanel Grid.Column="2" Grid.Row="1" Margin="24,0,0,0">
+            <TextBlock Margin="0,16,0,0" Foreground="Gray" FontFamily="{ThemeResource MiSansRegular}">参与创作的艺术家</TextBlock>
+            <TextBlock FontSize="15" Text="{x:Bind Music.GetArtists(), Mode=OneWay}" FontFamily="{ThemeResource MiSansRegular}" IsTextSelectionEnabled="True" MaxLines="3" TextWrapping="Wrap"/>
+
+            <TextBlock Margin="0,16,0,0" Foreground="Gray" FontFamily="{ThemeResource MiSansRegular}">时长</TextBlock>
+            <TextBlock FontSize="15" Text="{x:Bind Music.Duration.ToString('mm\\\\:ss'), Mode=OneWay}" FontFamily="{ThemeResource MiSansRegular}" IsTextSelectionEnabled="True"/>
+
+            <TextBlock Margin="0,16,0,0" Foreground="Gray" FontFamily="{ThemeResource MiSansRegular}">比特率</TextBlock>
+            <TextBlock FontSize="15" Text="{x:Bind Music.GetBitRate(), Mode=OneWay}" FontFamily="{ThemeResource MiSansRegular}" IsTextSelectionEnabled="True"/>
+
+            <TextBlock Margin="0,16,0,0" Foreground="Gray" FontFamily="{ThemeResource MiSansRegular}">项目类型</TextBlock>
+            <TextBlock FontSize="15" Text="{x:Bind Music.Source.Extension, Mode=OneWay}" FontFamily="{ThemeResource MiSansRegular}" IsTextSelectionEnabled="True"/>
+        </StackPanel>
+
+        <StackPanel Grid.Row="2" Grid.ColumnSpan="3" Margin="0,0,40,0">
+            <TextBlock Margin="0,16,0,0" Foreground="Gray" FontFamily="{ThemeResource MiSansRegular}">文件位置</TextBlock>
+            <TextBlock FontSize="15" Text="{x:Bind Music.Source.FullName, Mode=OneWay}" FontFamily="{ThemeResource MiSansRegular}" IsTextSelectionEnabled="True" MaxLines="5" TextWrapping="Wrap"/>
+            <Button Margin="0,16,0,0" Click="OpenFileClick" FontFamily="{ThemeResource MiSansRegular}">打开所在文件夹</Button>
+        </StackPanel>
+        
+    </Grid>
 </Page>

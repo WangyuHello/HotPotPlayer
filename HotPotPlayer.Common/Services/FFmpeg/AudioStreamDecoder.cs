@@ -44,11 +44,35 @@ namespace HotPotPlayer.Services.FFmpeg
             return sb.ToString();
         }
 
-        public TimeSpan GetDuration()
+        public TimeSpan Duration
         {
-            var seconds = _pFormatContext->duration / ffmpeg.AV_TIME_BASE;
-            return TimeSpan.FromSeconds(seconds);
+            get
+            {
+                var seconds = _pFormatContext->duration / ffmpeg.AV_TIME_BASE;
+                return TimeSpan.FromSeconds(seconds);
+            }
         }
+
+        public long BitRate => _pFormatContext->bit_rate;
+        public int SampleRate => _pCodecContext->sample_rate;
+        public int BitDepth => _pCodecContext->sample_fmt switch
+        {
+            AVSampleFormat.AV_SAMPLE_FMT_U8 => 8,
+            AVSampleFormat.AV_SAMPLE_FMT_S16 => 16,
+            AVSampleFormat.AV_SAMPLE_FMT_S32 => 32,
+            AVSampleFormat.AV_SAMPLE_FMT_FLT => 32,
+            AVSampleFormat.AV_SAMPLE_FMT_DBL => 64,
+            AVSampleFormat.AV_SAMPLE_FMT_U8P => 8,
+            AVSampleFormat.AV_SAMPLE_FMT_S16P => 16,
+            AVSampleFormat.AV_SAMPLE_FMT_S32P => 32,
+            AVSampleFormat.AV_SAMPLE_FMT_FLTP => 32,
+            AVSampleFormat.AV_SAMPLE_FMT_DBLP => 64,
+            AVSampleFormat.AV_SAMPLE_FMT_S64 => 64,
+            AVSampleFormat.AV_SAMPLE_FMT_S64P => 64,
+            AVSampleFormat.AV_SAMPLE_FMT_NB => 0,
+            AVSampleFormat.AV_SAMPLE_FMT_NONE => 0,
+            _ => 0
+        };
 
         public void Dispose()
         {
