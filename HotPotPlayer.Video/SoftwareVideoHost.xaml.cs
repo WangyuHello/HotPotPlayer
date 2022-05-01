@@ -139,6 +139,8 @@ namespace HotPotPlayer.Video
                 var y = wide ? (hostHeight - _player.Height * ratio) / 2 : 0;
                 args.DrawingSession.DrawImage(effect, (float)x , (float)y);
                 effect.Dispose();
+
+                
             }
         }
     }

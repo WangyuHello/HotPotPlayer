@@ -1,5 +1,8 @@
 #pragma once
 #include "MpvRender.g.h"
+#include "winrt/Microsoft.Graphics.Canvas.h"
+#include "winrt/Windows.Foundation.Numerics.h"
+#include "winrt/Windows.UI.h"
 
 namespace winrt::HotPotPlayer_Interop::implementation
 {
