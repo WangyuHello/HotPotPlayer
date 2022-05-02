@@ -51,6 +51,20 @@ namespace HotPotPlayer.Models
         {
             return ((double)BitRate / 1000) + " kb/s";
         }
+
+        public string GetSampleRate()
+        {
+            return SampleRate + " Hz";
+        }
+
+        public string GetBitDepth()
+        {
+            return BitDepth switch
+            {
+                0 => "未知",
+                _ => BitDepth + " bit"
+            };
+        }
     }
 
     public class MusicItemDb: RealmObject

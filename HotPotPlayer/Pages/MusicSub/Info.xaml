@@ -33,7 +33,7 @@
             <TextBlock FontSize="15" Text="{x:Bind Music.Genre, Mode=OneWay}" FontFamily="{ThemeResource MiSansRegular}" IsTextSelectionEnabled="True"/>
 
             <TextBlock Margin="0,16,0,0" Foreground="Gray" FontFamily="{ThemeResource MiSansRegular}">采样频率</TextBlock>
-            <TextBlock FontSize="15" Text="{x:Bind Music.SampleRate, Mode=OneWay}" FontFamily="{ThemeResource MiSansRegular}" IsTextSelectionEnabled="True"/>
+            <TextBlock FontSize="15" Text="{x:Bind Music.GetSampleRate(), Mode=OneWay}" FontFamily="{ThemeResource MiSansRegular}" IsTextSelectionEnabled="True"/>
         </StackPanel>
 
         <StackPanel Grid.Column="1" Grid.Row="1" Margin="24,0,0,0">
@@ -47,7 +47,7 @@
             <TextBlock FontSize="15" Text="{x:Bind Music.Year, Mode=OneWay}" FontFamily="{ThemeResource MiSansRegular}" IsTextSelectionEnabled="True"/>
 
             <TextBlock Margin="0,16,0,0" Foreground="Gray" FontFamily="{ThemeResource MiSansRegular}">采样深度</TextBlock>
-            <TextBlock FontSize="15" Text="{x:Bind Music.BitDepth, Mode=OneWay}" FontFamily="{ThemeResource MiSansRegular}" IsTextSelectionEnabled="True"/>
+            <TextBlock FontSize="15" Text="{x:Bind Music.GetBitDepth(), Mode=OneWay}" FontFamily="{ThemeResource MiSansRegular}" IsTextSelectionEnabled="True"/>
         </StackPanel>
 
         <StackPanel Grid.Column="2" Grid.Row="1" Margin="24,0,0,0">
