@@ -1,4 +1,5 @@
-﻿using HotPotPlayer.Extensions;
+﻿using HotPotPlayer.Controls;
+using HotPotPlayer.Extensions;
 using HotPotPlayer.Models;
 using HotPotPlayer.Services;
 using Microsoft.UI.Xaml;
@@ -19,7 +20,7 @@ namespace HotPotPlayer.Pages.Helper
         static MusicPlayer Player => ((App)Application.Current).MusicPlayer;
         static MainWindow MainWindow => ((App)Application.Current).MainWindow;
         static LocalMusicService MusicService => ((App) Application.Current).LocalMusicService;
-
+        static App App => (App)Application.Current;
         internal static void AlbumAdd(SplitButton sender, SplitButtonClickEventArgs args)
         {
             var selectedAlbum = sender.Tag as AlbumItem;
@@ -169,6 +170,7 @@ namespace HotPotPlayer.Pages.Helper
                     Text = "新建播放队列",
                     Icon = new SymbolIcon { Symbol = Symbol.Add },
                 };
+                i.Click += (s, e) => AddToNewPlayList(music);
                 sub.Items.Add(i);
 
                 foreach (var item in MusicService.LocalPlayListList)
@@ -239,6 +241,7 @@ namespace HotPotPlayer.Pages.Helper
                     Text = "新建播放队列",
                     Icon = new SymbolIcon { Symbol = Symbol.Add },
                 };
+                i.Click += (s, e) => AddToNewPlayList(music);
                 sub.Items.Add(i);
 
                 foreach (var item in MusicService.LocalPlayListList)
@@ -379,6 +382,31 @@ namespace HotPotPlayer.Pages.Helper
                 button.ContextFlyout = flyout;
             }
             button.ContextFlyout.ShowAt(button);
+        }
+
+        static async void AddToNewPlayList(MusicItem music)
+        {
+            ContentDialog dialog = new()
+            {
+                Title = "新建播放列表",
+                PrimaryButtonText = "确定",
+                CloseButtonText = "取消",
+                DefaultButton = ContentDialogButton.Primary,
+                Content = new NewPlayListDialog(),
+                XamlRoot = App.MainWindow.Content.XamlRoot
+            };
+
+            var result = await dialog.ShowAsync();
+
+            if (result == ContentDialogResult.Primary)
+            {
+                var page = dialog.Content as NewPlayListDialog;
+                var title = page.Title.Text;
+                if (!string.IsNullOrEmpty(title))
+                {
+                    MusicService.NewPlayList(title, music);
+                }
+            }
         }
     }
 }

@@ -42,6 +42,7 @@
     <None Remove="Controls\CurrentPlayListBar.xaml" />
     <None Remove="Controls\ImageEx2.xaml" />
     <None Remove="Controls\MainSidebar.xaml" />
+    <None Remove="Controls\NewPlayListDialog.xaml" />
     <None Remove="Controls\PlayBar.xaml" />
     <None Remove="Controls\PlayScreen.xaml" />
     <None Remove="Controls\Toast.xaml" />
@@ -105,6 +106,12 @@
     <ProjectReference Include="..\HotPotPlayer.Common\HotPotPlayer.Common.csproj" />
     <ProjectReference Include="..\HotPotPlayer.VideoHost\HotPotPlayer.VideoHost.csproj" />
     <ProjectReference Include="..\HotPotPlayer.Video\HotPotPlayer.Video.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Page Update="Controls\NewPlayListDialog.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
   </ItemGroup>
 
   <ItemGroup>

@@ -118,6 +118,19 @@ namespace HotPotPlayer.Models
             Source = new FileInfo(Source.FullName);
             LastWriteTime = Source.LastWriteTime;
         }
+
+        public static PlayListItem Create(string title, string directory, Realm db)
+        {
+            var pl = new PlayListItem
+            {
+                Source = new FileInfo(Path.Combine(directory, title+".m3u8")),
+                Title = title,
+                MusicItems = new ObservableCollection<MusicItem>(),
+                LastWriteTime = DateTime.Now,
+            };
+
+            return pl;
+        }
     }
 
     public class PlayListItemDb : RealmObject

@@ -414,6 +414,12 @@ namespace HotPotPlayer.Services
 
         private void WatcherMusicCreated(object sender, FileSystemEventArgs e)
         {
+            var createFile = e.FullPath;
+            if (_fileSystemWatcherFilter !=null && _fileSystemWatcherFilter.Contains(createFile))
+            {
+                _fileSystemWatcherFilter.Remove(createFile);
+                return;
+            }
             if (!Loader.IsBusy)
             {
                 Loader.RunWorkerAsync(true);
@@ -560,6 +566,39 @@ namespace HotPotPlayer.Services
                     db.Add(plist.ToDb(), update: true);
                 });
                 await plist.WriteAsync();
+            });
+        }
+
+        List<string> _fileSystemWatcherFilter;
+
+        public void NewPlayList(string title, MusicItem initItem)
+        {
+            var cont = LocalPlayListList.FirstOrDefault(p => p.Title == title) != null;
+            if (cont)
+            {
+                App?.ShowToast(new ToastInfo { Text = $"已存在 {title}" });
+                return;
+            }
+            Task.Run(async () =>
+            {
+                using var db = Realm.GetInstance(DbPath);
+                var pl = PlayListItem.Create(title, Config.MusicPlayListDirectory.First().Path, db);
+                pl.AddMusic(initItem);
+                db.Write(() =>
+                {
+                    db.Add(pl.ToDb(), update: true);
+                });
+
+                _fileSystemWatcherFilter = new List<string>()
+                {
+                    pl.Source.FullName
+                };
+                await pl.WriteAsync();
+                UIQueue.TryEnqueue(() =>
+                {
+                    LocalPlayListList.Add(pl);
+                    App?.ShowToast(new ToastInfo { Text = $"已将 {initItem.Title} 添加到 {title}" });
+                });
             });
         }
 
