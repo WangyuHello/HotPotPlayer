@@ -1,15 +1,9 @@
 [submodule "Mpv.NET-lib-"]
 	path = Mpv.NET-lib-
 	url = git@github.com:WangyuHello/Mpv.NET-lib-.git
-[submodule "WinUIEx"]
-	path = WinUIEx
-	url = git@github.com:WangyuHello/WinUIEx.git
 [submodule "NeteaseCloudMusicApi"]
 	path = NeteaseCloudMusicApi
 	url = git@github.com:WangyuHello/NeteaseCloudMusicApi.git
-[submodule "taglib-sharp"]
-	path = taglib-sharp
-	url = git@github.com:WangyuHello/taglib-sharp.git
 [submodule "WindowsCompositionSamples"]
 	path = WindowsCompositionSamples
 	url = git@github.com:WangyuHello/WindowsCompositionSamples.git
