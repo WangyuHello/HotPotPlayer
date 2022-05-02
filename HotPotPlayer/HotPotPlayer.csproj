@@ -38,6 +38,7 @@
     <None Remove="Assets\Font\MiSans-Regular.ttf" />
     <None Remove="Assets\Font\MiSans-Semibold.ttf" />
     <None Remove="Assets\Font\MiSans-Thin.ttf" />
+    <None Remove="Assets\nico.png" />
     <None Remove="Controls\CurrentPlayListBar.xaml" />
     <None Remove="Controls\ImageEx2.xaml" />
     <None Remove="Controls\MainSidebar.xaml" />
