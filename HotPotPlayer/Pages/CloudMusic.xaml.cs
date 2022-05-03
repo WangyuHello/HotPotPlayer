@@ -26,6 +26,7 @@ namespace HotPotPlayer.Pages
         public CloudMusic()
         {
             this.InitializeComponent();
+            VideoHost.Hwnd = ((App)Application.Current).MainWindowHandle;
         }
 
         private void VideoHost_Loaded(object sender, RoutedEventArgs e)

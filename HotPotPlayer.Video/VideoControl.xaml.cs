@@ -49,6 +49,8 @@ namespace HotPotPlayer.Video
             h.StartPlay((FileInfo)e.NewValue);
         }
 
+        public IntPtr Hwnd { get; set; }
+
         GlesContext glcontext;
         MpvPlayer _mpv;
         DispatcherQueueController _eventLoop;
@@ -68,7 +70,6 @@ namespace HotPotPlayer.Video
             {
                 if (_mpv == null)
                 {
-                    EnsureRenderSurface();
                     _mpv = new MpvPlayer(@"NativeLibs\mpv-2.dll", true)
                     {
                         AutoPlay = true,
@@ -118,6 +119,8 @@ namespace HotPotPlayer.Video
         {
             isLoaded = true;
             ContentsScale = Host.CompositionScaleX;
+            glcontext = new GlesContext();
+            EnsureRenderSurface();
         }
 
         private void Host_CompositionScaleChanged(SwapChainPanel sender, object args)
@@ -155,7 +158,7 @@ namespace HotPotPlayer.Video
                 Host.SizeChanged -= Host_SizeChanged;
                 Host.CompositionScaleChanged -= Host_CompositionScaleChanged;
 
-                glcontext.CreateSurface(Host, null, Host.CompositionScaleX);
+                glcontext.CreateSurface(Host, null, Host.CompositionScaleX, Hwnd);
 
                 Host.SizeChanged += Host_SizeChanged;
                 Host.CompositionScaleChanged += Host_CompositionScaleChanged;

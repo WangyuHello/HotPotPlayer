@@ -8,7 +8,7 @@ using EGLContext = System.IntPtr;
 using EGLConfig = System.IntPtr;
 using EGLSurface = System.IntPtr;
 using EGLNativeDisplayType = System.IntPtr;
-using EGLNativeWindowType = System.Object;
+using EGLNativeWindowType = System.IntPtr;
 using glbool = System.Int32;
 using System.Runtime.InteropServices;
 
@@ -17,6 +17,19 @@ namespace HotPotPlayer.Video.GlesInterop
 	internal static class Egl
 	{
 		private const string libEGL = "libEGL.dll";
+
+
+		[DllImport("kernel32.dll", SetLastError = true, CharSet = CharSet.Ansi, BestFitMapping = false)]
+		public static extern IntPtr LoadLibrary(string lpFileName);
+
+		static Egl()
+        {
+			var ret = LoadLibrary(libEGL);
+            if (ret == IntPtr.Zero)
+            {
+				throw new Exception("加载EGL失败");
+            }
+		}
 
 		// Out-of-band handle values
 		public static readonly EGLNativeDisplayType EGL_DEFAULT_DISPLAY = IntPtr.Zero;
@@ -97,7 +110,7 @@ namespace HotPotPlayer.Video.GlesInterop
 		[DllImport(libEGL)]
 		public static extern EGLContext eglCreateContext(EGLDisplay dpy, EGLConfig config, EGLContext share_context, int[] attrib_list);
 		[DllImport(libEGL)]
-		public static extern EGLSurface eglCreateWindowSurface(EGLDisplay dpy, EGLConfig config, [MarshalAs(UnmanagedType.IInspectable)] EGLNativeWindowType win, int[] attrib_list);
+		public static extern EGLSurface eglCreateWindowSurface(EGLDisplay dpy, EGLConfig config, EGLNativeWindowType win, int[] attrib_list);
 		[DllImport(libEGL)]
 		public static extern glbool eglQuerySurface(EGLDisplay dpy, EGLSurface surface, int attribute, out int value);
 		[DllImport(libEGL)]

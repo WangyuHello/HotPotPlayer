@@ -60,7 +60,7 @@ namespace HotPotPlayer.Video.GlesInterop
 			GC.SuppressFinalize(this);
 		}
 
-		public void CreateSurface(SwapChainPanel panel, Size? renderSurfaceSize, float? resolutionScale)
+		public void CreateSurface(SwapChainPanel panel, Size? renderSurfaceSize, float? resolutionScale, IntPtr hwnd)
 		{
 			if (panel == null)
 			{
@@ -90,7 +90,7 @@ namespace HotPotPlayer.Video.GlesInterop
 				surfaceCreationProperties.Add(Egl.EGLRenderResolutionScaleProperty, resolutionScale.Value);
 			}
 
-			surface = Egl.eglCreateWindowSurface(eglDisplay, eglConfig, surfaceCreationProperties, surfaceAttributes);
+			surface = Egl.eglCreateWindowSurface(eglDisplay, eglConfig, hwnd, surfaceAttributes);
 			if (surface == Egl.EGL_NO_SURFACE)
 			{
 				throw new Exception("Failed to create EGL surface");
