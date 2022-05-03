@@ -8,6 +8,7 @@ using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Navigation;
 using Mpv.NET.API;
+using Mpv.NET.API.Structs;
 using Mpv.NET.Player;
 using Silk.NET.Direct3D11;
 using System;
@@ -60,6 +61,9 @@ namespace HotPotPlayer.Video
         private bool isLoaded = false;
         private double lastCompositionScaleX = 0.0;
         private double lastCompositionScaleY = 0.0;
+
+        int width;
+        int height;
         public double ContentsScale { get; private set; }
 
         private bool pendingSizeChange = false;
@@ -70,7 +74,7 @@ namespace HotPotPlayer.Video
             {
                 if (_mpv == null)
                 {
-                    _mpv = new MpvPlayer(@"NativeLibs\mpv-2.dll", true)
+                    _mpv = new MpvPlayer(@"NativeLibs\mpv-2.dll", GetProcAddress)
                     {
                         AutoPlay = true,
                         Volume = 100,
@@ -79,6 +83,11 @@ namespace HotPotPlayer.Video
                 }
                 return _mpv;
             }
+        }
+
+        private IntPtr GetProcAddress(IntPtr ctx, string name)
+        {
+            return Egl.eglGetProcAddress(name);
         }
 
         private void StartPlay(FileInfo file)
@@ -144,7 +153,8 @@ namespace HotPotPlayer.Video
         private void Host_SizeChanged(object sender, SizeChangedEventArgs e)
         {
             pendingSizeChange = true;
-
+            width = (int)Host.ActualWidth;
+            height = (int)Host.ActualHeight;
             EnsureRenderSurface();
         }
 
@@ -186,6 +196,7 @@ namespace HotPotPlayer.Video
             glcontext.SetViewportSize(panelWidth, panelHeight);
 
             //MPV渲染
+            Mpv.API.RenderContextRenderGL(width, height);
 
             if (!glcontext.SwapBuffers())
             {

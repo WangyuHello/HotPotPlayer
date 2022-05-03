@@ -100,7 +100,7 @@ namespace HotPotPlayer.Video.GlesInterop
 		public const string EGLRenderResolutionScaleProperty = "EGLRenderResolutionScaleProperty";
 
 		[DllImport(libEGL)]
-		private static extern IntPtr eglGetProcAddress([MarshalAs(UnmanagedType.LPStr)] string procname);
+		public static extern IntPtr eglGetProcAddress([MarshalAs(UnmanagedType.LPStr)] string procname);
 		[DllImport(libEGL)]
 		public static extern EGLDisplay eglGetPlatformDisplayEXT(uint platform, EGLNativeDisplayType native_display, int[] attrib_list);
 		[DllImport(libEGL)]
