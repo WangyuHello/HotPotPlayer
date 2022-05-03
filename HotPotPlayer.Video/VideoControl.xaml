@@ -8,5 +8,5 @@
     xmlns:canvas="using:Microsoft.Graphics.Canvas.UI.Xaml"
     mc:Ignorable="d">
 
-    <canvas:CanvasSwapChainPanel x:Name="Host" Loaded="Host_Loaded"/>
+    <SwapChainPanel x:Name="Host" Loaded="Host_Loaded" CompositionScaleChanged="Host_CompositionScaleChanged" SizeChanged="Host_SizeChanged" Unloaded="Host_Unloaded"/>
 </UserControl>

@@ -44,7 +44,6 @@ namespace HotPotPlayer.Video
         public static readonly DependencyProperty SourceProperty =
             DependencyProperty.Register("Source", typeof(FileInfo), typeof(VideoHost), new PropertyMetadata(default(FileInfo), SourceChanged));
 
-
         private static void SourceChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
             var h = (VideoHost)d;
