@@ -129,18 +129,20 @@ namespace HotPotPlayer.Video
 
                 var wide = _player.Width > _player.Height;
                 var ratio = wide ? hostWidth / _player.Width : hostHeight / _player.Height;
-                effect = new ScaleEffect()
+
+                if (effect == null)
                 {
-                    Source = _bitmap,
-                };
+                    effect = new ScaleEffect()
+                    {
+                        Source = _bitmap,
+                    };
+                }
+
                 effect.Scale = new System.Numerics.Vector2((float)ratio, (float)ratio);
 
                 var x = wide ? 0 : (hostWidth - _player.Width * ratio) / 2;
                 var y = wide ? (hostHeight - _player.Height * ratio) / 2 : 0;
-                args.DrawingSession.DrawImage(effect, (float)x , (float)y);
-                effect.Dispose();
-
-                
+                args.DrawingSession.DrawImage(effect, (float)x , (float)y);               
             }
         }
     }

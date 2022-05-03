@@ -11,6 +11,6 @@
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
 
     <Grid>
-        <v:VideoControl x:Name="VideoHost" Loaded="VideoHost_Loaded" />
+        <v:SoftwareVideoHost x:Name="VideoHost" Loaded="VideoHost_Loaded" />
     </Grid>
 </Page>
