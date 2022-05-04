@@ -11,6 +11,7 @@
     <None Remove="NativeMethods.txt" />
     <None Remove="SoftwareVideoHost.xaml" />
     <None Remove="VideoControl.xaml" />
+    <None Remove="VideoControl2.xaml" />
   </ItemGroup>
   <ItemGroup>
     <AdditionalFiles Include="NativeMethods.txt" />
@@ -33,6 +34,12 @@
     <ProjectReference Include="..\HotPotPlayer.Common\HotPotPlayer.Common.csproj" />
     <ProjectReference Include="..\HotPotPlayer.Native\HotPotPlayer.Native.csproj" />
     <ProjectReference Include="..\libvlcsharp\src\LibVLCSharp\LibVLCSharp.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Page Update="VideoControl2.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
   </ItemGroup>
 
   <ItemGroup>
