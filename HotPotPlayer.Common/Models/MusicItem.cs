@@ -117,7 +117,7 @@ namespace HotPotPlayer.Models
     {
         public override bool Equals(MusicItem x, MusicItem y)
         {
-            if (x.Source == y.Source)
+            if (x.Source.FullName == y.Source.FullName)
                 return true;
             return false;
         }

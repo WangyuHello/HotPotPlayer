@@ -390,6 +390,7 @@ namespace HotPotPlayer.Services
                 fsw.Created += WatcherMusicCreated;
                 fsw.Renamed += WatcherMusicRenamed;
                 fsw.Deleted += WatcherMusicDeleted;
+                fsw.Changed += WatcherMusicChanged;
 
                 fsw.EnableRaisingEvents = true;
                 return fsw;
@@ -416,6 +417,20 @@ namespace HotPotPlayer.Services
         {
             var createFile = e.FullPath;
             if (_fileSystemWatcherFilter !=null && _fileSystemWatcherFilter.Contains(createFile))
+            {
+                _fileSystemWatcherFilter.Remove(createFile);
+                return;
+            }
+            if (!Loader.IsBusy)
+            {
+                Loader.RunWorkerAsync(true);
+            }
+        }
+
+        private void WatcherMusicChanged(object sender, FileSystemEventArgs e)
+        {
+            var createFile = e.FullPath;
+            if (_fileSystemWatcherFilter != null && _fileSystemWatcherFilter.Contains(createFile))
             {
                 _fileSystemWatcherFilter.Remove(createFile);
                 return;
@@ -462,12 +477,16 @@ namespace HotPotPlayer.Services
             LocalPlayListList[plistIndex] = plist;
             Task.Run(async () =>
             {
+                _fileSystemWatcherFilter = new List<string>()
+                {
+                    plist.Source.FullName
+                };
+                await plist.WriteAsync();
                 using var db = Realm.GetInstance(DbPath);
                 db.Write(() =>
                 {
                     db.Add(plist.ToDb(), update: true);
                 });
-                await plist.WriteAsync();
             });
         }
 
@@ -484,12 +503,16 @@ namespace HotPotPlayer.Services
             LocalPlayListList[plistIndex] = plist;
             Task.Run(async () =>
             {
+                _fileSystemWatcherFilter = new List<string>()
+                {
+                    plist.Source.FullName
+                };
+                await plist.WriteAsync();
                 using var db = Realm.GetInstance(DbPath);
                 db.Write(() =>
                 {
                     db.Add(plist.ToDb(), update: true);
                 });
-                await plist.WriteAsync();
 
                 UIQueue.TryEnqueue(() =>
                 {
@@ -511,12 +534,16 @@ namespace HotPotPlayer.Services
             LocalPlayListList[plistIndex] = plist;
             Task.Run(async () =>
             {
+                _fileSystemWatcherFilter = new List<string>()
+                {
+                    plist.Source.FullName
+                };
+                await plist.WriteAsync();
                 using var db = Realm.GetInstance(DbPath);
                 db.Write(() =>
                 {
                     db.Add(plist.ToDb(), update: true);
                 });
-                await plist.WriteAsync();
 
                 UIQueue.TryEnqueue(() =>
                 {
@@ -538,12 +565,16 @@ namespace HotPotPlayer.Services
             LocalPlayListList[plistIndex] = plist;
             Task.Run(async () =>
             {
+                _fileSystemWatcherFilter = new List<string>()
+                {
+                    plist.Source.FullName
+                };
+                await plist.WriteAsync();
                 using var db = Realm.GetInstance(DbPath);
                 db.Write(() =>
                 {
                     db.Add(plist.ToDb(), update: true);
                 });
-                await plist.WriteAsync();
             });
         }
 
@@ -560,12 +591,16 @@ namespace HotPotPlayer.Services
             LocalPlayListList[plistIndex] = plist;
             Task.Run(async () =>
             {
+                _fileSystemWatcherFilter = new List<string>()
+                {
+                    plist.Source.FullName
+                };
+                await plist.WriteAsync();
                 using var db = Realm.GetInstance(DbPath);
                 db.Write(() =>
                 {
                     db.Add(plist.ToDb(), update: true);
                 });
-                await plist.WriteAsync();
             });
         }
 
@@ -584,16 +619,15 @@ namespace HotPotPlayer.Services
                 using var db = Realm.GetInstance(DbPath);
                 var pl = PlayListItem.Create(title, Config.MusicPlayListDirectory.First().Path, db);
                 pl.AddMusic(initItem);
-                db.Write(() =>
-                {
-                    db.Add(pl.ToDb(), update: true);
-                });
-
                 _fileSystemWatcherFilter = new List<string>()
                 {
                     pl.Source.FullName
                 };
                 await pl.WriteAsync();
+                db.Write(() =>
+                {
+                    db.Add(pl.ToDb(), update: true);
+                });
                 UIQueue.TryEnqueue(() =>
                 {
                     LocalPlayListList.Add(pl);
