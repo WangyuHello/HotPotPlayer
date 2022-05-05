@@ -25,6 +25,10 @@
     <HoursBetweenUpdateChecks>0</HoursBetweenUpdateChecks>
   </PropertyGroup>
 
+  <PropertyGroup>
+    <defineconstants>DISABLE_XAML_GENERATED_MAIN</defineconstants>
+  </PropertyGroup>
+
   <ItemGroup>
     <None Remove="Assets\Background.png" />
     <None Remove="Assets\bilibili.svg" />
