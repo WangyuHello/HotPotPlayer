@@ -8,6 +8,7 @@
     xmlns:controls="using:HotPotPlayer.Controls"
     xmlns:animations="using:CommunityToolkit.WinUI.UI.Animations"
     xmlns:animatedvisuals="using:Microsoft.UI.Xaml.Controls.AnimatedVisuals"
+    xmlns:model="using:HotPotPlayer.Models"
     mc:Ignorable="d"
     >
 
@@ -81,7 +82,22 @@
                 <ColumnDefinition x:Name="RightDragColumn" Width="*"/>
                 <ColumnDefinition x:Name="RightPaddingColumn" Width="0"/>
             </Grid.ColumnDefinitions>
-            <AutoSuggestBox Grid.Column="1" QueryIcon="Find" PlaceholderText="搜索" VerticalAlignment="Center" Width="260" Opacity="{x:Bind GetTitleBarSearchVisible(MusicPlayer.IsPlayScreenVisible), Mode=OneWay}" />
+            <AutoSuggestBox Grid.Column="1" QueryIcon="Find" PlaceholderText="搜索" VerticalAlignment="Center" Width="260" Opacity="{x:Bind GetTitleBarSearchVisible(MusicPlayer.IsPlayScreenVisible), Mode=OneWay}" TextChanged="AutoSuggestBox_TextChanged" SuggestionChosen="AutoSuggestBox_SuggestionChosen" TextMemberPath="Title">
+                <AutoSuggestBox.ItemTemplate>
+                    <DataTemplate x:DataType="model:MusicItem">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
+                            <TextBlock Text="{x:Bind Title}" />
+                            <Button Grid.Column="1" Margin="8,0,0,0" Style="{StaticResource TransparentButton}" >
+                                <SymbolIcon Symbol="Play" />
+                            </Button>
+                        </Grid>
+                    </DataTemplate>
+                </AutoSuggestBox.ItemTemplate>
+            </AutoSuggestBox>
         </Grid>
     </Grid>
 </Window>

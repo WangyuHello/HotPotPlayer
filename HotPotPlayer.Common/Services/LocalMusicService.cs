@@ -636,6 +636,16 @@ namespace HotPotPlayer.Services
             });
         }
 
+        public async Task<List<MusicItem>> QueryMusicAsync(string name)
+        {
+            return await Task.Run(() =>
+            {
+                using var db = Realm.GetInstance(DbPath);
+                var qItems = db.All<MusicItemDb>().Where(m => m.Title.Contains(name)).AsEnumerable().Select(i => i.ToOrigin()).ToList();
+                return qItems;
+            });
+        }
+
         public override void Dispose()
         {
             Loader?.Dispose();

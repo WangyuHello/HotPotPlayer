@@ -49,6 +49,7 @@ namespace HotPotPlayer
         }
 
         MusicPlayer MusicPlayer => ((App)Application.Current).MusicPlayer;
+        LocalMusicService MusicService => ((App)Application.Current).LocalMusicService;
         //TrayIcon tray;
 
         private void MainWindow_Loaded(object sender, RoutedEventArgs e)
@@ -94,6 +95,10 @@ namespace HotPotPlayer
         {
             return isPlayScreenVisible ? new Thickness(24, 0, 24, 16) : new Thickness(80, 0, 24, 16);
         }
+
+
+
+
 
         //private void Tray_TrayIconLeftMouseDown(object sender, EventArgs e)
         //{

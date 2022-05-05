@@ -1,7 +1,10 @@
-﻿using HotPotPlayer.Services;
+﻿using HotPotPlayer.Models;
+using HotPotPlayer.Services;
 using Microsoft.UI;
 using Microsoft.UI.Windowing;
 using Microsoft.UI.Xaml;
+using Microsoft.UI.Xaml.Controls;
+using Microsoft.UI.Xaml.Media.Animation;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -168,6 +171,26 @@ namespace HotPotPlayer
         double GetTitleBarSearchVisible(bool isPlayScreenVisible)
         {
             return isPlayScreenVisible ? 0 : 1;
+        }
+
+        private async void AutoSuggestBox_TextChanged(AutoSuggestBox sender, AutoSuggestBoxTextChangedEventArgs args)
+        {
+            if (args.Reason == AutoSuggestionBoxTextChangeReason.UserInput)
+            {
+                var musics = await MusicService.QueryMusicAsync(sender.Text);
+                sender.ItemsSource = musics;
+            }
+            else
+            {
+ 
+            }
+        }
+
+        private void AutoSuggestBox_SuggestionChosen(AutoSuggestBox sender, AutoSuggestBoxSuggestionChosenEventArgs args)
+        {
+            var music = args.SelectedItem as MusicItem;
+            NavigateTo("MusicSub.Info", music, new SlideNavigationTransitionInfo() { Effect = SlideNavigationTransitionEffect.FromRight });
+            sender.ItemsSource = null;
         }
     }
 }
