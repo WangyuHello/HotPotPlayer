@@ -5,6 +5,7 @@ using Newtonsoft.Json.Linq;
 using QRCoder;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
@@ -100,11 +101,10 @@ namespace HotPotPlayer.Services
             var json = await Api.RequestAsync(CloudMusicApiProviders.UserPlaylist, new Dictionary<string, object> { ["uid"] = uid });
             json = await Api.RequestAsync(CloudMusicApiProviders.PlaylistDetail, new Dictionary<string, object> { ["id"] = json["playlist"][0]["id"] });
             int[] trackIds = json["playlist"]["trackIds"].Select(t => (int)t["id"]).ToArray();
-            json = await Api.RequestAsync(CloudMusicApiProviders.SongDetail, new Dictionary<string, object> { ["ids"] = trackIds });
-            Console.WriteLine($"我喜欢的音乐（{trackIds.Length} 首）：");
-            foreach (var song in json["songs"])
-                Console.WriteLine($"{string.Join(",", song["ar"].Select(t => t["name"]))} - {song["name"]}");
-            Console.WriteLine();
+            json = await Api.RequestAsync(CloudMusicApiProviders.SongDetail, new Dictionary<string, object> { ["ids"] = string.Join(",", trackIds) });
+            Debug.WriteLine($"我喜欢的音乐（{trackIds.Length} 首）：");
+            foreach (JObject song in json["songs"])
+                Debug.WriteLine($"{string.Join(",", song["ar"].Select(t => t["name"]))} - {song["name"]}");
         }
 
         public async Task<JObject> LogoutAsync()

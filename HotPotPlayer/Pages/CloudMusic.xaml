@@ -10,7 +10,7 @@
     NavigationCacheMode="Enabled"
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
 
-    <Grid>
-        
-    </Grid>
+    <StackPanel>
+        <TextBlock Text="{x:Bind NickName, Mode=OneWay}"/>
+    </StackPanel>
 </Page>
