@@ -1,4 +1,5 @@
-﻿using Microsoft.UI.Xaml;
+﻿using HotPotPlayer.Services;
+using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Controls.Primitives;
 using Microsoft.UI.Xaml.Data;
@@ -27,12 +28,16 @@ namespace HotPotPlayer.Pages
         {
             this.InitializeComponent();
         }
+        NetEaseMusicService CloudMusicService => ((App)Application.Current).NetEaseMusicService;
+        MainWindow MainWindow => ((App)Application.Current).MainWindow;
 
-        private void VideoHost_Loaded(object sender, RoutedEventArgs e)
+        protected override async void OnNavigatedTo(NavigationEventArgs e)
         {
-            VideoHost.Source = new FileInfo(@"D:\视频\TV动画《四月是你的谎言》片尾曲【オレンジ】.mkv");
-            //VideoHost.Source = new FileInfo(@"D:\视频\【Animenz】Bios（10周年版）-_罪恶王冠_OST.459129031.mkv");
-            //VideoHost.Source = new FileInfo(@"D:\视频\【8_15.生肉】紫罗兰永恒花园_交响音乐会_2021.389701874.mkv");
+            base.OnNavigatedTo(e);
+            if (!await CloudMusicService.IsLoginAsync())
+            {
+                MainWindow.NavigateTo("CloudMusicSub.Login");
+            }
         }
     }
 }

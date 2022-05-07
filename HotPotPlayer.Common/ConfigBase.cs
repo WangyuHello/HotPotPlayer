@@ -130,6 +130,11 @@ namespace HotPotPlayer
             });
         }
 
+        public void SaveConfigWhenExit(Action action)
+        {
+            exitSaveActions.Add(action);
+        }
+
         public abstract string[] AudioSupportedExt { get; }
         public abstract string[] VideoSupportedExt { get; }
 
@@ -172,6 +177,19 @@ namespace HotPotPlayer
             }
 
             return files;
+        }
+
+        public virtual string CookieFolder
+        {
+            get
+            {
+                var path = Path.Combine(LocalFolder, "Cookie");
+                if (!Directory.Exists(path))
+                {
+                    Directory.CreateDirectory(path);
+                }
+                return path;
+            }
         }
     }
 }

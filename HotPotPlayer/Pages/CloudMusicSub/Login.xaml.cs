@@ -33,18 +33,20 @@ namespace HotPotPlayer.Pages.CloudMusicSub
             this.InitializeComponent();
         }
         NetEaseMusicService CloudMusicService => ((App)Application.Current).NetEaseMusicService;
+        MainWindow MainWindow => ((App)Application.Current).MainWindow;
 
         protected override async void OnNavigatedTo(NavigationEventArgs e)
         {
             base.OnNavigatedTo(e);
             _ui = DispatcherQueue.GetForCurrentThread();
-            await SetQRCode();
+            await SetQRCodeAndWait();
+            MainWindow.NavigateTo("CloudMusic");
         }
 
         string qrKey;
         DispatcherQueue _ui;
 
-        private async Task SetQRCode()
+        private async Task SetQRCodeAndWait()
         {
             qrKey = await CloudMusicService.GetQrKeyAsync();
             var qrData = CloudMusicService.GetQrImgByte(qrKey);
@@ -66,7 +68,11 @@ namespace HotPotPlayer.Pages.CloudMusicSub
                 {
                     Status.Text = message;
                 });
-                await Task.Delay(200);
+                if (code == 803)
+                {
+                    break;
+                }
+                await Task.Delay(1000);
             }
         }
     }

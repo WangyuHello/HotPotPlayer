@@ -1,4 +1,6 @@
-﻿using NeteaseCloudMusicApi;
+﻿using HotPotPlayer.Extensions;
+using Microsoft.UI.Dispatching;
+using NeteaseCloudMusicApi;
 using Newtonsoft.Json.Linq;
 using QRCoder;
 using System;
@@ -10,12 +12,32 @@ using System.Threading.Tasks;
 
 namespace HotPotPlayer.Services
 {
-    public class NetEaseMusicService: ServiceBase
+    public class NetEaseMusicService: ServiceBaseWithConfig
     {
-        readonly CloudMusicApi api = new();
+        public NetEaseMusicService(ConfigBase config, DispatcherQueue uiThread = null, AppBase app = null) : base(config, uiThread, app)
+        {
+            Config.SaveConfigWhenExit(() => _api.SaveCookie(Config));
+        }
+
+        CloudMusicApi _api;
+
+        CloudMusicApi Api
+        {
+            get
+            {
+                if (_api == null)
+                {
+                    _api = new CloudMusicApi();
+                    _api.LoadCookie(Config);
+                }
+                return _api;
+            }
+        }
+
         long uid;
         string username;
-        
+
+
         public async Task<JObject> LoginAsync(string phone, string password)
         {
             var queries = new Dictionary<string, object>
@@ -24,7 +46,7 @@ namespace HotPotPlayer.Services
                 ["password"] = password
             };
 
-            var re = await api.RequestAsync( CloudMusicApiProviders.LoginCellphone, queries);
+            var re = await Api.RequestAsync( CloudMusicApiProviders.LoginCellphone, queries);
             return re;
 		}
 
@@ -36,19 +58,19 @@ namespace HotPotPlayer.Services
 
         public async Task<(long uid, string username)> GetUidAsync()
         {
-            var json = await api.RequestAsync(CloudMusicApiProviders.LoginStatus);
+            var json = await Api.RequestAsync(CloudMusicApiProviders.LoginStatus);
             if (!json["profile"].HasValues)
             {
                 return (0, null);
             }
-            long uid = json["profile"]["userId"].Value<long>();
-            var username = json["profile"]["nickname"].Value<string>();
+            uid = json["profile"]["userId"].Value<long>();
+            username = json["profile"]["nickname"].Value<string>();
             return (uid, username);
         }
 
         public async Task<string> GetQrKeyAsync()
         {
-            var json = await api.RequestAsync(CloudMusicApiProviders.LoginQrKey);
+            var json = await Api.RequestAsync(CloudMusicApiProviders.LoginQrKey);
             return json["unikey"].Value<string>();
         }
 
@@ -58,7 +80,7 @@ namespace HotPotPlayer.Services
             {
                 ["key"] = key,
             };
-            var json = await api.RequestAsync(CloudMusicApiProviders.LoginQrCheck, queries);
+            var json = await Api.RequestAsync(CloudMusicApiProviders.LoginQrCheck, queries);
 
             return (json["code"].Value<int>(), json["message"].Value<string>());
         }
@@ -75,10 +97,10 @@ namespace HotPotPlayer.Services
 
         public async Task GetLikeListAsync()
         {
-            var json = await api.RequestAsync(CloudMusicApiProviders.UserPlaylist, new Dictionary<string, object> { ["uid"] = uid });
-            json = await api.RequestAsync(CloudMusicApiProviders.PlaylistDetail, new Dictionary<string, object> { ["id"] = json["playlist"][0]["id"] });
+            var json = await Api.RequestAsync(CloudMusicApiProviders.UserPlaylist, new Dictionary<string, object> { ["uid"] = uid });
+            json = await Api.RequestAsync(CloudMusicApiProviders.PlaylistDetail, new Dictionary<string, object> { ["id"] = json["playlist"][0]["id"] });
             int[] trackIds = json["playlist"]["trackIds"].Select(t => (int)t["id"]).ToArray();
-            json = await api.RequestAsync(CloudMusicApiProviders.SongDetail, new Dictionary<string, object> { ["ids"] = trackIds });
+            json = await Api.RequestAsync(CloudMusicApiProviders.SongDetail, new Dictionary<string, object> { ["ids"] = trackIds });
             Console.WriteLine($"我喜欢的音乐（{trackIds.Length} 首）：");
             foreach (var song in json["songs"])
                 Console.WriteLine($"{string.Join(",", song["ar"].Select(t => t["name"]))} - {song["name"]}");
@@ -87,7 +109,7 @@ namespace HotPotPlayer.Services
 
         public async Task<JObject> LogoutAsync()
         {
-            var json = await api.RequestAsync(CloudMusicApiProviders.Logout);
+            var json = await Api.RequestAsync(CloudMusicApiProviders.Logout);
             return json;
         }
     }
