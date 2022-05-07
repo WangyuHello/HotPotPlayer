@@ -1,4 +1,5 @@
 ﻿using HotPotPlayer.Services;
+using Microsoft.UI.Dispatching;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Controls.Primitives;
@@ -36,12 +37,16 @@ namespace HotPotPlayer.Pages.CloudMusicSub
         protected override async void OnNavigatedTo(NavigationEventArgs e)
         {
             base.OnNavigatedTo(e);
+            _ui = DispatcherQueue.GetForCurrentThread();
             await SetQRCode();
         }
 
+        string qrKey;
+        DispatcherQueue _ui;
+
         private async Task SetQRCode()
         {
-            var qrKey = await CloudMusicService.GetQrKeyAsync();
+            qrKey = await CloudMusicService.GetQrKeyAsync();
             var qrData = CloudMusicService.GetQrImgByte(qrKey);
             BitmapImage image = new();
             var stream = new InMemoryRandomAccessStream();
@@ -49,6 +54,20 @@ namespace HotPotPlayer.Pages.CloudMusicSub
             stream.Seek(0);
             await image.SetSourceAsync(stream);
             QR.Source = image;
+            await Task.Run(CheckLogin);
+        }
+
+        public async Task CheckLogin()
+        {
+            while (true)
+            {
+                var (code, message) = await CloudMusicService.GetQrCheckAsync(qrKey);
+                _ui.TryEnqueue(() =>
+                {
+                    Status.Text = message;
+                });
+                await Task.Delay(200);
+            }
         }
     }
 }

@@ -52,6 +52,17 @@ namespace HotPotPlayer.Services
             return json["unikey"].Value<string>();
         }
 
+        public async ValueTask<(int code, string message)> GetQrCheckAsync(string key)
+        {
+            var queries = new Dictionary<string, object>
+            {
+                ["key"] = key,
+            };
+            var json = await api.RequestAsync(CloudMusicApiProviders.LoginQrCheck, queries);
+
+            return (json["code"].Value<int>(), json["message"].Value<string>());
+        }
+
         public byte[] GetQrImgByte(string key)
         {
             var url = $"https://music.163.com/login?codekey={key}";

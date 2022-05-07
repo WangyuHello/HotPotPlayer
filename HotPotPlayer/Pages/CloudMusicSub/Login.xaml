@@ -10,5 +10,6 @@
 
     <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
         <Image x:Name="QR" Width="300" Height="300"/>
+        <TextBlock x:Name="Status"/>
     </StackPanel>
 </Page>
