@@ -26,6 +26,7 @@
       </PackageReference>
 	  <PackageReference Include="Microsoft.WindowsAppSDK" Version="1.1.0-preview2" />
 	  <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
+	  <PackageReference Include="QRCoder" Version="1.4.3" />
       <PackageReference Include="System.Management" Version="6.0.0" />
       <PackageReference Include="Realm" Version="10.11.2" />
       <PackageReference Include="SixLabors.ImageSharp" Version="2.1.1" />

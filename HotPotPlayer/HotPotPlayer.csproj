@@ -55,6 +55,7 @@
     <None Remove="Pages\Artist.xaml" />
     <None Remove="Pages\Bilibili.xaml" />
     <None Remove="Pages\CloudMusic.xaml" />
+    <None Remove="Pages\CloudMusicSub\Login.xaml" />
     <None Remove="Pages\Music.xaml" />
     <None Remove="Pages\MusicSub\Info.xaml" />
     <None Remove="Pages\Setting.xaml" />
@@ -217,6 +218,12 @@
 
   <ItemGroup>
     <Page Update="Styles\Buttons.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Page Update="Pages\CloudMusicSub\Login.xaml">
       <Generator>MSBuild:Compile</Generator>
     </Page>
   </ItemGroup>

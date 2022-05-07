@@ -25,8 +25,17 @@ namespace HotPotPlayer
             set => Set(ref _selectedPageName, value);
         }
 
-        private void MainSidebar_SelectedPageNameChanged(string name)
+        private async void MainSidebar_SelectedPageNameChanged(string name)
         {
+            if (name == "CloudMusic")
+            {
+                var isLogin = await CloudMusicService.IsLoginAsync();
+                if (!isLogin)
+                {
+                    MainFrame.Navigate(Type.GetType("HotPotPlayer.Pages.CloudMusicSub.Login"), null, new DrillInNavigationTransitionInfo());
+                    return;
+                }
+            }
             MainFrame.Navigate(Type.GetType("HotPotPlayer.Pages." + name), null, new DrillInNavigationTransitionInfo());
         }
 

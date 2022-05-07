@@ -1,5 +1,6 @@
 ﻿using NeteaseCloudMusicApi;
 using Newtonsoft.Json.Linq;
+using QRCoder;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,6 +14,7 @@ namespace HotPotPlayer.Services
     {
         readonly CloudMusicApi api = new();
         long uid;
+        string username;
         
         public async Task<JObject> LoginAsync(string phone, string password)
         {
@@ -22,16 +24,42 @@ namespace HotPotPlayer.Services
                 ["password"] = password
             };
 
-
             var re = await api.RequestAsync( CloudMusicApiProviders.LoginCellphone, queries);
             return re;
 		}
 
-        public async Task<long> GetUidAsync()
+        public async ValueTask<bool> IsLoginAsync()
+        {
+            var t = await GetUidAsync();
+            return t.uid != 0;
+        }
+
+        public async Task<(long uid, string username)> GetUidAsync()
         {
             var json = await api.RequestAsync(CloudMusicApiProviders.LoginStatus);
-            long uid = (long)json["profile"]["userId"];
-            return uid;
+            if (!json["profile"].HasValues)
+            {
+                return (0, null);
+            }
+            long uid = json["profile"]["userId"].Value<long>();
+            var username = json["profile"]["nickname"].Value<string>();
+            return (uid, username);
+        }
+
+        public async Task<string> GetQrKeyAsync()
+        {
+            var json = await api.RequestAsync(CloudMusicApiProviders.LoginQrKey);
+            return json["unikey"].Value<string>();
+        }
+
+        public byte[] GetQrImgByte(string key)
+        {
+            var url = $"https://music.163.com/login?codekey={key}";
+            var qrGenerator = new QRCodeGenerator();
+            QRCodeData qrCodeData = qrGenerator.CreateQrCode(url, QRCodeGenerator.ECCLevel.Q);
+            BitmapByteQRCode qrCode = new BitmapByteQRCode(qrCodeData);
+            byte[] qrCodeAsBitmapByteArr = qrCode.GetGraphic(20);
+            return qrCodeAsBitmapByteArr;
         }
 
         public async Task GetLikeListAsync()
