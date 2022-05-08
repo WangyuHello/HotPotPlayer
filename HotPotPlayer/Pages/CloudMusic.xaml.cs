@@ -47,28 +47,6 @@ namespace HotPotPlayer.Pages
         MusicPlayer MusicPlayer => ((App)Application.Current).MusicPlayer;
         MainWindow MainWindow => ((App)Application.Current).MainWindow;
 
-        private string _nickName;
-
-        public string NickName
-        {
-            get => _nickName;
-            set => Set(ref _nickName, value);
-        }
-
-        private ObservableCollection<CloudMusicItem> _likeList;
-        public ObservableCollection<CloudMusicItem> LikeList
-        {
-            get => _likeList;
-            set => Set(ref _likeList, value);
-        }
-
-        private ObservableCollection<CloudMusicItem> _recommedList;
-        public ObservableCollection<CloudMusicItem> RecommedList
-        {
-            get => _recommedList;
-            set => Set(ref _recommedList, value);
-        }
-
         bool IsFirstNavigate = true;
 
         protected override async void OnNavigatedTo(NavigationEventArgs e)
@@ -83,22 +61,7 @@ namespace HotPotPlayer.Pages
                 MainWindow.NavigateTo("CloudMusicSub.Login");
             }
 
-            var (uid, name) = await CloudMusicService.GetUidAsync();
-            NickName = name;
-            var likeList = await CloudMusicService.GetLikeListAsync();
-            LikeList ??= new();
-            LikeList.Clear();
-            foreach (var item in likeList)
-            {
-                LikeList.Add(item);
-            }
-            var recList = await CloudMusicService.GetRecommendListAsync();
-            RecommedList ??= new();
-            RecommedList.Clear();
-            foreach (var item in recList)
-            {
-                RecommedList.Add(item);
-            }
+            await CloudMusicService.InitAsync();
 
             IsFirstNavigate = false;
         }
@@ -106,13 +69,13 @@ namespace HotPotPlayer.Pages
         private void MusicItemClick(object sender, RoutedEventArgs e)
         {
             var music = ((Button)sender).Tag as CloudMusicItem;
-            MusicPlayer.PlayNext(music, LikeList);
+            MusicPlayer.PlayNext(music, CloudMusicService.LikeList);
         }
 
         private void MusicItemClickInRecommed(object sender, RoutedEventArgs e)
         {
             var music = ((Button)sender).Tag as CloudMusicItem;
-            MusicPlayer.PlayNext(music, RecommedList);
+            MusicPlayer.PlayNext(music, CloudMusicService.RecommedList);
         }
     }
 }

@@ -6,6 +6,7 @@ using Newtonsoft.Json.Linq;
 using QRCoder;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.Linq;
 using System.Text;
@@ -37,8 +38,44 @@ namespace HotPotPlayer.Services
         }
 
         long uid;
-        string username;
 
+        private string _nickName;
+        public string NickName
+        {
+            get => _nickName;
+            set => Set(ref _nickName, value);
+        }
+
+        private Uri _avatar;
+
+        public Uri Avatar
+        {
+            get => _avatar;
+            set => Set(ref _avatar, value);
+        }
+
+        private ObservableCollection<CloudMusicItem> _likeList;
+        public ObservableCollection<CloudMusicItem> LikeList
+        {
+            get => _likeList;
+            set => Set(ref _likeList, value);
+        }
+
+        private ObservableCollection<CloudMusicItem> _recommedList;
+        public ObservableCollection<CloudMusicItem> RecommedList
+        {
+            get => _recommedList;
+            set => Set(ref _recommedList, value);
+        }
+
+        public async Task InitAsync()
+        {
+            var likeList = await GetLikeListAsync();
+            LikeList ??= new(likeList);
+            
+            var recList = await GetRecommendListAsync();
+            RecommedList ??= new(recList);
+        }
 
         public async Task<JObject> LoginAsync(string phone, string password)
         {
@@ -55,19 +92,20 @@ namespace HotPotPlayer.Services
         public async ValueTask<bool> IsLoginAsync()
         {
             var t = await GetUidAsync();
-            return t.uid != 0;
+            return t != 0;
         }
 
-        public async Task<(long uid, string username)> GetUidAsync()
+        public async Task<long> GetUidAsync()
         {
             var json = await Api.RequestAsync(CloudMusicApiProviders.LoginStatus);
             if (!json["profile"].HasValues)
             {
-                return (0, null);
+                return 0;
             }
             uid = json["profile"]["userId"].Value<long>();
-            username = json["profile"]["nickname"].Value<string>();
-            return (uid, username);
+            NickName = json["profile"]["nickname"].Value<string>();
+            Avatar = new Uri(json["profile"]["avatarUrl"].Value<string>());
+            return uid;
         }
 
         public async Task<string> GetQrKeyAsync()

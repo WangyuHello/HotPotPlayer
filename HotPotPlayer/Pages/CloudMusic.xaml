@@ -41,17 +41,17 @@
         </DataTemplate>
     </Page.Resources>
 
-    <Grid Padding="36,28,0,0" Background="White">
-        <Pivot x:Name="RootPivot" HeaderTemplate="{StaticResource MusicPivotHeaderTemplate}">
+    <Grid Background="White">
+        <Pivot Margin="36,28,0,0"  x:Name="RootPivot" HeaderTemplate="{StaticResource MusicPivotHeaderTemplate}">
             <PivotItem Header="每日推荐" Margin="0">
-                <GridView x:Name="SuggestListGridView" ItemsSource="{x:Bind RecommedList, Mode=OneWay}" ScrollViewer.IsHorizontalScrollChainingEnabled="False" SelectionMode="None" ItemTemplate="{StaticResource RecommedListItemTemplate}" ItemContainerStyle="{StaticResource LikeListItemContainerStyle}" >
+                <GridView x:Name="SuggestListGridView" ItemsSource="{x:Bind CloudMusicService.RecommedList, Mode=OneWay}" ScrollViewer.IsHorizontalScrollChainingEnabled="False" SelectionMode="None" ItemTemplate="{StaticResource RecommedListItemTemplate}" ItemContainerStyle="{StaticResource LikeListItemContainerStyle}" >
                     <GridView.Footer>
                         <Grid Height="100"/>
                     </GridView.Footer>
                 </GridView>
             </PivotItem>
             <PivotItem Header="我喜欢的音乐" Margin="0" >
-                <GridView x:Name="LikeListGridView" ItemsSource="{x:Bind LikeList, Mode=OneWay}" ScrollViewer.IsHorizontalScrollChainingEnabled="False" SelectionMode="None" ItemTemplate="{StaticResource LikeListItemTemplate}" ItemContainerStyle="{StaticResource LikeListItemContainerStyle}" >
+                <GridView x:Name="LikeListGridView" ItemsSource="{x:Bind CloudMusicService.LikeList, Mode=OneWay}" ScrollViewer.IsHorizontalScrollChainingEnabled="False" SelectionMode="None" ItemTemplate="{StaticResource LikeListItemTemplate}" ItemContainerStyle="{StaticResource LikeListItemContainerStyle}" >
                     <GridView.Footer>
                         <Grid Height="100"/>
                     </GridView.Footer>
@@ -59,5 +59,9 @@
             </PivotItem>
         </Pivot>
 
+        <StackPanel Margin="0,6,160,0" Orientation="Horizontal" VerticalAlignment="Top" HorizontalAlignment="Right" Spacing="8">
+            <cont2:ImageEx2 Source="{x:Bind CloudMusicService.Avatar, Mode=OneWay}" Style="{StaticResource LocalMusicImageStyle}" Width="32" Height="32" CornerRadius="16"/>
+            <TextBlock VerticalAlignment="Center" Text="{x:Bind CloudMusicService.NickName, Mode=OneWay}" FontFamily="{ThemeResource MiSansRegular}"/>
+        </StackPanel>
     </Grid>
 </Page>
