@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace HotPotPlayer.Models
+namespace HotPotPlayer.Models.CloudMusic
 {
-    public record CloudPlayListItem: PlayListItem
+    public record CloudPlayListItem : PlayListItem
     {
         public Uri Cover2 { get; set; }
         public int BookCount { get; set; }

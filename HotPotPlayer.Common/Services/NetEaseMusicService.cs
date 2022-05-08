@@ -1,5 +1,5 @@
 ﻿using HotPotPlayer.Extensions;
-using HotPotPlayer.Models;
+using HotPotPlayer.Models.CloudMusic;
 using Microsoft.UI.Dispatching;
 using NeteaseCloudMusicApi;
 using Newtonsoft.Json.Linq;

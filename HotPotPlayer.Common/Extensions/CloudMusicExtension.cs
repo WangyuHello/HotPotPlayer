@@ -1,4 +1,4 @@
-﻿using HotPotPlayer.Models;
+﻿using HotPotPlayer.Models.CloudMusic;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;

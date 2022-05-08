@@ -1,4 +1,4 @@
-﻿using HotPotPlayer.Models;
+﻿using HotPotPlayer.Models.CloudMusic;
 using HotPotPlayer.Services;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;

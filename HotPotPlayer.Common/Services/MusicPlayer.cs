@@ -1,5 +1,6 @@
 ﻿using HotPotPlayer.Helpers;
 using HotPotPlayer.Models;
+using HotPotPlayer.Models.CloudMusic;
 using Microsoft.UI.Dispatching;
 using NAudio.Wave;
 using System;

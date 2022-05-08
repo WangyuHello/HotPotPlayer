@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace HotPotPlayer.Models
+namespace HotPotPlayer.Models.CloudMusic
 {
-    public record CloudMusicItem: MusicItem
+    public record CloudMusicItem : MusicItem
     {
         public CloudAlbumItem Album2 { get; set; }
         public string SId { get; set; }

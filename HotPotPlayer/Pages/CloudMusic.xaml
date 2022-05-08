@@ -27,11 +27,12 @@
         </Style>
     </Page.Resources>
 
-    <Grid Margin="36,48,0,0">
-        <GridView x:Name="LikeListGridView" ItemsSource="{x:Bind LikeList, Mode=OneWay}" ScrollViewer.IsHorizontalScrollChainingEnabled="False" SelectionMode="None" ItemTemplate="{StaticResource LikeListItemTemplate}" ItemContainerStyle="{StaticResource LikeListItemContainerStyle}" >
+    <StackPanel Margin="0,48,0,0" HorizontalAlignment="Left">
+        <TextBlock Margin="36,0,0,12" FontSize="24">我喜欢的音乐</TextBlock>
+        <GridView Margin="30,0,0,0" x:Name="LikeListGridView" ItemsSource="{x:Bind LikeList, Mode=OneWay}" ScrollViewer.IsHorizontalScrollChainingEnabled="False" SelectionMode="None" ItemTemplate="{StaticResource LikeListItemTemplate}" ItemContainerStyle="{StaticResource LikeListItemContainerStyle}" >
             <GridView.Footer>
                 <Grid Height="100"/>
             </GridView.Footer>
         </GridView>
-    </Grid>
+    </StackPanel>
 </Page>
