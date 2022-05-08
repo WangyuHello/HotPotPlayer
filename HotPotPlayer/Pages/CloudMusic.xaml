@@ -41,7 +41,7 @@
         </DataTemplate>
     </Page.Resources>
 
-    <Grid Padding="36,28,0,0" >
+    <Grid Padding="36,28,0,0" Background="White">
         <Pivot x:Name="RootPivot" HeaderTemplate="{StaticResource MusicPivotHeaderTemplate}">
             <PivotItem Header="每日推荐" Margin="0">
                 <GridView x:Name="SuggestListGridView" ItemsSource="{x:Bind RecommedList, Mode=OneWay}" ScrollViewer.IsHorizontalScrollChainingEnabled="False" SelectionMode="None" ItemTemplate="{StaticResource RecommedListItemTemplate}" ItemContainerStyle="{StaticResource LikeListItemContainerStyle}" >

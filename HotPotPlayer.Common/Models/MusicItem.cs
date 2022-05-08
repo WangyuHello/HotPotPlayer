@@ -14,7 +14,7 @@ namespace HotPotPlayer.Models
     public record MusicItem
     {
         public FileInfo Source { get; set; }
-        public string Title { get; set; }
+        public virtual string Title { get; set; }
         public virtual string[] Artists { get; set; }
         public virtual string Album { get; set; }
         public int Year { get; set; }
