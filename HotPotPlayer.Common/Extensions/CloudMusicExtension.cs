@@ -62,8 +62,11 @@ namespace HotPotPlayer.Extensions
                 Desc = json[descpath].ToString(),
                 Title = json["name"].ToString(),
                 PLId = json["id"].ToString(),
+                PlayCount = json[playcountpath].Value<long>(),
                 Subscribed = !(json["subscribed"] == null || json["subscribed"].ToString() == "False"),
             };
+
+            if (json[subcountpath] != null) ncp.BookCount = json[subcountpath].Value<long>();
 
             return ncp;
         }

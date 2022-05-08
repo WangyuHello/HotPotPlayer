@@ -163,6 +163,7 @@ namespace HotPotPlayer.Services
         public async Task GetRecommendPlayListAsync()
         {
             var json = await Api.RequestAsync(CloudMusicApiProviders.RecommendResource, new Dictionary<string, object> { ["uid"] = uid });
+            var playList = json["recommend"].ToArray();
 
         }
 
