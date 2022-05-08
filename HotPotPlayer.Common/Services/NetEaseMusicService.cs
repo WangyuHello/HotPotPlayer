@@ -75,6 +75,8 @@ namespace HotPotPlayer.Services
             
             var recList = await GetRecommendListAsync();
             RecommedList ??= new(recList);
+
+            await GetRecommendPlayListAsync();
         }
 
         public async Task<JObject> LoginAsync(string phone, string password)
@@ -156,6 +158,12 @@ namespace HotPotPlayer.Services
                 i.GetSource = () => GetSongUrlAsync(i.SId).Result;
                 return i;
             }).ToList();
+        }
+
+        public async Task GetRecommendPlayListAsync()
+        {
+            var json = await Api.RequestAsync(CloudMusicApiProviders.RecommendResource, new Dictionary<string, object> { ["uid"] = uid });
+
         }
 
         public async Task<string> GetSongUrlAsync(string id)
