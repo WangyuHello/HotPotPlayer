@@ -38,11 +38,12 @@ namespace HotPotPlayer.Helpers
         /// Initializes a new instance of the <see cref="ImageCache"/> class.
         /// </summary>
         /// <param name="dispatcherQueue">The DispatcherQueue that should be used to dispatch UI updates, or null if this is being called from the UI thread.</param>
-        public ImageCacheEx(DispatcherQueue dispatcherQueue = null)
+        public ImageCacheEx(DispatcherQueue dispatcherQueue = null): base()
         {
             DispatcherQueue = dispatcherQueue ?? DispatcherQueue.GetForCurrentThread();
             _extendedPropertyNames.Add(DateAccessedProperty);
             MaxMemoryCacheCount = 200;
+            CacheDuration = TimeSpan.FromDays(1);
         }
 
         /// <summary>

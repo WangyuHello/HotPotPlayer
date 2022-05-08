@@ -38,7 +38,6 @@ namespace HotPotPlayer.Helpers
         /// </summary>
         protected ImageCacheBaseEx()
         {
-            CacheDuration = TimeSpan.FromDays(1);
             _inMemoryFileStorage = new InMemoryStorage<T>();
             RetryCount = 1;
         }
