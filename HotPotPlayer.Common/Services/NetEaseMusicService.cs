@@ -1,4 +1,5 @@
 ﻿using HotPotPlayer.Extensions;
+using HotPotPlayer.Models;
 using Microsoft.UI.Dispatching;
 using NeteaseCloudMusicApi;
 using Newtonsoft.Json.Linq;
@@ -96,15 +97,24 @@ namespace HotPotPlayer.Services
             return qrCodeAsBitmapByteArr;
         }
 
-        public async Task GetLikeListAsync()
+        public async Task<List<CloudMusicItem>> GetLikeListAsync()
         {
             var json = await Api.RequestAsync(CloudMusicApiProviders.UserPlaylist, new Dictionary<string, object> { ["uid"] = uid });
             json = await Api.RequestAsync(CloudMusicApiProviders.PlaylistDetail, new Dictionary<string, object> { ["id"] = json["playlist"][0]["id"] });
             int[] trackIds = json["playlist"]["trackIds"].Select(t => (int)t["id"]).ToArray();
             json = await Api.RequestAsync(CloudMusicApiProviders.SongDetail, new Dictionary<string, object> { ["ids"] = string.Join(",", trackIds) });
-            Debug.WriteLine($"我喜欢的音乐（{trackIds.Length} 首）：");
-            foreach (JObject song in json["songs"])
-                Debug.WriteLine($"{string.Join(",", song["ar"].Select(t => t["name"]))} - {song["name"]}");
+            return json["songs"].ToArray().Select(s => {
+                var i = s.ToMusicItem();
+                i.GetSource = () => GetSongUrlAsync(i.SId).Result;
+                return i;
+            }).ToList();
+        }
+
+        public async Task<string> GetSongUrlAsync(string id)
+        {
+            var json = await Api.RequestAsync(CloudMusicApiProviders.SongUrl, new Dictionary<string, object> { ["id"] = id });
+            var url = json["data"][0]["url"].Value<string>();
+            return url;
         }
 
         public async Task<JObject> LogoutAsync()

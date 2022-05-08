@@ -5,12 +5,33 @@
     xmlns:local="using:HotPotPlayer.Pages"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    xmlns:v="using:HotPotPlayer.Video"
+    xmlns:cont2="using:HotPotPlayer.UI.Controls"
+    xmlns:models="using:HotPotPlayer.Models"
     mc:Ignorable="d"
     NavigationCacheMode="Enabled"
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
 
-    <StackPanel>
-        <TextBlock Text="{x:Bind NickName, Mode=OneWay}"/>
-    </StackPanel>
+    <Page.Resources>
+        <DataTemplate x:Key="LikeListItemTemplate" x:DataType="models:MusicItem">
+            <Button Style="{StaticResource AlbumGroupButton}" Click="MusicItemClick" Tag="{x:Bind }" x:Name="AlbumConnectedElement" >
+                <StackPanel Spacing="8" Margin="0,0,0,12">
+                    <cont2:ImageEx2 Source="{x:Bind Cover}" Style="{StaticResource LocalMusicImageStyle}" x:Phase="2" />
+                    <TextBlock Margin="8,0" Text="{x:Bind Title}" LineStackingStrategy="BaselineToBaseline" FontSize="14" MaxLines="2" TextTrimming="CharacterEllipsis" TextWrapping="Wrap" Height="40" ToolTipService.ToolTip="{x:Bind Title}" x:Phase="0" FontFamily="{ThemeResource MiSansBold}"/>
+                    <TextBlock Margin="8,0" Text="{x:Bind GetArtists()}" Foreground="Gray" ToolTipService.ToolTip="{x:Bind GetArtists()}" x:Phase="1" FontFamily="{ThemeResource MiSansRegular}"/>
+                </StackPanel>
+            </Button>
+        </DataTemplate>
+
+        <Style x:Key="LikeListItemContainerStyle" TargetType="GridViewItem" >
+            <Setter Property="Margin" Value="8" />
+        </Style>
+    </Page.Resources>
+
+    <Grid Margin="36,48,0,0">
+        <GridView x:Name="LikeListGridView" ItemsSource="{x:Bind LikeList, Mode=OneWay}" ScrollViewer.IsHorizontalScrollChainingEnabled="False" SelectionMode="None" ItemTemplate="{StaticResource LikeListItemTemplate}" ItemContainerStyle="{StaticResource LikeListItemContainerStyle}" >
+            <GridView.Footer>
+                <Grid Height="100"/>
+            </GridView.Footer>
+        </GridView>
+    </Grid>
 </Page>

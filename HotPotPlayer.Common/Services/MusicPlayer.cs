@@ -13,6 +13,7 @@ using Windows.Media;
 using Windows.Media.Core;
 using Windows.Media.Playback;
 using Windows.Storage;
+using Windows.Storage.Streams;
 using WinRT;
 
 namespace HotPotPlayer.Services
@@ -51,7 +52,7 @@ namespace HotPotPlayer.Services
 
         public TimeSpan? CurrentPlayingDuration
         {
-            get => _audioFile?.TotalTime;
+            get => _audioStream?.TotalTime;
         }
 
         private int _currentPlayingIndex = -1;
@@ -140,7 +141,7 @@ namespace HotPotPlayer.Services
         {
             get
             {
-                if(_audioFile == null)
+                if(_audioStream == null)
                 {
                     var volume = Config.GetConfig<float?>("Volume");
                     if (volume != null)
@@ -149,21 +150,29 @@ namespace HotPotPlayer.Services
                     }
                     return 0f;
                 }
+                else if (_audioStream is AudioFileReader fi)
+                {
+                    return fi.Volume;
+                }
                 else
                 {
-                    return _audioFile.Volume;
+                    return 1;
                 }
             }
             set 
             {
-                if (value != _audioFile.Volume)
+                if (_audioStream is AudioFileReader fi)
                 {
-                    if (_audioFile != null)
+                    if (value != fi.Volume)
                     {
-                        _audioFile.Volume = (float)value;
+                        if (fi != null)
+                        {
+                            fi.Volume = (float)value;
+                        }
+                        RaisePropertyChanged(nameof(Volume));
                     }
-                    RaisePropertyChanged(nameof(Volume));
                 }
+
             }
         }
 
@@ -380,7 +389,7 @@ namespace HotPotPlayer.Services
 
         public void PlayTo(TimeSpan to)
         {
-            _audioFile.CurrentTime = to;
+            _audioStream.CurrentTime = to;
         }
 
         public void TogglePlayMode()
@@ -405,7 +414,7 @@ namespace HotPotPlayer.Services
         }
 
         WaveOutEvent _outputDevice;
-        AudioFileReader _audioFile;
+        WaveStream _audioStream;
         readonly Timer _playerTimer;
         bool _isMusicSwitching;
 
@@ -428,7 +437,7 @@ namespace HotPotPlayer.Services
 
         private void PlayerTimerElapsed(object sender, ElapsedEventArgs e)
         {
-            var time = _audioFile.CurrentTime;
+            var time = _audioStream.CurrentTime;
             UIQueue.TryEnqueue(() =>
             {
                 try
@@ -460,26 +469,7 @@ namespace HotPotPlayer.Services
                 {
                     _outputDevice.Stop();
                 }
-                if (_audioFile == null)
-                {
-                    var volume = Volume;
-                    _audioFile = new AudioFileReader(music.Source.FullName);
-                    if (volume != 0)
-                    {
-                        _audioFile.Volume = volume;
-                    }
-                    _outputDevice.Init(_audioFile);
-                }
-                else
-                {
-                    _audioFile.Dispose();
-                    var tempVolume = (float)Volume;
-                    _audioFile = new AudioFileReader(music.Source.FullName)
-                    {
-                        Volume = tempVolume
-                    };
-                    _outputDevice.Init(_audioFile);
-                }
+                LoadMusic(music);
                 _outputDevice.Play();
                 e.Result = e.Argument;
 
@@ -494,6 +484,39 @@ namespace HotPotPlayer.Services
             }
 
             _isMusicSwitching = false;
+        }
+
+        private void LoadMusic(MusicItem music)
+        {
+            if (music is CloudMusicItem c)
+            {
+                _audioStream?.Dispose();
+                _audioStream = new MediaFoundationReader(c.GetSource());
+                _outputDevice.Init(_audioStream);
+            }
+            else
+            {
+                if (_audioStream == null)
+                {
+                    var volume = Volume;
+                    _audioStream = new AudioFileReader(music.Source.FullName);
+                    if (volume != 0 && _audioStream is AudioFileReader fi)
+                    {
+                        fi.Volume = volume;
+                    }
+                    _outputDevice.Init(_audioStream);
+                }
+                else
+                {
+                    _audioStream.Dispose();
+                    var tempVolume = (float)Volume;
+                    _audioStream = new AudioFileReader(music.Source.FullName)
+                    {
+                        Volume = tempVolume
+                    };
+                    _outputDevice.Init(_audioStream);
+                }
+            }
         }
 
         private async void PreCacheNextMusic(int index)
@@ -563,7 +586,7 @@ namespace HotPotPlayer.Services
         {
             _playerStarter?.Dispose();
             _outputDevice?.Dispose();
-            _audioFile?.Dispose();
+            _audioStream?.Dispose();
             _playerTimer?.Dispose();
         }
 
@@ -673,16 +696,30 @@ namespace HotPotPlayer.Services
         {
             SMTC.PlaybackStatus = MediaPlaybackStatus.Playing;
             var music = CurrentPlayList[index];
-            var mediaFile = await StorageFile.GetFileFromPathAsync(music.Source.FullName);
-            bool copyFromFileAsyncSuccessful;
-            try
+            if (music is CloudMusicItem c)
             {
-                copyFromFileAsyncSuccessful = await SMTC.DisplayUpdater.CopyFromFileAsync(MediaPlaybackType.Music, mediaFile);
+                SystemMediaTransportControlsDisplayUpdater updater = SMTC.DisplayUpdater;
+
+                updater.Type = MediaPlaybackType.Music;
+                updater.MusicProperties.Artist = c.GetArtists();
+                updater.MusicProperties.Title = c.Title;
+                updater.Thumbnail = RandomAccessStreamReference.CreateFromUri(c.Cover);
+
             }
-            catch (Exception)
+            else
             {
-                
+                var mediaFile = await StorageFile.GetFileFromPathAsync(music.Source.FullName);
+                bool copyFromFileAsyncSuccessful;
+                try
+                {
+                    copyFromFileAsyncSuccessful = await SMTC.DisplayUpdater.CopyFromFileAsync(MediaPlaybackType.Music, mediaFile);
+                }
+                catch (Exception)
+                {
+
+                }
             }
+
             SMTC.DisplayUpdater.Update();
         }
     }

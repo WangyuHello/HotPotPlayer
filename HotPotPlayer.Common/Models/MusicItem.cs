@@ -15,8 +15,8 @@ namespace HotPotPlayer.Models
     {
         public FileInfo Source { get; set; }
         public string Title { get; set; }
-        public string[] Artists { get; set; }
-        public string Album { get; set; }
+        public virtual string[] Artists { get; set; }
+        public virtual string Album { get; set; }
         public int Year { get; set; }
         public TimeSpan Duration { get; set; }
         public int Track { get; set; }
@@ -24,8 +24,7 @@ namespace HotPotPlayer.Models
         public long BitRate { get; set; }
         public int SampleRate { get; set; }
         public int BitDepth { get; set; }
-
-        public Uri Cover { get; set; }
+        public virtual Uri Cover { get; set; }
         public Color MainColor { get; set; }
         public DateTime LastWriteTime { get; set; }
         public string[] AlbumArtists { get; set; }

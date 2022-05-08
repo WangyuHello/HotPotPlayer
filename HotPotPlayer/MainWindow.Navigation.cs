@@ -70,7 +70,7 @@ namespace HotPotPlayer
         private void MainFrame_Navigated(object sender, NavigationEventArgs e)
         {
             var navPageName = e.SourcePageType.FullName.Replace("HotPotPlayer.Pages.", "");
-            if (navPageName.StartsWith("Music"))
+            if (navPageName.StartsWith("Music") || navPageName.StartsWith("CloudMusic"))
             {
                 MusicPlayer.ShowPlayBar();
             }
