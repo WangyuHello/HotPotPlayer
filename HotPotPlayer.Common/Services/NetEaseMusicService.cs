@@ -110,6 +110,16 @@ namespace HotPotPlayer.Services
             }).ToList();
         }
 
+        public async Task<List<CloudMusicItem>> GetRecommendListAsync()
+        {
+            var json = await Api.RequestAsync(CloudMusicApiProviders.RecommendSongs, new Dictionary<string, object> { ["uid"] = uid });
+            return json["data"]["dailySongs"].ToArray().Select(s => {
+                var i = s.ToMusicItem();
+                i.GetSource = () => GetSongUrlAsync(i.SId).Result;
+                return i;
+            }).ToList();
+        }
+
         public async Task<string> GetSongUrlAsync(string id)
         {
             var json = await Api.RequestAsync(CloudMusicApiProviders.SongUrl, new Dictionary<string, object> { ["id"] = id });

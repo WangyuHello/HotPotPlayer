@@ -5,6 +5,8 @@ using Microsoft.UI.Dispatching;
 using NAudio.Wave;
 using NAudio.Wave.SampleProviders;
 using System;
+using System.Collections;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Runtime.InteropServices;
@@ -218,6 +220,13 @@ namespace HotPotPlayer.Services
         {
             CurrentPlayList = new ObservableCollection<MusicItem>() { music };
             PlayNext(0);
+        }
+
+        public void PlayNext(MusicItem music, IEnumerable<MusicItem> list)
+        {
+            CurrentPlayList = new ObservableCollection<MusicItem>(list);
+            var index = CurrentPlayList.IndexOf(music);
+            PlayNext(index);
         }
 
         public void PlayNextContinue(MusicItem music)

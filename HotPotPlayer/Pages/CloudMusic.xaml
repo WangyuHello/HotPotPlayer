@@ -22,17 +22,42 @@
             </Button>
         </DataTemplate>
 
+        <DataTemplate x:Key="RecommedListItemTemplate" x:DataType="models:MusicItem">
+            <Button Style="{StaticResource AlbumGroupButton}" Click="MusicItemClickInRecommed" Tag="{x:Bind }" x:Name="AlbumConnectedElement" >
+                <StackPanel Spacing="8" Margin="0,0,0,12">
+                    <cont2:ImageEx2 Source="{x:Bind Cover}" Style="{StaticResource LocalMusicImageStyle}" x:Phase="2" />
+                    <TextBlock Margin="8,0" Text="{x:Bind Title}" LineStackingStrategy="BaselineToBaseline" FontSize="14" MaxLines="2" TextTrimming="CharacterEllipsis" TextWrapping="Wrap" Height="40" ToolTipService.ToolTip="{x:Bind Title}" x:Phase="0" FontFamily="{ThemeResource MiSansBold}"/>
+                    <TextBlock Margin="8,0" Text="{x:Bind GetArtists()}" Foreground="Gray" ToolTipService.ToolTip="{x:Bind GetArtists()}" x:Phase="1" FontFamily="{ThemeResource MiSansRegular}"/>
+                </StackPanel>
+            </Button>
+        </DataTemplate>
+
         <Style x:Key="LikeListItemContainerStyle" TargetType="GridViewItem" >
             <Setter Property="Margin" Value="8" />
         </Style>
+
+        <DataTemplate x:Key="MusicPivotHeaderTemplate">
+            <TextBlock Text="{Binding }" FontSize="24" FontWeight="Medium" FontFamily="{ThemeResource MiSansRegular}"/>
+        </DataTemplate>
     </Page.Resources>
 
-    <StackPanel Margin="0,48,0,0" HorizontalAlignment="Left">
-        <TextBlock Margin="36,0,0,12" FontSize="24">我喜欢的音乐</TextBlock>
-        <GridView Margin="30,0,0,0" x:Name="LikeListGridView" ItemsSource="{x:Bind LikeList, Mode=OneWay}" ScrollViewer.IsHorizontalScrollChainingEnabled="False" SelectionMode="None" ItemTemplate="{StaticResource LikeListItemTemplate}" ItemContainerStyle="{StaticResource LikeListItemContainerStyle}" >
-            <GridView.Footer>
-                <Grid Height="100"/>
-            </GridView.Footer>
-        </GridView>
-    </StackPanel>
+    <Grid Padding="36,28,0,0" >
+        <Pivot x:Name="RootPivot" HeaderTemplate="{StaticResource MusicPivotHeaderTemplate}">
+            <PivotItem Header="每日推荐" Margin="0">
+                <GridView x:Name="SuggestListGridView" ItemsSource="{x:Bind RecommedList, Mode=OneWay}" ScrollViewer.IsHorizontalScrollChainingEnabled="False" SelectionMode="None" ItemTemplate="{StaticResource RecommedListItemTemplate}" ItemContainerStyle="{StaticResource LikeListItemContainerStyle}" >
+                    <GridView.Footer>
+                        <Grid Height="100"/>
+                    </GridView.Footer>
+                </GridView>
+            </PivotItem>
+            <PivotItem Header="我喜欢的音乐" Margin="0" >
+                <GridView x:Name="LikeListGridView" ItemsSource="{x:Bind LikeList, Mode=OneWay}" ScrollViewer.IsHorizontalScrollChainingEnabled="False" SelectionMode="None" ItemTemplate="{StaticResource LikeListItemTemplate}" ItemContainerStyle="{StaticResource LikeListItemContainerStyle}" >
+                    <GridView.Footer>
+                        <Grid Height="100"/>
+                    </GridView.Footer>
+                </GridView>
+            </PivotItem>
+        </Pivot>
+
+    </Grid>
 </Page>

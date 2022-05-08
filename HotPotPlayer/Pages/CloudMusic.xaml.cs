@@ -56,12 +56,19 @@ namespace HotPotPlayer.Pages
         }
 
         private ObservableCollection<CloudMusicItem> _likeList;
-
         public ObservableCollection<CloudMusicItem> LikeList
         {
             get => _likeList;
             set => Set(ref _likeList, value);
         }
+
+        private ObservableCollection<CloudMusicItem> _recommedList;
+        public ObservableCollection<CloudMusicItem> RecommedList
+        {
+            get => _recommedList;
+            set => Set(ref _recommedList, value);
+        }
+
         bool IsFirstNavigate = true;
 
         protected override async void OnNavigatedTo(NavigationEventArgs e)
@@ -79,19 +86,33 @@ namespace HotPotPlayer.Pages
             var (uid, name) = await CloudMusicService.GetUidAsync();
             NickName = name;
             var likeList = await CloudMusicService.GetLikeListAsync();
-            LikeList ??= new ObservableCollection<CloudMusicItem>();
+            LikeList ??= new();
             LikeList.Clear();
             foreach (var item in likeList)
             {
                 LikeList.Add(item);
             }
+            var recList = await CloudMusicService.GetRecommendListAsync();
+            RecommedList ??= new();
+            RecommedList.Clear();
+            foreach (var item in recList)
+            {
+                RecommedList.Add(item);
+            }
+
             IsFirstNavigate = false;
         }
 
         private void MusicItemClick(object sender, RoutedEventArgs e)
         {
             var music = ((Button)sender).Tag as CloudMusicItem;
-            MusicPlayer.PlayNext(music);
+            MusicPlayer.PlayNext(music, LikeList);
+        }
+
+        private void MusicItemClickInRecommed(object sender, RoutedEventArgs e)
+        {
+            var music = ((Button)sender).Tag as CloudMusicItem;
+            MusicPlayer.PlayNext(music, RecommedList);
         }
     }
 }
