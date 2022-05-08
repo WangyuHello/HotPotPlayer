@@ -3,6 +3,7 @@ using HotPotPlayer.Models;
 using HotPotPlayer.Models.CloudMusic;
 using Microsoft.UI.Dispatching;
 using NAudio.Wave;
+using NAudio.Wave.SampleProviders;
 using System;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
@@ -142,7 +143,7 @@ namespace HotPotPlayer.Services
         {
             get
             {
-                if(_audioStream == null)
+                if(_volumeSample == null)
                 {
                     var volume = Config.GetConfig<float?>("Volume");
                     if (volume != null)
@@ -151,29 +152,21 @@ namespace HotPotPlayer.Services
                     }
                     return 0f;
                 }
-                else if (_audioStream is AudioFileReader fi)
-                {
-                    return fi.Volume;
-                }
                 else
                 {
-                    return 1;
+                    return _volumeSample.Volume;
                 }
             }
             set 
             {
-                if (_audioStream is AudioFileReader fi)
+                if (value != _volumeSample.Volume)
                 {
-                    if (value != fi.Volume)
+                    if (_volumeSample != null)
                     {
-                        if (fi != null)
-                        {
-                            fi.Volume = (float)value;
-                        }
-                        RaisePropertyChanged(nameof(Volume));
+                        _volumeSample.Volume = (float)value;
                     }
+                    RaisePropertyChanged(nameof(Volume));
                 }
-
             }
         }
 
@@ -416,6 +409,7 @@ namespace HotPotPlayer.Services
 
         WaveOutEvent _outputDevice;
         WaveStream _audioStream;
+        VolumeSampleProvider _volumeSample;
         readonly Timer _playerTimer;
         bool _isMusicSwitching;
 
@@ -489,34 +483,40 @@ namespace HotPotPlayer.Services
 
         private void LoadMusic(MusicItem music)
         {
-            if (music is CloudMusicItem c)
+            if (_audioStream == null)
             {
-                _audioStream?.Dispose();
-                _audioStream = new MediaFoundationReader(c.GetSource());
-                _outputDevice.Init(_audioStream);
+                var volume = Volume;
+
+                _audioStream = music switch
+                {
+                    CloudMusicItem c2 => new MediaFoundationReader(c2.GetSource()),
+                    _ => new AudioFileReader(music.Source.FullName)
+                };
+                _volumeSample = new(_audioStream.ToSampleProvider());
+
+                if (volume != 0)
+                {
+                    _volumeSample.Volume = volume;
+                }
+                _outputDevice.Init(_volumeSample);
             }
             else
             {
-                if (_audioStream == null)
+                _audioStream.Dispose();
+                var tempVolume = (float)Volume;
+
+                _audioStream = music switch
                 {
-                    var volume = Volume;
-                    _audioStream = new AudioFileReader(music.Source.FullName);
-                    if (volume != 0 && _audioStream is AudioFileReader fi)
-                    {
-                        fi.Volume = volume;
-                    }
-                    _outputDevice.Init(_audioStream);
-                }
-                else
+                    CloudMusicItem c2 => new MediaFoundationReader(c2.GetSource()),
+                    _ => new AudioFileReader(music.Source.FullName)
+                };
+
+                _volumeSample = new(_audioStream.ToSampleProvider())
                 {
-                    _audioStream.Dispose();
-                    var tempVolume = (float)Volume;
-                    _audioStream = new AudioFileReader(music.Source.FullName)
-                    {
-                        Volume = tempVolume
-                    };
-                    _outputDevice.Init(_audioStream);
-                }
+                    Volume = tempVolume
+                };
+
+                _outputDevice.Init(_volumeSample);
             }
         }
 
