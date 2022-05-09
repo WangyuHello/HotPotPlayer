@@ -4,11 +4,13 @@ using Microsoft.UI;
 using Microsoft.UI.Windowing;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
+using Microsoft.UI.Xaml.Hosting;
 using Microsoft.UI.Xaml.Media.Animation;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
+using System.Numerics;
 using System.Text;
 using System.Threading.Tasks;
 using WinUIEx;
@@ -54,10 +56,16 @@ namespace HotPotPlayer
                 if (musicPlayer.IsPlayListBarVisible)
                 {
                     m_AppWindow.TitleBar.ButtonForegroundColor = Colors.White;
+                    var visual = ElementCompositionPreview.GetElementVisual(ContentRoot);
+                    visual.Scale = new Vector3(0.8f, 0.8f, 1);
+                    visual.Offset = new Vector3(-400, 0, 0);
                 }
                 else
                 {
                     m_AppWindow.TitleBar.ButtonForegroundColor = Colors.Black;
+                    var visual = ElementCompositionPreview.GetElementVisual(ContentRoot);
+                    visual.Scale = new Vector3(1, 1, 1);
+                    visual.Offset = new Vector3(0, 0, 0);
                 }
             }
             else if(e.PropertyName == "IsPlayScreenVisible")
@@ -65,6 +73,7 @@ namespace HotPotPlayer
                 var musicPlayer = (MusicPlayer)sender;
                 SetDragRegionForCustomTitleBar(m_AppWindow, !musicPlayer.IsPlayScreenVisible);
             }
+
         }
 
         private void AppTitleBar_SizeChanged(object sender, SizeChangedEventArgs e)

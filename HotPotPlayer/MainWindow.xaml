@@ -7,13 +7,14 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
     xmlns:controls="using:HotPotPlayer.Controls"
     xmlns:animations="using:CommunityToolkit.WinUI.UI.Animations"
+    xmlns:ui="using:CommunityToolkit.WinUI.UI"
     xmlns:animatedvisuals="using:Microsoft.UI.Xaml.Controls.AnimatedVisuals"
     xmlns:model="using:HotPotPlayer.Models"
     mc:Ignorable="d"
     >
 
-    <Grid x:Name="Root" Loaded="MainWindow_Loaded" PointerReleased="MainWindow_PointerReleased">
-        <Grid>
+    <Grid x:Name="Root" Loaded="MainWindow_Loaded" PointerReleased="MainWindow_PointerReleased" Background="White">
+        <Grid x:Name="ContentRoot" ui:VisualExtensions.NormalizedCenterPoint="0.5" ui:VisualExtensions.RotationAxis="0,1,0" >
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="60" />
                 <ColumnDefinition Width="*" />
@@ -31,6 +32,11 @@
                 
             </controls:MainSidebar>
             <Frame x:Name="MainFrame" Grid.Column="1" Navigated="MainFrame_Navigated" />
+
+            <animations:Implicit.Animations>
+                <animations:OffsetAnimation Duration="0:0:0.4" />
+                <animations:ScaleAnimation Duration="0:0:0.4"/>
+            </animations:Implicit.Animations>
         </Grid>
 
         <controls:PlayScreen x:Name="PlayScreen" Visibility="{x:Bind MusicPlayer.IsPlayScreenVisible, Mode=OneWay}" >

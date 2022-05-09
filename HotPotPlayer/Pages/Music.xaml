@@ -121,7 +121,9 @@
     </Page.Resources>
 
     <Grid x:Name="Root" Background="White" Padding="36,28,0,0">
-        <Pivot x:Name="RootPivot" HeaderTemplate="{StaticResource GeneralPivotHeaderTemplate}">
+        <Pivot x:Name="RootPivot" HeaderTemplate="{StaticResource GeneralPivotHeaderTemplate}" 
+               ui:VisualExtensions.NormalizedCenterPoint="0.5"
+               >
             <PivotItem Header="专辑" Margin="0" >
                 <SemanticZoom>
                     <SemanticZoom.ZoomedInView>
