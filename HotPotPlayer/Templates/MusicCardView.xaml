@@ -1,0 +1,44 @@
+﻿<ResourceDictionary
+    x:Class="HotPotPlayer.Templates.MusicCardView"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:models="using:HotPotPlayer.Models"
+    xmlns:cont2="using:HotPotPlayer.UI.Controls"
+    >
+
+    <DataTemplate x:Key="MusicCardViewTemplate" x:DataType="models:MusicItem">
+        <StackPanel 
+            Spacing="8" 
+            Padding="0,0,0,12"
+            >
+            <cont2:ImageEx2 
+                Source="{x:Bind Cover}" 
+                Style="{StaticResource LocalMusicImageStyle}" 
+                x:Phase="2" 
+                />
+            <TextBlock 
+                Margin="8,0" 
+                Text="{x:Bind Title}" 
+                LineStackingStrategy="BaselineToBaseline" 
+                FontSize="14" 
+                MaxLines="2" 
+                TextTrimming="CharacterEllipsis" 
+                TextWrapping="Wrap" 
+                Height="40" 
+                ToolTipService.ToolTip="{x:Bind Title}" 
+                x:Phase="0" 
+                FontFamily="{ThemeResource MiSansBold}"
+                />
+            <TextBlock 
+                Margin="8,0" 
+                Text="{x:Bind GetArtists()}" 
+                Foreground="Gray" 
+                ToolTipService.ToolTip="{x:Bind GetArtists()}" 
+                x:Phase="1" 
+                TextTrimming="CharacterEllipsis" 
+                FontFamily="{ThemeResource MiSansRegular}"
+                />
+        </StackPanel>
+    </DataTemplate>
+    
+</ResourceDictionary>

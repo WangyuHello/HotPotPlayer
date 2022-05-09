@@ -62,9 +62,12 @@
     <None Remove="Pages\Video.xaml" />
     <None Remove="Styles\Buttons.xaml" />
     <None Remove="Styles\Colors.xaml" />
+    <None Remove="Styles\GridView.xaml" />
     <None Remove="Styles\Images.xaml" />
     <None Remove="Styles\Sliders.xaml" />
     <None Remove="Styles\VLC.xaml" />
+    <None Remove="Templates\MusicCardView.xaml" />
+    <None Remove="Templates\Pivot.xaml" />
   </ItemGroup>
 
   <ItemGroup>
@@ -112,6 +115,18 @@
     <ProjectReference Include="..\HotPotPlayer.VideoHost\HotPotPlayer.VideoHost.csproj" />
     <ProjectReference Include="..\HotPotPlayer.Video\HotPotPlayer.Video.csproj" />
     <ProjectReference Include="..\libvlcsharp\src\LibVLCSharp\LibVLCSharp.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Page Update="Templates\Pivot.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Page Update="Styles\GridView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
   </ItemGroup>
 
   <ItemGroup>
@@ -224,6 +239,12 @@
 
   <ItemGroup>
     <Page Update="Pages\CloudMusicSub\Login.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Page Update="Templates\MusicCardView.xaml">
       <Generator>MSBuild:Compile</Generator>
     </Page>
   </ItemGroup>

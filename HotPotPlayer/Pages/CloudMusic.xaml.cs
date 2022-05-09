@@ -66,16 +66,16 @@ namespace HotPotPlayer.Pages
             IsFirstNavigate = false;
         }
 
-        private void MusicItemClick(object sender, RoutedEventArgs e)
+        private void RecommedListGridView_ItemClick(object sender, ItemClickEventArgs e)
         {
-            var music = ((Button)sender).Tag as CloudMusicItem;
-            MusicPlayer.PlayNext(music, CloudMusicService.LikeList);
+            var music = e.ClickedItem as CloudMusicItem;
+            MusicPlayer.PlayNext(music, CloudMusicService.RecommedList);
         }
 
-        private void MusicItemClickInRecommed(object sender, RoutedEventArgs e)
+        private void LikeListGridView_ItemClick(object sender, ItemClickEventArgs e)
         {
-            var music = ((Button)sender).Tag as CloudMusicItem;
-            MusicPlayer.PlayNext(music, CloudMusicService.RecommedList);
+            var music = e.ClickedItem as CloudMusicItem;
+            MusicPlayer.PlayNext(music, CloudMusicService.LikeList);
         }
     }
 }

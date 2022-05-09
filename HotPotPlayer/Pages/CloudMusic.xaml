@@ -7,51 +7,37 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:cont2="using:HotPotPlayer.UI.Controls"
     xmlns:models="using:HotPotPlayer.Models"
+    xmlns:tplt="using:HotPotPlayer.Templates"
     mc:Ignorable="d"
     NavigationCacheMode="Enabled"
-    Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
-
-    <Page.Resources>
-        <DataTemplate x:Key="LikeListItemTemplate" x:DataType="models:MusicItem">
-            <Button Style="{StaticResource AlbumGroupButton}" Click="MusicItemClick" Tag="{x:Bind }" x:Name="AlbumConnectedElement" >
-                <StackPanel Spacing="8" Margin="0,0,0,12">
-                    <cont2:ImageEx2 Source="{x:Bind Cover}" Style="{StaticResource LocalMusicImageStyle}" x:Phase="2" />
-                    <TextBlock Margin="8,0" Text="{x:Bind Title}" LineStackingStrategy="BaselineToBaseline" FontSize="14" MaxLines="2" TextTrimming="CharacterEllipsis" TextWrapping="Wrap" Height="40" ToolTipService.ToolTip="{x:Bind Title}" x:Phase="0" FontFamily="{ThemeResource MiSansBold}"/>
-                    <TextBlock Margin="8,0" Text="{x:Bind GetArtists()}" Foreground="Gray" ToolTipService.ToolTip="{x:Bind GetArtists()}" x:Phase="1" FontFamily="{ThemeResource MiSansRegular}"/>
-                </StackPanel>
-            </Button>
-        </DataTemplate>
-
-        <DataTemplate x:Key="RecommedListItemTemplate" x:DataType="models:MusicItem">
-            <Button Style="{StaticResource AlbumGroupButton}" Click="MusicItemClickInRecommed" Tag="{x:Bind }" x:Name="AlbumConnectedElement" >
-                <StackPanel Spacing="8" Margin="0,0,0,12">
-                    <cont2:ImageEx2 Source="{x:Bind Cover}" Style="{StaticResource LocalMusicImageStyle}" x:Phase="2" />
-                    <TextBlock Margin="8,0" Text="{x:Bind Title}" LineStackingStrategy="BaselineToBaseline" FontSize="14" MaxLines="2" TextTrimming="CharacterEllipsis" TextWrapping="Wrap" Height="40" ToolTipService.ToolTip="{x:Bind Title}" x:Phase="0" FontFamily="{ThemeResource MiSansBold}"/>
-                    <TextBlock Margin="8,0" Text="{x:Bind GetArtists()}" Foreground="Gray" ToolTipService.ToolTip="{x:Bind GetArtists()}" x:Phase="1" FontFamily="{ThemeResource MiSansRegular}"/>
-                </StackPanel>
-            </Button>
-        </DataTemplate>
-
-        <Style x:Key="LikeListItemContainerStyle" TargetType="GridViewItem" >
-            <Setter Property="Margin" Value="8" />
-        </Style>
-
-        <DataTemplate x:Key="MusicPivotHeaderTemplate">
-            <TextBlock Text="{Binding }" FontSize="24" FontWeight="Medium" FontFamily="{ThemeResource MiSansRegular}"/>
-        </DataTemplate>
-    </Page.Resources>
+    Background="White"
+    >
 
     <Grid Background="White">
-        <Pivot Margin="36,28,0,0"  x:Name="RootPivot" HeaderTemplate="{StaticResource MusicPivotHeaderTemplate}">
-            <PivotItem Header="每日推荐" Margin="0">
-                <GridView x:Name="SuggestListGridView" ItemsSource="{x:Bind CloudMusicService.RecommedList, Mode=OneWay}" ScrollViewer.IsHorizontalScrollChainingEnabled="False" SelectionMode="None" ItemTemplate="{StaticResource RecommedListItemTemplate}" ItemContainerStyle="{StaticResource LikeListItemContainerStyle}" >
+        <Pivot 
+            Margin="36,28,0,0" 
+            x:Name="RootPivot" 
+            HeaderTemplate="{StaticResource GeneralPivotHeaderTemplate}"
+            >
+            <PivotItem Header="每日推荐" >
+                <GridView 
+                    x:Name="RecommedListGridView" 
+                    Style="{StaticResource CardGridViewStyle}"
+                    ItemsSource="{x:Bind CloudMusicService.RecommedList, Mode=OneWay}" 
+                    ItemClick="RecommedListGridView_ItemClick"
+                    >
                     <GridView.Footer>
                         <Grid Height="100"/>
                     </GridView.Footer>
                 </GridView>
             </PivotItem>
-            <PivotItem Header="我喜欢的音乐" Margin="0" >
-                <GridView x:Name="LikeListGridView" ItemsSource="{x:Bind CloudMusicService.LikeList, Mode=OneWay}" ScrollViewer.IsHorizontalScrollChainingEnabled="False" SelectionMode="None" ItemTemplate="{StaticResource LikeListItemTemplate}" ItemContainerStyle="{StaticResource LikeListItemContainerStyle}" >
+            <PivotItem Header="我喜欢的音乐" >
+                <GridView 
+                    x:Name="LikeListGridView" 
+                    Style="{StaticResource CardGridViewStyle}"
+                    ItemsSource="{x:Bind CloudMusicService.LikeList, Mode=OneWay}" 
+                    ItemClick="LikeListGridView_ItemClick"
+                    >
                     <GridView.Footer>
                         <Grid Height="100"/>
                     </GridView.Footer>
@@ -59,9 +45,24 @@
             </PivotItem>
         </Pivot>
 
-        <StackPanel Margin="0,6,160,0" Orientation="Horizontal" VerticalAlignment="Top" HorizontalAlignment="Right" Spacing="8">
-            <cont2:ImageEx2 Source="{x:Bind CloudMusicService.Avatar, Mode=OneWay}" Style="{StaticResource LocalMusicImageStyle}" Width="32" Height="32" CornerRadius="16"/>
-            <TextBlock VerticalAlignment="Center" Text="{x:Bind CloudMusicService.NickName, Mode=OneWay}" FontFamily="{ThemeResource MiSansRegular}"/>
+        <StackPanel 
+            Margin="0,6,160,0" 
+            Orientation="Horizontal" 
+            VerticalAlignment="Top" 
+            HorizontalAlignment="Right" 
+            Spacing="8"
+            >
+            <cont2:ImageEx2 
+                Source="{x:Bind CloudMusicService.Avatar, Mode=OneWay}" 
+                Style="{StaticResource LocalMusicImageStyle}" 
+                Width="32" Height="32"
+                CornerRadius="16"
+                />
+            <TextBlock 
+                VerticalAlignment="Center" 
+                Text="{x:Bind CloudMusicService.NickName, Mode=OneWay}" 
+                FontFamily="{ThemeResource MiSansRegular}"
+                />
         </StackPanel>
     </Grid>
 </Page>
