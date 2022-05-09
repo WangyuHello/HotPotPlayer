@@ -25,28 +25,6 @@
     <Page.Resources>
         <CollectionViewSource x:Name="LocalAlbumGroups" Source="{x:Bind MusicService.LocalAlbumGroup}" IsSourceGrouped="True" />
 
-
-        <DataTemplate x:Key="LocalPlayListTemplate" x:DataType="models:PlayListItem">
-            <Button Style="{StaticResource AlbumGroupButton}" Click="PlayListClick" Tag="{x:Bind }" x:Name="PlayListConnectedElement">
-                <StackPanel Spacing="8" Margin="0,0,0,12">
-                    <cont2:ImageEx2 Source="{x:Bind Cover}" Style="{StaticResource LocalMusicImageStyle}" x:Phase="1"/>
-                    <TextBlock Margin="8,0" Text="{x:Bind Title}" LineStackingStrategy="BaselineToBaseline" FontSize="18" TextTrimming="CharacterEllipsis" TextWrapping="Wrap" ToolTipService.ToolTip="{x:Bind Title}" FontFamily="{ThemeResource MiSansMedium}"/>
-                </StackPanel>
-            </Button>
-        </DataTemplate>
-
-        <Style x:Key="LocalAlbumContainerStyle" TargetType="GridViewItem" >
-            <Setter Property="Margin" Value="8" />
-        </Style>
-
-        <DataTemplate x:Key="LocalAlbumZoomedInGroupHeaderTemplate" x:DataType="collection:IReadOnlyObservableGroup">
-            <TextBlock Text="{x:Bind Key.ToString()}" Foreground="{ThemeResource ApplicationForegroundThemeBrush}" Style="{StaticResource SubtitleTextBlockStyle}" FontFamily="{ThemeResource MiSansRegular}"/>
-        </DataTemplate>
-
-        <DataTemplate x:Key="LocalAlbumZoomedOutTemplate" x:DataType="muxdata:ICollectionViewGroup">
-            <TextBlock Margin="8" Text="{x:Bind ((collection:IReadOnlyObservableGroup)Group).Key.ToString()}" FontSize="20" TextWrapping="Wrap" FontFamily="{ThemeResource MiSansRegular}"/>
-        </DataTemplate>
-
         <tplt:EvenOldTemplateSelector x:Key="EvenOldAlbumPopupTemplate" >
             <tplt:EvenOldTemplateSelector.EvenTemplate>
                 <DataTemplate x:DataType="models:MusicItem">
@@ -166,7 +144,7 @@
                             ItemClick="AlbumGridView_ItemClick"
                             >
                             <GridView.GroupStyle>
-                                <GroupStyle HeaderTemplate="{StaticResource LocalAlbumZoomedInGroupHeaderTemplate}" />
+                                <GroupStyle HeaderTemplate="{StaticResource GeneralZoomedInGroupHeaderTemplate}" />
                             </GridView.GroupStyle>
                             <GridView.Footer>
                                 <Grid Height="100"/>
@@ -174,12 +152,18 @@
                         </GridView>
                     </SemanticZoom.ZoomedInView>
                     <SemanticZoom.ZoomedOutView>
-                        <GridView ItemsSource="{x:Bind LocalAlbumGroups.View.CollectionGroups}" SelectionMode="None" ItemTemplate="{StaticResource LocalAlbumZoomedOutTemplate}" Padding="24" VerticalAlignment="Center"/>
+                        <GridView 
+                            ItemsSource="{x:Bind LocalAlbumGroups.View.CollectionGroups}" Style="{StaticResource GeneralZoomOutGridViewStyle}"/>
                     </SemanticZoom.ZoomedOutView>
                 </SemanticZoom>
             </PivotItem>
             <PivotItem Header="播放列表" Margin="0" >
-                <GridView x:Name="PlayListGridView" ItemsSource="{x:Bind MusicService.LocalPlayListList, Mode=OneWay}" ScrollViewer.IsHorizontalScrollChainingEnabled="False" SelectionMode="None" ItemTemplate="{StaticResource LocalPlayListTemplate}" ItemContainerStyle="{StaticResource LocalAlbumContainerStyle}" >
+                <GridView 
+                    x:Name="PlayListGridView" 
+                    ItemsSource="{x:Bind MusicService.LocalPlayListList, Mode=OneWay}" 
+                    Style="{StaticResource PlayListCardViewStyle}" 
+                    ItemClick="PlayListGridView_ItemClick"
+                    >
                     <GridView.Footer>
                         <Grid Height="100"/>
                     </GridView.Footer>

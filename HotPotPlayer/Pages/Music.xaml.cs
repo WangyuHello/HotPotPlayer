@@ -89,18 +89,6 @@ namespace HotPotPlayer.Pages
             return state == LocalServiceState.Loading ? Visibility.Visible : Visibility.Collapsed;
         }
 
-        private void PlayListClick(object sender, RoutedEventArgs e)
-        {
-            var playList = ((Button)sender).Tag as PlayListItem;
-            SelectedPlayList = playList;
-
-            var ani = PlayListGridView.PrepareConnectedAnimation("forwardAnimation2", playList, "PlayListConnectedElement");
-            ani.Configuration = new BasicConnectedAnimationConfiguration();
-            ani.TryStart(PlayListOverlayTarget);
-
-            PlayListOverlayPopup.Visibility = Visibility.Visible;
-        }
-
         MusicPlayer MusicPlayer => ((App)Application.Current).MusicPlayer;
 
         private void AlbumPopupListClick(object sender, RoutedEventArgs e)
@@ -172,7 +160,7 @@ namespace HotPotPlayer.Pages
         {
             var anim = ConnectedAnimationService.GetForCurrentView().PrepareToAnimate("backwardsAnimation2", PlayListOverlayTarget);
             anim.Configuration = new BasicConnectedAnimationConfiguration();
-            await PlayListGridView.TryStartConnectedAnimationAsync(anim, SelectedPlayList, "PlayListConnectedElement");
+            await PlayListGridView.TryStartConnectedAnimationAsync(anim, SelectedPlayList, "PlayListCardConnectedElement");
             PlayListOverlayPopup.Visibility = Visibility.Collapsed;
         }
 
@@ -187,6 +175,18 @@ namespace HotPotPlayer.Pages
             ani.TryStart(AlbumOverlayTarget);
 
             AlbumOverlayPopup.Visibility = Visibility.Visible;
+        }
+
+        private void PlayListGridView_ItemClick(object sender, ItemClickEventArgs e)
+        {
+            var playList = e.ClickedItem as PlayListItem;
+            SelectedPlayList = playList;
+
+            var ani = PlayListGridView.PrepareConnectedAnimation("forwardAnimation2", playList, "PlayListCardConnectedElement");
+            ani.Configuration = new BasicConnectedAnimationConfiguration();
+            ani.TryStart(PlayListOverlayTarget);
+
+            PlayListOverlayPopup.Visibility = Visibility.Visible;
         }
     }
 

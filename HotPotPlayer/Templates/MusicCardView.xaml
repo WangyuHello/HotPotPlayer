@@ -82,6 +82,33 @@
                 />
         </StackPanel>
     </DataTemplate>
+    
+    <DataTemplate x:Key="PlayListCardViewTemplate" x:DataType="models:PlayListItem">
+        <StackPanel 
+            Spacing="8" 
+            Padding="0,0,0,12" 
+            x:Name="PlayListCardConnectedElement"
+            BorderBrush="{ThemeResource ButtonBorderBrush}"
+            BorderThickness="{ThemeResource ButtonBorderThemeThickness}"
+            CornerRadius="4"
+            >
+            <cont2:ImageEx2 
+                Source="{x:Bind Cover}" 
+                Style="{StaticResource LocalMusicImageStyle}" 
+                x:Phase="1"
+                />
+            <TextBlock 
+                Margin="8,0" 
+                Text="{x:Bind Title}" 
+                LineStackingStrategy="BaselineToBaseline" 
+                FontSize="18" 
+                TextTrimming="CharacterEllipsis" 
+                TextWrapping="Wrap" 
+                ToolTipService.ToolTip="{x:Bind Title}" 
+                FontFamily="{ThemeResource MiSansMedium}"
+                />
+        </StackPanel>
+    </DataTemplate>
 
     <DataTemplate x:Key="VideoCardViewTemplate" x:DataType="models:VideoItem">
         <StackPanel 

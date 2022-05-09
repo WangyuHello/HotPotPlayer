@@ -24,6 +24,10 @@
         <Setter Property="ItemTemplate" Value="{StaticResource AlbumCardViewTemplate}" />
     </Style>
 
+    <Style x:Key="PlayListCardViewStyle" TargetType="GridView" BasedOn="{StaticResource CardGridViewStyle}">
+        <Setter Property="ItemTemplate" Value="{StaticResource PlayListCardViewTemplate}" />
+    </Style>
+
     <Style x:Key="CardGridContainerStyle" TargetType="GridViewItem" >
         <Setter Property="IsHoldingEnabled" Value="True" />
         <Setter Property="FontFamily" Value="{ThemeResource ContentControlThemeFontFamily}" />
