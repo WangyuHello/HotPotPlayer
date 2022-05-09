@@ -1,0 +1,26 @@
+﻿<ResourceDictionary
+    x:Class="HotPotPlayer.Templates.Zoom"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:collection="using:CommunityToolkit.Common.Collections"
+    xmlns:muxdata="using:Microsoft.UI.Xaml.Data"
+    xmlns:local="using:HotPotPlayer.Templates">
+    
+    <DataTemplate x:Key="GeneralZoomedInGroupHeaderTemplate" x:DataType="collection:IReadOnlyObservableGroup">
+        <TextBlock 
+            Text="{x:Bind Key.ToString()}" 
+            Foreground="{ThemeResource ApplicationForegroundThemeBrush}" 
+            Style="{StaticResource SubtitleTextBlockStyle}" 
+            FontFamily="{ThemeResource MiSansRegular}"/>
+    </DataTemplate>
+
+    <DataTemplate x:Key="GeneralZoomedOutTemplate" x:DataType="muxdata:ICollectionViewGroup">
+        <TextBlock 
+            Margin="8" 
+            Text="{x:Bind ((collection:IReadOnlyObservableGroup)Group).Key.ToString()}" 
+            FontSize="20" 
+            TextWrapping="Wrap" 
+            FontFamily="{ThemeResource MiSansRegular}"/>
+    </DataTemplate>
+
+</ResourceDictionary>

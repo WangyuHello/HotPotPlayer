@@ -15,6 +15,7 @@
     xmlns:media="using:CommunityToolkit.WinUI.UI.Media"
     xmlns:media2="using:Microsoft.UI.Xaml.Media"
     xmlns:ui="using:CommunityToolkit.WinUI.UI"
+    xmlns:tplt="using:HotPotPlayer.Templates"
     xmlns:animations="using:CommunityToolkit.WinUI.UI.Animations"
     xmlns:collection="using:CommunityToolkit.Common.Collections"
     mc:Ignorable="d"
@@ -55,8 +56,8 @@
             <TextBlock Margin="8" Text="{x:Bind ((collection:IReadOnlyObservableGroup)Group).Key.ToString()}" FontSize="20" TextWrapping="Wrap" FontFamily="{ThemeResource MiSansRegular}"/>
         </DataTemplate>
 
-        <local:EvenOldTemplateSelector x:Key="EvenOldAlbumPopupTemplate" >
-            <local:EvenOldTemplateSelector.EvenTemplate>
+        <tplt:EvenOldTemplateSelector x:Key="EvenOldAlbumPopupTemplate" >
+            <tplt:EvenOldTemplateSelector.EvenTemplate>
                 <DataTemplate x:DataType="models:MusicItem">
                     <Button Style="{StaticResource AlbumPopupListButton}" Background="#40F4F7FE" Click="AlbumPopupListClick" Tag="{x:Bind }" RightTapped="{x:Bind helper:AlbumHelper.MusicClick}"  FontFamily="{ThemeResource MiSansRegular}">
                         <Grid>
@@ -77,8 +78,8 @@
                         </Grid>
                     </Button>
                 </DataTemplate>
-            </local:EvenOldTemplateSelector.EvenTemplate>
-            <local:EvenOldTemplateSelector.OddTemplate>
+            </tplt:EvenOldTemplateSelector.EvenTemplate>
+            <tplt:EvenOldTemplateSelector.OddTemplate>
                 <DataTemplate x:DataType="models:MusicItem">
                     <Button Style="{StaticResource AlbumPopupListButton}" Click="AlbumPopupListClick" Tag="{x:Bind }" RightTapped="{x:Bind helper:AlbumHelper.MusicClick}"  FontFamily="{ThemeResource MiSansRegular}">
                         <Grid>
@@ -99,11 +100,11 @@
                         </Grid>
                     </Button>
                 </DataTemplate>
-            </local:EvenOldTemplateSelector.OddTemplate>
-        </local:EvenOldTemplateSelector>
+            </tplt:EvenOldTemplateSelector.OddTemplate>
+        </tplt:EvenOldTemplateSelector>
 
-        <local:EvenOldTemplateSelector x:Key="EvenOldPlayListPopupTemplate" >
-            <local:EvenOldTemplateSelector.EvenTemplate>
+        <tplt:EvenOldTemplateSelector x:Key="EvenOldPlayListPopupTemplate" >
+            <tplt:EvenOldTemplateSelector.EvenTemplate>
                 <DataTemplate x:DataType="models:MusicItem">
                     <Button Style="{StaticResource AlbumPopupListButton}" Background="#40F4F7FE" Click="PlayListPopupListClick" Tag="{x:Bind }" RightTapped="{x:Bind helper:AlbumHelper.MusicClick}">
                         <Grid>
@@ -124,8 +125,8 @@
                         </Grid>
                     </Button>
                 </DataTemplate>
-            </local:EvenOldTemplateSelector.EvenTemplate>
-            <local:EvenOldTemplateSelector.OddTemplate>
+            </tplt:EvenOldTemplateSelector.EvenTemplate>
+            <tplt:EvenOldTemplateSelector.OddTemplate>
                 <DataTemplate x:DataType="models:MusicItem">
                     <Button Style="{StaticResource AlbumPopupListButton}" Click="PlayListPopupListClick" Tag="{x:Bind }" RightTapped="{x:Bind helper:AlbumHelper.MusicClick}">
                         <Grid>
@@ -146,8 +147,8 @@
                         </Grid>
                     </Button>
                 </DataTemplate>
-            </local:EvenOldTemplateSelector.OddTemplate>
-        </local:EvenOldTemplateSelector>
+            </tplt:EvenOldTemplateSelector.OddTemplate>
+        </tplt:EvenOldTemplateSelector>
 
         <Style x:Key="AlbumPopupListContainerStyle" TargetType="ListViewItem">
             <Setter Property="HorizontalContentAlignment" Value="Stretch"/>

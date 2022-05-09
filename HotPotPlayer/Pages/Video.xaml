@@ -9,6 +9,7 @@
     xmlns:muxdata="using:Microsoft.UI.Xaml.Data"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:animations="using:CommunityToolkit.WinUI.UI.Animations"
+    xmlns:helper="using:HotPotPlayer.Pages.Helper"
     mc:Ignorable="d"
     NavigationCacheMode="Enabled"
     xmlns:cont2="using:HotPotPlayer.UI.Controls"
@@ -16,97 +17,22 @@
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
 
     <Page.Resources>
-
         <CollectionViewSource x:Name="LocalSingleVideosGroups" Source="{x:Bind VideoService.LocalVideoGroup}" IsSourceGrouped="True" />
         <CollectionViewSource x:Name="LocalSeriesGroups" Source="{x:Bind VideoService.LocalSeriesGroup}" IsSourceGrouped="True" />
-
-        <DataTemplate x:Key="LocalSingleVideosZoomedInTemplate" x:DataType="models:VideoItem">
-            <Button Style="{StaticResource VideoButton}" Click="VideoClick" Tag="{x:Bind }">
-                <StackPanel Spacing="8" Margin="0,0,0,12">
-                    <cont2:ImageEx2 Source="{x:Bind Cover}" Style="{StaticResource LocalVideoImageStyle}"/>
-                    <TextBlock Margin="8,0" Text="{x:Bind Title}" LineStackingStrategy="BaselineToBaseline" FontSize="14" MaxLines="2" TextTrimming="CharacterEllipsis" TextWrapping="Wrap" Height="40" ToolTipService.ToolTip="{x:Bind Title}" FontFamily="{ThemeResource MiSansMedium}"/>
-                    <TextBlock Margin="8,0" Text="{x:Bind GetDuration()}" Foreground="Gray" FontFamily="{ThemeResource MiSansRegular}"/>
-                </StackPanel>
-            </Button>
-        </DataTemplate>
-
-        <DataTemplate x:Key="LocalSingleVideosZoomedInGroupHeaderTemplate" x:DataType="collection:IReadOnlyObservableGroup">
-            <TextBlock Text="{x:Bind Key.ToString()}" Foreground="{ThemeResource ApplicationForegroundThemeBrush}" Style="{StaticResource SubtitleTextBlockStyle}" FontFamily="{ThemeResource MiSansRegular}"/>
-        </DataTemplate>
-
-        <DataTemplate x:Key="LocalSingleVideosZoomedOutTemplate" x:DataType="muxdata:ICollectionViewGroup">
-            <TextBlock Margin="8" Text="{x:Bind ((collection:IReadOnlyObservableGroup)Group).Key.ToString()}" FontSize="20" TextWrapping="Wrap" FontFamily="{ThemeResource MiSansRegular}"/>
-        </DataTemplate>
-
-        <Style x:Key="LocalSeriesContainerStyle" TargetType="GridViewItem" >
-            <Setter Property="Margin" Value="8" />
-        </Style>
-
-        <Style x:Key="LocalSingleVideosContainerStyle" TargetType="GridViewItem" >
-            <Setter Property="Margin" Value="8" />
-        </Style>
-
-        <DataTemplate x:Key="LocalSeriesZoomedInTemplate" x:DataType="models:SeriesItem">
-            <Button Style="{StaticResource SeriesButton}" Click="SeriesClick" Tag="{x:Bind }" x:Name="SeriesConnectedElement">
-                <StackPanel Spacing="8" Margin="0,0,0,12">
-                    <cont2:ImageEx2 Source="{x:Bind Cover}" Style="{StaticResource SeriesImageStyle}" />
-                    <TextBlock Margin="8,0" Text="{x:Bind Title}" LineStackingStrategy="BaselineToBaseline" FontSize="14" MaxLines="2" TextTrimming="CharacterEllipsis" TextWrapping="Wrap" Height="40" ToolTipService.ToolTip="{x:Bind Title}" FontFamily="{ThemeResource MiSansMedium}"/>
-                </StackPanel>
-            </Button>
-        </DataTemplate>
-
-        <local:EvenOldTemplateSelector x:Key="EvenOldSeriesPopupTemplate" >
-            <local:EvenOldTemplateSelector.EvenTemplate>
-                <DataTemplate x:DataType="models:VideoItem">
-                    <Button Style="{StaticResource AlbumPopupListButton}" Background="#40F4F7FE" Click="SeriesPopupListClick" Tag="{x:Bind }">
-                        <Grid>
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="*" />
-                                <ColumnDefinition Width="Auto" />
-                            </Grid.ColumnDefinitions>
-                            <TextBlock Grid.Column="0" Text="{x:Bind Title}" TextTrimming="CharacterEllipsis" VerticalAlignment="Center" FontFamily="{ThemeResource MiSansRegular}"/>
-                            <TextBlock Grid.Column="1" Text="{x:Bind Duration.ToString('mm\\\\:ss')}" VerticalAlignment="Center" FontFamily="{ThemeResource MiSansRegular}"/>
-                        </Grid>
-                    </Button>
-                </DataTemplate>
-            </local:EvenOldTemplateSelector.EvenTemplate>
-            <local:EvenOldTemplateSelector.OddTemplate>
-                <DataTemplate x:DataType="models:VideoItem">
-                    <Button Style="{StaticResource AlbumPopupListButton}" Click="SeriesPopupListClick" Tag="{x:Bind }">
-                        <Grid>
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="*" />
-                                <ColumnDefinition Width="Auto" />
-                            </Grid.ColumnDefinitions>
-                            <TextBlock Grid.Column="0" Text="{x:Bind Title}" TextTrimming="CharacterEllipsis" VerticalAlignment="Center" FontFamily="{ThemeResource MiSansRegular}"/>
-                            <TextBlock Grid.Column="1" Text="{x:Bind Duration.ToString('mm\\\\:ss')}" VerticalAlignment="Center" FontFamily="{ThemeResource MiSansRegular}"/>
-                        </Grid>
-                    </Button>
-                </DataTemplate>
-            </local:EvenOldTemplateSelector.OddTemplate>
-        </local:EvenOldTemplateSelector>
-
-        <Style x:Key="SeriesPopupListContainerStyle" TargetType="ListViewItem">
-            <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
-            <Setter Property="VerticalContentAlignment" Value="Stretch"/>
-            <Setter Property="Padding" Value="0" />
-            <Setter Property="Margin" Value="0" />
-            <Setter Property="Height" Value="40" />
-        </Style>
-
-        <DataTemplate x:Key="VideoPivotHeaderTemplate">
-            <TextBlock Text="{Binding }" FontSize="24" FontWeight="Medium" FontFamily="{ThemeResource MiSansRegular}"/>
-        </DataTemplate>
     </Page.Resources>
 
     <Grid Background="White" Padding="36,28,0,0">
-        <Pivot HeaderTemplate="{StaticResource VideoPivotHeaderTemplate}">
+        <Pivot HeaderTemplate="{StaticResource GeneralPivotHeaderTemplate}">
             <PivotItem Header="视频列表" Margin="0">
                 <SemanticZoom>
                     <SemanticZoom.ZoomedInView>
-                        <GridView ItemsSource="{x:Bind LocalSingleVideosGroups.View}" ScrollViewer.IsHorizontalScrollChainingEnabled="False" SelectionMode="None" ItemTemplate="{StaticResource LocalSingleVideosZoomedInTemplate}" ItemContainerStyle="{StaticResource LocalSingleVideosContainerStyle}">
+                        <GridView 
+                            ItemsSource="{x:Bind LocalSingleVideosGroups.View}" 
+                            Style="{StaticResource VideoCardViewStyle}"
+                            ItemClick="{x:Bind helper:ListHelper.PlayVideo}"
+                            >
                             <GridView.GroupStyle>
-                                <GroupStyle HeaderTemplate="{StaticResource LocalSingleVideosZoomedInGroupHeaderTemplate}" />
+                                <GroupStyle HeaderTemplate="{StaticResource GeneralZoomedInGroupHeaderTemplate}" />
                             </GridView.GroupStyle>
                             <GridView.Footer>
                                 <Grid Height="100"/>
@@ -114,16 +40,18 @@
                         </GridView>
                     </SemanticZoom.ZoomedInView>
                     <SemanticZoom.ZoomedOutView>
-                        <GridView ItemsSource="{x:Bind LocalSingleVideosGroups.View.CollectionGroups}" SelectionMode="None" ItemTemplate="{StaticResource LocalSingleVideosZoomedOutTemplate}" Padding="24" VerticalAlignment="Center"/>
+                        <GridView ItemsSource="{x:Bind LocalSingleVideosGroups.View.CollectionGroups}" SelectionMode="None" ItemTemplate="{StaticResource GeneralZoomedOutTemplate}" Padding="24" VerticalAlignment="Center"/>
                     </SemanticZoom.ZoomedOutView>
                 </SemanticZoom>
             </PivotItem>
             <PivotItem Header="番剧" Margin="0">
                 <SemanticZoom>
                     <SemanticZoom.ZoomedInView>
-                        <GridView x:Name="SeriesGridView" ItemsSource="{x:Bind LocalSeriesGroups.View}" ScrollViewer.IsHorizontalScrollChainingEnabled="False" SelectionMode="None" ItemTemplate="{StaticResource LocalSeriesZoomedInTemplate}" ItemContainerStyle="{StaticResource LocalSingleVideosContainerStyle}" >
+                        <GridView x:Name="SeriesGridView" 
+                                  ItemsSource="{x:Bind LocalSeriesGroups.View}" 
+                                  Style="{StaticResource SeriesCardViewStyle}" >
                             <GridView.GroupStyle>
-                                <GroupStyle HeaderTemplate="{StaticResource LocalSingleVideosZoomedInGroupHeaderTemplate}" />
+                                <GroupStyle HeaderTemplate="{StaticResource GeneralZoomedInGroupHeaderTemplate}" />
                             </GridView.GroupStyle>
                             <GridView.Footer>
                                 <Grid Height="100"/>
@@ -131,7 +59,7 @@
                         </GridView>
                     </SemanticZoom.ZoomedInView>
                     <SemanticZoom.ZoomedOutView>
-                        <GridView ItemsSource="{x:Bind LocalSeriesGroups.View.CollectionGroups}" SelectionMode="None" ItemTemplate="{StaticResource LocalSingleVideosZoomedOutTemplate}" Padding="24" VerticalAlignment="Center"/>
+                        <GridView ItemsSource="{x:Bind LocalSeriesGroups.View.CollectionGroups}" Style="{StaticResource GeneralZoomOutGridViewStyle}" />
                     </SemanticZoom.ZoomedOutView>
                 </SemanticZoom>
             </PivotItem>
@@ -142,7 +70,7 @@
             <TextBlock FontSize="14">正在扫描视频库</TextBlock>
         </StackPanel>
 
-        <Grid x:Name="SeriesOverlayPopup" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Visibility="Collapsed" Background="#00000000" Tapped="SeriesOverlayPopup_Tapped">
+        <!--<Grid x:Name="SeriesOverlayPopup" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Visibility="Collapsed" Background="#00000000" Tapped="SeriesOverlayPopup_Tapped">
             <Grid x:Name="SeriesOverlayTarget" Margin="0,-60,0,0" VerticalAlignment="Center" HorizontalAlignment="Center" Width="640" MinHeight="460" MaxHeight="560" CornerRadius="8" Background="{StaticResource PopupBackground}" Tapped="SeriesOverlayTarget_Tapped">
                 <animations:Implicit.HideAnimations>
                     <animations:OpacityAnimation Duration="0:0:0.45" From="1" To="0" />
@@ -185,11 +113,11 @@
                 <ListView Grid.Row="2" 
                               ItemsSource="{x:Bind SelectedSeries.Videos, Mode=OneWay}" 
                               SelectionMode="None" 
-                              ItemTemplateSelector="{StaticResource EvenOldSeriesPopupTemplate}" 
-                              ItemContainerStyle="{StaticResource SeriesPopupListContainerStyle}" >
+                              ItemTemplateSelector="{StaticResource EvenOldSeriesListTemplate}" 
+                              ItemContainerStyle="{StaticResource GeneralListContainerStyle}" >
 
                 </ListView>
             </Grid>
-        </Grid>
+        </Grid>-->
     </Grid>
 </Page>

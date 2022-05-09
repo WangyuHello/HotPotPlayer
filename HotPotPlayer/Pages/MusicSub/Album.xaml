@@ -4,6 +4,7 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:local="using:HotPotPlayer.Pages.MusicSub"
     xmlns:pages="using:HotPotPlayer.Pages"
+    xmlns:tplt="using:HotPotPlayer.Templates"
     xmlns:models="using:HotPotPlayer.Models"
     xmlns:helper="using:HotPotPlayer.Pages.Helper"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
@@ -15,8 +16,8 @@
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
 
     <Page.Resources>
-        <pages:EvenOldTemplateSelector x:Key="EvenOldAlbumPopupTemplate" >
-            <pages:EvenOldTemplateSelector.EvenTemplate>
+        <tplt:EvenOldTemplateSelector x:Key="EvenOldAlbumPopupTemplate" >
+            <tplt:EvenOldTemplateSelector.EvenTemplate>
                 <DataTemplate x:DataType="models:MusicItem">
                     <Button Style="{StaticResource AlbumPopupListButton}" Background="#ffF4F7FE" Click="AlbumPopupListClick" Tag="{x:Bind }">
                         <Grid>
@@ -37,8 +38,8 @@
                         </Grid>
                     </Button>
                 </DataTemplate>
-            </pages:EvenOldTemplateSelector.EvenTemplate>
-            <pages:EvenOldTemplateSelector.OddTemplate>
+            </tplt:EvenOldTemplateSelector.EvenTemplate>
+            <tplt:EvenOldTemplateSelector.OddTemplate>
                 <DataTemplate x:DataType="models:MusicItem">
                     <Button Style="{StaticResource AlbumPopupListButton}" Click="AlbumPopupListClick" Tag="{x:Bind }">
                         <Grid>
@@ -59,8 +60,8 @@
                         </Grid>
                     </Button>
                 </DataTemplate>
-            </pages:EvenOldTemplateSelector.OddTemplate>
-        </pages:EvenOldTemplateSelector>
+            </tplt:EvenOldTemplateSelector.OddTemplate>
+        </tplt:EvenOldTemplateSelector>
 
         <Style x:Key="AlbumPopupListContainerStyle" TargetType="ListViewItem">
             <Setter Property="HorizontalContentAlignment" Value="Stretch"/>

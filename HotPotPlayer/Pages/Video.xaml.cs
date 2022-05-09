@@ -47,29 +47,24 @@ namespace HotPotPlayer.Pages
 
         static App App => (App)Application.Current;
 
-        private void VideoClick(object sender, RoutedEventArgs e)
-        {
-            var video = ((Button)sender).Tag as VideoItem;
-            PlayVideo(video);
-        }
 
         private static void PlayVideo(VideoItem video)
         {
             App.PlayVideo(video.Source);
         }
 
-        private void SeriesClick(object sender, RoutedEventArgs e)
-        {
-            var series = ((Button)sender).Tag as SeriesItem;
+        //private void SeriesClick(object sender, RoutedEventArgs e)
+        //{
+        //    var series = ((Button)sender).Tag as SeriesItem;
 
-            SelectedSeries = series;
+        //    SelectedSeries = series;
 
-            var ani = SeriesGridView.PrepareConnectedAnimation("forwardAnimation", series, "SeriesConnectedElement");
-            ani.Configuration = new BasicConnectedAnimationConfiguration();
-            ani.TryStart(SeriesOverlayTarget);
+        //    var ani = SeriesGridView.PrepareConnectedAnimation("forwardAnimation", series, "SeriesConnectedElement");
+        //    ani.Configuration = new BasicConnectedAnimationConfiguration();
+        //    ani.TryStart(SeriesOverlayTarget);
 
-            SeriesOverlayPopup.Visibility = Visibility.Visible;
-        }
+        //    SeriesOverlayPopup.Visibility = Visibility.Visible;
+        //}
 
         private void SeriesPopupListClick(object sender, RoutedEventArgs e)
         {
@@ -111,13 +106,13 @@ namespace HotPotPlayer.Pages
             e.Handled = true;
         }
 
-        private async void SeriesOverlayPopup_Tapped(object sender, TappedRoutedEventArgs e)
-        {
-            var anim = ConnectedAnimationService.GetForCurrentView().PrepareToAnimate("backwardsAnimation", SeriesOverlayTarget);
-            anim.Configuration = new BasicConnectedAnimationConfiguration();
-            await SeriesGridView.TryStartConnectedAnimationAsync(anim, SelectedSeries, "SeriesConnectedElement");
-            SeriesOverlayPopup.Visibility = Visibility.Collapsed;
-        }
+        //private async void SeriesOverlayPopup_Tapped(object sender, TappedRoutedEventArgs e)
+        //{
+        //    var anim = ConnectedAnimationService.GetForCurrentView().PrepareToAnimate("backwardsAnimation", SeriesOverlayTarget);
+        //    anim.Configuration = new BasicConnectedAnimationConfiguration();
+        //    await SeriesGridView.TryStartConnectedAnimationAsync(anim, SelectedSeries, "SeriesConnectedElement");
+        //    SeriesOverlayPopup.Visibility = Visibility.Collapsed;
+        //}
 
     }
 }

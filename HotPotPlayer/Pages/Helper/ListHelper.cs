@@ -12,6 +12,7 @@ namespace HotPotPlayer.Pages.Helper
 {
     internal static class ListHelper
     {
+        static App App => (App)Application.Current;
         static MusicPlayer Player => ((App)Application.Current).MusicPlayer;
         public static void PlayMusicInList(object sender, ItemClickEventArgs e)
         {
@@ -21,6 +22,12 @@ namespace HotPotPlayer.Pages.Helper
                 var music = e.ClickedItem as MusicItem;
                 Player.PlayNext(music, list);
             }
+        }
+
+        public static void PlayVideo(object sender, ItemClickEventArgs e)
+        {
+            var video = e.ClickedItem as VideoItem;
+            App.PlayVideo(video.Source);
         }
     }
 }

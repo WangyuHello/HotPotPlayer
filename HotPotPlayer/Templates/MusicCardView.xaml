@@ -10,6 +10,7 @@
         <StackPanel 
             Spacing="8" 
             Padding="0,0,0,12"
+            x:Name="MusicCardConnectedElement"
             >
             <cont2:ImageEx2 
                 Source="{x:Bind Cover}" 
@@ -40,5 +41,60 @@
                 />
         </StackPanel>
     </DataTemplate>
-    
+
+    <DataTemplate x:Key="VideoCardViewTemplate" x:DataType="models:VideoItem">
+        <StackPanel 
+            Spacing="8" 
+            Margin="0,0,0,12"
+            x:Name="VideoCardConnectedElement"
+            >
+            <cont2:ImageEx2 
+                Source="{x:Bind Cover}" 
+                Style="{StaticResource LocalVideoImageStyle}"
+                />
+            <TextBlock 
+                Margin="8,0" 
+                Text="{x:Bind Title}" 
+                LineStackingStrategy="BaselineToBaseline" 
+                FontSize="14" 
+                MaxLines="2" 
+                TextTrimming="CharacterEllipsis" 
+                TextWrapping="Wrap" 
+                Height="40" 
+                ToolTipService.ToolTip="{x:Bind Title}" 
+                FontFamily="{ThemeResource MiSansMedium}"
+                />
+            <TextBlock 
+                Margin="8,0" 
+                Text="{x:Bind GetDuration()}" 
+                Foreground="Gray" 
+                FontFamily="{ThemeResource MiSansRegular}"
+                />
+        </StackPanel>
+    </DataTemplate>
+
+    <DataTemplate x:Key="SeriesCardViewTemplate" x:DataType="models:SeriesItem">
+        <StackPanel 
+            Spacing="8" 
+            Margin="0,0,0,12" 
+            x:Name="SeriesCardConnectedElement"
+            >
+            <cont2:ImageEx2 
+                Source="{x:Bind Cover}" 
+                Style="{StaticResource SeriesImageStyle}" 
+                />
+            <TextBlock 
+                Margin="8,0" 
+                Text="{x:Bind Title}" 
+                LineStackingStrategy="BaselineToBaseline" 
+                FontSize="14" 
+                MaxLines="2" 
+                TextTrimming="CharacterEllipsis" 
+                TextWrapping="Wrap" 
+                Height="40" 
+                ToolTipService.ToolTip="{x:Bind Title}" 
+                FontFamily="{ThemeResource MiSansMedium}"
+                />
+        </StackPanel>
+    </DataTemplate>
 </ResourceDictionary>

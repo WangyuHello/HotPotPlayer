@@ -17,6 +17,8 @@
                 <ResourceDictionary Source="ms-appx:///Styles/GridView.xaml" />
                 <ResourceDictionary Source="ms-appx:///Templates/Pivot.xaml" />
                 <tplt:MusicCardView />
+                <tplt:ListView />
+                <tplt:Zoom />
                 <!-- Other merged dictionaries here -->
             </ResourceDictionary.MergedDictionaries>
             <!-- Other app resources here -->

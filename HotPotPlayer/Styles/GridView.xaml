@@ -10,9 +10,16 @@
         <Setter Property="ItemTemplate" Value="{StaticResource MusicCardViewTemplate}" />
         <Setter Property="ItemContainerStyle" Value="{StaticResource CardGridContainerStyle}" />
     </Style>
-    
+
+    <Style x:Key="VideoCardViewStyle" TargetType="GridView" BasedOn="{StaticResource CardGridViewStyle}">
+        <Setter Property="ItemTemplate" Value="{StaticResource VideoCardViewTemplate}" />
+    </Style>
+
+    <Style x:Key="SeriesCardViewStyle" TargetType="GridView" BasedOn="{StaticResource CardGridViewStyle}">
+        <Setter Property="ItemTemplate" Value="{StaticResource SeriesCardViewTemplate}" />
+    </Style>
+
     <Style x:Key="CardGridContainerStyle" TargetType="GridViewItem" >
-        <Setter Property="Width" Value="170" />
         <Setter Property="IsHoldingEnabled" Value="True" />
         <Setter Property="FontFamily" Value="{ThemeResource ContentControlThemeFontFamily}" />
         <Setter Property="FontSize" Value="{ThemeResource ControlContentThemeFontSize}" />
@@ -445,5 +452,12 @@
                 </ControlTemplate>
             </Setter.Value>
         </Setter>
+    </Style>
+
+    <Style x:Key="GeneralZoomOutGridViewStyle" TargetType="GridView">
+        <Setter Property="SelectionMode" Value="None" />
+        <Setter Property="ItemTemplate" Value="{StaticResource GeneralZoomedOutTemplate}" />
+        <Setter Property="Padding" Value="24" />
+        <Setter Property="VerticalAlignment" Value="Center" />
     </Style>
 </ResourceDictionary>
