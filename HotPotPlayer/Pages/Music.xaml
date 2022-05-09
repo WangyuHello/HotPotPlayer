@@ -127,13 +127,10 @@
             <Setter Property="Height" Value="40" />
         </Style>
 
-        <DataTemplate x:Key="MusicPivotHeaderTemplate">
-            <TextBlock Text="{Binding }" FontSize="24" FontWeight="Medium" FontFamily="{ThemeResource MiSansRegular}"/>
-        </DataTemplate>
     </Page.Resources>
 
     <Grid x:Name="Root" Background="White" Padding="36,28,0,0">
-        <Pivot x:Name="RootPivot" HeaderTemplate="{StaticResource MusicPivotHeaderTemplate}">
+        <Pivot x:Name="RootPivot" HeaderTemplate="{StaticResource GeneralPivotHeaderTemplate}">
             <PivotItem Header="专辑" Margin="0" >
                 <SemanticZoom>
                     <SemanticZoom.ZoomedInView>
