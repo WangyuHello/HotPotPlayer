@@ -89,19 +89,6 @@ namespace HotPotPlayer.Pages
             return state == LocalServiceState.Loading ? Visibility.Visible : Visibility.Collapsed;
         }
 
-        private void AlbumClick(object sender, RoutedEventArgs e)
-        {
-            var album = ((Button)sender).Tag as AlbumItem;
-            SelectedAlbum = album;
-            InitAlbumAddFlyout();
-
-            var ani = AlbumGridView.PrepareConnectedAnimation("forwardAnimation", album, "AlbumConnectedElement");
-            ani.Configuration = new BasicConnectedAnimationConfiguration();
-            ani.TryStart(AlbumOverlayTarget);
-
-            AlbumOverlayPopup.Visibility = Visibility.Visible;
-        }
-
         private void PlayListClick(object sender, RoutedEventArgs e)
         {
             var playList = ((Button)sender).Tag as PlayListItem;
@@ -177,7 +164,7 @@ namespace HotPotPlayer.Pages
         {
             var anim = ConnectedAnimationService.GetForCurrentView().PrepareToAnimate("backwardsAnimation", AlbumOverlayTarget);
             anim.Configuration = new BasicConnectedAnimationConfiguration();
-            await AlbumGridView.TryStartConnectedAnimationAsync(anim, SelectedAlbum, "AlbumConnectedElement");
+            await AlbumGridView.TryStartConnectedAnimationAsync(anim, SelectedAlbum, "AlbumCardConnectedElement");
             AlbumOverlayPopup.Visibility = Visibility.Collapsed;
         }
 
@@ -189,11 +176,18 @@ namespace HotPotPlayer.Pages
             PlayListOverlayPopup.Visibility = Visibility.Collapsed;
         }
 
-        private void AlbumGridView_ContainerContentChanging(ListViewBase sender, ContainerContentChangingEventArgs args)
+        private void AlbumGridView_ItemClick(object sender, ItemClickEventArgs e)
         {
+            var album = e.ClickedItem as AlbumItem;
+            SelectedAlbum = album;
+            InitAlbumAddFlyout();
 
+            var ani = AlbumGridView.PrepareConnectedAnimation("forwardAnimation", album, "AlbumCardConnectedElement");
+            ani.Configuration = new BasicConnectedAnimationConfiguration();
+            ani.TryStart(AlbumOverlayTarget);
+
+            AlbumOverlayPopup.Visibility = Visibility.Visible;
         }
-
     }
 
 

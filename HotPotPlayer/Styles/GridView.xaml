@@ -7,6 +7,7 @@
         <Setter Property="SelectionMode" Value="None" />
         <Setter Property="ScrollViewer.IsHorizontalScrollChainingEnabled" Value="False" />
         <Setter Property="IsItemClickEnabled" Value="True" />
+        <Setter Property="ShowsScrollingPlaceholders" Value="True" />
         <Setter Property="ItemTemplate" Value="{StaticResource MusicCardViewTemplate}" />
         <Setter Property="ItemContainerStyle" Value="{StaticResource CardGridContainerStyle}" />
     </Style>
@@ -17,6 +18,10 @@
 
     <Style x:Key="SeriesCardViewStyle" TargetType="GridView" BasedOn="{StaticResource CardGridViewStyle}">
         <Setter Property="ItemTemplate" Value="{StaticResource SeriesCardViewTemplate}" />
+    </Style>
+
+    <Style x:Key="AlbumCardViewStyle" TargetType="GridView" BasedOn="{StaticResource CardGridViewStyle}">
+        <Setter Property="ItemTemplate" Value="{StaticResource AlbumCardViewTemplate}" />
     </Style>
 
     <Style x:Key="CardGridContainerStyle" TargetType="GridViewItem" >
@@ -35,7 +40,7 @@
         <Setter Property="AllowDrop" Value="False" />
         <Setter Property="UseSystemFocusVisuals" Value="{StaticResource UseSystemFocusVisuals}" />
         <Setter Property="FocusVisualMargin" Value="-2" />
-        <Setter Property="CornerRadius" Value="4" />
+        <Setter Property="CornerRadius" Value="0" />
         <Setter Property="BorderBrush" Value="{ThemeResource ButtonBorderBrush}" />
         <Setter Property="BorderThickness" Value="{ThemeResource ButtonBorderThemeThickness}" />
         <Setter Property="Template">
@@ -398,8 +403,7 @@
                             Margin="{TemplateBinding Padding}" 
                             CornerRadius="{TemplateBinding CornerRadius}"
                             AutomationProperties.AccessibilityView="Raw"
-                            BorderBrush="{TemplateBinding BorderBrush}"
-                            BorderThickness="{TemplateBinding BorderThickness}"
+                            
                                           />
                         <!-- The 'Xg' text simulates the amount of space one line of text will occupy.
                              In the DataPlaceholder state, the Content is not loaded yet so we

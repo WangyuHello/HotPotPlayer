@@ -25,15 +25,6 @@
     <Page.Resources>
         <CollectionViewSource x:Name="LocalAlbumGroups" Source="{x:Bind MusicService.LocalAlbumGroup}" IsSourceGrouped="True" />
 
-        <DataTemplate x:Key="LocalAlbumZoomedInTemplate" x:DataType="models:AlbumItem">
-            <Button Style="{StaticResource AlbumGroupButton}" Click="AlbumClick" Tag="{x:Bind }" x:Name="AlbumConnectedElement" >
-                <StackPanel Spacing="8" Margin="0,0,0,12">
-                    <cont2:ImageEx2 Source="{x:Bind Cover}" Style="{StaticResource LocalMusicImageStyle}" x:Phase="2" />
-                    <TextBlock Margin="8,0" Text="{x:Bind Title}" LineStackingStrategy="BaselineToBaseline" FontSize="14" MaxLines="2" TextTrimming="CharacterEllipsis" TextWrapping="Wrap" Height="40" ToolTipService.ToolTip="{x:Bind Title}" x:Phase="0" FontFamily="{ThemeResource MiSansBold}"/>
-                    <TextBlock Margin="8,0" Text="{x:Bind GetArtists()}" Foreground="Gray" ToolTipService.ToolTip="{x:Bind GetArtists()}" x:Phase="1" FontFamily="{ThemeResource MiSansRegular}"/>
-                </StackPanel>
-            </Button>
-        </DataTemplate>
 
         <DataTemplate x:Key="LocalPlayListTemplate" x:DataType="models:PlayListItem">
             <Button Style="{StaticResource AlbumGroupButton}" Click="PlayListClick" Tag="{x:Bind }" x:Name="PlayListConnectedElement">
@@ -168,7 +159,12 @@
             <PivotItem Header="专辑" Margin="0" >
                 <SemanticZoom>
                     <SemanticZoom.ZoomedInView>
-                        <GridView x:Name="AlbumGridView" ItemsSource="{x:Bind LocalAlbumGroups.View}" ScrollViewer.IsHorizontalScrollChainingEnabled="False" SelectionMode="None" ItemTemplate="{StaticResource LocalAlbumZoomedInTemplate}" ItemContainerStyle="{StaticResource LocalAlbumContainerStyle}" ShowsScrollingPlaceholders="True" ContainerContentChanging="AlbumGridView_ContainerContentChanging">
+                        <GridView 
+                            x:Name="AlbumGridView"
+                            ItemsSource="{x:Bind LocalAlbumGroups.View}" 
+                            Style="{StaticResource AlbumCardViewStyle}"
+                            ItemClick="AlbumGridView_ItemClick"
+                            >
                             <GridView.GroupStyle>
                                 <GroupStyle HeaderTemplate="{StaticResource LocalAlbumZoomedInGroupHeaderTemplate}" />
                             </GridView.GroupStyle>

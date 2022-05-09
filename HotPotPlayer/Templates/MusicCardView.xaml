@@ -11,6 +11,9 @@
             Spacing="8" 
             Padding="0,0,0,12"
             x:Name="MusicCardConnectedElement"
+            BorderBrush="{ThemeResource ButtonBorderBrush}"
+            BorderThickness="{ThemeResource ButtonBorderThemeThickness}"
+            CornerRadius="4"
             >
             <cont2:ImageEx2 
                 Source="{x:Bind Cover}" 
@@ -42,11 +45,52 @@
         </StackPanel>
     </DataTemplate>
 
+    <DataTemplate x:Key="AlbumCardViewTemplate" x:DataType="models:AlbumItem">
+        <StackPanel 
+            Spacing="8" 
+            Padding="0,0,0,12" 
+            x:Name="AlbumCardConnectedElement"
+            BorderBrush="{ThemeResource ButtonBorderBrush}"
+            BorderThickness="{ThemeResource ButtonBorderThemeThickness}"
+            CornerRadius="4"
+            >
+            <cont2:ImageEx2 
+                Source="{x:Bind Cover}" 
+                Style="{StaticResource LocalMusicImageStyle}" 
+                x:Phase="2" 
+                />
+            <TextBlock 
+                Margin="8,0" 
+                Text="{x:Bind Title}" 
+                LineStackingStrategy="BaselineToBaseline" 
+                FontSize="14" 
+                MaxLines="2" 
+                TextTrimming="CharacterEllipsis" 
+                TextWrapping="Wrap" 
+                Height="40" 
+                ToolTipService.ToolTip="{x:Bind Title}" 
+                x:Phase="0" 
+                FontFamily="{ThemeResource MiSansBold}"
+                />
+            <TextBlock 
+                Margin="8,0" 
+                Text="{x:Bind GetArtists()}" 
+                Foreground="Gray" 
+                ToolTipService.ToolTip="{x:Bind GetArtists()}" 
+                x:Phase="1" 
+                FontFamily="{ThemeResource MiSansRegular}"
+                />
+        </StackPanel>
+    </DataTemplate>
+
     <DataTemplate x:Key="VideoCardViewTemplate" x:DataType="models:VideoItem">
         <StackPanel 
             Spacing="8" 
-            Margin="0,0,0,12"
+            Padding="0,0,0,12"
             x:Name="VideoCardConnectedElement"
+            BorderBrush="{ThemeResource ButtonBorderBrush}"
+            BorderThickness="{ThemeResource ButtonBorderThemeThickness}"
+            CornerRadius="4"
             >
             <cont2:ImageEx2 
                 Source="{x:Bind Cover}" 
@@ -76,8 +120,11 @@
     <DataTemplate x:Key="SeriesCardViewTemplate" x:DataType="models:SeriesItem">
         <StackPanel 
             Spacing="8" 
-            Margin="0,0,0,12" 
+            Padding="0,0,0,12" 
             x:Name="SeriesCardConnectedElement"
+            BorderBrush="{ThemeResource ButtonBorderBrush}"
+            BorderThickness="{ThemeResource ButtonBorderThemeThickness}"
+            CornerRadius="4"
             >
             <cont2:ImageEx2 
                 Source="{x:Bind Cover}" 
