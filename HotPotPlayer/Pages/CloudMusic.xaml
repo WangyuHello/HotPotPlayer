@@ -6,8 +6,7 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:cont2="using:HotPotPlayer.UI.Controls"
-    xmlns:models="using:HotPotPlayer.Models"
-    xmlns:tplt="using:HotPotPlayer.Templates"
+    xmlns:helper="using:HotPotPlayer.Pages.Helper"
     mc:Ignorable="d"
     NavigationCacheMode="Enabled"
     Background="White"
@@ -19,24 +18,24 @@
             x:Name="RootPivot" 
             HeaderTemplate="{StaticResource GeneralPivotHeaderTemplate}"
             >
-            <PivotItem Header="每日推荐" >
+            <PivotItem Header="每日推荐" Margin="0">
                 <GridView 
                     x:Name="RecommedListGridView" 
                     Style="{StaticResource CardGridViewStyle}"
                     ItemsSource="{x:Bind CloudMusicService.RecommedList, Mode=OneWay}" 
-                    ItemClick="RecommedListGridView_ItemClick"
+                    ItemClick="{x:Bind helper:ListHelper.PlayMusicInList}"
                     >
                     <GridView.Footer>
                         <Grid Height="100"/>
                     </GridView.Footer>
                 </GridView>
             </PivotItem>
-            <PivotItem Header="我喜欢的音乐" >
+            <PivotItem Header="我喜欢的音乐" Margin="0">
                 <GridView 
                     x:Name="LikeListGridView" 
                     Style="{StaticResource CardGridViewStyle}"
                     ItemsSource="{x:Bind CloudMusicService.LikeList, Mode=OneWay}" 
-                    ItemClick="LikeListGridView_ItemClick"
+                    ItemClick="{x:Bind helper:ListHelper.PlayMusicInList}"
                     >
                     <GridView.Footer>
                         <Grid Height="100"/>

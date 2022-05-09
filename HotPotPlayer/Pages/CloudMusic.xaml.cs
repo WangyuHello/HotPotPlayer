@@ -44,7 +44,6 @@ namespace HotPotPlayer.Pages
             }
         }
         NetEaseMusicService CloudMusicService => ((App)Application.Current).NetEaseMusicService;
-        MusicPlayer MusicPlayer => ((App)Application.Current).MusicPlayer;
         MainWindow MainWindow => ((App)Application.Current).MainWindow;
 
         bool IsFirstNavigate = true;
@@ -66,16 +65,5 @@ namespace HotPotPlayer.Pages
             IsFirstNavigate = false;
         }
 
-        private void RecommedListGridView_ItemClick(object sender, ItemClickEventArgs e)
-        {
-            var music = e.ClickedItem as CloudMusicItem;
-            MusicPlayer.PlayNext(music, CloudMusicService.RecommedList);
-        }
-
-        private void LikeListGridView_ItemClick(object sender, ItemClickEventArgs e)
-        {
-            var music = e.ClickedItem as CloudMusicItem;
-            MusicPlayer.PlayNext(music, CloudMusicService.LikeList);
-        }
     }
 }
