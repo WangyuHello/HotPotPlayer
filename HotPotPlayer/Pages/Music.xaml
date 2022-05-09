@@ -164,7 +164,8 @@
             <TextBlock FontSize="14">正在扫描音乐库</TextBlock>
         </StackPanel>
 
-        <Grid x:Name="AlbumOverlayPopup" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Visibility="Collapsed" Background="#00000000" Tapped="AlbumOverlayPopup_Tapped">
+        <Grid x:Name="AlbumOverlayPopup" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Visibility="Collapsed" Background="#00FFFFFF" Tapped="AlbumOverlayPopup_Tapped">
+            <!--<Border x:Name="ShadowTarget"/>-->
             <Grid x:Name="AlbumOverlayTarget" Margin="0,-60,0,0" VerticalAlignment="Center" HorizontalAlignment="Center" Width="640" MinHeight="460" MaxHeight="560" CornerRadius="8" Background="{StaticResource PopupBackground}" Tapped="AlbumOverlayTarget_Tapped" BorderThickness="{ThemeResource ButtonBorderThemeThickness}" BorderBrush="{ThemeResource ButtonBorderBrush}">
                 <animations:Implicit.HideAnimations>
                     <animations:OpacityAnimation Duration="0:0:0.45" From="1" To="0" />
@@ -173,6 +174,16 @@
                 <animations:Implicit.ShowAnimations>
                     <animations:OpacityAnimation Duration="0:0:0.01" From="0" To="1" />
                 </animations:Implicit.ShowAnimations>
+
+                <!--<ui:Effects.Shadow>
+                    <ui:AttachedDropShadow BlurRadius="8"
+                                   CornerRadius="32"
+                                   IsMasked="False"
+                                   Color="Black"
+                                   Offset="4,4"
+                                   Opacity="1"
+                                   CastTo="{Binding ElementName=ShadowTarget}"/>
+                </ui:Effects.Shadow>-->
 
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto" />
