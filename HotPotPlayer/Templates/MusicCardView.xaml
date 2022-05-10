@@ -7,7 +7,8 @@
     >
 
     <DataTemplate x:Key="MusicCardViewTemplate" x:DataType="models:MusicItem">
-        <StackPanel 
+        <StackPanel
+            Width="170"
             Spacing="8" 
             Padding="0,0,0,12"
             x:Name="MusicCardConnectedElement"
@@ -47,6 +48,7 @@
 
     <DataTemplate x:Key="AlbumCardViewTemplate" x:DataType="models:AlbumItem">
         <StackPanel 
+            Width="170"
             Spacing="8" 
             Padding="0,0,0,12" 
             x:Name="AlbumCardConnectedElement"
@@ -85,6 +87,7 @@
     
     <DataTemplate x:Key="PlayListCardViewTemplate" x:DataType="models:PlayListItem">
         <StackPanel 
+            Width="170"
             Spacing="8" 
             Padding="0,0,0,12" 
             x:Name="PlayListCardConnectedElement"
@@ -112,6 +115,7 @@
 
     <DataTemplate x:Key="VideoCardViewTemplate" x:DataType="models:VideoItem">
         <StackPanel 
+            Width="300"
             Spacing="8" 
             Padding="0,0,0,12"
             x:Name="VideoCardConnectedElement"
@@ -146,6 +150,7 @@
 
     <DataTemplate x:Key="SeriesCardViewTemplate" x:DataType="models:SeriesItem">
         <StackPanel 
+            Width="300"
             Spacing="8" 
             Padding="0,0,0,12" 
             x:Name="SeriesCardConnectedElement"
