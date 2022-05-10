@@ -62,6 +62,7 @@ namespace HotPotPlayer
         {
             MainWindow.Title = "HotPotPlayer";
             MainWindow.CenterOnScreen(1070, 760);
+            MainWindow.TrySetMicaBackdrop();
             MainWindow.Closed += MainWindow_Closed;
 
             var firstArg = args.Arguments; //尚不支持，永远为null

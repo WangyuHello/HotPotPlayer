@@ -10,10 +10,11 @@
     xmlns:ui="using:CommunityToolkit.WinUI.UI"
     xmlns:animatedvisuals="using:Microsoft.UI.Xaml.Controls.AnimatedVisuals"
     xmlns:model="using:HotPotPlayer.Models"
+    xmlns:muxc="using:Microsoft.UI.Xaml.Controls"
     mc:Ignorable="d"
     >
 
-    <Grid x:Name="Root" Loaded="MainWindow_Loaded" PointerReleased="MainWindow_PointerReleased" Background="White">
+    <Grid x:Name="Root" Loaded="MainWindow_Loaded" PointerReleased="MainWindow_PointerReleased" >
         <Grid x:Name="ContentRoot" ui:VisualExtensions.NormalizedCenterPoint="0.5" ui:VisualExtensions.RotationAxis="0,1,0" >
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="60" />
