@@ -4,6 +4,7 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:models="using:HotPotPlayer.Models"
     xmlns:cont2="using:HotPotPlayer.UI.Controls"
+    xmlns:ui="using:CommunityToolkit.WinUI.UI"
     >
 
     <DataTemplate x:Key="MusicCardViewTemplate" x:DataType="models:MusicItem">
@@ -15,6 +16,8 @@
             BorderBrush="{ThemeResource ButtonBorderBrush}"
             BorderThickness="{ThemeResource ButtonBorderThemeThickness}"
             CornerRadius="4"
+            ui:VisualExtensions.NormalizedCenterPoint="0.5"
+            Loaded="Root_Loaded"
             >
             <cont2:ImageEx2 
                 Source="{x:Bind Cover}" 
@@ -55,6 +58,8 @@
             BorderBrush="{ThemeResource ButtonBorderBrush}"
             BorderThickness="{ThemeResource ButtonBorderThemeThickness}"
             CornerRadius="4"
+            ui:VisualExtensions.NormalizedCenterPoint="0.5"
+            Loaded="Root_Loaded"
             >
             <cont2:ImageEx2 
                 Source="{x:Bind Cover}" 
@@ -94,6 +99,8 @@
             BorderBrush="{ThemeResource ButtonBorderBrush}"
             BorderThickness="{ThemeResource ButtonBorderThemeThickness}"
             CornerRadius="4"
+            ui:VisualExtensions.NormalizedCenterPoint="0.5"
+            Loaded="Root_Loaded"
             >
             <cont2:ImageEx2 
                 Source="{x:Bind Cover}" 
@@ -122,6 +129,8 @@
             BorderBrush="{ThemeResource ButtonBorderBrush}"
             BorderThickness="{ThemeResource ButtonBorderThemeThickness}"
             CornerRadius="4"
+            ui:VisualExtensions.NormalizedCenterPoint="0.5"
+            Loaded="Root_Loaded"
             >
             <cont2:ImageEx2 
                 Source="{x:Bind Cover}" 
@@ -157,6 +166,8 @@
             BorderBrush="{ThemeResource ButtonBorderBrush}"
             BorderThickness="{ThemeResource ButtonBorderThemeThickness}"
             CornerRadius="4"
+            ui:VisualExtensions.NormalizedCenterPoint="0.5"
+            Loaded="Root_Loaded"
             >
             <cont2:ImageEx2 
                 Source="{x:Bind Cover}" 
