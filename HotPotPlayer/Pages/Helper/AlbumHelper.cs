@@ -384,7 +384,7 @@ namespace HotPotPlayer.Pages.Helper
             button.ContextFlyout.ShowAt(button);
         }
 
-        static async void AddToNewPlayList(MusicItem music)
+        public static async void AddToNewPlayList(MusicItem music)
         {
             ContentDialog dialog = new()
             {

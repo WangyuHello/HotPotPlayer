@@ -1,0 +1,99 @@
+﻿<UserControl
+    x:Class="HotPotPlayer.Controls.AlbumPopup"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:HotPotPlayer.Controls"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:animations="using:CommunityToolkit.WinUI.UI.Animations"
+    xmlns:cont2="using:HotPotPlayer.UI.Controls"
+    xmlns:helper="using:HotPotPlayer.Pages.Helper"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d"
+    >
+
+    <Grid 
+        Width="640" 
+        MinHeight="460" 
+        MaxHeight="560" 
+        CornerRadius="8"
+        VerticalAlignment="Center" 
+        HorizontalAlignment="Center" 
+        Background="{StaticResource PopupBackground}"
+        BorderThickness="{ThemeResource ButtonBorderThemeThickness}" 
+        BorderBrush="{ThemeResource ButtonBorderBrush}"
+        >
+        <animations:Implicit.HideAnimations>
+            <animations:OpacityAnimation Duration="0:0:0.45" From="1" To="0" />
+        </animations:Implicit.HideAnimations>
+
+        <animations:Implicit.ShowAnimations>
+            <animations:OpacityAnimation Duration="0:0:0.01" From="0" To="1" />
+        </animations:Implicit.ShowAnimations>
+
+        <!--<ui:Effects.Shadow>
+                    <ui:AttachedDropShadow BlurRadius="8"
+                                   CornerRadius="32"
+                                   IsMasked="False"
+                                   Color="Black"
+                                   Offset="4,4"
+                                   Opacity="1"
+                                   CastTo="{Binding ElementName=ShadowTarget}"/>
+                </ui:Effects.Shadow>-->
+
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+        <Grid Height="16">
+
+        </Grid>
+        <Grid Grid.Row="1" Margin="16,0,16,8" >
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+
+            <cont2:ImageEx2  Source="{x:Bind Album.Cover, Mode=OneWay}" Style="{StaticResource LocalAlbumPopupImageStyle}" />
+            <StackPanel Grid.Column="1" Margin="16,0,0,0" >
+                <TextBlock Text="{x:Bind Album.Title, Mode=OneWay}" MaxLines="2" FontSize="32" TextWrapping="Wrap" TextTrimming="CharacterEllipsis" FontFamily="{ThemeResource MiSansMedium}">
+
+                </TextBlock>
+                <TextBlock Text="{x:Bind Album.Year, Mode=OneWay}" FontSize="18" Margin="0,4,0,0" FontFamily="{ThemeResource MiSansRegular}">
+
+                </TextBlock>
+                <HyperlinkButton Content="{x:Bind Album.GetArtists(), Mode=OneWay}" Padding="0,4" FontSize="18" Margin="0,4,0,0" Click="{x:Bind helper:AlbumHelper.ArtistClick2}" FontFamily="{ThemeResource MiSansRegular}">
+
+                </HyperlinkButton>
+                <Grid Margin="0,12,0,0">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="Auto"/>
+                    </Grid.ColumnDefinitions>
+
+                    <Button Grid.Column="0" Margin="0,0,8,0" Style="{StaticResource AlbumPlayButton}" Click="{x:Bind helper:AlbumHelper.AlbumPlay}" Tag="{x:Bind Album, Mode=OneWay}">
+                        <SymbolIcon Symbol="Play" />
+                    </Button>
+                    <SplitButton x:Name="AlbumSplitButton" Grid.Column="1" Padding="6" Click="{x:Bind helper:AlbumHelper.AlbumAdd}" Tag="{x:Bind Album, Mode=OneWay}" >
+                        <SymbolIcon Symbol="Add" />
+                    </SplitButton>
+                    <Button Grid.Column="3" Click="{x:Bind helper:AlbumHelper.AlbumDetailClick}" Tag="{x:Bind Album, Mode=OneWay}">
+                        <SymbolIcon Symbol="FullScreen" />
+                    </Button>
+                </Grid>
+            </StackPanel>
+        </Grid>
+
+        <ListView 
+            Grid.Row="2" 
+            ItemsSource="{x:Bind Album.MusicItems, Mode=OneWay}" 
+            ItemTemplateSelector="{StaticResource EvenOldMusicListInAlbumTemplate}"
+            Style="{StaticResource GeneralListViewStyle}"
+            ItemClick="ListView_ItemClick"
+            >
+
+        </ListView>
+    </Grid>
+</UserControl>
