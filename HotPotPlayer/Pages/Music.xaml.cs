@@ -86,13 +86,6 @@ namespace HotPotPlayer.Pages
             return state == LocalServiceState.Loading ? Visibility.Visible : Visibility.Collapsed;
         }
 
-        MusicPlayer MusicPlayer => ((App)Application.Current).MusicPlayer;
-
-        private void AlbumPopupTarget_Tapped(object sender, TappedRoutedEventArgs e)
-        {
-            e.Handled = true;
-        }
-
         private async void AlbumPopupOverlay_Tapped(object sender, TappedRoutedEventArgs e)
         {
             var anim = ConnectedAnimationService.GetForCurrentView().PrepareToAnimate("backwardsAnimation", AlbumPopupTarget);

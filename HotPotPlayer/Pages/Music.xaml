@@ -27,30 +27,19 @@
         <CollectionViewSource x:Name="LocalAlbumGroups" Source="{x:Bind MusicService.LocalAlbumGroup}" IsSourceGrouped="True" />
     </Page.Resources>
 
-    <Grid x:Name="Root"  Padding="36,28,0,0">
-        <Pivot x:Name="RootPivot" HeaderTemplate="{StaticResource GeneralPivotHeaderTemplate}" 
-               ui:VisualExtensions.NormalizedCenterPoint="0.5"
-               >
+    <Grid Padding="36,28,0,0">
+        <Pivot HeaderTemplate="{StaticResource GeneralPivotHeaderTemplate}" >
             <PivotItem Header="专辑" Margin="0" >
                 <SemanticZoom>
                     <SemanticZoom.ZoomedInView>
-                        <GridView 
-                            x:Name="AlbumGridView"
-                            ItemsSource="{x:Bind LocalAlbumGroups.View}" 
-                            Style="{StaticResource AlbumCardViewStyle}"
-                            ItemClick="AlbumGridView_ItemClick"
-                            >
+                        <GridView x:Name="AlbumGridView" ItemsSource="{x:Bind LocalAlbumGroups.View}" Style="{StaticResource AlbumCardViewWithFooterStyle}" ItemClick="AlbumGridView_ItemClick" >
                             <GridView.GroupStyle>
                                 <GroupStyle HeaderTemplate="{StaticResource GeneralZoomedInGroupHeaderTemplate}" />
                             </GridView.GroupStyle>
-                            <GridView.Footer>
-                                <Grid Height="100"/>
-                            </GridView.Footer>
                         </GridView>
                     </SemanticZoom.ZoomedInView>
                     <SemanticZoom.ZoomedOutView>
-                        <GridView 
-                            ItemsSource="{x:Bind LocalAlbumGroups.View.CollectionGroups}" Style="{StaticResource GeneralZoomOutGridViewStyle}"/>
+                        <GridView ItemsSource="{x:Bind LocalAlbumGroups.View.CollectionGroups}" Style="{StaticResource GeneralZoomOutGridViewStyle}"/>
                     </SemanticZoom.ZoomedOutView>
                 </SemanticZoom>
             </PivotItem>
@@ -58,12 +47,9 @@
                 <GridView 
                     x:Name="PlayListGridView" 
                     ItemsSource="{x:Bind MusicService.LocalPlayListList, Mode=OneWay}" 
-                    Style="{StaticResource PlayListCardViewStyle}" 
+                    Style="{StaticResource PlayListCardViewWithFooterStyle}" 
                     ItemClick="PlayListGridView_ItemClick"
                     >
-                    <GridView.Footer>
-                        <Grid Height="100"/>
-                    </GridView.Footer>
                 </GridView>
             </PivotItem>
         </Pivot>
@@ -74,11 +60,11 @@
         </StackPanel>
 
         <Grid x:Name="AlbumPopupOverlay" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Visibility="Collapsed" Background="#00FFFFFF" Tapped="AlbumPopupOverlay_Tapped">
-            <cont3:AlbumPopup x:Name="AlbumPopupTarget" Margin="0,-60,0,0" Album="{x:Bind SelectedAlbum, Mode=OneWay}" Tapped="AlbumPopupTarget_Tapped"/>
+            <cont3:AlbumPopup x:Name="AlbumPopupTarget" Margin="0,-60,0,0" Album="{x:Bind SelectedAlbum, Mode=OneWay}" Tapped="{x:Bind helper:AlbumHelper.SuppressTap}"/>
         </Grid>
 
         <Grid x:Name="PlayListPopupOverlay" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Visibility="Collapsed" Background="#00ffffff" Tapped="PlayListPopupOverlay_Tapped">
-            <cont3:PlayListPopup x:Name="PlayListPopupTarget" Margin="0,-60,0,0" PlayList="{x:Bind SelectedPlayList, Mode=OneWay}" Tapped="AlbumPopupTarget_Tapped"/>
+            <cont3:PlayListPopup x:Name="PlayListPopupTarget" Margin="0,-60,0,0" PlayList="{x:Bind SelectedPlayList, Mode=OneWay}" Tapped="{x:Bind helper:AlbumHelper.SuppressTap}"/>
         </Grid>
 
     </Grid>

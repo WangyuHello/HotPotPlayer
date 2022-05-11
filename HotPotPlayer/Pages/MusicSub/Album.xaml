@@ -13,66 +13,9 @@
     xmlns:cont="using:HotPotPlayer.UI.Controls"
     xmlns:animations="using:CommunityToolkit.WinUI.UI.Animations"
     mc:Ignorable="d"
-    Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+    Background="White">
 
-    <Page.Resources>
-        <tplt:EvenOldTemplateSelector x:Key="EvenOldAlbumPopupTemplate" >
-            <tplt:EvenOldTemplateSelector.EvenTemplate>
-                <DataTemplate x:DataType="models:MusicItem">
-                    <Button Style="{StaticResource AlbumPopupListButton}" Background="#ffF4F7FE" Click="AlbumPopupListClick" Tag="{x:Bind }">
-                        <Grid>
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="Auto" />
-                                <ColumnDefinition Width="*" />
-                                <ColumnDefinition Width="*" />
-                                <ColumnDefinition Width="Auto" />
-                                <ColumnDefinition Width="Auto" />
-                            </Grid.ColumnDefinitions>
-                            <TextBlock Text="{x:Bind Track}" Margin="0,0,8,0" VerticalAlignment="Center"/>
-                            <TextBlock Grid.Column="1" Text="{x:Bind Title}" TextTrimming="CharacterEllipsis" VerticalAlignment="Center"/>
-                            <HyperlinkButton Grid.Column="2" Content="{x:Bind GetArtists()}" VerticalAlignment="Center" Click="{x:Bind helper:AlbumHelper.ArtistClick}" Tag="{x:Bind }"/>
-                            <TextBlock Grid.Column="3" Margin="8,0,0,0" Text="{x:Bind Duration.ToString('mm\\\\:ss')}" VerticalAlignment="Center"/>
-                            <Button Grid.Column="4" Style="{StaticResource TransparentButton}" Margin="16,0,0,0" CornerRadius="4" Padding="4">
-                                <SymbolIcon Symbol="More" />
-                            </Button>
-                        </Grid>
-                    </Button>
-                </DataTemplate>
-            </tplt:EvenOldTemplateSelector.EvenTemplate>
-            <tplt:EvenOldTemplateSelector.OddTemplate>
-                <DataTemplate x:DataType="models:MusicItem">
-                    <Button Style="{StaticResource AlbumPopupListButton}" Click="AlbumPopupListClick" Tag="{x:Bind }">
-                        <Grid>
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="Auto" />
-                                <ColumnDefinition Width="*" />
-                                <ColumnDefinition Width="*" />
-                                <ColumnDefinition Width="Auto" />
-                                <ColumnDefinition Width="Auto" />
-                            </Grid.ColumnDefinitions>
-                            <TextBlock Text="{x:Bind Track}" Margin="0,0,8,0" VerticalAlignment="Center"/>
-                            <TextBlock Grid.Column="1" Text="{x:Bind Title}" TextTrimming="CharacterEllipsis" VerticalAlignment="Center"/>
-                            <HyperlinkButton Grid.Column="2" Content="{x:Bind GetArtists()}" VerticalAlignment="Center" Click="{x:Bind helper:AlbumHelper.ArtistClick}" Tag="{x:Bind }"/>
-                            <TextBlock Grid.Column="3" Margin="8,0,0,0" Text="{x:Bind Duration.ToString('mm\\\\:ss')}" VerticalAlignment="Center" />
-                            <Button Grid.Column="4" Style="{StaticResource TransparentButton}" Margin="16,0,0,0" CornerRadius="4" Padding="4" VerticalAlignment="Center">
-                                <SymbolIcon Symbol="More" />
-                            </Button>
-                        </Grid>
-                    </Button>
-                </DataTemplate>
-            </tplt:EvenOldTemplateSelector.OddTemplate>
-        </tplt:EvenOldTemplateSelector>
-
-        <Style x:Key="AlbumPopupListContainerStyle" TargetType="ListViewItem">
-            <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
-            <Setter Property="VerticalContentAlignment" Value="Stretch"/>
-            <Setter Property="Padding" Value="0" />
-            <Setter Property="Margin" Value="0" />
-            <Setter Property="Height" Value="40" />
-        </Style>
-    </Page.Resources>
-
-    <Grid Background="White">
+    <Grid >
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
@@ -96,22 +39,20 @@
                     <Button Style="{StaticResource AlbumPlayButton}" Click="{x:Bind helper:AlbumHelper.AlbumPlay}" Tag="{x:Bind SelectedAlbum, Mode=OneWay}">
                         <SymbolIcon Symbol="Play" />
                     </Button>
-                    <SplitButton Grid.Column="1" Padding="6" Click="{x:Bind helper:AlbumHelper.AlbumAdd}" Tag="{x:Bind SelectedAlbum, Mode=OneWay}" Flyout="{x:Bind AlbumAddFlyout, Mode=OneWay}">
+                    <SplitButton x:Name="AlbumSplitButton" Grid.Column="1" Padding="6" Click="{x:Bind helper:AlbumHelper.AlbumAdd}" Tag="{x:Bind SelectedAlbum, Mode=OneWay}" >
                         <SymbolIcon Symbol="Add" />
                     </SplitButton>
                 </StackPanel>
             </StackPanel>
         </Grid>
 
-        <ListView Grid.Row="2" 
-                              ItemsSource="{x:Bind SelectedAlbum.MusicItems, Mode=OneWay}" 
-                              SelectionMode="None" 
-                              ItemTemplateSelector="{StaticResource EvenOldAlbumPopupTemplate}" 
-                              ItemContainerStyle="{StaticResource AlbumPopupListContainerStyle}" 
-                    >
-            <ListView.Footer>
-                <Grid Height="100"/>
-            </ListView.Footer>
+        <ListView 
+            Grid.Row="2" 
+            ItemsSource="{x:Bind SelectedAlbum.MusicItems, Mode=OneWay}" 
+            ItemTemplateSelector="{StaticResource EvenOldMusicListInAlbumTemplate}" 
+            Style="{StaticResource GeneralListViewWithFooterStyle}"
+            ItemClick="ListView_ItemClick"
+            >
         </ListView>
 
     </Grid>

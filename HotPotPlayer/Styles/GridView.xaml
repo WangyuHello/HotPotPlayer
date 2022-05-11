@@ -24,8 +24,24 @@
         <Setter Property="ItemTemplate" Value="{StaticResource AlbumCardViewTemplate}" />
     </Style>
 
+    <Style x:Key="AlbumCardViewWithFooterStyle" TargetType="GridView" BasedOn="{StaticResource AlbumCardViewStyle}">
+        <Setter Property="Footer">
+            <Setter.Value>
+                <Grid Height="100"/>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
     <Style x:Key="PlayListCardViewStyle" TargetType="GridView" BasedOn="{StaticResource CardGridViewStyle}">
         <Setter Property="ItemTemplate" Value="{StaticResource PlayListCardViewTemplate}" />
+    </Style>
+
+    <Style x:Key="PlayListCardViewWithFooterStyle" TargetType="GridView" BasedOn="{StaticResource PlayListCardViewStyle}">
+        <Setter Property="Footer">
+            <Setter.Value>
+                <Grid Height="100"/>
+            </Setter.Value>
+        </Setter>
     </Style>
 
     <Style x:Key="CardGridContainerStyle" TargetType="GridViewItem" >

@@ -408,5 +408,45 @@ namespace HotPotPlayer.Pages.Helper
                 }
             }
         }
+
+        public static void InitSplitButtonFlyout(SplitButton targetButton, AlbumItem album)
+        {
+            if (targetButton.Flyout != null)
+            {
+                return;
+            }
+            var flyout = new MenuFlyout();
+            var i1 = new MenuFlyoutItem
+            {
+                Text = "当前列表",
+                Icon = new SymbolIcon { Symbol = Symbol.MusicInfo },
+            };
+            i1.Click += (s, a) => AlbumHelper.AlbumAddOne(album);
+            flyout.Items.Add(i1);
+            var i2 = new MenuFlyoutSeparator();
+            flyout.Items.Add(i2);
+            i1 = new MenuFlyoutItem
+            {
+                Text = "新建播放队列",
+                Icon = new SymbolIcon { Symbol = Symbol.Add },
+            };
+            flyout.Items.Add(i1);
+            foreach (var item in MusicService.LocalPlayListList)
+            {
+                var i = new MenuFlyoutItem
+                {
+                    Text = item.Title,
+                    Tag = item
+                };
+                i.Click += (s, a) => AlbumHelper.AlbumAddToPlayList(item.Title, album);
+                flyout.Items.Add(i);
+            }
+            targetButton.Flyout = flyout;
+        }
+
+        public static void SuppressTap(object sender, TappedRoutedEventArgs e)
+        {
+            e.Handled = true;
+        }
     }
 }

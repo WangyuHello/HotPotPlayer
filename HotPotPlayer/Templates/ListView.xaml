@@ -124,4 +124,49 @@
             </DataTemplate>
         </local:EvenOldTemplateSelector.OddTemplate>
     </local:EvenOldTemplateSelector>
+
+    <local:EvenOldTemplateSelector x:Key="EvenOldMusicListInArtistMusicListTemplate" >
+        <local:EvenOldTemplateSelector.EvenTemplate>
+            <DataTemplate x:DataType="models:MusicItem">
+                <Grid Background="#A0F4F7FE" Padding="{StaticResource ListItemPadding}"
+                      RightTapped="{x:Bind helper:ListHelper.RightTapMusicInPlayListClick}">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="48" />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
+                    <TextBlock Grid.Column="0" Text="{x:Bind Title}" TextTrimming="CharacterEllipsis" VerticalAlignment="Center" FontFamily="{ThemeResource MiSansRegular}"/>
+                    <HyperlinkButton Grid.Column="1" Content="{x:Bind GetArtists()}" VerticalAlignment="Center" Click="{x:Bind helper:AlbumHelper.ArtistClick}" Tag="{x:Bind }" FontFamily="{ThemeResource MiSansRegular}"/>
+                    <HyperlinkButton Grid.Column="2" Content="{x:Bind Album}" VerticalAlignment="Center" Click="{x:Bind helper:AlbumHelper.AlbumInfoClick}" Tag="{x:Bind }" FontFamily="{ThemeResource MiSansRegular}"/>
+                    <TextBlock Grid.Column="3" Margin="8,0,0,0" Text="{x:Bind Duration.ToString('mm\\\\:ss')}" VerticalAlignment="Center" FontFamily="{ThemeResource MiSansRegular}"/>
+                    <Button Grid.Column="4" Style="{StaticResource TransparentButton}" Margin="16,0,0,0" CornerRadius="4" Padding="4" Tag="{x:Bind }" Click="{x:Bind helper:ListHelper.RightTapMusicInArtistMusicListClick}">
+                        <SymbolIcon Symbol="More" />
+                    </Button>
+                </Grid>
+            </DataTemplate>
+        </local:EvenOldTemplateSelector.EvenTemplate>
+        <local:EvenOldTemplateSelector.OddTemplate>
+            <DataTemplate x:DataType="models:MusicItem">
+                <Grid Padding="{StaticResource ListItemPadding}"
+                    RightTapped="{x:Bind helper:ListHelper.RightTapMusicInPlayListClick}">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="48" />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
+                    <TextBlock Grid.Column="0" Text="{x:Bind Title}" TextTrimming="CharacterEllipsis" VerticalAlignment="Center" FontFamily="{ThemeResource MiSansRegular}"/>
+                    <HyperlinkButton Grid.Column="1" Margin="0,0,16,0" Content="{x:Bind GetArtists()}" VerticalAlignment="Center" Click="{x:Bind helper:AlbumHelper.ArtistClick}" Tag="{x:Bind }" FontFamily="{ThemeResource MiSansRegular}"/>
+                    <HyperlinkButton Grid.Column="2" Margin="0,0,16,0" Content="{x:Bind Album}" VerticalAlignment="Center" Click="{x:Bind helper:AlbumHelper.AlbumInfoClick}" Tag="{x:Bind }" FontFamily="{ThemeResource MiSansRegular}"/>
+                    <TextBlock Grid.Column="3" Margin="8,0,0,0" Text="{x:Bind Duration.ToString('mm\\\\:ss')}" VerticalAlignment="Center" FontFamily="{ThemeResource MiSansRegular}"/>
+                    <Button Grid.Column="4" Style="{StaticResource TransparentButton}" Margin="16,0,0,0" CornerRadius="4" Padding="4" Tag="{x:Bind }" Click="{x:Bind helper:ListHelper.RightTapMusicInArtistMusicListClick}">
+                        <SymbolIcon Symbol="More" />
+                    </Button>
+                </Grid>
+            </DataTemplate>
+        </local:EvenOldTemplateSelector.OddTemplate>
+    </local:EvenOldTemplateSelector>
 </ResourceDictionary>

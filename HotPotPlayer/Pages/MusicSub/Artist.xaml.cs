@@ -2,6 +2,7 @@
 using HotPotPlayer.Extensions;
 using HotPotPlayer.Models;
 using HotPotPlayer.Pages.Helper;
+using HotPotPlayer.Services;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Controls.Primitives;
@@ -63,18 +64,15 @@ namespace HotPotPlayer.Pages.MusicSub
             get => _artistName;
             set => Set(ref _artistName, value);
         }
+
         private AlbumItem _selectedAlbum;
         public AlbumItem SelectedAlbum
         {
             get => _selectedAlbum;
             set => Set(ref _selectedAlbum, value);
         }
-        MenuFlyout _albumAddFlyout;
-        MenuFlyout AlbumAddFlyout
-        {
-            get => _albumAddFlyout;
-            set => Set(ref _albumAddFlyout, value);
-        }
+
+        static MusicPlayer MusicPlayer => ((App)Application.Current).MusicPlayer;
 
         protected override async void OnNavigatedTo(NavigationEventArgs e)
         {
@@ -87,7 +85,6 @@ namespace HotPotPlayer.Pages.MusicSub
             {
                 _localAlbum.AddGroup(item.Key, item);
             }
-            AlbumAddFlyout = InitAlbumAddFlyout();
             LocalArtistMusic.Clear();
             foreach (var item in musicList)
             {
@@ -107,68 +104,30 @@ namespace HotPotPlayer.Pages.MusicSub
             return albumGroup;
         }
 
-        private void AlbumClick(object sender, RoutedEventArgs e)
+        private void AllMusicList_ItemClick(object sender, ItemClickEventArgs e)
         {
-            var album = ((Button)sender).Tag as AlbumItem;
+            var music = e.ClickedItem as MusicItem;
+            MusicPlayer.PlayNext(music, LocalArtistMusic);
+        }
+
+        private async void AlbumPopupOverlay_Tapped(object sender, TappedRoutedEventArgs e)
+        {
+            var anim = ConnectedAnimationService.GetForCurrentView().PrepareToAnimate("backwardsAnimation", AlbumPopupTarget);
+            anim.Configuration = new BasicConnectedAnimationConfiguration();
+            await AlbumGridView.TryStartConnectedAnimationAsync(anim, SelectedAlbum, "AlbumCardConnectedElement");
+            AlbumPopupOverlay.Visibility = Visibility.Collapsed;
+        }
+
+        private void AlbumGridView_ItemClick(object sender, ItemClickEventArgs e)
+        {
+            var album = e.ClickedItem as AlbumItem;
             SelectedAlbum = album;
 
-            var ani = AlbumGridView.PrepareConnectedAnimation("forwardAnimation", album, "AlbumConnectedElement");
+            var ani = AlbumGridView.PrepareConnectedAnimation("forwardAnimation", album, "AlbumCardConnectedElement");
             ani.Configuration = new BasicConnectedAnimationConfiguration();
-            ani.TryStart(AlbumOverlayTarget);
+            ani.TryStart(AlbumPopupTarget);
 
-            AlbumOverlayPopup.Visibility = Visibility.Visible;
-        }
-
-        private void AlbumPopupListClick(object sender, RoutedEventArgs e)
-        {
-            var music = ((Button)sender).Tag as MusicItem;
-            var player = ((App)Application.Current).MusicPlayer;
-            player.PlayNext(music, SelectedAlbum);
-        }
-
-        MenuFlyout InitAlbumAddFlyout()
-        {
-            var flyout = new MenuFlyout();
-            var i1 = new MenuFlyoutItem
-            {
-                Text = "当前列表"
-            };
-            i1.Click += (s, a) => AlbumHelper.AlbumAddOne(SelectedAlbum);
-            flyout.Items.Add(i1);
-            var i2 = new MenuFlyoutSeparator();
-            flyout.Items.Add(i2);
-            foreach (var item in ((App)Application.Current).LocalMusicService.LocalPlayListList)
-            {
-                var i = new MenuFlyoutItem
-                {
-                    Text = item.Title,
-                    Tag = item
-                };
-                i.Click += (s, a) => AlbumHelper.AlbumAddToPlayList(item.Title, SelectedAlbum);
-                flyout.Items.Add(i);
-            }
-
-            return flyout;
-        }
-
-        private void AlbumOverlayTarget_Tapped(object sender, TappedRoutedEventArgs e)
-        {
-            e.Handled = true;
-        }
-
-        private async void AlbumOverlayPopup_Tapped(object sender, TappedRoutedEventArgs e)
-        {
-            var anim = ConnectedAnimationService.GetForCurrentView().PrepareToAnimate("backwardsAnimation", AlbumOverlayTarget);
-            anim.Configuration = new BasicConnectedAnimationConfiguration();
-            await AlbumGridView.TryStartConnectedAnimationAsync(anim, SelectedAlbum, "AlbumConnectedElement");
-            AlbumOverlayPopup.Visibility = Visibility.Collapsed;
-        }
-
-        private void ArtistMusicListClick(object sender, RoutedEventArgs e)
-        {
-            var music = ((Button)sender).Tag as MusicItem;
-            var player = ((App)Application.Current).MusicPlayer;
-            player.PlayNext(music);
+            AlbumPopupOverlay.Visibility = Visibility.Visible;
         }
     }
 }

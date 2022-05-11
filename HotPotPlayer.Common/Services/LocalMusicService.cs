@@ -453,7 +453,7 @@ namespace HotPotPlayer.Services
         {
             var album = QueryArtistAlbum(artistName);
             var group = GroupAllAlbumByYear(album);
-            var music = album.SelectMany(a => a.MusicItems).ToList();
+            var music = album.SelectMany(a => a.MusicItems).Where(m => m.GetArtists().Contains(artistName)).ToList();
             return (group, music);
         }
 

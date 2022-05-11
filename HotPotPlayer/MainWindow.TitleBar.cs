@@ -62,7 +62,7 @@ namespace HotPotPlayer
                     m_AppWindow.TitleBar.ButtonForegroundColor = Colors.White;
                     var visual = ElementCompositionPreview.GetElementVisual(ContentRoot);
                     visual.Scale = new Vector3(0.8f, 0.8f, 1);
-                    visual.Offset = new Vector3(-300, 0, 0);
+                    visual.Offset = new Vector3(-280, 0, 0);
                 }
                 else
                 {
