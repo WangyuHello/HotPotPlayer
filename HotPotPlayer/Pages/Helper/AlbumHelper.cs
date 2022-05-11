@@ -1,6 +1,7 @@
 ﻿using HotPotPlayer.Controls;
 using HotPotPlayer.Extensions;
 using HotPotPlayer.Models;
+using HotPotPlayer.Models.CloudMusic;
 using HotPotPlayer.Services;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
@@ -54,7 +55,12 @@ namespace HotPotPlayer.Pages.Helper
             Player.HidePlayScreen();
             var el = sender as FrameworkElement;
             var music = el.Tag as MusicItem;
-            MainWindow.NavigateTo("MusicSub.Album", music);
+            var targetPage = music switch
+            {
+                CloudMusicItem => "CloudMusicSub.Album",
+                _ => "MusicSub.Album"
+            };
+            MainWindow.NavigateTo(targetPage, music);
         }
 
         internal static void AlbumPlay(object sender, RoutedEventArgs e)

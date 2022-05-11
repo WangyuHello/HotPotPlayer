@@ -29,6 +29,7 @@ namespace HotPotPlayer.Extensions
                 Title = song["name"].ToString(),
                 Duration = TimeSpan.FromMilliseconds(double.Parse(song[dtpath].ToString())),
                 Artists2 = new List<CloudArtistItem>(),
+                Track = song["no"].Value<int>()
             };
             if (song[arpath].HasValues)
                 song[arpath].ToList().ForEach(t => { NCSong.Artists2.Add(t.ToArtist()); });
@@ -74,7 +75,10 @@ namespace HotPotPlayer.Extensions
         public static CloudAlbumItem ToAlbum(this JToken album)
         {
             if (!album.HasValues) return new CloudAlbumItem();
-            return new CloudAlbumItem
+            var arpath = "artists";
+            if (album[arpath] == null)
+                arpath = "ar";
+            var al = new CloudAlbumItem
             {
                 Alias = album["alias"] != null
                 ? string.Join(" / ", album["alias"].ToArray().Select(t => t.ToString()))
@@ -82,8 +86,17 @@ namespace HotPotPlayer.Extensions
                 Cover = new Uri(album["picUrl"].ToString()),
                 Description = album["description"] != null ? album["description"].ToString() : "",
                 Id = album["id"].ToString(),
-                Title = album["name"].ToString()
+                Title = album["name"].ToString(),
+                Artists2 = new List<CloudArtistItem>()
             };
+            if (album["artist"] != null)
+            {
+                al.AlbumArtist = album["artist"].ToArtist();
+            }
+            if (album[arpath] != null)
+                album[arpath].ToList().ForEach(t => { al.Artists2.Add(t.ToArtist()); });
+
+            return al;
         }
 
         public static CloudArtistItem ToArtist(this JToken artist)

@@ -57,6 +57,7 @@
     <None Remove="Pages\Artist.xaml" />
     <None Remove="Pages\Bilibili.xaml" />
     <None Remove="Pages\CloudMusic.xaml" />
+    <None Remove="Pages\CloudMusicSub\Album.xaml" />
     <None Remove="Pages\CloudMusicSub\Login.xaml" />
     <None Remove="Pages\Music.xaml" />
     <None Remove="Pages\MusicSub\Info.xaml" />
@@ -120,6 +121,12 @@
     <ProjectReference Include="..\HotPotPlayer.VideoHost\HotPotPlayer.VideoHost.csproj" />
     <ProjectReference Include="..\HotPotPlayer.Video\HotPotPlayer.Video.csproj" />
     <ProjectReference Include="..\libvlcsharp\src\LibVLCSharp\LibVLCSharp.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Page Update="Pages\CloudMusicSub\Album.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
   </ItemGroup>
 
   <ItemGroup>

@@ -267,6 +267,10 @@ namespace HotPotPlayer.Services
 
         public void PlayNext(AlbumItem album)
         {
+            if (album.MusicItems == null)
+            {
+                return;
+            }
             CurrentPlayList = new ObservableCollection<MusicItem>(album.MusicItems);
             PlayNext(0);
         }
