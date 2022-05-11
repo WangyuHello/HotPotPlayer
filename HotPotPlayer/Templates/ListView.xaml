@@ -129,7 +129,7 @@
         <local:EvenOldTemplateSelector.EvenTemplate>
             <DataTemplate x:DataType="models:MusicItem">
                 <Grid Background="#A0F4F7FE" Padding="{StaticResource ListItemPadding}"
-                      RightTapped="{x:Bind helper:ListHelper.RightTapMusicInPlayListClick}">
+                      RightTapped="{x:Bind helper:ListHelper.RightTapMusicInArtistMusicListClick}">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="*" />
                         <ColumnDefinition Width="*" />
@@ -150,7 +150,7 @@
         <local:EvenOldTemplateSelector.OddTemplate>
             <DataTemplate x:DataType="models:MusicItem">
                 <Grid Padding="{StaticResource ListItemPadding}"
-                    RightTapped="{x:Bind helper:ListHelper.RightTapMusicInPlayListClick}">
+                    RightTapped="{x:Bind helper:ListHelper.RightTapMusicInArtistMusicListClick}">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="*" />
                         <ColumnDefinition Width="*" />
