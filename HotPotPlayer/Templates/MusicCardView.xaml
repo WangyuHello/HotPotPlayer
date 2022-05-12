@@ -192,4 +192,61 @@
                 />
         </StackPanel>
     </DataTemplate>
+
+    <DataTemplate x:Key="CloudPlayListCardViewTemplate" x:DataType="models:PlayListItem">
+        <StackPanel
+            Width="170"
+            Spacing="8" 
+            Padding="0,0,0,8"
+            x:Name="PlayListCardConnectedElement"
+            BorderBrush="{ThemeResource ButtonBorderBrush}"
+            BorderThickness="{ThemeResource ButtonBorderThemeThickness}"
+            CornerRadius="4"
+            ui:VisualExtensions.NormalizedCenterPoint="0.5"
+            Loaded="Root_Loaded"
+            Background="White"
+            >
+            <cont2:ImageEx2 
+                Source="{x:Bind Cover}" 
+                Style="{StaticResource LocalMusicImageStyle}" 
+                x:Phase="2" 
+                />
+            <TextBlock 
+                Margin="8,0" 
+                Text="{x:Bind Title}" 
+                LineStackingStrategy="BaselineToBaseline" 
+                FontSize="14" 
+                MaxLines="2" 
+                TextTrimming="CharacterEllipsis" 
+                TextWrapping="Wrap" 
+                Height="40" 
+                ToolTipService.ToolTip="{x:Bind Title}" 
+                x:Phase="0" 
+                FontFamily="{ThemeResource MiSansMedium}"
+                />
+        </StackPanel>
+    </DataTemplate>
+
+    <DataTemplate x:Key="CloudMusicCardViewTemplate" x:DataType="models:MusicItem">
+        <Grid Padding="8" Background="White" CornerRadius="4">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
+            <TextBlock Margin="0,0,12,0" Text="{x:Bind Track}" FontSize="12" FontFamily="{ThemeResource MiSansBold}" VerticalAlignment="Center"/>
+            <cont2:ImageEx2 Grid.Column="1" Source="{x:Bind Cover}" Style="{StaticResource LocalMusicImageStyle}" Height="40" Width="40" CornerRadius="4"/>
+            <FontIcon Grid.Column="2" Margin="6,0" FontFamily="Segoe Fluent Icons" Glyph="&#xE00F;" Foreground="#BEC2CE" FontSize="16" FontWeight="Bold"/>
+            <TextBlock Grid.Column="3" FontSize="14" TextTrimming="CharacterEllipsis" VerticalAlignment="Center" Text="{x:Bind Title}" FontFamily="{ThemeResource MiSansMedium}" ToolTipService.ToolTip="{x:Bind Title}"/>
+            <TextBlock Grid.Column="4" Text="{x:Bind Album}" FontSize="12" TextTrimming="CharacterEllipsis" FontFamily="{ThemeResource MiSansRegular}" Foreground="Gray" VerticalAlignment="Center" ToolTipService.ToolTip="{x:Bind Album}"/>
+            <TextBlock Grid.Column="5" Text="{x:Bind Duration.ToString('mm\\\\:ss')}" FontSize="12" FontFamily="{ThemeResource MiSansRegular}" Foreground="Gray" VerticalAlignment="Center"/>
+            <Button Grid.Column="6" Style="{StaticResource TransparentButton}" Margin="16,0,8,0">
+                <FontIcon FontFamily="Segoe Fluent Icons" Glyph="&#xE006;" Foreground="#BEC2CE"/>
+            </Button>
+        </Grid>
+    </DataTemplate>
 </ResourceDictionary>

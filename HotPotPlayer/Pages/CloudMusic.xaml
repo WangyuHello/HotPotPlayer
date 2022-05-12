@@ -9,48 +9,19 @@
     xmlns:helper="using:HotPotPlayer.Pages.Helper"
     mc:Ignorable="d"
     NavigationCacheMode="Enabled"
-    Background="White"
+    Background="#F5F7FD"
     >
 
-    <Grid Background="White">
-        <Pivot 
-            Margin="36,28,0,0" 
-            x:Name="RootPivot" 
-            HeaderTemplate="{StaticResource GeneralPivotHeaderTemplate}"
-            >
-            <PivotItem Header="每日推荐" Margin="0">
-                <GridView 
-                    x:Name="RecommedListGridView" 
-                    Style="{StaticResource CardGridViewStyle}"
-                    ItemsSource="{x:Bind CloudMusicService.RecommedList, Mode=OneWay}" 
-                    ItemClick="{x:Bind helper:ListHelper.PlayMusicInList}"
-                    >
-                    <GridView.Footer>
-                        <Grid Height="100"/>
-                    </GridView.Footer>
-                </GridView>
-            </PivotItem>
-            <PivotItem Header="我喜欢的音乐" Margin="0">
-                <GridView 
-                    x:Name="LikeListGridView" 
-                    Style="{StaticResource CardGridViewStyle}"
-                    ItemsSource="{x:Bind CloudMusicService.LikeList, Mode=OneWay}" 
-                    ItemClick="{x:Bind helper:ListHelper.PlayMusicInList}"
-                    >
-                    <GridView.Footer>
-                        <Grid Height="100"/>
-                    </GridView.Footer>
-                </GridView>
-            </PivotItem>
-        </Pivot>
+    <Grid Padding="28,0,0,0">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
 
-        <StackPanel 
-            Margin="0,6,160,0" 
-            Orientation="Horizontal" 
-            VerticalAlignment="Top" 
-            HorizontalAlignment="Right" 
-            Spacing="8"
-            >
+        <AutoSuggestBox Margin="0,16" QueryIcon="Find" PlaceholderText="搜索" VerticalAlignment="Center" HorizontalAlignment="Left" Width="260" CornerRadius="16" TextMemberPath="Title" />
+        <StackPanel x:Name="UserAvatar" Margin="0,0,160,0" Orientation="Horizontal" VerticalAlignment="Center" HorizontalAlignment="Right" Spacing="8">
             <cont2:ImageEx2 
                 Source="{x:Bind CloudMusicService.Avatar, Mode=OneWay}" 
                 Style="{StaticResource LocalMusicImageStyle}" 
@@ -63,5 +34,61 @@
                 FontFamily="{ThemeResource MiSansRegular}"
                 />
         </StackPanel>
+
+        <TextBlock Grid.Row="1" Text="推荐歌单" FontSize="20" FontFamily="{StaticResource MiSansMedium}"/>
+
+        <ListView Grid.Row="2" ItemsSource="{x:Bind CloudMusicService.RecommedPlayList, Mode=OneWay}" Style="{StaticResource HorizontalListViewStyle}" ItemTemplate="{StaticResource CloudPlayListCardViewTemplate}"/>
+
+        <Grid Grid.Row="3" Margin="0,12,0,0">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="1.5*" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="*" />
+                </Grid.RowDefinitions>
+                <TextBlock Text="每日推荐" FontSize="20" FontFamily="{StaticResource MiSansMedium}" />
+                <TextBlock Grid.Row="1" Text="20首" Margin="0,4" Foreground="Gray" FontFamily="{StaticResource MiSansRegular}" />
+                <ListView Grid.Row="2" Margin="0,8,0,0" ItemsSource="{x:Bind CloudMusicService.RecommedList, Mode=OneWay}" Style="{StaticResource GeneralListViewWithFooterStyle}" ItemTemplate="{StaticResource CloudMusicCardViewTemplate}" ItemContainerStyle="{StaticResource GeneralListContainerWithPadding2Style}" ItemClick="{x:Bind helper:ListHelper.PlayMusicInList}"/>
+            </Grid>
+
+            <Grid Grid.Column="1" Margin="8,0,8,0">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="*" />
+                </Grid.RowDefinitions>
+                <TextBlock Margin="8,0" Text="排行榜" FontSize="20" FontFamily="{StaticResource MiSansMedium}" />
+                <Grid Grid.Row="1" Margin="0,8">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="*" />
+                        <RowDefinition Height="*" />
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="*" />
+                    </Grid.ColumnDefinitions>
+                    <Grid Margin="8" CornerRadius="8" Background="White" Padding="8">
+                        <TextBlock Text="飙升榜" FontSize="20" FontFamily="{StaticResource MiSansMedium}" />
+                        
+                    </Grid>
+                    <Grid Grid.Row="1" Margin="8" CornerRadius="8" Background="White" Padding="8">
+                        <TextBlock Text="新歌榜" FontSize="20" FontFamily="{StaticResource MiSansMedium}" />
+
+                    </Grid>
+                    <Grid Grid.Column="1" Margin="8" CornerRadius="8" Background="White" Padding="8">
+                        <TextBlock Text="热歌榜" FontSize="20" FontFamily="{StaticResource MiSansMedium}" />
+
+                    </Grid>
+                    <Grid Grid.Row="1" Grid.Column="1" Margin="8" CornerRadius="8" Background="White" Padding="8">
+                        <TextBlock Text="原创榜" FontSize="20" FontFamily="{StaticResource MiSansMedium}" />
+
+                    </Grid>
+                </Grid>
+            </Grid>
+        </Grid>
     </Grid>
 </Page>

@@ -89,7 +89,7 @@
                 <ColumnDefinition x:Name="RightDragColumn" Width="*"/>
                 <ColumnDefinition x:Name="RightPaddingColumn" Width="0"/>
             </Grid.ColumnDefinitions>
-            <AutoSuggestBox Grid.Column="1" QueryIcon="Find" PlaceholderText="搜索" VerticalAlignment="Center" Width="260" Opacity="{x:Bind GetTitleBarSearchVisible(MusicPlayer.IsPlayScreenVisible), Mode=OneWay}" TextChanged="AutoSuggestBox_TextChanged" SuggestionChosen="AutoSuggestBox_SuggestionChosen" TextMemberPath="Title">
+            <!--<AutoSuggestBox Grid.Column="1" QueryIcon="Find" PlaceholderText="搜索" VerticalAlignment="Center" Width="260" Opacity="{x:Bind GetTitleBarSearchVisible(MusicPlayer.IsPlayScreenVisible), Mode=OneWay}" TextChanged="AutoSuggestBox_TextChanged" SuggestionChosen="AutoSuggestBox_SuggestionChosen" TextMemberPath="Title">
                 <AutoSuggestBox.ItemTemplate>
                     <DataTemplate x:DataType="model:MusicItem">
                         <Grid>
@@ -104,7 +104,7 @@
                         </Grid>
                     </DataTemplate>
                 </AutoSuggestBox.ItemTemplate>
-            </AutoSuggestBox>
+            </AutoSuggestBox>-->
         </Grid>
     </Grid>
 </Window>

@@ -20,7 +20,7 @@ namespace HotPotPlayer.Pages.Helper
         static MainWindow MainWindow => ((App)Application.Current).MainWindow;
         public static void PlayMusicInList(object sender, ItemClickEventArgs e)
         {
-            if (sender is GridView g)
+            if (sender is ListViewBase g)
             {
                 var list = (IEnumerable<MusicItem>)g.ItemsSource;
                 var music = e.ClickedItem as MusicItem;
