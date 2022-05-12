@@ -68,6 +68,13 @@ namespace HotPotPlayer.Services
             set => Set(ref _recommedList, value);
         }
 
+        private ObservableCollection<CloudPlayListItem> _recommedPlayList;
+        public ObservableCollection<CloudPlayListItem> RecommedPlayList
+        {
+            get => _recommedPlayList;
+            set => Set(ref _recommedPlayList, value);
+        }
+
         public async Task InitAsync()
         {
             var likeList = await GetLikeListAsync();
@@ -76,7 +83,8 @@ namespace HotPotPlayer.Services
             var recList = await GetRecommendListAsync();
             RecommedList ??= new(recList);
 
-            await GetRecommendPlayListAsync();
+            var recPlayList = await GetRecommendPlayListAsync();
+            RecommedPlayList ??= new(recPlayList);
         }
 
         public async Task<JObject> LoginAsync(string phone, string password)
@@ -160,11 +168,11 @@ namespace HotPotPlayer.Services
             }).ToList();
         }
 
-        public async Task GetRecommendPlayListAsync()
+        public async Task<List<CloudPlayListItem>> GetRecommendPlayListAsync()
         {
             var json = await Api.RequestAsync(CloudMusicApiProviders.RecommendResource, new Dictionary<string, object> { ["uid"] = uid });
-            var playList = json["recommend"].ToArray();
-
+            var playList = json["recommend"].ToArray().Select(r => r.ToPlayListItem()).ToList();
+            return playList;
         }
 
         public async Task<(CloudAlbumItem album, List<CloudMusicItem> musicList)> GetAlbum(string albumId)

@@ -10,6 +10,7 @@ namespace HotPotPlayer.Models.CloudMusic
     {
         public CloudAlbumItem Album2 { get; set; }
         public string SId { get; set; }
+        public int MvId { get; set; }
         public string Alias { get; set; }
         public List<CloudArtistItem> Artists2 { get; set; }
         public string TransName { get; set; }

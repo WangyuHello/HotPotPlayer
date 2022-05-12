@@ -10,6 +10,7 @@ namespace HotPotPlayer.Extensions
 {
     public static class CloudMusicExtension
     {
+        //https://github.com/HyPlayer/HyPlayer/blob/491b0b2ae5feaaf5632986f5dbe76b02a0313bbb/HyPlayer/Classes/NCSong.cs#L170
         public static CloudMusicItem ToMusicItem(this JToken song)
         {
             if (song == null) return null;
@@ -39,7 +40,7 @@ namespace HotPotPlayer.Extensions
                 NCSong.Alias = string.Join(" / ", song["alia"].ToArray().Select(t => t.ToString()));
             if (song["tns"] != null)
                 NCSong.TransName = string.Join(" / ", song["tns"].ToArray().Select(t => t.ToString()));
-            
+            if (song["mv"] != null) NCSong.MvId = song["mv"].ToObject<int>();
             return NCSong;
         }
 
@@ -60,11 +61,12 @@ namespace HotPotPlayer.Extensions
             var ncp = new CloudPlayListItem
             {
                 Cover2 = new Uri(json[picpath].ToString()),
-                Desc = json[descpath].ToString(),
+                Description = json[descpath].ToString(),
                 Title = json["name"].ToString(),
-                PLId = json["id"].ToString(),
+                PlId = json["id"].ToString(),
                 PlayCount = json[playcountpath].Value<long>(),
                 Subscribed = !(json["subscribed"] == null || json["subscribed"].ToString() == "False"),
+                TrackCount = json["trackCount"].Value<long>()
             };
 
             if (json[subcountpath] != null) ncp.BookCount = json[subcountpath].Value<long>();

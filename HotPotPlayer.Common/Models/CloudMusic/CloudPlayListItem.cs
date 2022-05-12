@@ -10,9 +10,12 @@ namespace HotPotPlayer.Models.CloudMusic
     {
         public Uri Cover2 { get; set; }
         public long BookCount { get; set; }
-        public string Desc { get; set; }
-        public string PLId { get; set; }
+        public string Description { get; set; }
+        public string PlId { get; set; }
         public bool Subscribed { get; set; }
         public long PlayCount { get; set; }
+        public long TrackCount { get; set; }
+
+        public override Uri Cover => Cover2;
     }
 }

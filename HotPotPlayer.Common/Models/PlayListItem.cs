@@ -17,7 +17,7 @@ namespace HotPotPlayer.Models
         public FileInfo Source { get; set; }
         public string Title { get; set; }
         public int Year => LastWriteTime.Year;
-        public Uri Cover => MusicItems.FirstOrDefault()?.Cover;
+        public virtual Uri Cover => MusicItems.FirstOrDefault()?.Cover;
         public DateTime LastWriteTime { get; set; }
         public ObservableCollection<MusicItem> MusicItems { get; set; }
 
