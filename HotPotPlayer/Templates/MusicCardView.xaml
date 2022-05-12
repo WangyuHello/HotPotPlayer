@@ -242,7 +242,7 @@
                 <ColumnDefinition Width="Auto" />
             </Grid.ColumnDefinitions>
             <TextBlock HorizontalAlignment="Center" Text="{Binding RelativeSource={RelativeSource Mode=TemplatedParent}, Converter={StaticResource IndexConverter}}" FontSize="12" FontFamily="{ThemeResource MiSansBold}" VerticalAlignment="Center"/>
-            <cont2:ImageEx2 Margin="8,0,0,0" Grid.Column="1" Source="{x:Bind Cover}" Style="{StaticResource LocalMusicImageStyle}" Height="40" Width="40" CornerRadius="4"/>
+            <cont2:ImageEx2 Margin="8,0,0,0" Grid.Column="1" Source="{x:Bind Cover}" Style="{StaticResource LocalMusicImageStyle}" Height="40" Width="40" CornerRadius="4" EnableLazyLoading="False"/>
             <FontIcon Grid.Column="2" Margin="6,0" FontFamily="Segoe Fluent Icons" Glyph="&#xE00F;" Foreground="#BEC2CE" FontSize="16" FontWeight="Bold"/>
             <TextBlock Grid.Column="3" FontSize="14" TextTrimming="CharacterEllipsis" VerticalAlignment="Center" Text="{x:Bind Title}" FontFamily="{ThemeResource MiSansMedium}" ToolTipService.ToolTip="{x:Bind Title}"/>
             <TextBlock Grid.Column="4" Text="{x:Bind Album}" FontSize="12" TextTrimming="CharacterEllipsis" FontFamily="{ThemeResource MiSansRegular}" Foreground="Gray" VerticalAlignment="Center" ToolTipService.ToolTip="{x:Bind Album}"/>
