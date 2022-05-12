@@ -65,5 +65,9 @@ namespace HotPotPlayer.Pages
             IsFirstNavigate = false;
         }
 
+        string GetCount(ObservableCollection<CloudMusicItem> musics)
+        {
+            return musics == null ? "" : musics.Count + "首";
+        }
     }
 }
