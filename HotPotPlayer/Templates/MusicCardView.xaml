@@ -228,7 +228,7 @@
     </DataTemplate>
 
     <DataTemplate x:Key="CloudMusicCardViewTemplate" x:DataType="models:MusicItem">
-        <Grid Padding="8" Background="White" CornerRadius="4">
+        <Grid Padding="8" Background="White" CornerRadius="4" ui:VisualExtensions.NormalizedCenterPoint="0.5" Loaded="Root_Loaded2">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="Auto" />
                 <ColumnDefinition Width="Auto" />

@@ -30,6 +30,19 @@ namespace HotPotPlayer.Templates
             root.PointerExited += (sender, args) => rootVisual.StartAnimation("Scale", pointerExitedAnimation);
         }
 
+        private void Root_Loaded2(object sender, RoutedEventArgs e)
+        {
+            var root = (UIElement)sender;
+            var rootVisual = ElementCompositionPreview.GetElementVisual(root);
+            var compositor = rootVisual.Compositor;
+            var pointerEnteredAnimation = compositor.CreateVector3KeyFrameAnimation();
+            pointerEnteredAnimation.InsertKeyFrame(1.0f, new Vector3(1.05f));
+            var pointerExitedAnimation = compositor.CreateVector3KeyFrameAnimation();
+            pointerExitedAnimation.InsertKeyFrame(1.0f, new Vector3(1.0f));
+            root.PointerEntered += (sender, args) => rootVisual.StartAnimation("Scale", pointerEnteredAnimation);
+            root.PointerExited += (sender, args) => rootVisual.StartAnimation("Scale", pointerExitedAnimation);
+        }
+
         private TChild FindVisualChild<TChild>(DependencyObject obj) where TChild : DependencyObject
         {
             for (int i = 0; i < VisualTreeHelper.GetChildrenCount(obj); i++)

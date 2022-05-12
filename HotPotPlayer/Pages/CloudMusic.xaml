@@ -53,7 +53,7 @@
                 </Grid.RowDefinitions>
                 <TextBlock Text="每日推荐" FontSize="20" FontFamily="{StaticResource MiSansMedium}" />
                 <TextBlock Grid.Row="1" Text="20首" Margin="0,4" Foreground="Gray" FontFamily="{StaticResource MiSansRegular}" />
-                <ListView Grid.Row="2" Margin="0,8,0,0" ItemsSource="{x:Bind CloudMusicService.RecommedList, Mode=OneWay}" Style="{StaticResource GeneralListViewWithFooterStyle}" ItemTemplate="{StaticResource CloudMusicCardViewTemplate}" ItemContainerStyle="{StaticResource GeneralListContainerWithPadding2Style}" ItemClick="{x:Bind helper:ListHelper.PlayMusicInList}"/>
+                <ListView Grid.Row="2" Margin="-28,8,-12,0" Padding="24,0,12,0" ItemsSource="{x:Bind CloudMusicService.RecommedList, Mode=OneWay}" Style="{StaticResource GeneralListViewWithFooterStyle}" ItemTemplate="{StaticResource CloudMusicCardViewTemplate}" ItemContainerStyle="{StaticResource GeneralListContainerWithPadding2Style}" ItemClick="{x:Bind helper:ListHelper.PlayMusicInList}"/>
             </Grid>
 
             <Grid Grid.Column="1" Margin="8,0,8,0">
