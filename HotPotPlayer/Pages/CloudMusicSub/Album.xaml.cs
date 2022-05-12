@@ -63,7 +63,7 @@ namespace HotPotPlayer.Pages.CloudMusicSub
             base.OnNavigatedTo(e);
             var (album, music) = e.Parameter switch
             {
-                CloudMusicItem c => await CloudMusicService.GetAlbum(c.Album2.Id),
+                CloudMusicItem c => await CloudMusicService.GetAlbumAsync(c.Album2.Id),
                 _ => throw new NotImplementedException()
             };
 

@@ -199,7 +199,7 @@
             Width="170"
             Spacing="8" 
             Padding="0,0,0,8"
-            x:Name="PlayListCardConnectedElement"
+            x:Name="CloudPlayListCardConnectedElement"
             BorderBrush="{ThemeResource ButtonBorderBrush}"
             BorderThickness="{ThemeResource ButtonBorderThemeThickness}"
             CornerRadius="4"

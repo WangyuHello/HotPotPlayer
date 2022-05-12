@@ -70,6 +70,10 @@ namespace HotPotPlayer.Extensions
             };
 
             if (json[subcountpath] != null) ncp.BookCount = json[subcountpath].Value<long>();
+            if (json["tracks"] != null) // 只有前20首
+            {
+                ncp.MusicItems = new(json["tracks"].ToArray().Select(t => t.ToMusicItem()));
+            }
 
             return ncp;
         }

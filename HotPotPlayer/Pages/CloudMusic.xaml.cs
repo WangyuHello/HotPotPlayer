@@ -1,4 +1,5 @@
-﻿using HotPotPlayer.Models.CloudMusic;
+﻿using HotPotPlayer.Models;
+using HotPotPlayer.Models.CloudMusic;
 using HotPotPlayer.Services;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
@@ -6,6 +7,7 @@ using Microsoft.UI.Xaml.Controls.Primitives;
 using Microsoft.UI.Xaml.Data;
 using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Media;
+using Microsoft.UI.Xaml.Media.Animation;
 using Microsoft.UI.Xaml.Navigation;
 using System;
 using System.Collections.Generic;
@@ -48,6 +50,14 @@ namespace HotPotPlayer.Pages
 
         bool IsFirstNavigate = true;
 
+        private PlayListItem _selectedPlayListItem;
+
+        public PlayListItem SelectedPlayList
+        {
+            get => _selectedPlayListItem;
+            set => Set(ref _selectedPlayListItem, value);
+        }
+
         protected override async void OnNavigatedTo(NavigationEventArgs e)
         {
             base.OnNavigatedTo(e);
@@ -68,6 +78,26 @@ namespace HotPotPlayer.Pages
         string GetCount(ObservableCollection<CloudMusicItem> musics)
         {
             return musics == null ? "" : musics.Count + "首";
+        }
+
+        private async void RecListView_ItemClick(object sender, ItemClickEventArgs e)
+        {
+            var playList = e.ClickedItem as CloudPlayListItem;
+            SelectedPlayList = await CloudMusicService.GetPlayListAsync(playList.PlId);
+
+            //var ani = RecListView.PrepareConnectedAnimation("forwardAnimation2", playList, "CloudPlayListCardConnectedElement");
+            //ani.Configuration = new BasicConnectedAnimationConfiguration();
+            //ani.TryStart(PlayListPopupTarget);
+
+            PlayListPopupOverlay.Visibility = Visibility.Visible;
+        }
+
+        private void PlayListPopupOverlay_Tapped(object sender, TappedRoutedEventArgs e)
+        {
+            //var anim = ConnectedAnimationService.GetForCurrentView().PrepareToAnimate("backwardsAnimation2", PlayListPopupTarget);
+            //anim.Configuration = new BasicConnectedAnimationConfiguration();
+            //await RecListView.TryStartConnectedAnimationAsync(anim, SelectedPlayList, "CloudPlayListCardConnectedElement");
+            PlayListPopupOverlay.Visibility = Visibility.Collapsed;
         }
     }
 }

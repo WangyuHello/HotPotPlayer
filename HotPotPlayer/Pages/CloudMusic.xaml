@@ -7,6 +7,7 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:cont2="using:HotPotPlayer.UI.Controls"
     xmlns:helper="using:HotPotPlayer.Pages.Helper"
+    xmlns:cont3="using:HotPotPlayer.Controls"
     mc:Ignorable="d"
     NavigationCacheMode="Enabled"
     Background="#F5F7FD"
@@ -35,9 +36,9 @@
                 />
         </StackPanel>
 
-        <TextBlock Grid.Row="1" Text="推荐歌单" FontSize="20" FontFamily="{StaticResource MiSansMedium}"/>
+        <TextBlock Grid.Row="1" Text="推荐歌单" FontSize="20" FontFamily="{StaticResource MiSansMedium}" />
 
-        <ListView Grid.Row="2" ItemsSource="{x:Bind CloudMusicService.RecommedPlayList, Mode=OneWay}" Style="{StaticResource HorizontalListViewStyle}" ItemTemplate="{StaticResource CloudPlayListCardViewTemplate}"/>
+        <ListView x:Name="RecListView" Grid.Row="2" ItemsSource="{x:Bind CloudMusicService.RecommedPlayList, Mode=OneWay}" Style="{StaticResource HorizontalListViewStyle}" ItemTemplate="{StaticResource CloudPlayListCardViewTemplate}" ItemClick="RecListView_ItemClick"/>
 
         <Grid Grid.Row="3" Margin="0,12,0,0">
             <Grid.ColumnDefinitions>
@@ -89,6 +90,10 @@
                     </Grid>
                 </Grid>
             </Grid>
+        </Grid>
+
+        <Grid x:Name="PlayListPopupOverlay" Grid.RowSpan="4" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Visibility="Collapsed" Background="#00ffffff" Tapped="PlayListPopupOverlay_Tapped">
+            <cont3:PlayListPopup x:Name="PlayListPopupTarget" Margin="0,-60,0,0" PlayList="{x:Bind SelectedPlayList, Mode=OneWay}" Tapped="{x:Bind helper:AlbumHelper.SuppressTap}"/>
         </Grid>
     </Grid>
 </Page>

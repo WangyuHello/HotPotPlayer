@@ -1,4 +1,5 @@
 ﻿using HotPotPlayer.Models;
+using HotPotPlayer.Models.CloudMusic;
 using HotPotPlayer.Services;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
@@ -48,6 +49,16 @@ namespace HotPotPlayer.Controls
 
         public static readonly DependencyProperty PlayListProperty =
             DependencyProperty.Register("PlayList", typeof(PlayListItem), typeof(PlayListPopup), new PropertyMetadata(default(PlayListItem)));
+
+
+        string GetDescription(PlayListItem p)
+        {
+            if (p is CloudPlayListItem c)
+            {
+                return c.Description;
+            }
+            return string.Empty;
+        }
 
         static MusicPlayer MusicPlayer => ((App)Application.Current).MusicPlayer;
         private void PlayListPlay(object sender, RoutedEventArgs e)

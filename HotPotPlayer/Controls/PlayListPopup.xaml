@@ -36,6 +36,7 @@
             <cont2:ImageEx2 Source="{x:Bind PlayList.Cover, Mode=OneWay}" Style="{StaticResource LocalMusicImageStyle}"/>
             <StackPanel Grid.Column="1" Margin="16,0,0,0">
                 <TextBlock Text="{x:Bind PlayList.Title, Mode=OneWay}" MaxLines="2" FontSize="32" TextWrapping="Wrap" FontWeight="Medium" TextTrimming="CharacterEllipsis" FontFamily="{ThemeResource MiSansRegular}"/>
+                <TextBlock Text="{x:Bind GetDescription(PlayList), Mode=OneWay}" MaxLines="4" TextTrimming="CharacterEllipsis" FontFamily="{StaticResource MiSansRegular}" />
                 <StackPanel Orientation="Horizontal" Margin="0,12,0,0" Spacing="8">
                     <Button Style="{StaticResource AlbumPlayButton}" Click="PlayListPlay">
                         <SymbolIcon Symbol="Play" />

@@ -175,7 +175,7 @@ namespace HotPotPlayer.Services
             return playList;
         }
 
-        public async Task<(CloudAlbumItem album, List<CloudMusicItem> musicList)> GetAlbum(string albumId)
+        public async Task<(CloudAlbumItem album, List<CloudMusicItem> musicList)> GetAlbumAsync(string albumId)
         {
             var json = await Api.RequestAsync(CloudMusicApiProviders.Album, new Dictionary<string, object> { ["id"] = albumId });
             var album = json["album"].ToAlbum();
@@ -185,6 +185,18 @@ namespace HotPotPlayer.Services
                 return i;
             }).ToList();
             return (album, songs);
+        }
+
+        public async Task<CloudPlayListItem> GetPlayListAsync(string playListId)
+        {
+            var json = await Api.RequestAsync(CloudMusicApiProviders.PlaylistDetail, new Dictionary<string, object> { ["id"] = playListId });
+            var playList = json["playlist"].ToPlayListItem();
+            foreach (var item in playList.MusicItems)
+            {
+                var c = item as CloudMusicItem;
+                c.GetSource = () => GetSongUrlAsync(c.SId).Result;
+            }
+            return playList;
         }
 
         public async Task<string> GetSongUrlAsync(string id)
