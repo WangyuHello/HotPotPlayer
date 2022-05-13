@@ -29,6 +29,8 @@ namespace HotPotPlayer.Models.CloudMusic
                 return s;
             } 
         }
-        public Func<string> GetSource { get; set; }
+
+        public string OriginalTitle => base.Title;
+        public Func<Uri> GetSource { get; set; }
     }
 }

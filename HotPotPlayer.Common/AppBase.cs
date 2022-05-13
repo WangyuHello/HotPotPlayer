@@ -25,7 +25,7 @@ namespace HotPotPlayer
         public LocalMusicService LocalMusicService => localMusicService ??= new LocalMusicService(Config, UIQueue, this);
 
         NetEaseMusicService netEaseMusicService;
-        public NetEaseMusicService NetEaseMusicService => netEaseMusicService ??= new NetEaseMusicService(Config, UIQueue, this);
+        public NetEaseMusicService NetEaseMusicService => netEaseMusicService ??= new NetEaseMusicService(Config, UIQueue, this, LocalMusicService);
 
         LocalVideoService localVideoService;
         public LocalVideoService LocalVideoService => localVideoService ??= new LocalVideoService(Config, UIQueue, this);

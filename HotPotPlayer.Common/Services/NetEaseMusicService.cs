@@ -1,4 +1,5 @@
 ﻿using HotPotPlayer.Extensions;
+using HotPotPlayer.Models;
 using HotPotPlayer.Models.CloudMusic;
 using Microsoft.UI.Dispatching;
 using NeteaseCloudMusicApi;
@@ -17,9 +18,11 @@ namespace HotPotPlayer.Services
 {
     public class NetEaseMusicService: ServiceBaseWithConfig
     {
-        public NetEaseMusicService(ConfigBase config, DispatcherQueue uiThread = null, AppBase app = null) : base(config, uiThread, app)
+        LocalMusicService LocalMusic;
+        public NetEaseMusicService(ConfigBase config, DispatcherQueue uiThread = null, AppBase app = null, LocalMusicService localMusic = null) : base(config, uiThread, app)
         {
             Config.SaveConfigWhenExit(() => _api.SaveCookie(Config));
+            LocalMusic = localMusic;
         }
 
         CloudMusicApi _api;
@@ -155,6 +158,20 @@ namespace HotPotPlayer.Services
             return (json["code"].Value<int>(), json["message"].Value<string>());
         }
 
+        async Task<Uri> GetSongSourceAsync(string id, string name, string artist)
+        {
+            if (LocalMusic != null)
+            {
+                var local = await LocalMusic.QueryMusicAsync(name);
+                var l = local.FirstOrDefault();
+                if (l!=null && l.GetArtists()==artist)
+                {
+                    return new Uri(l.Source.FullName);
+                }
+            }
+            return new Uri(await GetSongUrlAsync(id));
+        }
+
         public byte[] GetQrImgByte(string key)
         {
             var url = $"https://music.163.com/login?codekey={key}";
@@ -173,7 +190,7 @@ namespace HotPotPlayer.Services
             json = await Api.RequestAsync(CloudMusicApiProviders.SongDetail, new Dictionary<string, object> { ["ids"] = string.Join(",", trackIds) });
             return json["songs"].ToArray().Select(s => {
                 var i = s.ToMusicItem();
-                i.GetSource = () => GetSongUrlAsync(i.SId).Result;
+                i.GetSource = () => GetSongSourceAsync(i.SId, i.OriginalTitle, i.GetArtists()).Result;
                 return i;
             }).ToList();
         }
@@ -183,7 +200,7 @@ namespace HotPotPlayer.Services
             var json = await Api.RequestAsync(CloudMusicApiProviders.RecommendSongs, new Dictionary<string, object> { ["uid"] = uid });
             return json["data"]["dailySongs"].ToArray().Select(s => {
                 var i = s.ToMusicItem();
-                i.GetSource = () => GetSongUrlAsync(i.SId).Result;
+                i.GetSource = () => GetSongSourceAsync(i.SId, i.OriginalTitle, i.GetArtists()).Result;
                 return i;
             }).ToList();
         }
@@ -201,7 +218,7 @@ namespace HotPotPlayer.Services
             var album = json["album"].ToAlbum();
             var songs = json["songs"].ToArray().Select(s => {
                 var i = s.ToMusicItem();
-                i.GetSource = () => GetSongUrlAsync(i.SId).Result;
+                i.GetSource = () => GetSongSourceAsync(i.SId, i.OriginalTitle, i.GetArtists()).Result;
                 return i;
             }).ToList();
             return (album, songs);
@@ -214,7 +231,7 @@ namespace HotPotPlayer.Services
             foreach (var item in playList.MusicItems)
             {
                 var c = item as CloudMusicItem;
-                c.GetSource = () => GetSongUrlAsync(c.SId).Result;
+                c.GetSource = () => GetSongSourceAsync(c.SId, c.OriginalTitle, c.GetArtists()).Result;
             }
             return playList;
         }

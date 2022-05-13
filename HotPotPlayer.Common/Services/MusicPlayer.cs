@@ -1,4 +1,5 @@
-﻿using HotPotPlayer.Helpers;
+﻿using HotPotPlayer.Extensions;
+using HotPotPlayer.Helpers;
 using HotPotPlayer.Models;
 using HotPotPlayer.Models.CloudMusic;
 using Microsoft.UI.Dispatching;
@@ -502,7 +503,12 @@ namespace HotPotPlayer.Services
 
                 _audioStream = music switch
                 {
-                    CloudMusicItem c2 => new MediaFoundationReader(c2.GetSource()),
+                    CloudMusicItem c2 => c2.GetSource() switch
+                    {
+                        Uri uri when uri.IsFile => new AudioFileReader(uri.GetLocalPath()),
+                        Uri netUri when !netUri.IsFile => new MediaFoundationReader(netUri.OriginalString),
+                        _ => throw new NotImplementedException()
+                    },
                     _ => new AudioFileReader(music.Source.FullName)
                 };
                 _volumeSample = new(_audioStream.ToSampleProvider());
@@ -520,7 +526,12 @@ namespace HotPotPlayer.Services
 
                 _audioStream = music switch
                 {
-                    CloudMusicItem c2 => new MediaFoundationReader(c2.GetSource()),
+                    CloudMusicItem c2 => c2.GetSource() switch
+                    {
+                        Uri uri when uri.IsFile => new AudioFileReader(uri.GetLocalPath()),
+                        Uri netUri when !netUri.IsFile => new MediaFoundationReader(netUri.OriginalString),
+                        _ => throw new NotImplementedException()
+                    },
                     _ => new AudioFileReader(music.Source.FullName)
                 };
 
