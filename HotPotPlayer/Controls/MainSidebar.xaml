@@ -39,6 +39,9 @@
         <Button Grid.Row="5" Margin="0,4" x:Name="CloudMusic" Style="{StaticResource MainNavButton}" Click="NavigateClick" Tag="CloudMusic" IsEnabled="{x:Bind GetEnableState('CloudMusic', SelectedPageName), Mode=OneWay}">
             <SymbolIcon Symbol="World" />
         </Button>
+        <Button x:Name="ShowPlayBar" Grid.Row="6" Style="{StaticResource MainNavButton}" VerticalAlignment="Bottom" Visibility="{x:Bind GetShowPlayBarVisible(MusicPlayer.IsPlayBarVisible, MusicPlayer.CurrentPlaying), Mode=OneWay}" Click="{x:Bind MusicPlayer.ShowPlayBar}">
+            <SymbolIcon Symbol="Tag" />
+        </Button>
         <Button x:Name="Setting" Grid.Row="7" Style="{StaticResource MainNavButton}" Click="NavigateClick" Tag="Setting" IsEnabled="{x:Bind GetEnableState('Setting', SelectedPageName), Mode=OneWay}">
             <SymbolIcon Symbol="Setting" />
         </Button>

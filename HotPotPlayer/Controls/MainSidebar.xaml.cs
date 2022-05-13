@@ -1,4 +1,6 @@
-﻿using Microsoft.UI.Composition;
+﻿using HotPotPlayer.Models;
+using HotPotPlayer.Services;
+using Microsoft.UI.Composition;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Controls.Primitives;
@@ -120,6 +122,17 @@ namespace HotPotPlayer.Controls
             {
                 StartMoveAnimation(_selectedButton);
             }
+        }
+
+        MusicPlayer MusicPlayer => ((App)Application.Current).MusicPlayer;
+
+        public Visibility GetShowPlayBarVisible(bool playbarVisible, MusicItem currentPlaying)
+        {
+            if (currentPlaying == null)
+            {
+                return Visibility.Collapsed;
+            }
+            return playbarVisible ? Visibility.Collapsed : Visibility.Visible;
         }
     }
 }

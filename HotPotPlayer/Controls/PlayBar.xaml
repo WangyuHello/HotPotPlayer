@@ -101,6 +101,9 @@
                     </Flyout>
                 </Button.Flyout>
             </Button>
+            <Button Style="{StaticResource PlayOtherButton}" Click="{x:Bind MusicPlayer.HidePlayBar}">
+                <FontIcon FontFamily="Segoe Fluent Icons" Glyph="&#xE019;" />
+            </Button>
             <Button Style="{StaticResource PlayOtherButton}" Click="{x:Bind MusicPlayer.TogglePlayListBarVisibility}">
                 <FontIcon FontFamily="Segoe Fluent Icons" Glyph="&#xE762;" />
             </Button>
