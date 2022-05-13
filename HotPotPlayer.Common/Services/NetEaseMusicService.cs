@@ -162,7 +162,7 @@ namespace HotPotPlayer.Services
         {
             if (LocalMusic != null)
             {
-                var local = await LocalMusic.QueryMusicAsync(name);
+                var local = await LocalMusic.QueryMusicAsync(name, true);
                 var l = local.FirstOrDefault();
                 if (l!=null && l.GetArtists()==artist)
                 {

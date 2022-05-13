@@ -636,12 +636,13 @@ namespace HotPotPlayer.Services
             });
         }
 
-        public async Task<List<MusicItem>> QueryMusicAsync(string name)
+        public async Task<List<MusicItem>> QueryMusicAsync(string name, bool exactMatch = false)
         {
             return await Task.Run(() =>
             {
                 using var db = Realm.GetInstance(DbPath);
-                var qItems = db.All<MusicItemDb>().Where(m => m.Title.Contains(name)).AsEnumerable().Select(i => i.ToOrigin()).ToList();
+                var qItems1 = db.All<MusicItemDb>().Where(m => m.Title.Contains(name)).AsEnumerable().Select(i => i.ToOrigin());
+                var qItems = exactMatch ? qItems1.Where(m => m.Title == name).ToList() : qItems1.ToList();
                 return qItems;
             });
         }
