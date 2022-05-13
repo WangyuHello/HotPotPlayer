@@ -75,6 +75,13 @@ namespace HotPotPlayer.Services
             set => Set(ref _recommedPlayList, value);
         }
 
+        private ObservableCollection<Toplist> _topList;
+        public ObservableCollection<Toplist> TopList
+        {
+            get => _topList;
+            set => Set(ref _topList, value);
+        }
+
         public async Task InitAsync()
         {
             var likeList = await GetLikeListAsync();
@@ -85,6 +92,9 @@ namespace HotPotPlayer.Services
 
             var recPlayList = await GetRecommendPlayListAsync();
             RecommedPlayList ??= new(recPlayList);
+
+            var topL = await GetTopListDigestAsync();
+            TopList ??= new(topL);
         }
 
         public async Task<JObject> LoginAsync(string phone, string password)
@@ -197,6 +207,16 @@ namespace HotPotPlayer.Services
                 c.GetSource = () => GetSongUrlAsync(c.SId).Result;
             }
             return playList;
+        }
+
+        public async Task<List<Toplist>> GetTopListDigestAsync()
+        {
+            var json = await Api.RequestAsync(CloudMusicApiProviders.ToplistDetail);
+            var l = json["list"].ToArray().Select(s => {
+                var i = s.ToToplist();
+                return i;
+            }).Take(4).ToList();
+            return l;
         }
 
         public async Task<string> GetSongUrlAsync(string id)

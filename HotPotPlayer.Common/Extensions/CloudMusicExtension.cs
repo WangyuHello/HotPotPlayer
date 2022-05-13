@@ -1,4 +1,5 @@
 ﻿using HotPotPlayer.Models.CloudMusic;
+using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
@@ -117,6 +118,12 @@ namespace HotPotPlayer.Extensions
             if (artist["trans"] != null) art.TransName = artist["trans"].ToString();
             if (artist["picUrl"] != null) art.Avatar = artist["picUrl"].ToString();
             return art;
+        }
+
+        public static Toplist ToToplist(this JToken j)
+        {
+            var t = JsonConvert.DeserializeObject<Toplist>(j.ToString());
+            return t;
         }
     }
 }
