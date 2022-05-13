@@ -524,6 +524,11 @@
         </Setter>
     </Style>
 
+    <Style TargetType="ListViewItem" x:Key="GeneralListContainerCompactStyle" BasedOn="{StaticResource GeneralListContainerStyle}" >
+        <Setter Property="MinHeight" Value="0" />
+        <Setter Property="MinWidth" Value="0" />
+    </Style>
+
     <Style TargetType="ListViewItem" x:Key="GeneralListContainerWithPaddingStyle" BasedOn="{StaticResource GeneralListContainerStyle}">
         <Setter Property="Margin" Value="8,12,4,12" />
     </Style>

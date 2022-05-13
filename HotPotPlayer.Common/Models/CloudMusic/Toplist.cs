@@ -35,5 +35,10 @@ namespace HotPotPlayer.Models.CloudMusic
 
         [JsonProperty("second")]
         public string Second { get; set; }
+
+        public string GetSecond()
+        {
+            return "- " + Second;
+        }
     }
 }

@@ -3,7 +3,9 @@
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:models="using:HotPotPlayer.Models"
+    xmlns:modelsC="using:HotPotPlayer.Models.CloudMusic"
     xmlns:helper="using:HotPotPlayer.Pages.Helper"
+    xmlns:conv="using:HotPotPlayer.Converters"
     xmlns:local="using:HotPotPlayer.Templates">
 
     <Thickness x:Key="ListItemPadding" >12,0</Thickness>
@@ -169,4 +171,13 @@
             </DataTemplate>
         </local:EvenOldTemplateSelector.OddTemplate>
     </local:EvenOldTemplateSelector>
+
+    <conv:IndexConverter x:Key="TopListIndexConverter" />
+    <DataTemplate x:Key="TopListTemplate" x:DataType="modelsC:TopListTrack">
+        <StackPanel Orientation="Horizontal" Spacing="8" Padding="12,8" HorizontalAlignment="Stretch">
+            <TextBlock FontSize="12" Text="{Binding RelativeSource={RelativeSource Mode=TemplatedParent}, Converter={StaticResource TopListIndexConverter}}" VerticalAlignment="Center" FontFamily="{StaticResource MiSansBold}"/>
+            <TextBlock FontSize="12" Text="{x:Bind First}" VerticalAlignment="Center" FontFamily="{StaticResource MiSansMedium}"/>
+            <TextBlock FontSize="12" Text="{x:Bind GetSecond()}" Foreground="Gray" TextTrimming="CharacterEllipsis" VerticalAlignment="Center" FontFamily="{StaticResource MiSansRegular}"/>
+        </StackPanel>
+    </DataTemplate>
 </ResourceDictionary>
