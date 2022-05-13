@@ -54,44 +54,26 @@
                 </Grid.RowDefinitions>
                 <TextBlock Text="每日推荐" FontSize="20" FontFamily="{StaticResource MiSansMedium}" />
                 <TextBlock Grid.Row="1" Text="{x:Bind GetCount(CloudMusicService.RecommedList), Mode=OneWay}" Margin="0,4" Foreground="Gray" FontFamily="{StaticResource MiSansRegular}" />
-                <ListView Grid.Row="2" Margin="-28,4,-12,0" Padding="24,0,12,0" ItemsSource="{x:Bind CloudMusicService.RecommedList, Mode=OneWay}" Style="{StaticResource GeneralListViewWithFooterStyle}" ItemTemplate="{StaticResource CloudMusicCardViewTemplate}" ItemContainerStyle="{StaticResource GeneralListContainerWithPadding2Style}" ItemClick="{x:Bind helper:ListHelper.PlayMusicInList}"/>
+                <ListView Grid.Row="2" Margin="-28,4,-8,0" Padding="24,0,12,0" ItemsSource="{x:Bind CloudMusicService.RecommedList, Mode=OneWay}" Style="{StaticResource GeneralListViewWithFooterStyle}" ItemTemplate="{StaticResource CloudMusicCardViewTemplate}" ItemContainerStyle="{StaticResource GeneralListContainerWithPadding2Style}" ItemClick="{x:Bind helper:ListHelper.PlayMusicInList}"/>
             </Grid>
 
-            <Grid Grid.Column="1" Margin="8,0,8,0">
+            <Grid Grid.Column="1" Margin="12,0,8,0">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto" />
                     <RowDefinition Height="*" />
+                    <RowDefinition Height="*" />
                 </Grid.RowDefinitions>
-                <TextBlock Margin="8,0" Text="排行榜" FontSize="20" FontFamily="{StaticResource MiSansMedium}" />
-                <Grid Grid.Row="1" Margin="0,8">
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="*" />
-                        <RowDefinition Height="*" />
-                    </Grid.RowDefinitions>
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="*" />
-                        <ColumnDefinition Width="*" />
-                    </Grid.ColumnDefinitions>
-                    <Grid Margin="8" CornerRadius="8" Background="White" Padding="16">
-                        <TextBlock Text="{x:Bind CloudMusicService.TopList[0].Name, Mode=OneWay}" FontSize="20" FontFamily="{StaticResource MiSansMedium}" />
-                        <TextBlock Margin="0,8,0,0" HorizontalAlignment="Right" Text="{x:Bind CloudMusicService.TopList[0].UpdateFrequency, Mode=OneWay}" Foreground="Gray" FontSize="10" FontFamily="{StaticResource MiSansRegular}" />
-                        <ListView Margin="-16,40,-16,-8" ItemsSource="{x:Bind CloudMusicService.TopList[0].Tracks, Mode=OneWay}" Style="{StaticResource GeneralListViewStyle}" ItemTemplate="{StaticResource TopListTemplate}" ItemContainerStyle="{StaticResource GeneralListContainerCompactStyle}"/>
-                    </Grid>
-                    <Grid Grid.Row="1" Margin="8" CornerRadius="8" Background="White" Padding="16">
-                        <TextBlock Text="{x:Bind CloudMusicService.TopList[1].Name, Mode=OneWay}" FontSize="20" FontFamily="{StaticResource MiSansMedium}" />
-                        <TextBlock Margin="0,8,0,0" HorizontalAlignment="Right" Text="{x:Bind CloudMusicService.TopList[1].UpdateFrequency, Mode=OneWay}" Foreground="Gray" FontSize="10" FontFamily="{StaticResource MiSansRegular}" />
-                        <ListView Margin="-16,40,-16,-8" ItemsSource="{x:Bind CloudMusicService.TopList[1].Tracks, Mode=OneWay}" Style="{StaticResource GeneralListViewStyle}" ItemTemplate="{StaticResource TopListTemplate}" ItemContainerStyle="{StaticResource GeneralListContainerCompactStyle}"/>
-                    </Grid>
-                    <Grid Grid.Column="1" Margin="8" CornerRadius="8" Background="White" Padding="16">
-                        <TextBlock Text="{x:Bind CloudMusicService.TopList[2].Name, Mode=OneWay}" FontSize="20" FontFamily="{StaticResource MiSansMedium}" />
-                        <TextBlock Margin="0,8,0,0" HorizontalAlignment="Right" Text="{x:Bind CloudMusicService.TopList[2].UpdateFrequency, Mode=OneWay}" Foreground="Gray" FontSize="10" FontFamily="{StaticResource MiSansRegular}" />
-                        <ListView Margin="-16,40,-16,-8" ItemsSource="{x:Bind CloudMusicService.TopList[2].Tracks, Mode=OneWay}" Style="{StaticResource GeneralListViewStyle}" ItemTemplate="{StaticResource TopListTemplate}" ItemContainerStyle="{StaticResource GeneralListContainerCompactStyle}"/>
-                    </Grid>
-                    <Grid Grid.Row="1" Grid.Column="1" Margin="8" CornerRadius="8" Background="White" Padding="16">
-                        <TextBlock Text="{x:Bind CloudMusicService.TopList[3].Name, Mode=OneWay}" FontSize="20" FontFamily="{StaticResource MiSansMedium}" />
-                        <TextBlock Margin="0,8,0,0" HorizontalAlignment="Right" Text="{x:Bind CloudMusicService.TopList[3].UpdateFrequency, Mode=OneWay}" Foreground="Gray" FontSize="10" FontFamily="{StaticResource MiSansRegular}" />
-                        <ListView Margin="-16,40,-16,-8" ItemsSource="{x:Bind CloudMusicService.TopList[3].Tracks, Mode=OneWay}" Style="{StaticResource GeneralListViewStyle}" ItemTemplate="{StaticResource TopListTemplate}" ItemContainerStyle="{StaticResource GeneralListContainerCompactStyle}"/>
-                    </Grid>
+                <TextBlock Margin="8,0,0,8" Text="排行榜" FontSize="20" FontFamily="{StaticResource MiSansMedium}" />
+
+                <Grid Grid.Row="1" CornerRadius="8" Background="White" Padding="16">
+                    <TextBlock Text="热门歌手" FontSize="20" FontFamily="{StaticResource MiSansMedium}"/>
+                    <ListView Margin="-16,36,-16,0" Padding="8,0,0,0" ItemsSource="{x:Bind CloudMusicService.TopArtists, Mode=OneWay}" Style="{StaticResource HorizontalListViewStyle}" ItemContainerStyle="{StaticResource GeneralListContainerCompactPaddingStyle}" ItemTemplate="{StaticResource CloudArtistCardViewTemplate}"/>
+                </Grid>
+                
+                <Grid Grid.Row="2" Margin="0,8" CornerRadius="8" Background="White" Padding="16">
+                    <TextBlock Text="{x:Bind CloudMusicService.TopList[0].Name, Mode=OneWay}" FontSize="20" FontFamily="{StaticResource MiSansMedium}" />
+                    <TextBlock Margin="0,8,0,0" HorizontalAlignment="Right" Text="{x:Bind CloudMusicService.TopList[0].UpdateFrequency, Mode=OneWay}" Foreground="Gray" FontSize="10" FontFamily="{StaticResource MiSansRegular}" />
+                    <ListView Margin="-16,40,-16,-8" ItemsSource="{x:Bind CloudMusicService.TopList[0].Tracks, Mode=OneWay}" Style="{StaticResource GeneralListViewStyle}" ItemTemplate="{StaticResource TopListTemplate}" ItemContainerStyle="{StaticResource GeneralListContainerCompactStyle}"/>
                 </Grid>
             </Grid>
         </Grid>

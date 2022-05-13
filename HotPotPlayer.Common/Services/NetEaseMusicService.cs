@@ -82,6 +82,13 @@ namespace HotPotPlayer.Services
             set => Set(ref _topList, value);
         }
 
+        private ObservableCollection<CloudArtistItem> _topArtists;
+        public ObservableCollection<CloudArtistItem> TopArtists
+        {
+            get => _topArtists;
+            set => Set(ref _topArtists, value);
+        }
+
         public async Task InitAsync()
         {
             var likeList = await GetLikeListAsync();
@@ -95,6 +102,9 @@ namespace HotPotPlayer.Services
 
             var topL = await GetTopListDigestAsync();
             TopList ??= new(topL);
+
+            var topA = await GetTopArtistsAsync();
+            TopArtists ??= new(topA);
         }
 
         public async Task<JObject> LoginAsync(string phone, string password)
@@ -216,6 +226,16 @@ namespace HotPotPlayer.Services
                 var i = s.ToToplist();
                 return i;
             }).Take(4).ToList();
+            return l;
+        }
+
+        public async Task<List<CloudArtistItem>> GetTopArtistsAsync()
+        {
+            var json = await Api.RequestAsync(CloudMusicApiProviders.TopArtists, new Dictionary<string, object> { ["limit"] = 10 });
+            var l = json["artists"].ToArray().Select(s => {
+                var i = s.ToArtist();
+                return i;
+            }).ToList();
             return l;
         }
 

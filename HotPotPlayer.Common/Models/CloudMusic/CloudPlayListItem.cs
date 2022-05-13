@@ -17,5 +17,14 @@ namespace HotPotPlayer.Models.CloudMusic
         public long TrackCount { get; set; }
 
         public override Uri Cover => Cover2;
+
+        public string GetPlayCount()
+        {
+            if (PlayCount > 10000)
+            {
+                return (PlayCount / 10000) + "万";
+            }
+            return PlayCount.ToString();
+        }
     }
 }

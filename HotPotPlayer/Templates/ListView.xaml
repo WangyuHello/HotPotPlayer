@@ -174,10 +174,18 @@
 
     <conv:IndexConverter x:Key="TopListIndexConverter" />
     <DataTemplate x:Key="TopListTemplate" x:DataType="modelsC:TopListTrack">
-        <StackPanel Orientation="Horizontal" Spacing="8" Padding="12,8" HorizontalAlignment="Stretch">
-            <TextBlock FontSize="12" Text="{Binding RelativeSource={RelativeSource Mode=TemplatedParent}, Converter={StaticResource TopListIndexConverter}}" VerticalAlignment="Center" FontFamily="{StaticResource MiSansBold}"/>
-            <TextBlock FontSize="12" Text="{x:Bind First}" VerticalAlignment="Center" FontFamily="{StaticResource MiSansMedium}"/>
-            <TextBlock FontSize="12" Text="{x:Bind GetSecond()}" Foreground="Gray" TextTrimming="CharacterEllipsis" VerticalAlignment="Center" FontFamily="{StaticResource MiSansRegular}"/>
-        </StackPanel>
+        <Grid Padding="12,8">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
+            <StackPanel Orientation="Horizontal" Spacing="8" >
+                <TextBlock FontSize="12" Text="{Binding RelativeSource={RelativeSource Mode=TemplatedParent}, Converter={StaticResource TopListIndexConverter}}" VerticalAlignment="Center" FontFamily="{StaticResource MiSansBold}"/>
+                <TextBlock FontSize="12" Text="{x:Bind First}" VerticalAlignment="Center" FontFamily="{StaticResource MiSansMedium}"/>
+                <TextBlock FontSize="12" Text="{x:Bind GetSecond()}" Foreground="Gray" TextTrimming="CharacterEllipsis" VerticalAlignment="Center" FontFamily="{StaticResource MiSansRegular}"/>
+            </StackPanel>
+            <FontIcon Grid.Column="1" FontFamily="Segoe Fluent Icons" Glyph="&#xE014;" FontSize="12"/>
+        </Grid>
+
     </DataTemplate>
 </ResourceDictionary>
