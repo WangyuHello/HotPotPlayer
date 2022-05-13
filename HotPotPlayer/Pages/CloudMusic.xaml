@@ -38,11 +38,11 @@
 
         <TextBlock Grid.Row="1" Text="推荐歌单" FontSize="20" FontFamily="{StaticResource MiSansMedium}" />
 
-        <ListView x:Name="RecListView" Height="254" Grid.Row="2" ItemsSource="{x:Bind CloudMusicService.RecommedPlayList, Mode=OneWay}" Style="{StaticResource HorizontalListViewStyle}" ItemTemplate="{StaticResource CloudPlayListCardViewTemplate}" ItemClick="RecListView_ItemClick"/>
+        <ListView x:Name="RecListView" Margin="-28,0,0,0" Padding="22,0,0,0" Height="254" Grid.Row="2" ItemsSource="{x:Bind CloudMusicService.RecommedPlayList, Mode=OneWay}" Style="{StaticResource HorizontalListViewStyle}" ItemTemplate="{StaticResource CloudPlayListCardViewTemplate}" ItemClick="RecListView_ItemClick"/>
 
-        <Grid Grid.Row="3" Margin="0,12,0,0">
+        <Grid Grid.Row="3" Margin="0,4,0,0">
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="1.5*" />
+                <ColumnDefinition Width="1.3*" />
                 <ColumnDefinition Width="*" />
             </Grid.ColumnDefinitions>
 
@@ -54,7 +54,7 @@
                 </Grid.RowDefinitions>
                 <TextBlock Text="每日推荐" FontSize="20" FontFamily="{StaticResource MiSansMedium}" />
                 <TextBlock Grid.Row="1" Text="{x:Bind GetCount(CloudMusicService.RecommedList), Mode=OneWay}" Margin="0,4" Foreground="Gray" FontFamily="{StaticResource MiSansRegular}" />
-                <ListView Grid.Row="2" Margin="-28,8,-12,0" Padding="24,0,12,0" ItemsSource="{x:Bind CloudMusicService.RecommedList, Mode=OneWay}" Style="{StaticResource GeneralListViewWithFooterStyle}" ItemTemplate="{StaticResource CloudMusicCardViewTemplate}" ItemContainerStyle="{StaticResource GeneralListContainerWithPadding2Style}" ItemClick="{x:Bind helper:ListHelper.PlayMusicInList}"/>
+                <ListView Grid.Row="2" Margin="-28,4,-12,0" Padding="24,0,12,0" ItemsSource="{x:Bind CloudMusicService.RecommedList, Mode=OneWay}" Style="{StaticResource GeneralListViewWithFooterStyle}" ItemTemplate="{StaticResource CloudMusicCardViewTemplate}" ItemContainerStyle="{StaticResource GeneralListContainerWithPadding2Style}" ItemClick="{x:Bind helper:ListHelper.PlayMusicInList}"/>
             </Grid>
 
             <Grid Grid.Column="1" Margin="8,0,8,0">
