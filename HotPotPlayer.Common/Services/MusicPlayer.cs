@@ -478,9 +478,9 @@ namespace HotPotPlayer.Services
                 {
                     _outputDevice.Stop();
                 }
-                LoadMusic(music);
+                var intercept = LoadMusic(music);
                 _outputDevice.Play();
-                e.Result = e.Argument;
+                e.Result = ValueTuple.Create(index, intercept);
 
                 _smtc ??= InitSmtc();
                 UpdateMstcInfoAsync((int)e.Argument);
@@ -495,21 +495,21 @@ namespace HotPotPlayer.Services
             _isMusicSwitching = false;
         }
 
-        private void LoadMusic(MusicItem music)
+        private bool LoadMusic(MusicItem music)
         {
+            bool intercept;
             if (_audioStream == null)
             {
                 var volume = Volume;
-
-                _audioStream = music switch
+                (_audioStream, intercept) = music switch
                 {
                     CloudMusicItem c2 => c2.GetSource() switch
                     {
-                        Uri uri when uri.IsFile => new AudioFileReader(uri.GetLocalPath()),
-                        Uri netUri when !netUri.IsFile => new MediaFoundationReader(netUri.OriginalString),
+                        Uri uri when uri.IsFile => Tuple.Create<WaveStream, bool>(new AudioFileReader(uri.GetLocalPath()), true),
+                        Uri netUri when !netUri.IsFile => Tuple.Create<WaveStream, bool>(new MediaFoundationReader(netUri.OriginalString), false),
                         _ => throw new NotImplementedException()
                     },
-                    _ => new AudioFileReader(music.Source.FullName)
+                    _ => Tuple.Create<WaveStream, bool>(new AudioFileReader(music.Source.FullName), false)
                 };
                 _volumeSample = new(_audioStream.ToSampleProvider());
 
@@ -524,15 +524,15 @@ namespace HotPotPlayer.Services
                 _audioStream.Dispose();
                 var tempVolume = (float)Volume;
 
-                _audioStream = music switch
+                (_audioStream, intercept) = music switch
                 {
                     CloudMusicItem c2 => c2.GetSource() switch
                     {
-                        Uri uri when uri.IsFile => new AudioFileReader(uri.GetLocalPath()),
-                        Uri netUri when !netUri.IsFile => new MediaFoundationReader(netUri.OriginalString),
+                        Uri uri when uri.IsFile => Tuple.Create<WaveStream, bool>(new AudioFileReader(uri.GetLocalPath()), true),
+                        Uri netUri when !netUri.IsFile => Tuple.Create<WaveStream, bool>(new MediaFoundationReader(netUri.OriginalString), false),
                         _ => throw new NotImplementedException()
                     },
-                    _ => new AudioFileReader(music.Source.FullName)
+                    _ => Tuple.Create<WaveStream, bool>(new AudioFileReader(music.Source.FullName), false)
                 };
 
                 _volumeSample = new(_audioStream.ToSampleProvider())
@@ -542,6 +542,7 @@ namespace HotPotPlayer.Services
 
                 _outputDevice.Init(_volumeSample);
             }
+            return intercept;
         }
 
         private async void PreCacheNextMusic(int index)
@@ -561,11 +562,12 @@ namespace HotPotPlayer.Services
         private void PlayerStarterCompleted(object sender, RunWorkerCompletedEventArgs e)
         {
             IsPlayBarVisible = true;
-            if (e.Result is int index)
+            if (e.Result is (int index, bool intercept))
             {
                 HasError = false;
                 IsPlaying = true;
                 var music = CurrentPlayList[index];
+                music.IsIntercept = intercept;
                 CurrentPlaying = music;
                 CurrentPlayingIndex = index;
                 _playerTimer.Start();

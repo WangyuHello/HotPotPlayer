@@ -37,6 +37,11 @@ namespace HotPotPlayer.Models
         public string AlbumSignature => Album+Year;
         public int DiscTrack => (Disc << 16) | Track;
 
+        /// <summary>
+        /// 如果是网络音乐但是用本地音乐播放
+        /// </summary>
+        public bool IsIntercept { get; set; }
+
         public string GetArtists()
         {
             return string.Join(", ", Artists);
