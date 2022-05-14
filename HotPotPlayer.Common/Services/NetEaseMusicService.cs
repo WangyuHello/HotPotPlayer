@@ -269,9 +269,9 @@ namespace HotPotPlayer.Services
             return json;
         }
 
-        public void GetSongComment(string id)
+        public async Task GetSongCommentAsync(string id)
         {
-            var json = Api.RequestAsync(CloudMusicApiProviders.SongDetail)
+            var json = await Api.RequestAsync(CloudMusicApiProviders.CommentMusic, new Dictionary<string, object> { ["id"] = id });
         }
     }
 }

@@ -1,4 +1,5 @@
-﻿using HotPotPlayer.Services;
+﻿using HotPotPlayer.Models.CloudMusic;
+using HotPotPlayer.Services;
 using Microsoft.UI.Input;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
@@ -9,6 +10,7 @@ using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Navigation;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
@@ -25,8 +27,22 @@ namespace HotPotPlayer.Controls
         public PlayScreen()
         {
             this.InitializeComponent();
+            MusicPlayer.PropertyChanged += MusicPlayer_PropertyChanged;
         }
 
+        private async void MusicPlayer_PropertyChanged(object sender, PropertyChangedEventArgs e)
+        {
+            MusicPlayer m = (MusicPlayer)sender;
+            if (e.PropertyName == "CurrentPlaying" || e.PropertyName == "IsPlayScreenVisible")
+            {
+                if (m.IsPlayScreenVisible && m.CurrentPlaying != null && m.CurrentPlaying is CloudMusicItem c)
+                {
+                    await CloudMusicService.GetSongCommentAsync(c.SId);
+                }
+            }
+        }
+
+        NetEaseMusicService CloudMusicService => ((App)Application.Current).NetEaseMusicService;
         MusicPlayer MusicPlayer => ((App)Application.Current).MusicPlayer;
 
         private void PlayScreen_PointerReleased(object sender, PointerRoutedEventArgs e)
