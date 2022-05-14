@@ -1,5 +1,8 @@
-﻿using HotPotPlayer.Models.CloudMusic;
+﻿using HotPotPlayer.Interop;
+using HotPotPlayer.Models;
+using HotPotPlayer.Models.CloudMusic;
 using HotPotPlayer.Services;
+using Microsoft.UI;
 using Microsoft.UI.Input;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
@@ -16,8 +19,10 @@ using System.IO;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices.WindowsRuntime;
+using Windows.ApplicationModel.DataTransfer;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
+using Windows.System;
 
 // To learn more about WinUI, the WinUI project structure,
 // and more about our project templates, see: http://aka.ms/winui-project-info.
@@ -91,6 +96,7 @@ namespace HotPotPlayer.Controls
 
         NetEaseMusicService CloudMusicService => ((App)Application.Current).NetEaseMusicService;
         MusicPlayer MusicPlayer => ((App)Application.Current).MusicPlayer;
+        App App => (App)Application.Current;
 
         private void PlayScreen_PointerReleased(object sender, PointerRoutedEventArgs e)
         {
@@ -104,6 +110,53 @@ namespace HotPotPlayer.Controls
                 }
             }
             e.Handled = true;
+        }
+
+        public string GetLikeButtonGlyph(MusicItem m)
+        {
+            if (m is CloudMusicItem c)
+            {
+                return CloudMusicService.GetSongLiked(c) ? "\uEB52" : "\uEB51";
+            }
+            return "\uEB51";
+        }
+
+        public SolidColorBrush GetLikeButtonForeground(MusicItem m)
+        {
+            if (m is CloudMusicItem c)
+            {
+                return CloudMusicService.GetSongLiked(c) ? new SolidColorBrush(Colors.Red) : new SolidColorBrush(Colors.Black);
+            }
+            return new SolidColorBrush(Colors.Black);
+        }
+
+        private async void OpenFolder_Click(object sender, RoutedEventArgs e)
+        {
+            DirectoryInfo path = MusicPlayer.CurrentPlaying?.Source?.Directory;
+            if (path != null)
+            {
+                await Launcher.LaunchFolderPathAsync(path.FullName);
+            }
+        }
+
+        private void Share_Click(object sender, RoutedEventArgs e)
+        {
+            var hWnd = App.MainWindowHandle;
+
+            IDataTransferManagerInterop interop = DataTransferManager.As<IDataTransferManagerInterop>();
+
+            IntPtr result = interop.GetForWindow(hWnd, DataTransferManagerInteropConstants._dtm_iid);
+            var dataTransferManager = WinRT.MarshalInterface<DataTransferManager>.FromAbi(result);
+
+            dataTransferManager.DataRequested += (sender, args) =>
+            {
+                args.Request.Data.Properties.Title = "分享音乐";
+                args.Request.Data.SetText(MusicPlayer.CurrentPlaying.ToString());
+                args.Request.Data.RequestedOperation = DataPackageOperation.Copy;
+            };
+
+            // Show the Share UI
+            interop.ShowShareUIForWindow(hWnd);
         }
     }
 }

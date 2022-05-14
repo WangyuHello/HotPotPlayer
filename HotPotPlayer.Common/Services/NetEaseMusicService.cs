@@ -278,5 +278,14 @@ namespace HotPotPlayer.Services
             }).ToList();
             return l;
         }
+
+        public bool GetSongLiked(CloudMusicItem c)
+        {
+            if (LikeList.Contains(c, new CloudMusicItemComparer()))
+            {
+                return true;
+            }
+            return false;
+        }
     }
 }
