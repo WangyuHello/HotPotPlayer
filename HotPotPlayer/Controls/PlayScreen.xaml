@@ -22,7 +22,7 @@
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="1.2*" />
+            <ColumnDefinition Width="*" />
             <ColumnDefinition Width="*" />
         </Grid.ColumnDefinitions>
         <Button Margin="0,16" Style="{StaticResource PlayOtherButton}" Click="{x:Bind MusicPlayer.ToggleShowPlayScreen}">
@@ -67,11 +67,14 @@
             </Button>
         </StackPanel>
         <TextBlock Grid.Row="5" Text="点赞" Margin="0,24,0,0" FontSize="16" FontFamily="{StaticResource MiSansMedium}" />
-        <Pivot Grid.Column="1" Grid.Row="1" Grid.RowSpan="5" Margin="0,-8,0,0" HeaderTemplate="{StaticResource LyricPivotHeaderTemplate}">
-            <PivotItem Header="歌词" >
-                
-            </PivotItem>
+        <Pivot Grid.Column="1" Grid.Row="0" Grid.RowSpan="7" Margin="0,58,0,96" HeaderTemplate="{StaticResource LyricPivotHeaderTemplate}">
             <PivotItem Header="评论" >
+                <Grid>
+                    <ListView x:Name="CommentList" Margin="0,0,-8,0" Padding="0,0,8,0" ItemsSource="{x:Bind Comments, Mode=OneWay}" Style="{StaticResource GeneralListViewStyle}" ItemContainerStyle="{StaticResource GeneralListContainerStyle}" ItemTemplate="{StaticResource CommentTemplate}"/>
+
+                </Grid>
+            </PivotItem>
+            <PivotItem Header="歌词" >
                 
             </PivotItem>
         </Pivot>

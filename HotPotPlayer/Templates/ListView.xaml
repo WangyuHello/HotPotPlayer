@@ -6,6 +6,7 @@
     xmlns:modelsC="using:HotPotPlayer.Models.CloudMusic"
     xmlns:helper="using:HotPotPlayer.Pages.Helper"
     xmlns:conv="using:HotPotPlayer.Converters"
+    xmlns:cont2="using:HotPotPlayer.UI.Controls"
     xmlns:local="using:HotPotPlayer.Templates">
 
     <Thickness x:Key="ListItemPadding" >12,0</Thickness>
@@ -187,5 +188,33 @@
             <FontIcon Grid.Column="1" FontFamily="Segoe Fluent Icons" Glyph="&#xE014;" FontSize="12"/>
         </Grid>
 
+    </DataTemplate>
+
+    <DataTemplate x:Key="CommentTemplate" x:DataType="modelsC:CloudCommentItem">
+        <Grid Padding="0,8">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="*" />
+                    <RowDefinition Height="*" />
+                </Grid.RowDefinitions>
+                <cont2:ImageEx2 Margin="0,0,8,0" Grid.RowSpan="2" Source="{x:Bind User.AvatarUrl}" Height="36" Width="36" CornerRadius="20" Style="{StaticResource LocalMusicImageStyle}"/>
+                <TextBlock Grid.Column="1" Text="{x:Bind User.NickName}" FontFamily="{StaticResource MiSansRegular}"/>
+                <TextBlock Grid.Column="1" Margin="0,2,0,0" Grid.Row="1" Text="{x:Bind TimeStr}" Foreground="Gray" FontSize="12" FontFamily="{StaticResource MiSansRegular}"/>
+                <TextBlock Grid.Column="2" Grid.RowSpan="2" Text="{x:Bind LikedCount}" VerticalAlignment="Center" Foreground="Gray" FontSize="12" FontFamily="{StaticResource MiSansRegular}"/>
+            </Grid>
+            <StackPanel Grid.Row="1" Margin="42,8,0,0">
+                <TextBlock Text="{x:Bind Content}" TextWrapping="Wrap" FontFamily="{StaticResource MiSansRegular}"/>
+            </StackPanel>
+        </Grid>
     </DataTemplate>
 </ResourceDictionary>
