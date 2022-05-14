@@ -62,16 +62,16 @@
             Source="{x:Bind MusicPlayer.CurrentPlaying.Cover, Mode=OneWay}" 
             />
         <StackPanel Grid.Row="5" Orientation="Horizontal" Spacing="40" Margin="0,32,0,0">
-            <Button x:Name="OpenFolder" Style="{StaticResource TransparentButton}" Click="OpenFolder_Click">
+            <Button x:Name="OpenFolder" Style="{StaticResource FullTransparentButton}" Click="OpenFolder_Click">
                 <FontIcon FontFamily="Segoe Fluent Icons" Glyph="&#xE8B7;" />
             </Button>
-            <Button x:Name="Share" Style="{StaticResource TransparentButton}" Click="Share_Click">
+            <Button x:Name="Share" Style="{StaticResource FullTransparentButton}" Click="Share_Click">
                 <FontIcon FontFamily="Segoe Fluent Icons" Glyph="&#xE72D;" />
             </Button>
-            <Button Style="{StaticResource TransparentButton}" >
+            <Button Style="{StaticResource FullTransparentButton}" >
                 <FontIcon FontFamily="Segoe Fluent Icons" Glyph="&#xE134;" />
             </Button>
-            <Button Style="{StaticResource TransparentButton}" Foreground="{x:Bind GetLikeButtonForeground(MusicPlayer.CurrentPlaying), Mode=OneWay}">
+            <Button Style="{StaticResource FullTransparentButton}" Foreground="{x:Bind GetLikeButtonForeground(MusicPlayer.CurrentPlaying), Mode=OneWay}">
                 <FontIcon FontFamily="Segoe Fluent Icons" Glyph="{x:Bind GetLikeButtonGlyph(MusicPlayer.CurrentPlaying), Mode=OneWay}" />
             </Button>
         </StackPanel>

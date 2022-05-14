@@ -60,11 +60,27 @@
         </StackPanel>
 
         <Grid x:Name="AlbumPopupOverlay" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Visibility="Collapsed" Background="#00FFFFFF" Tapped="AlbumPopupOverlay_Tapped">
-            <cont3:AlbumPopup x:Name="AlbumPopupTarget" Margin="0,-60,0,0" Album="{x:Bind SelectedAlbum, Mode=OneWay}" Tapped="{x:Bind helper:AlbumHelper.SuppressTap}"/>
+            <cont3:AlbumPopup x:Name="AlbumPopupTarget" Margin="0,-60,0,0" Album="{x:Bind SelectedAlbum, Mode=OneWay}" Tapped="{x:Bind helper:AlbumHelper.SuppressTap}">
+                <animations:Implicit.HideAnimations>
+                    <animations:OpacityAnimation Duration="0:0:0.45" From="1" To="0" />
+                </animations:Implicit.HideAnimations>
+
+                <animations:Implicit.ShowAnimations>
+                    <animations:OpacityAnimation Duration="0:0:0.01" From="0" To="1" />
+                </animations:Implicit.ShowAnimations>
+            </cont3:AlbumPopup>
         </Grid>
 
         <Grid x:Name="PlayListPopupOverlay" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Visibility="Collapsed" Background="#00ffffff" Tapped="PlayListPopupOverlay_Tapped">
-            <cont3:PlayListPopup x:Name="PlayListPopupTarget" Margin="0,-60,0,0" PlayList="{x:Bind SelectedPlayList, Mode=OneWay}" Tapped="{x:Bind helper:AlbumHelper.SuppressTap}"/>
+            <cont3:PlayListPopup x:Name="PlayListPopupTarget" Margin="0,-60,0,0" PlayList="{x:Bind SelectedPlayList, Mode=OneWay}" Tapped="{x:Bind helper:AlbumHelper.SuppressTap}">
+                <animations:Implicit.HideAnimations>
+                    <animations:OpacityAnimation Duration="0:0:0.45" From="1" To="0" />
+                </animations:Implicit.HideAnimations>
+
+                <animations:Implicit.ShowAnimations>
+                    <animations:OpacityAnimation Duration="0:0:0.01" From="0" To="1" />
+                </animations:Implicit.ShowAnimations>
+            </cont3:PlayListPopup>
         </Grid>
 
     </Grid>

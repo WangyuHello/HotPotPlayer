@@ -22,13 +22,6 @@
         BorderThickness="{ThemeResource ButtonBorderThemeThickness}" 
         BorderBrush="{ThemeResource ButtonBorderBrush}"
         >
-        <animations:Implicit.HideAnimations>
-            <animations:OpacityAnimation Duration="0:0:0.45" From="1" To="0" />
-        </animations:Implicit.HideAnimations>
-
-        <animations:Implicit.ShowAnimations>
-            <animations:OpacityAnimation Duration="0:0:0.01" From="0" To="1" />
-        </animations:Implicit.ShowAnimations>
 
         <!--<ui:Effects.Shadow>
                     <ui:AttachedDropShadow BlurRadius="8"

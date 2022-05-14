@@ -8,6 +8,8 @@
     xmlns:cont2="using:HotPotPlayer.UI.Controls"
     xmlns:helper="using:HotPotPlayer.Pages.Helper"
     xmlns:cont3="using:HotPotPlayer.Controls"
+    xmlns:animations="using:CommunityToolkit.WinUI.UI.Animations"
+    xmlns:ui="using:CommunityToolkit.WinUI.UI"
     mc:Ignorable="d"
     NavigationCacheMode="Enabled"
     Background="#F5F7FD"
@@ -79,7 +81,20 @@
         </Grid>
 
         <Grid x:Name="PlayListPopupOverlay" Grid.RowSpan="4" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Visibility="Collapsed" Background="#00ffffff" Tapped="PlayListPopupOverlay_Tapped">
-            <cont3:PlayListPopup x:Name="PlayListPopupTarget" Margin="0,-60,0,0" PlayList="{x:Bind SelectedPlayList, Mode=OneWay}" Tapped="{x:Bind helper:AlbumHelper.SuppressTap}"/>
+            <cont3:PlayListPopup x:Name="PlayListPopupTarget" Margin="0,-60,0,0" PlayList="{x:Bind SelectedPlayList, Mode=OneWay}" Tapped="{x:Bind helper:AlbumHelper.SuppressTap}" ui:VisualExtensions.NormalizedCenterPoint="0.5">
+                <animations:Implicit.HideAnimations>
+                    <animations:OpacityAnimation Duration="0:0:0.45" From="1" To="0" />
+                    <animations:ScaleAnimation Duration="0:0:0.45" From="1,1,1" To="0.9,0.9,1" />
+                    <animations:OffsetAnimation Duration="0:0:0.45" From="0,-40" To="0,-60" />
+                </animations:Implicit.HideAnimations>
+                
+
+                <animations:Implicit.ShowAnimations>
+                    <animations:OpacityAnimation Duration="0:0:0.45" From="0" To="1" />
+                    <animations:ScaleAnimation Duration="0:0:0.45" From="0.9,0.9,1" To="1,1,1" />
+                    <animations:OffsetAnimation Duration="0:0:0.45" From="0,-60" To="0,-40" />
+                </animations:Implicit.ShowAnimations>
+            </cont3:PlayListPopup>
         </Grid>
     </Grid>
 </Page>

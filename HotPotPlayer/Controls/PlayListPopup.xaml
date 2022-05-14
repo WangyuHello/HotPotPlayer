@@ -11,14 +11,6 @@
     mc:Ignorable="d">
 
     <Grid VerticalAlignment="Center" HorizontalAlignment="Center" Width="800" MinHeight="460" MaxHeight="560" CornerRadius="8" Background="{StaticResource PopupBackground}" >
-        <animations:Implicit.HideAnimations>
-            <animations:OpacityAnimation Duration="0:0:0.45" From="1" To="0" />
-        </animations:Implicit.HideAnimations>
-
-        <animations:Implicit.ShowAnimations>
-            <animations:OpacityAnimation Duration="0:0:0.01" From="0" To="1" />
-        </animations:Implicit.ShowAnimations>
-
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
@@ -27,24 +19,29 @@
         <Grid Height="16">
 
         </Grid>
-        <Grid Grid.Row="1" Margin="16,0,16,8">
+        <Grid Grid.Row="1" Margin="16,0,16,8" Height="180">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="Auto" />
                 <ColumnDefinition Width="*" />
             </Grid.ColumnDefinitions>
-
-            <cont2:ImageEx2 Source="{x:Bind PlayList.Cover, Mode=OneWay}" Style="{StaticResource LocalMusicImageStyle}"/>
-            <StackPanel Grid.Column="1" Margin="16,0,0,0">
-                <TextBlock Text="{x:Bind PlayList.Title, Mode=OneWay}" MaxLines="2" FontSize="32" TextWrapping="Wrap" FontWeight="Medium" TextTrimming="CharacterEllipsis" FontFamily="{ThemeResource MiSansRegular}"/>
-                <TextBlock Text="{x:Bind GetDescription(PlayList), Mode=OneWay}" MaxLines="4" TextTrimming="CharacterEllipsis" FontFamily="{StaticResource MiSansRegular}" />
-                <StackPanel Orientation="Horizontal" Margin="0,12,0,0" Spacing="8">
-                    <Button Style="{StaticResource AlbumPlayButton}" Click="PlayListPlay">
-                        <SymbolIcon Symbol="Play" />
-                    </Button>
-                    <SplitButton Padding="6">
-                        <SymbolIcon Symbol="Add" />
-                    </SplitButton>
-                </StackPanel>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="*" />
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
+            
+            <cont2:ImageEx2 Grid.RowSpan="3" VerticalAlignment="Top" Source="{x:Bind PlayList.Cover, Mode=OneWay}" Style="{StaticResource LocalMusicImageStyle}"/>
+            <TextBlock Margin="16,0,0,0" Grid.Column="1" Text="{x:Bind PlayList.Title, Mode=OneWay}" MaxLines="2" FontSize="32" TextWrapping="Wrap" FontWeight="Medium" TextTrimming="CharacterEllipsis" IsTextSelectionEnabled="True" FontFamily="{ThemeResource MiSansRegular}"/>
+            <ScrollViewer Margin="16,0,0,0" Grid.Column="1" Grid.Row="1">
+                <TextBlock Text="{x:Bind GetDescription(PlayList), Mode=OneWay}" TextWrapping="Wrap" TextTrimming="CharacterEllipsis" FontFamily="{StaticResource MiSansRegular}" IsTextSelectionEnabled="True"/>
+            </ScrollViewer>
+            <StackPanel Margin="16,8,0,10" Grid.Column="1" Grid.Row="2" Orientation="Horizontal" Spacing="8">
+                <Button Style="{StaticResource AlbumPlayButton}" Click="PlayListPlay">
+                    <SymbolIcon Symbol="Play" />
+                </Button>
+                <SplitButton Padding="6">
+                    <SymbolIcon Symbol="Add" />
+                </SplitButton>
             </StackPanel>
         </Grid>
 
