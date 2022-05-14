@@ -125,5 +125,17 @@ namespace HotPotPlayer.Extensions
             var t = JsonConvert.DeserializeObject<Toplist>(j.ToString());
             return t;
         }
+
+        public static CloudUserItem ToUser(this JToken j)
+        {
+            var t = JsonConvert.DeserializeObject<CloudUserItem>(j.ToString());
+            return t;
+        }
+
+        public static CloudCommentItem ToComment(this JToken j)
+        {
+            var t = JsonConvert.DeserializeObject<CloudCommentItem>(j.ToString());
+            return t;
+        }
     }
 }

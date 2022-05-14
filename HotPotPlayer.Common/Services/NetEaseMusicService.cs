@@ -269,9 +269,14 @@ namespace HotPotPlayer.Services
             return json;
         }
 
-        public async Task GetSongCommentAsync(string id)
+        public async Task<List<CloudCommentItem>> GetSongCommentAsync(string id)
         {
             var json = await Api.RequestAsync(CloudMusicApiProviders.CommentMusic, new Dictionary<string, object> { ["id"] = id });
+            var l = json["hotComments"].ToArray().Select(s => {
+                var i = s.ToComment();
+                return i;
+            }).ToList();
+            return l;
         }
     }
 }

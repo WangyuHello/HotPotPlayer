@@ -10,9 +10,11 @@ using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Navigation;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.IO;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices.WindowsRuntime;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
@@ -22,7 +24,7 @@ using Windows.Foundation.Collections;
 
 namespace HotPotPlayer.Controls
 {
-    public sealed partial class PlayScreen : UserControl
+    public sealed partial class PlayScreen : UserControl, INotifyPropertyChanged
     {
         public PlayScreen()
         {
@@ -30,16 +32,61 @@ namespace HotPotPlayer.Controls
             MusicPlayer.PropertyChanged += MusicPlayer_PropertyChanged;
         }
 
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        public void Set<T>(ref T oldValue, T newValue, [CallerMemberName] string propertyName = "")
+        {
+            if (!EqualityComparer<T>.Default.Equals(oldValue, newValue))
+            {
+                oldValue = newValue;
+                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+            }
+        }
+
+        bool _pendingChange = true;
         private async void MusicPlayer_PropertyChanged(object sender, PropertyChangedEventArgs e)
         {
             MusicPlayer m = (MusicPlayer)sender;
-            if (e.PropertyName == "CurrentPlaying" || e.PropertyName == "IsPlayScreenVisible")
+            if (m.CurrentPlaying != null && m.CurrentPlaying is CloudMusicItem c)
             {
-                if (m.IsPlayScreenVisible && m.CurrentPlaying != null && m.CurrentPlaying is CloudMusicItem c)
+                if (e.PropertyName == "IsPlayScreenVisible" && m.IsPlayScreenVisible)
                 {
-                    await CloudMusicService.GetSongCommentAsync(c.SId);
+                    if (_pendingChange)
+                    {
+                        Comments ??= new ObservableCollection<CloudCommentItem>();
+                        Comments.Clear();
+                        var l = await CloudMusicService.GetSongCommentAsync(c.SId);
+                        foreach (var item in l)
+                        {
+                            Comments.Add(item);
+                        }
+                        _pendingChange = false;
+                    }
+                }
+                else if (e.PropertyName == "CurrentPlaying")
+                {
+                    if (m.IsPlayScreenVisible)
+                    {
+                        Comments.Clear();
+                        var l = await CloudMusicService.GetSongCommentAsync(c.SId);
+                        foreach (var item in l)
+                        {
+                            Comments.Add(item);
+                        }
+                    }
+                    else
+                    {
+                        _pendingChange = true;
+                    }
                 }
             }
+        }
+
+        private ObservableCollection<CloudCommentItem> _comments;
+        public ObservableCollection<CloudCommentItem> Comments
+        {
+            get => _comments;
+            set => Set(ref _comments, value);
         }
 
         NetEaseMusicService CloudMusicService => ((App)Application.Current).NetEaseMusicService;
