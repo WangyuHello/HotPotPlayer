@@ -130,6 +130,24 @@ namespace HotPotPlayer.Controls
             return new SolidColorBrush(Colors.Black);
         }
 
+        public string GetAlias(MusicItem m)
+        {
+            if (m is CloudMusicItem c)
+            {
+                return c.Alias;
+            }
+            return string.Empty;
+        }
+
+        public Visibility GetAliasVisible(MusicItem m)
+        {
+            if (m is CloudMusicItem c && !string.IsNullOrEmpty(c.Alias))
+            {
+                return Visibility.Visible;
+            }
+            return Visibility.Collapsed;
+        }
+
         private async void OpenFolder_Click(object sender, RoutedEventArgs e)
         {
             DirectoryInfo path = MusicPlayer.CurrentPlaying?.Source?.Directory;

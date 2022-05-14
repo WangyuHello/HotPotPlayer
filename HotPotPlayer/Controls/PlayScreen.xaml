@@ -19,6 +19,7 @@
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
@@ -38,7 +39,8 @@
                 <TextBlock Text="MV" Foreground="#FF4A8E" FontSize="11" FontWeight="Bold" FontFamily="{StaticResource MiSansMedium}"/>
             </Grid>
         </Grid>
-        <Grid Grid.Row="2" Grid.ColumnSpan="1" Margin="0,24,32,0">
+        <TextBlock Grid.Row="2" Text="{x:Bind GetAlias(MusicPlayer.CurrentPlaying), Mode=OneWay}" Visibility="{x:Bind GetAliasVisible(MusicPlayer.CurrentPlaying), Mode=OneWay}" Foreground="Gray" MaxLines="2" TextWrapping="Wrap" TextTrimming="CharacterEllipsis" FontFamily="{StaticResource MiSansRegular}"/>
+        <Grid Grid.Row="3" Grid.ColumnSpan="1" Margin="0,24,32,0">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="Auto" />
                 <ColumnDefinition Width="Auto" />
@@ -50,12 +52,12 @@
             <TextBlock Grid.Column="2" Margin="28,0,4,0" Text="专辑:" Foreground="Gray" FontFamily="{StaticResource MiSansRegular}"/>
             <TextBlock Grid.Column="3" Text="{x:Bind MusicPlayer.CurrentPlaying.Album, Mode=OneWay}" TextWrapping="Wrap" MaxLines="2" TextTrimming="CharacterEllipsis" FontFamily="{StaticResource MiSansMedium}"/>
         </Grid>
-        <cont:ImageEx2 Grid.Row="3" x:Name="Cover" Margin="0,32,0,0"
+        <cont:ImageEx2 Grid.Row="4" x:Name="Cover" Margin="0,32,0,0"
             Style="{StaticResource PlayScreenImageStyle}" 
             Width="360" Height="360"
             Source="{x:Bind MusicPlayer.CurrentPlaying.Cover, Mode=OneWay}" 
             />
-        <StackPanel Grid.Row="4" Orientation="Horizontal" Spacing="40" Margin="0,32,0,0">
+        <StackPanel Grid.Row="5" Orientation="Horizontal" Spacing="40" Margin="0,32,0,0">
             <Button x:Name="OpenFolder" Style="{StaticResource TransparentButton}" Click="OpenFolder_Click">
                 <FontIcon FontFamily="Segoe Fluent Icons" Glyph="&#xE8B7;" />
             </Button>
@@ -69,8 +71,8 @@
                 <FontIcon FontFamily="Segoe Fluent Icons" Glyph="{x:Bind GetLikeButtonGlyph(MusicPlayer.CurrentPlaying), Mode=OneWay}" />
             </Button>
         </StackPanel>
-        <TextBlock Grid.Row="5" Text="点赞" Margin="0,24,0,0" FontSize="16" FontFamily="{StaticResource MiSansMedium}" />
-        <Pivot Grid.Column="1" Grid.Row="0" Grid.RowSpan="7" Margin="0,58,0,96" HeaderTemplate="{StaticResource LyricPivotHeaderTemplate}">
+        <TextBlock Grid.Row="6" Text="点赞" Margin="0,24,0,0" FontSize="16" FontFamily="{StaticResource MiSansMedium}" />
+        <Pivot Grid.Column="1" Grid.Row="0" Grid.RowSpan="8" Margin="0,58,0,96" HeaderTemplate="{StaticResource LyricPivotHeaderTemplate}">
             <PivotItem Header="评论" >
                 <Grid>
                     <ListView x:Name="CommentList" Margin="0,0,-8,0" Padding="0,0,8,0" ItemsSource="{x:Bind Comments, Mode=OneWay}" Style="{StaticResource GeneralListViewStyle}" ItemContainerStyle="{StaticResource GeneralListContainerStyle}" ItemTemplate="{StaticResource CommentTemplate}"/>
