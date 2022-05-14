@@ -268,5 +268,10 @@ namespace HotPotPlayer.Services
             var json = await Api.RequestAsync(CloudMusicApiProviders.Logout);
             return json;
         }
+
+        public void GetSongComment(string id)
+        {
+            var json = Api.RequestAsync(CloudMusicApiProviders.SongDetail)
+        }
     }
 }
