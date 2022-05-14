@@ -11,5 +11,14 @@
             FontFamily="{ThemeResource MiSansRegular}"
             />
     </DataTemplate>
-    
+
+    <DataTemplate x:Key="LyricPivotHeaderTemplate">
+        <TextBlock 
+            Text="{Binding }" 
+            FontSize="24" 
+            FontWeight="Medium" 
+            FontFamily="{ThemeResource MiSansMedium}"
+            />
+    </DataTemplate>
+
 </ResourceDictionary>
