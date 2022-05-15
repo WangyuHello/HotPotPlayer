@@ -75,7 +75,7 @@ namespace HotPotPlayer.Controls
                         {
                             SimiSongs.Add(item);
                         }
-
+                        Lyric = await CloudMusicService.GetLyric(c.SId);
                         _pendingChange = false;
                     }
                 }
@@ -96,6 +96,7 @@ namespace HotPotPlayer.Controls
                         {
                             SimiSongs.Add(item);
                         }
+                        Lyric = await CloudMusicService.GetLyric(c.SId);
                     }
                     else
                     {
@@ -117,6 +118,13 @@ namespace HotPotPlayer.Controls
         {
             get => _simiSongs;
             set => Set(ref _simiSongs, value);
+        }
+
+        private string _lyric;
+        public string Lyric
+        {
+            get => _lyric;
+            set => Set(ref _lyric, value);
         }
 
         NetEaseMusicService CloudMusicService => ((App)Application.Current).NetEaseMusicService;

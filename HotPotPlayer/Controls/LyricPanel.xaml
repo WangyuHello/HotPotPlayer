@@ -9,6 +9,6 @@
     mc:Ignorable="d">
 
     <Grid>
-        <canvas:CanvasControl x:Name="Canvas" Draw="Canvas_Draw" CreateResources="Canvas_CreateResources" PointerPressed="Canvas_PointerPressed" PointerMoved="Canvas_PointerMoved"/>
+        <canvas:CanvasControl x:Name="Canvas" Draw="Canvas_Draw" CreateResources="Canvas_CreateResources" PointerPressed="Canvas_PointerPressed" PointerMoved="Canvas_PointerMoved" SizeChanged="Canvas_SizeChanged"/>
     </Grid>
 </UserControl>

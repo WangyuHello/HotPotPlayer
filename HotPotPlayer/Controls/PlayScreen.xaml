@@ -80,14 +80,13 @@
         <ListView x:Name="SimiSongsList" Grid.Row="7" Height="56" VerticalAlignment="Top" ItemsSource="{x:Bind SimiSongs, Mode=OneWay}" Style="{StaticResource HorizontalListViewStyle}" ItemContainerStyle="{StaticResource GeneralListContainerCompactPaddingStyle}" ItemTemplate="{StaticResource CloudSimiSongCardViewTemplate}" ItemClick="SimiSongsList_ItemClick"/>
 
         <Pivot Grid.Column="1" Grid.Row="0" Grid.RowSpan="8" Margin="0,44,0,96" HeaderTemplate="{StaticResource LyricPivotHeaderTemplate}">
+            <PivotItem Header="歌词" >
+                <local:LyricPanel RawLyric="{x:Bind Lyric, Mode=OneWay}" CurrentTime="{x:Bind MusicPlayer.CurrentTime, Mode=OneWay}"/>
+            </PivotItem>
             <PivotItem Header="评论" >
                 <Grid>
                     <ListView x:Name="CommentList" Margin="0,0,-8,0" Padding="0,0,8,0" ItemsSource="{x:Bind Comments, Mode=OneWay}" Style="{StaticResource GeneralListViewStyle}" ItemContainerStyle="{StaticResource GeneralListContainerStyle}" ItemTemplate="{StaticResource CommentTemplate}"/>
-
                 </Grid>
-            </PivotItem>
-            <PivotItem Header="歌词" >
-                
             </PivotItem>
         </Pivot>
     </Grid>

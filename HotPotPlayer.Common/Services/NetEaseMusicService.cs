@@ -296,6 +296,12 @@ namespace HotPotPlayer.Services
             var json = await Api.RequestAsync(CloudMusicApiProviders.SimiUser, new Dictionary<string, object> { ["id"] = id });
         }
 
+        public async Task<string> GetLyric(string id)
+        {
+            var json = await Api.RequestAsync(CloudMusicApiProviders.Lyric, new Dictionary<string, object> { ["id"] = id });
+
+            return json["lrc"]["lyric"].Value<string>();
+        }
         public bool GetSongLiked(CloudMusicItem c)
         {
             if (LikeList.Contains(c, new CloudMusicItemComparer()))
