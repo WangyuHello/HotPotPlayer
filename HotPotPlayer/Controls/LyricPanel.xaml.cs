@@ -129,7 +129,9 @@ namespace HotPotPlayer.Controls
             _format = new CanvasTextFormat
             {
                 HorizontalAlignment = CanvasHorizontalAlignment.Center,
-                WordWrapping = CanvasWordWrapping.Wrap
+                WordWrapping = CanvasWordWrapping.Wrap,
+                FontFamily = "ms-appx:///Assets/Font/MiSans-Regular.ttf#MiSans",
+                FontSize = 16,
             };
         }
 
