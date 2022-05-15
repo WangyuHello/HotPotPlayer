@@ -1,6 +1,7 @@
 ﻿using HotPotPlayer.Interop;
 using HotPotPlayer.Models;
 using HotPotPlayer.Models.CloudMusic;
+using HotPotPlayer.Pages.Helper;
 using HotPotPlayer.Services;
 using Microsoft.UI;
 using Microsoft.UI.Input;
@@ -205,6 +206,11 @@ namespace HotPotPlayer.Controls
         {
             var music = e.ClickedItem as CloudMusicItem;
             MusicPlayer.PlayNext(music);
+        }
+
+        private void Album_Tapped(object sender, TappedRoutedEventArgs e)
+        {
+            AlbumHelper.AlbumInfoClick(sender, null);
         }
     }
 }
