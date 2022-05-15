@@ -279,6 +279,23 @@ namespace HotPotPlayer.Services
             return l;
         }
 
+        public async Task<List<CloudMusicItem>> GetSimilarSongAsync(string id)
+        {
+            var json = await Api.RequestAsync(CloudMusicApiProviders.SimiSong, new Dictionary<string, object> { ["id"] = id });
+            var songs = json["songs"].ToArray().Select(s =>
+            {
+                var i = s.ToMusicItem();
+                i.GetSource = () => GetSongSourceAsync(i.SId, i.OriginalTitle, i.GetArtists()).Result;
+                return i;
+            }).ToList();
+            return songs;
+        }
+
+        public async Task GetSimilarUserAsync(string id)
+        {
+            var json = await Api.RequestAsync(CloudMusicApiProviders.SimiUser, new Dictionary<string, object> { ["id"] = id });
+        }
+
         public bool GetSongLiked(CloudMusicItem c)
         {
             if (LikeList.Contains(c, new CloudMusicItemComparer()))

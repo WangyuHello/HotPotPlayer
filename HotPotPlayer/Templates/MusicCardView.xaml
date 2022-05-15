@@ -294,4 +294,23 @@
             </Button>
         </Grid>
     </DataTemplate>
+
+    <DataTemplate x:Key="CloudSimiSongCardViewTemplate" x:DataType="modelsC:CloudMusicItem">
+        <StackPanel
+            Width="40"
+            Padding="0,0,0,0"
+            x:Name="CloudSimiSongCardConnectedElement"
+            ui:VisualExtensions.NormalizedCenterPoint="0.5"
+            Loaded="Root_Loaded"
+            >
+            <cont2:ImageEx2 
+                Source="{x:Bind Cover}" 
+                Style="{StaticResource LocalMusicImageStyle}" 
+                ui:VisualExtensions.NormalizedCenterPoint="0.5"
+                Width="40" Height="40"
+                CornerRadius="4"
+                ToolTipService.ToolTip="{x:Bind Title}" 
+                />
+        </StackPanel>
+    </DataTemplate>
 </ResourceDictionary>

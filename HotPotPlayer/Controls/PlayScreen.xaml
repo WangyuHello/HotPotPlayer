@@ -26,7 +26,7 @@
             <ColumnDefinition Width="*" />
             <ColumnDefinition Width="*" />
         </Grid.ColumnDefinitions>
-        <Button Margin="0,16" Style="{StaticResource PlayOtherButton}" Click="{x:Bind MusicPlayer.ToggleShowPlayScreen}">
+        <Button Margin="0,8" Style="{StaticResource PlayOtherButton}" Click="{x:Bind MusicPlayer.ToggleShowPlayScreen}">
             <SymbolIcon Symbol="Clear" />
         </Button>
         <Grid Grid.Row="1" Grid.ColumnSpan="1" Margin="0,0,32,0">
@@ -75,8 +75,10 @@
                 <FontIcon FontFamily="Segoe Fluent Icons" Glyph="{x:Bind GetLikeButtonGlyph(MusicPlayer.CurrentPlaying), Mode=OneWay}" />
             </Button>
         </StackPanel>
-        <TextBlock Grid.Row="6" Text="点赞" Margin="0,24,0,0" FontSize="16" FontFamily="{StaticResource MiSansMedium}" />
-        <Pivot Grid.Column="1" Grid.Row="0" Grid.RowSpan="8" Margin="0,58,0,96" HeaderTemplate="{StaticResource LyricPivotHeaderTemplate}">
+        <TextBlock Grid.Row="6" Text="相似歌曲" Margin="0,24,0,4" FontSize="16" FontFamily="{StaticResource MiSansMedium}" />
+        <ListView x:Name="SimiSongsList" Grid.Row="7" Height="56" VerticalAlignment="Top" ItemsSource="{x:Bind SimiSongs, Mode=OneWay}" Style="{StaticResource HorizontalListViewStyle}" ItemContainerStyle="{StaticResource GeneralListContainerCompactPaddingStyle}" ItemTemplate="{StaticResource CloudSimiSongCardViewTemplate}" ItemClick="SimiSongsList_ItemClick"/>
+
+        <Pivot Grid.Column="1" Grid.Row="0" Grid.RowSpan="8" Margin="0,44,0,96" HeaderTemplate="{StaticResource LyricPivotHeaderTemplate}">
             <PivotItem Header="评论" >
                 <Grid>
                     <ListView x:Name="CommentList" Margin="0,0,-8,0" Padding="0,0,8,0" ItemsSource="{x:Bind Comments, Mode=OneWay}" Style="{StaticResource GeneralListViewStyle}" ItemContainerStyle="{StaticResource GeneralListContainerStyle}" ItemTemplate="{StaticResource CommentTemplate}"/>

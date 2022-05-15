@@ -61,10 +61,20 @@ namespace HotPotPlayer.Controls
                         Comments ??= new ObservableCollection<CloudCommentItem>();
                         Comments.Clear();
                         var l = await CloudMusicService.GetSongCommentAsync(c.SId);
+                        //await CloudMusicService.GetSimilarUserAsync(c.SId);
                         foreach (var item in l)
                         {
                             Comments.Add(item);
                         }
+
+                        SimiSongs ??= new ObservableCollection<CloudMusicItem>();
+                        SimiSongs.Clear();
+                        var ss = await CloudMusicService.GetSimilarSongAsync(c.SId);
+                        foreach (var item in ss)
+                        {
+                            SimiSongs.Add(item);
+                        }
+
                         _pendingChange = false;
                     }
                 }
@@ -74,9 +84,16 @@ namespace HotPotPlayer.Controls
                     {
                         Comments.Clear();
                         var l = await CloudMusicService.GetSongCommentAsync(c.SId);
+                        //await CloudMusicService.GetSimilarUserAsync(c.SId);
                         foreach (var item in l)
                         {
                             Comments.Add(item);
+                        }
+                        SimiSongs.Clear();
+                        var ss = await CloudMusicService.GetSimilarSongAsync(c.SId);
+                        foreach (var item in ss)
+                        {
+                            SimiSongs.Add(item);
                         }
                     }
                     else
@@ -92,6 +109,13 @@ namespace HotPotPlayer.Controls
         {
             get => _comments;
             set => Set(ref _comments, value);
+        }
+
+        private ObservableCollection<CloudMusicItem> _simiSongs;
+        public ObservableCollection<CloudMusicItem> SimiSongs
+        {
+            get => _simiSongs;
+            set => Set(ref _simiSongs, value);
         }
 
         NetEaseMusicService CloudMusicService => ((App)Application.Current).NetEaseMusicService;
@@ -175,6 +199,12 @@ namespace HotPotPlayer.Controls
 
             // Show the Share UI
             interop.ShowShareUIForWindow(hWnd);
+        }
+
+        private void SimiSongsList_ItemClick(object sender, ItemClickEventArgs e)
+        {
+            var music = e.ClickedItem as CloudMusicItem;
+            MusicPlayer.PlayNext(music);
         }
     }
 }

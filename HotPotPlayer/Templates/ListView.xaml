@@ -174,6 +174,7 @@
     </local:EvenOldTemplateSelector>
 
     <conv:IndexConverter x:Key="TopListIndexConverter" />
+    
     <DataTemplate x:Key="TopListTemplate" x:DataType="modelsC:TopListTrack">
         <Grid Padding="12,8">
             <Grid.ColumnDefinitions>
