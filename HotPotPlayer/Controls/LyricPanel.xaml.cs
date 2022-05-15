@@ -105,6 +105,10 @@ namespace HotPotPlayer.Controls
 
         private void Canvas_Draw(CanvasControl sender, CanvasDrawEventArgs args)
         {
+            if (lyricItems == null)
+            {
+                return;
+            }
             var lower = index >= count ? index - count : 0;
             var upper = index <= lyricItems.Length - 1 - count ? index + count : lyricItems.Length - 1;
             for (int i = lower; i <= upper; i++)
