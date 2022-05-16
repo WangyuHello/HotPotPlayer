@@ -182,17 +182,34 @@ namespace HotPotPlayer.Services
             return qrCodeAsBitmapByteArr;
         }
 
+        bool NotifiyWhenFail(JObject j)
+        {
+            if (j["code"] != null && j["code"].Value<int>() == 502)
+            {
+                var msg = j["msg"].Value<string>();
+                UIQueue?.TryEnqueue(() =>
+                {
+                    App?.ShowToast(new ToastInfo { Text = msg });
+                });
+                return false;
+            }
+            return true;
+        }
+
         public async Task<List<CloudMusicItem>> GetLikeListAsync()
         {
-            var json = await Api.RequestAsync(CloudMusicApiProviders.UserPlaylist, new Dictionary<string, object> { ["uid"] = uid });
-            json = await Api.RequestAsync(CloudMusicApiProviders.PlaylistDetail, new Dictionary<string, object> { ["id"] = json["playlist"][0]["id"] });
-            int[] trackIds = json["playlist"]["trackIds"].Select(t => (int)t["id"]).ToArray();
-            json = await Api.RequestAsync(CloudMusicApiProviders.SongDetail, new Dictionary<string, object> { ["ids"] = string.Join(",", trackIds) });
-            return json["songs"].ToArray().Select(s => {
-                var i = s.ToMusicItem();
-                i.GetSource = () => GetSongSourceAsync(i.SId, i.OriginalTitle, i.Artists).Result;
-                return i;
-            }).ToList();
+            return await Task.Run(async () =>
+            {
+                var json = await Api.RequestAsync(CloudMusicApiProviders.UserPlaylist, new Dictionary<string, object> { ["uid"] = uid });
+                json = await Api.RequestAsync(CloudMusicApiProviders.PlaylistDetail, new Dictionary<string, object> { ["id"] = json["playlist"][0]["id"] });
+                int[] trackIds = json["playlist"]["trackIds"].Select(t => (int)t["id"]).ToArray();
+                json = await Api.RequestAsync(CloudMusicApiProviders.SongDetail, new Dictionary<string, object> { ["ids"] = string.Join(",", trackIds) });
+                return json["songs"].ToArray().Select(s => {
+                    var i = s.ToMusicItem();
+                    i.GetSource = () => GetSongSourceAsync(i.SId, i.OriginalTitle, i.Artists).Result;
+                    return i;
+                }).ToList();
+            });
         }
 
         public async Task<List<CloudMusicItem>> GetRecommendListAsync()
@@ -238,8 +255,10 @@ namespace HotPotPlayer.Services
             return await Task.Run(async () =>
             {
                 var json = await Api.RequestAsync(CloudMusicApiProviders.PlaylistDetail, new Dictionary<string, object> { ["id"] = playListId });
+                if(!NotifiyWhenFail(json)) return null;
                 var playList = json["playlist"].ToPlayListItem(true);
                 var json2 = await Api.RequestAsync(CloudMusicApiProviders.SongDetail, new Dictionary<string, object> { ["ids"] = string.Join(",", playList.TrackIds) });
+                if(!NotifiyWhenFail(json2)) return null;
                 playList.MusicItems = new ObservableCollection<MusicItem>(json2["songs"].ToArray().Select(s =>
                 {
                     var c = s.ToMusicItem();

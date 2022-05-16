@@ -22,7 +22,7 @@
 
         <FontIcon FontFamily="Segoe Fluent Icons" Glyph="&#xE946;" />
         <TextBlock Margin="8,0" Grid.Column="1" Text="{x:Bind ToastInfo.Text, Mode=OneWay}" />
-        <Button Grid.Column="2" Style="{StaticResource TransparentButton}" Click="Dismiss">
+        <Button Grid.Column="2" Style="{StaticResource FullTransparentButton}" Click="Dismiss">
             <SymbolIcon Symbol="Clear" />
         </Button>
     </Grid>
