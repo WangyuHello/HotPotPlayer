@@ -158,13 +158,13 @@ namespace HotPotPlayer.Services
             return (json["code"].Value<int>(), json["message"].Value<string>());
         }
 
-        async Task<Uri> GetSongSourceAsync(string id, string name, string artist)
+        async Task<Uri> GetSongSourceAsync(string id, string name, string[] artist)
         {
             if (LocalMusic != null)
             {
                 var local = await LocalMusic.QueryMusicAsync(name, true);
-                var l = local.FirstOrDefault();
-                if (l!=null && l.GetArtists()==artist)
+                var l = local.Where(l => l.Artists.Select(a => a.GetArtists()).SelectMany(s => s).Intersect(artist).Any()).FirstOrDefault();
+                if (l!=null)
                 {
                     return new Uri(l.Source.FullName);
                 }
@@ -190,7 +190,7 @@ namespace HotPotPlayer.Services
             json = await Api.RequestAsync(CloudMusicApiProviders.SongDetail, new Dictionary<string, object> { ["ids"] = string.Join(",", trackIds) });
             return json["songs"].ToArray().Select(s => {
                 var i = s.ToMusicItem();
-                i.GetSource = () => GetSongSourceAsync(i.SId, i.OriginalTitle, i.GetArtists()).Result;
+                i.GetSource = () => GetSongSourceAsync(i.SId, i.OriginalTitle, i.Artists).Result;
                 return i;
             }).ToList();
         }
@@ -202,7 +202,7 @@ namespace HotPotPlayer.Services
                 var json = await Api.RequestAsync(CloudMusicApiProviders.RecommendSongs, new Dictionary<string, object> { ["uid"] = uid });
                 return json["data"]["dailySongs"].ToArray().Select(s => {
                     var i = s.ToMusicItem();
-                    i.GetSource = () => GetSongSourceAsync(i.SId, i.OriginalTitle, i.GetArtists()).Result;
+                    i.GetSource = () => GetSongSourceAsync(i.SId, i.OriginalTitle, i.Artists).Result;
                     return i;
                 }).ToList();
             });
@@ -226,7 +226,7 @@ namespace HotPotPlayer.Services
                 var album = json["album"].ToAlbum();
                 var songs = json["songs"].ToArray().Select(s => {
                     var i = s.ToMusicItem();
-                    i.GetSource = () => GetSongSourceAsync(i.SId, i.OriginalTitle, i.GetArtists()).Result;
+                    i.GetSource = () => GetSongSourceAsync(i.SId, i.OriginalTitle, i.Artists).Result;
                     return i;
                 }).ToList();
                 return (album, songs);
@@ -243,7 +243,7 @@ namespace HotPotPlayer.Services
                 playList.MusicItems = new ObservableCollection<MusicItem>(json2["songs"].ToArray().Select(s =>
                 {
                     var c = s.ToMusicItem();
-                    c.GetSource = () => GetSongSourceAsync(c.SId, c.OriginalTitle, c.GetArtists()).Result;
+                    c.GetSource = () => GetSongSourceAsync(c.SId, c.OriginalTitle, c.Artists).Result;
                     return c;
                 }));
                 return playList;
@@ -310,7 +310,7 @@ namespace HotPotPlayer.Services
                 var songs = json["songs"].ToArray().Select(s =>
                 {
                     var i = s.ToMusicItem();
-                    i.GetSource = () => GetSongSourceAsync(i.SId, i.OriginalTitle, i.GetArtists()).Result;
+                    i.GetSource = () => GetSongSourceAsync(i.SId, i.OriginalTitle, i.Artists).Result;
                     return i;
                 }).ToList();
                 return songs;
