@@ -197,63 +197,81 @@ namespace HotPotPlayer.Services
 
         public async Task<List<CloudMusicItem>> GetRecommendListAsync()
         {
-            var json = await Api.RequestAsync(CloudMusicApiProviders.RecommendSongs, new Dictionary<string, object> { ["uid"] = uid });
-            return json["data"]["dailySongs"].ToArray().Select(s => {
-                var i = s.ToMusicItem();
-                i.GetSource = () => GetSongSourceAsync(i.SId, i.OriginalTitle, i.GetArtists()).Result;
-                return i;
-            }).ToList();
+            return await Task.Run(async () =>
+            {
+                var json = await Api.RequestAsync(CloudMusicApiProviders.RecommendSongs, new Dictionary<string, object> { ["uid"] = uid });
+                return json["data"]["dailySongs"].ToArray().Select(s => {
+                    var i = s.ToMusicItem();
+                    i.GetSource = () => GetSongSourceAsync(i.SId, i.OriginalTitle, i.GetArtists()).Result;
+                    return i;
+                }).ToList();
+            });
         }
 
         public async Task<List<CloudPlayListItem>> GetRecommendPlayListAsync()
         {
-            var json = await Api.RequestAsync(CloudMusicApiProviders.RecommendResource, new Dictionary<string, object> { ["uid"] = uid });
-            var playList = json["recommend"].ToArray().Select(r => r.ToPlayListItem()).ToList();
-            return playList;
+            return await Task.Run(async () =>
+            {
+                var json = await Api.RequestAsync(CloudMusicApiProviders.RecommendResource, new Dictionary<string, object> { ["uid"] = uid });
+                var playList = json["recommend"].ToArray().Select(r => r.ToPlayListItem()).ToList();
+                return playList;
+            });
         }
 
         public async Task<(CloudAlbumItem album, List<CloudMusicItem> musicList)> GetAlbumAsync(string albumId)
         {
-            var json = await Api.RequestAsync(CloudMusicApiProviders.Album, new Dictionary<string, object> { ["id"] = albumId });
-            var album = json["album"].ToAlbum();
-            var songs = json["songs"].ToArray().Select(s => {
-                var i = s.ToMusicItem();
-                i.GetSource = () => GetSongSourceAsync(i.SId, i.OriginalTitle, i.GetArtists()).Result;
-                return i;
-            }).ToList();
-            return (album, songs);
+            return await Task.Run(async () =>
+            {
+                var json = await Api.RequestAsync(CloudMusicApiProviders.Album, new Dictionary<string, object> { ["id"] = albumId });
+                var album = json["album"].ToAlbum();
+                var songs = json["songs"].ToArray().Select(s => {
+                    var i = s.ToMusicItem();
+                    i.GetSource = () => GetSongSourceAsync(i.SId, i.OriginalTitle, i.GetArtists()).Result;
+                    return i;
+                }).ToList();
+                return (album, songs);
+            });
         }
 
         public async Task<CloudPlayListItem> GetPlayListAsync(string playListId)
         {
-            var json = await Api.RequestAsync(CloudMusicApiProviders.PlaylistDetail, new Dictionary<string, object> { ["id"] = playListId });
-            var playList = json["playlist"].ToPlayListItem();
-            foreach (var item in playList.MusicItems)
+            return await Task.Run(async () =>
             {
-                var c = item as CloudMusicItem;
-                c.GetSource = () => GetSongSourceAsync(c.SId, c.OriginalTitle, c.GetArtists()).Result;
-            }
-            return playList;
+                var json = await Api.RequestAsync(CloudMusicApiProviders.PlaylistDetail, new Dictionary<string, object> { ["id"] = playListId });
+                var playList = json["playlist"].ToPlayListItem();
+                foreach (var item in playList.MusicItems)
+                {
+                    var c = item as CloudMusicItem;
+                    c.GetSource = () => GetSongSourceAsync(c.SId, c.OriginalTitle, c.GetArtists()).Result;
+                }
+                return playList;
+            });
         }
 
         public async Task<List<Toplist>> GetTopListDigestAsync()
         {
-            var json = await Api.RequestAsync(CloudMusicApiProviders.ToplistDetail);
-            var l = json["list"].ToArray().Select(s => {
-                var i = s.ToToplist();
-                return i;
-            }).Take(4).ToList();
-            return l;
+            return await Task.Run(async () =>
+            {
+                var json = await Api.RequestAsync(CloudMusicApiProviders.ToplistDetail);
+                var l = json["list"].ToArray().Select(s => {
+                    var i = s.ToToplist();
+                    return i;
+                }).Take(4).ToList();
+                return l;
+            });
         }
 
         public async Task<List<CloudArtistItem>> GetTopArtistsAsync()
         {
-            var json = await Api.RequestAsync(CloudMusicApiProviders.TopArtists, new Dictionary<string, object> { ["limit"] = 10 });
-            var l = json["artists"].ToArray().Select(s => {
-                var i = s.ToArtist();
-                return i;
-            }).ToList();
-            return l;
+            return await Task.Run(async () =>
+            {
+                var json = await Api.RequestAsync(CloudMusicApiProviders.TopArtists, new Dictionary<string, object> { ["limit"] = 10 });
+                var l = json["artists"].ToArray().Select(s => {
+                    var i = s.ToArtist();
+                    return i;
+                }).ToList();
+                return l;
+            });
         }
 
         public async Task<string> GetSongUrlAsync(string id)
@@ -271,24 +289,30 @@ namespace HotPotPlayer.Services
 
         public async Task<List<CloudCommentItem>> GetSongCommentAsync(string id)
         {
-            var json = await Api.RequestAsync(CloudMusicApiProviders.CommentMusic, new Dictionary<string, object> { ["id"] = id });
-            var l = json["hotComments"].ToArray().Select(s => {
-                var i = s.ToComment();
-                return i;
-            }).ToList();
-            return l;
+            return await Task.Run(async () =>
+            {
+                var json = await Api.RequestAsync(CloudMusicApiProviders.CommentMusic, new Dictionary<string, object> { ["id"] = id });
+                var l = json["hotComments"].ToArray().Select(s => {
+                    var i = s.ToComment();
+                    return i;
+                }).ToList();
+                return l;
+            });
         }
 
         public async Task<List<CloudMusicItem>> GetSimilarSongAsync(string id)
         {
-            var json = await Api.RequestAsync(CloudMusicApiProviders.SimiSong, new Dictionary<string, object> { ["id"] = id });
-            var songs = json["songs"].ToArray().Select(s =>
+            return await Task.Run(async () =>
             {
-                var i = s.ToMusicItem();
-                i.GetSource = () => GetSongSourceAsync(i.SId, i.OriginalTitle, i.GetArtists()).Result;
-                return i;
-            }).ToList();
-            return songs;
+                var json = await Api.RequestAsync(CloudMusicApiProviders.SimiSong, new Dictionary<string, object> { ["id"] = id });
+                var songs = json["songs"].ToArray().Select(s =>
+                {
+                    var i = s.ToMusicItem();
+                    i.GetSource = () => GetSongSourceAsync(i.SId, i.OriginalTitle, i.GetArtists()).Result;
+                    return i;
+                }).ToList();
+                return songs;
+            });
         }
 
         public async Task GetSimilarUserAsync(string id)
@@ -298,9 +322,12 @@ namespace HotPotPlayer.Services
 
         public async Task<string> GetLyric(string id)
         {
-            var json = await Api.RequestAsync(CloudMusicApiProviders.Lyric, new Dictionary<string, object> { ["id"] = id });
+            return await Task.Run(async () =>
+            {
+                var json = await Api.RequestAsync(CloudMusicApiProviders.Lyric, new Dictionary<string, object> { ["id"] = id });
 
-            return json["lrc"]["lyric"].Value<string>();
+                return json["lrc"]["lyric"].Value<string>();
+            });
         }
         public bool GetSongLiked(CloudMusicItem c)
         {

@@ -73,6 +73,10 @@ namespace HotPotPlayer.Controls
             {
                 var curIndex = index;
                 int i = 0;
+                if (time < lyricItems[0].Time)
+                {
+                    goto get;
+                }
                 for (; i < lyricItems.Length - 1; i++)
                 {
                     if (time >= lyricItems[i].Time && time < lyricItems[i+1].Time)
@@ -80,6 +84,7 @@ namespace HotPotPlayer.Controls
                         break;
                     }
                 }
+                get:
                 index = i;
                 if (index != curIndex || forceUpdate)
                 {
