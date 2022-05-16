@@ -75,6 +75,10 @@ namespace HotPotPlayer.Extensions
             {
                 ncp.MusicItems = new(json["tracks"].ToArray().Select(t => t.ToMusicItem()));
             }
+            if (json["trackIds"] != null)
+            {
+                ncp.TrackIds = json["trackIds"].Select(t => t["id"].Value<long>()).ToArray();
+            }
 
             return ncp;
         }
