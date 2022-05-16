@@ -238,12 +238,14 @@ namespace HotPotPlayer.Services
             return await Task.Run(async () =>
             {
                 var json = await Api.RequestAsync(CloudMusicApiProviders.PlaylistDetail, new Dictionary<string, object> { ["id"] = playListId });
-                var playList = json["playlist"].ToPlayListItem();
-                foreach (var item in playList.MusicItems)
+                var playList = json["playlist"].ToPlayListItem(true);
+                var json2 = await Api.RequestAsync(CloudMusicApiProviders.SongDetail, new Dictionary<string, object> { ["ids"] = string.Join(",", playList.TrackIds) });
+                playList.MusicItems = new ObservableCollection<MusicItem>(json2["songs"].ToArray().Select(s =>
                 {
-                    var c = item as CloudMusicItem;
+                    var c = s.ToMusicItem();
                     c.GetSource = () => GetSongSourceAsync(c.SId, c.OriginalTitle, c.GetArtists()).Result;
-                }
+                    return c;
+                }));
                 return playList;
             });
         }

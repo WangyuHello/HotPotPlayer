@@ -45,7 +45,7 @@ namespace HotPotPlayer.Extensions
             return NCSong;
         }
 
-        public static CloudPlayListItem ToPlayListItem(this JToken json)
+        public static CloudPlayListItem ToPlayListItem(this JToken json, bool skipMusicItems = false)
         {
             var picpath = "picUrl";
             var descpath = "description";
@@ -71,13 +71,13 @@ namespace HotPotPlayer.Extensions
             };
 
             if (json[subcountpath] != null) ncp.BookCount = json[subcountpath].Value<long>();
-            if (json["tracks"] != null) // 只有前20首
+            if (json["tracks"] != null && !skipMusicItems) // 只有前20首
             {
                 ncp.MusicItems = new(json["tracks"].ToArray().Select(t => t.ToMusicItem()));
             }
             if (json["trackIds"] != null)
             {
-                ncp.TrackIds = json["trackIds"].Select(t => t["id"].Value<long>()).ToArray();
+                ncp.TrackIds = json["trackIds"].Select(t => t["id"].Value<string>()).ToArray();
             }
 
             return ncp;
