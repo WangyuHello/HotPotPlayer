@@ -120,8 +120,8 @@ namespace HotPotPlayer.Controls
             set => Set(ref _simiSongs, value);
         }
 
-        private string _lyric;
-        public string Lyric
+        private List<LyricItem> _lyric;
+        public List<LyricItem> Lyric
         {
             get => _lyric;
             set => Set(ref _lyric, value);

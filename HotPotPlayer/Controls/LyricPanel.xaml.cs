@@ -31,18 +31,18 @@ namespace HotPotPlayer.Controls
             this.InitializeComponent();
         }
 
-        public string RawLyric
+        public List<LyricItem> Lyric
         {
-            get { return (string)GetValue(RawLyricProperty); }
-            set { SetValue(RawLyricProperty, value); }
+            get { return (List<LyricItem>)GetValue(LyricProperty); }
+            set { SetValue(LyricProperty, value); }
         }
 
-        public static readonly DependencyProperty RawLyricProperty =
-            DependencyProperty.Register("RawLyric", typeof(string), typeof(LyricPanel), new PropertyMetadata(string.Empty, OnLyricChanged));
+        public static readonly DependencyProperty LyricProperty =
+            DependencyProperty.Register("Lyric", typeof(List<LyricItem>), typeof(LyricPanel), new PropertyMetadata(null, OnLyricChanged));
 
         private static void OnLyricChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
-            ((LyricPanel)d).LyricChanged((string)e.NewValue);
+            ((LyricPanel)d).LyricChanged((List<LyricItem>)e.NewValue);
         }
 
         public TimeSpan CurrentTime
@@ -62,7 +62,7 @@ namespace HotPotPlayer.Controls
         void TimeChanged(TimeSpan time, bool forceUpdate = false)
         {
             if (lyricItems == null) return;
-            if (index == lyricItems.Length - 1)
+            if (index == lyricItems.Count - 1)
             {
                 if (forceUpdate)
                 {
@@ -77,7 +77,7 @@ namespace HotPotPlayer.Controls
                 {
                     goto get;
                 }
-                for (; i < lyricItems.Length - 1; i++)
+                for (; i < lyricItems.Count - 1; i++)
                 {
                     if (time >= lyricItems[i].Time && time < lyricItems[i+1].Time)
                     {
@@ -95,10 +95,10 @@ namespace HotPotPlayer.Controls
         }
 
         int index;
-        LyricItem[] lyricItems;
-        void LyricChanged(string raw)
+        List<LyricItem> lyricItems;
+        void LyricChanged(List<LyricItem> raw)
         {
-            lyricItems = raw.Parse();
+            lyricItems = raw;
             index = 0;
             TimeChanged(TimeSpan.Zero, true);
         }
@@ -106,7 +106,7 @@ namespace HotPotPlayer.Controls
         float centerHeight = 500;
         float centerWidth = 500;
         int count = 6;
-        int textHeight = 40;
+        int textHeight = 60;
 
         private void Canvas_Draw(CanvasControl sender, CanvasDrawEventArgs args)
         {
@@ -115,7 +115,7 @@ namespace HotPotPlayer.Controls
                 return;
             }
             var lower = index >= count ? index - count : 0;
-            var upper = index <= lyricItems.Length - 1 - count ? index + count : lyricItems.Length - 1;
+            var upper = index <= lyricItems.Count - 1 - count ? index + count : lyricItems.Count - 1;
             for (int i = lower; i <= upper; i++)
             {
                 var i2 = i - index;
@@ -124,6 +124,10 @@ namespace HotPotPlayer.Controls
                 var s = lyricItems[i].Content;
                 var color = i2 == 0 ? Colors.Black : Colors.Gray;
                 args.DrawingSession.DrawText(s, centerWidth, y, color, _format);
+                if (!string.IsNullOrEmpty(lyricItems[i].Translate))
+                {
+                    args.DrawingSession.DrawText(lyricItems[i].Translate, centerWidth, y+20, color, _format);
+                }
             }
         }
 

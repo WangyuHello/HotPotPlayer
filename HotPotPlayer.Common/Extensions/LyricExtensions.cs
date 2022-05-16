@@ -10,13 +10,13 @@ namespace HotPotPlayer.Extensions
 {
     public static class LyricExtensions
     {
-        public static LyricItem[] Parse(this string raw)
+        public static List<LyricItem> ParseLyric(this string raw)
         {
-            var l = raw.Split('\n').Where(s => !string.IsNullOrEmpty(s)).Select(s => s.ParseOne()).ToArray();
+            var l = raw.Split('\n').Where(s => !string.IsNullOrEmpty(s)).Select(s => s.ParseOne()).Where(s => s != null).Select(s => (LyricItem)s).ToList();
             return l;
         }
 
-        static LyricItem ParseOne(this string s)
+        static LyricItem? ParseOne(this string s)
         {
             //[00:00.000] 作词 : Eir/Takahiro Yasuda
             int state = 0;
@@ -49,6 +49,10 @@ namespace HotPotPlayer.Extensions
             }
             var timeStr = s[ti1..ti2];
             var ts = timeStr.Split(':', '.');
+            if (ts.Length != 3)
+            {
+                return null;
+            }
             var m = int.Parse(ts[0]);
             var sc = int.Parse(ts[1]);
             var f = int.Parse(ts[2]);

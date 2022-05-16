@@ -81,7 +81,7 @@
 
         <Pivot Grid.Column="1" Grid.Row="0" Grid.RowSpan="8" Margin="0,44,0,96" HeaderTemplate="{StaticResource LyricPivotHeaderTemplate}">
             <PivotItem Header="歌词" >
-                <local:LyricPanel RawLyric="{x:Bind Lyric, Mode=OneWay}" CurrentTime="{x:Bind MusicPlayer.CurrentTime, Mode=OneWay}"/>
+                <local:LyricPanel Lyric="{x:Bind Lyric, Mode=OneWay}" CurrentTime="{x:Bind MusicPlayer.CurrentTime, Mode=OneWay}"/>
             </PivotItem>
             <PivotItem Header="评论" >
                 <Grid>

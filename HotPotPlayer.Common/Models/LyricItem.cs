@@ -6,9 +6,10 @@ using System.Threading.Tasks;
 
 namespace HotPotPlayer.Models
 {
-    readonly public struct LyricItem
+    public struct LyricItem
     {
-        public TimeSpan Time { get; init; }
-        public string Content { get; init; }
+        public TimeSpan Time { get; set; }
+        public string Content { get; set; }
+        public string Translate { get; set; }
     }
 }

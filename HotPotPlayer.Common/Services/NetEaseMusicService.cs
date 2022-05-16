@@ -320,15 +320,47 @@ namespace HotPotPlayer.Services
             var json = await Api.RequestAsync(CloudMusicApiProviders.SimiUser, new Dictionary<string, object> { ["id"] = id });
         }
 
-        public async Task<string> GetLyric(string id)
+        public async Task<List<LyricItem>> GetLyric(string id)
         {
             return await Task.Run(async () =>
             {
                 var json = await Api.RequestAsync(CloudMusicApiProviders.Lyric, new Dictionary<string, object> { ["id"] = id });
 
-                return json["lrc"]["lyric"].Value<string>();
+                var lyRaw = json["lrc"]["lyric"].Value<string>();
+                var ly = lyRaw.ParseLyric();
+                if (json["tlyric"] != null)
+                {
+                    var transRaw = json["tlyric"]["lyric"].Value<string>();
+                    var trans = transRaw.ParseLyric();
+                    MergeLyric(ly, trans);
+                }
+                return ly;
             });
         }
+
+        static void MergeLyric(List<LyricItem> l, List<LyricItem> tr)
+        {
+            int j = 0;
+            for (int i = 0; i < tr.Count; i++)
+            {
+                while (j <= l.Count - 1)
+                {
+                    if (l[j].Time == tr[i].Time)
+                    {
+                        l[j] = new LyricItem
+                        {
+                            Time = l[j].Time,
+                            Content = l[j].Content,
+                            Translate = tr[i].Content,
+                        };
+                        j++;
+                        break;
+                    }
+                    j++;
+                }
+            }
+        }
+
         public bool GetSongLiked(CloudMusicItem c)
         {
             if (LikeList.Contains(c, new CloudMusicItemComparer()))
