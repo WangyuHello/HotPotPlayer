@@ -61,7 +61,7 @@ namespace HotPotPlayer.Controls
 
         void TimeChanged(TimeSpan time, bool forceUpdate = false)
         {
-            if (lyricItems == null) return;
+            if (lyricItems == null || lyricItems.Count == 0) return;
             if (index == lyricItems.Count - 1)
             {
                 if (forceUpdate)

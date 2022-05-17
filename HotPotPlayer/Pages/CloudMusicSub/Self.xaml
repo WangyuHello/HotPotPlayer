@@ -1,0 +1,19 @@
+﻿<Page
+    x:Class="HotPotPlayer.Pages.CloudMusicSub.Self"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:HotPotPlayer.Pages.CloudMusicSub"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d"
+    Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+
+    <Grid Padding="36,28,16,0">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+        <TextBlock Margin="8,0" FontSize="24" FontFamily="{StaticResource MiSansMedium}">我喜欢的音乐</TextBlock>
+        <GridView x:Name="LikeList" Grid.Row="1" Padding="0,8,0,0" ItemsSource="{x:Bind CloudMusicService.LikeList, Mode=OneWay}" Style="{StaticResource CardGridViewStyle}" ItemTemplate="{StaticResource MusicCardViewTemplate}" ItemClick="LikeList_ItemClick"/>
+    </Grid>
+</Page>

@@ -147,7 +147,7 @@ namespace HotPotPlayer.Pages
 
         private void UserDetail_Click(object sender, RoutedEventArgs e)
         {
-
+            MainWindow.NavigateTo("CloudMusicSub.Self");
         }
 
         private async void LogOut_Click(object sender, RoutedEventArgs e)
