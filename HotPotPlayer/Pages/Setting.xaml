@@ -128,6 +128,7 @@
             <Button Click="OpenDataLocationClick">打开数据位置</Button>
             <Button Click="ClearDataClick" Style="{ThemeResource AccentButtonStyle}">删除应用数据</Button>
             <Button Click="ClearConfigClick" Style="{ThemeResource AccentButtonStyle}">删除应用配置</Button>
+            <Button Click="ClearCacheClick" Style="{ThemeResource AccentButtonStyle}">删除缓存</Button>
         </StackPanel>
     </Grid>
 </Page>

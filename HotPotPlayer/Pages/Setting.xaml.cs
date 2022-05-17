@@ -133,6 +133,19 @@ namespace HotPotPlayer.Pages
             Config.ResetSettings();
         }
 
+        private void ClearCacheClick(object sender, RoutedEventArgs e)
+        {
+            var cache = Config.CacheFolder;
+            var di = new DirectoryInfo(cache);
+            var temp = di.Parent.GetDirectories("TempState").FirstOrDefault();
+            if (temp == null) return;
+            var sub = temp.GetDirectories();
+            foreach (var item in sub)
+            {
+                item.Delete(true);
+            }
+        }
+
         private async void AddVideoLibrary(object sender, RoutedEventArgs e)
         {
             var folderPicker = new FolderPicker
