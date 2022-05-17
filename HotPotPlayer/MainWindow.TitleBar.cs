@@ -18,6 +18,7 @@ using System.Threading.Tasks;
 using WinUIEx;
 using WinRT;
 using Windows.UI;
+using Windows.Graphics;
 
 namespace HotPotPlayer
 {
@@ -74,8 +75,7 @@ namespace HotPotPlayer
             }
             else if(e.PropertyName == "IsPlayScreenVisible")
             {
-                var musicPlayer = (MusicPlayer)sender;
-                SetDragRegionForCustomTitleBar(m_AppWindow, !musicPlayer.IsPlayScreenVisible);
+                
             }
 
         }
@@ -135,77 +135,28 @@ namespace HotPotPlayer
             }
         }
 
-        private void SetDragRegionForCustomTitleBar(AppWindow appWindow, bool isSearchVisible = true)
+        private void SetDragRegionForCustomTitleBar(AppWindow appWindow)
         {
-            if (AppWindowTitleBar.IsCustomizationSupported()
-                && appWindow.TitleBar.ExtendsContentIntoTitleBar)
+            if (AppWindowTitleBar.IsCustomizationSupported() && appWindow.TitleBar.ExtendsContentIntoTitleBar)
             {
                 double scaleAdjustment = Root.XamlRoot.RasterizationScale;
 
                 RightPaddingColumn.Width = new GridLength(appWindow.TitleBar.RightInset / scaleAdjustment);
 
-                List<Windows.Graphics.RectInt32> dragRectsList = new();
+                List<RectInt32> dragRectsList = new();
 
-                if (isSearchVisible)
-                {
-                    Windows.Graphics.RectInt32 dragRectL;
-                    dragRectL.X = (int)(60 * scaleAdjustment);
-                    dragRectL.Y = 0;
-                    dragRectL.Height = (int)(AppTitleBar.ActualHeight * scaleAdjustment);
-                    dragRectL.Width = (int)(LeftDragColumn.ActualWidth * scaleAdjustment);
-                    dragRectsList.Add(dragRectL);
+                RectInt32 dragRectL;
+                dragRectL.X = (int)(60 * scaleAdjustment);
+                dragRectL.Y = 0;
+                dragRectL.Height = (int)(AppTitleBar.ActualHeight * scaleAdjustment);
+                dragRectL.Width = (int)(AppTitleBar.ActualWidth * scaleAdjustment - appWindow.TitleBar.RightInset);
+                dragRectsList.Add(dragRectL);
 
-                    Windows.Graphics.RectInt32 dragRectR;
-                    dragRectR.X = (int)((60
-                                        + LeftDragColumn.ActualWidth
-                                        + SearchColumn.ActualWidth) * scaleAdjustment);
-                    dragRectR.Y = 0;
-                    dragRectR.Height = (int)(AppTitleBar.ActualHeight * scaleAdjustment);
-                    dragRectR.Width = (int)(RightDragColumn.ActualWidth * scaleAdjustment);
-                    dragRectsList.Add(dragRectR);
-                }
-                else
-                {
-                    Windows.Graphics.RectInt32 dragRectL;
-                    dragRectL.X = (int)(60 * scaleAdjustment);
-                    dragRectL.Y = 0;
-                    dragRectL.Height = (int)(AppTitleBar.ActualHeight * scaleAdjustment);
-                    dragRectL.Width = (int)(AppTitleBar.ActualWidth * scaleAdjustment - appWindow.TitleBar.RightInset);
-                    dragRectsList.Add(dragRectL);
-                }
-                
-
-                Windows.Graphics.RectInt32[] dragRects = dragRectsList.ToArray();
+                RectInt32[] dragRects = dragRectsList.ToArray();
 
                 appWindow.TitleBar.SetDragRectangles(dragRects);
             }
         }
-
-        double GetTitleBarSearchVisible(bool isPlayScreenVisible)
-        {
-            return isPlayScreenVisible ? 0 : 1;
-        }
-
-        private async void AutoSuggestBox_TextChanged(AutoSuggestBox sender, AutoSuggestBoxTextChangedEventArgs args)
-        {
-            if (args.Reason == AutoSuggestionBoxTextChangeReason.UserInput)
-            {
-                var musics = await MusicService.QueryMusicAsync(sender.Text);
-                sender.ItemsSource = musics;
-            }
-            else
-            {
- 
-            }
-        }
-
-        private void AutoSuggestBox_SuggestionChosen(AutoSuggestBox sender, AutoSuggestBoxSuggestionChosenEventArgs args)
-        {
-            var music = args.SelectedItem as MusicItem;
-            NavigateTo("MusicSub.Info", music, new SlideNavigationTransitionInfo() { Effect = SlideNavigationTransitionEffect.FromRight });
-            sender.ItemsSource = null;
-        }
-
 
         WindowsSystemDispatcherQueueHelper m_wsdqHelper; // See separate sample below for implementation
         MicaController m_micaController;
