@@ -46,11 +46,19 @@
                             <RowDefinition Height="Auto" />
                             <RowDefinition Height="Auto" />
                             <RowDefinition Height="Auto" />
-                            <RowDefinition Height="Auto" />
                         </Grid.RowDefinitions>
                         <cont2:ImageEx2 Grid.Row="0" Margin="-16,-16,-16,0" Source="{x:Bind CloudMusicService.Self.BackgroundUrl, Mode=OneWay}" HorizontalAlignment="Center" Style="{StaticResource LocalMusicImageStyle}" Width="340" Height="140" />
-                        <cont2:ImageEx2 Grid.Row="1" Margin="0,-30,0,8" Source="{x:Bind CloudMusicService.Self.AvatarUrl, Mode=OneWay}" HorizontalAlignment="Center" Style="{StaticResource LocalMusicImageStyle}" Width="56" Height="56" CornerRadius="28" />
-                        <TextBlock Grid.Row="2" Text="{x:Bind CloudMusicService.Self.NickName, Mode=OneWay}" HorizontalAlignment="Center" FontFamily="{StaticResource MiSansMedium}" />
+                        <cont2:ImageEx2 Grid.Row="1" Margin="0,-30,0,8" Source="{x:Bind CloudMusicService.Self.AvatarUrl, Mode=OneWay}" HorizontalAlignment="Center" Style="{StaticResource LocalMusicImageStyle}" Width="64" Height="64" CornerRadius="32" />
+                        <TextBlock Grid.Row="2" Text="{x:Bind CloudMusicService.Self.NickName, Mode=OneWay}" FontSize="16" HorizontalAlignment="Center" FontFamily="{StaticResource MiSansMedium}" />
+                        <StackPanel Grid.Row="3" Margin="0,8,0,0" HorizontalAlignment="Center" Orientation="Horizontal" Spacing="16">
+                            <TextBlock Text="{x:Bind GetFollows(CloudMusicService.Self), Mode=OneWay}" Foreground="Gray" FontFamily="{StaticResource MiSansRegular}"/>
+                            <TextBlock Text="{x:Bind GetFolloweds(CloudMusicService.Self), Mode=OneWay}" Foreground="Gray" FontFamily="{StaticResource MiSansRegular}"/>
+                            <TextBlock Text="{x:Bind GetLv(CloudMusicService.Level), Mode=OneWay}" Foreground="Gray" FontFamily="{StaticResource MiSansRegular}"/>
+                        </StackPanel>
+                        <StackPanel Grid.Row="4" Margin="0,16,0,0" HorizontalAlignment="Center" Orientation="Horizontal" Spacing="8">
+                            <Button x:Name="UserDetail" Width="80" Click="UserDetail_Click">详情</Button>
+                            <Button x:Name="LogOut" Grid.Column="1" Width="80" Style="{StaticResource AccentButtonStyle}" Click="LogOut_Click">登出</Button>
+                        </StackPanel>
                     </Grid>
                 </Flyout>
             </StackPanel.ContextFlyout>

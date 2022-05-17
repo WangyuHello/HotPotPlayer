@@ -47,6 +47,13 @@ namespace HotPotPlayer.Services
             set => Set(ref _self, value);
         }
 
+        private LevelItem _level;
+        public LevelItem Level
+        {
+            get => _level;
+            set => Set(ref _level, value);
+        }
+
         private ObservableCollection<CloudMusicItem> _likeList;
         public ObservableCollection<CloudMusicItem> LikeList
         {
@@ -100,6 +107,12 @@ namespace HotPotPlayer.Services
             TopArtists ??= new(topA);
         }
 
+        public async Task InitLevelAsync()
+        {
+            Self = await GetUserDetail();
+            Level = await GetUserLevelAsync();
+        }
+
         public async Task<JObject> LoginAsync(string phone, string password)
         {
             var queries = new Dictionary<string, object>
@@ -127,6 +140,19 @@ namespace HotPotPlayer.Services
             }
             Self = json["profile"].ToUser();
             return Self.UserId;
+        }
+
+        public async Task<CloudUserItem> GetUserDetail(long? uid = null)
+        {
+            uid ??= Self.UserId;
+            var json = await Api.RequestAsync(CloudMusicApiProviders.UserDetail, new Dictionary<string, object> { ["uid"] = uid });
+            return json["profile"].ToUser();
+        }
+
+        public async Task<LevelItem> GetUserLevelAsync()
+        {
+            var json = await Api.RequestAsync(CloudMusicApiProviders.UserLevel);
+            return json["data"].ToLevel();
         }
 
         public async Task<string> GetQrKeyAsync()
@@ -290,10 +316,16 @@ namespace HotPotPlayer.Services
             return url;
         }
 
-        public async Task<JObject> LogoutAsync()
+        public async Task<bool> LogoutAsync()
         {
             var json = await Api.RequestAsync(CloudMusicApiProviders.Logout);
-            return json;
+            var code = json["code"].Value<int>();
+            if (code == 200)
+            {
+                Api.ClearCookie();
+                return true;
+            }
+            return false;
         }
 
         public async Task<List<CloudCommentItem>> GetSongCommentAsync(string id)

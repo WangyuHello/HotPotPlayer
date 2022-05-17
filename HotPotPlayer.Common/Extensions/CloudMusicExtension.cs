@@ -141,5 +141,11 @@ namespace HotPotPlayer.Extensions
             var t = JsonConvert.DeserializeObject<CloudCommentItem>(j.ToString());
             return t;
         }
+
+        public static LevelItem ToLevel(this JToken j)
+        {
+            var t = JsonConvert.DeserializeObject<LevelItem>(j.ToString());
+            return t;
+        }
     }
 }

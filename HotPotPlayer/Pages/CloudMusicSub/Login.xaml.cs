@@ -31,32 +31,41 @@ namespace HotPotPlayer.Pages.CloudMusicSub
         public Login()
         {
             this.InitializeComponent();
+            _ui = DispatcherQueue.GetForCurrentThread();
         }
         NetEaseMusicService CloudMusicService => ((App)Application.Current).NetEaseMusicService;
         MainWindow MainWindow => ((App)Application.Current).MainWindow;
 
-        protected override async void OnNavigatedTo(NavigationEventArgs e)
+        protected override void OnNavigatedTo(NavigationEventArgs e)
         {
             base.OnNavigatedTo(e);
-            _ui = DispatcherQueue.GetForCurrentThread();
-            await SetQRCodeAndWait();
-            MainWindow.NavigateTo("CloudMusic");
+            SetQRCodeAndWait();
         }
 
         string qrKey;
         DispatcherQueue _ui;
 
-        private async Task SetQRCodeAndWait()
+        private void SetQRCodeAndWait()
         {
-            qrKey = await CloudMusicService.GetQrKeyAsync();
-            var qrData = CloudMusicService.GetQrImgByte(qrKey);
-            BitmapImage image = new();
-            var stream = new InMemoryRandomAccessStream();
-            await stream.WriteAsync(qrData.AsBuffer());
-            stream.Seek(0);
-            await image.SetSourceAsync(stream);
-            QR.Source = image;
-            await Task.Run(CheckLogin);
+            Task.Run(async () =>
+            {
+                qrKey = await CloudMusicService.GetQrKeyAsync();
+                var qrData = CloudMusicService.GetQrImgByte(qrKey);
+                var stream = new InMemoryRandomAccessStream();
+                await stream.WriteAsync(qrData.AsBuffer());
+                stream.Seek(0);
+                _ui.TryEnqueue(async () =>
+                {
+                    BitmapImage image = new();
+                    await image.SetSourceAsync(stream);
+                    QR.Source = image;
+                });
+                await CheckLogin();
+                _ui.TryEnqueue(() =>
+                {
+                    MainWindow.NavigateTo("CloudMusic");
+                });
+            });
         }
 
         public async Task CheckLogin()

@@ -21,6 +21,11 @@ namespace HotPotPlayer.Extensions
             File.WriteAllText(file, json);
         }
 
+        public static void ClearCookie(this CloudMusicApi api)
+        {
+            api.Cookies.Clear();
+        }
+
         public static void LoadCookie(this CloudMusicApi api, ConfigBase config)
         {
             var folder = config.CookieFolder;

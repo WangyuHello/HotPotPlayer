@@ -29,5 +29,33 @@ namespace HotPotPlayer.Models.CloudMusic
 
         [JsonProperty("city")]
         public long City { get; set; }
+
+        [JsonProperty("followeds")]
+        public int Followeds { get; set; }
+
+        [JsonProperty("follows")]
+        public int Follows { get; set; }
     }
+
+    public record LevelItem 
+    {
+        [JsonProperty("progress")]
+        public double Progress { get; set; }
+
+        [JsonProperty("nextPlayCount")]
+        public int NextPlayCount { get; set; }
+
+        [JsonProperty("nextLoginCount")]
+        public int NextLoginCount { get; set; }
+
+        [JsonProperty("nowPlayCount")]
+        public int NowPlayCount { get; set; }
+
+        [JsonProperty("nowLoginCount")]
+        public int NowLoginCount { get; set; }
+
+        [JsonProperty("level")]
+        public int Level { get; set; }
+    }
+
 }

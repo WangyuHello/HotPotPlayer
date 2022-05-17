@@ -68,6 +68,7 @@ namespace HotPotPlayer.Pages
             if (!await CloudMusicService.IsLoginAsync())
             {
                 MainWindow.NavigateTo("CloudMusicSub.Login");
+                return;
             }
 
             await CloudMusicService.InitAsync();
@@ -123,9 +124,37 @@ namespace HotPotPlayer.Pages
             SetDragRegionExcept();
         }
 
-        private void UserAvatar_Tapped(object sender, TappedRoutedEventArgs e)
+        private async void UserAvatar_Tapped(object sender, TappedRoutedEventArgs e)
         {
+            await CloudMusicService.InitLevelAsync();
             UserAvatar.ContextFlyout.ShowAt(UserAvatar);
+        }
+
+        string GetFollows(CloudUserItem c)
+        {
+            return $"{c?.Follows} 关注";
+        }
+
+        string GetFolloweds(CloudUserItem c)
+        {
+            return $"{c?.Followeds} 粉丝";
+        }
+
+        string GetLv(LevelItem c)
+        {
+            return $"Lv.{c?.Level}";
+        }
+
+        private void UserDetail_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private async void LogOut_Click(object sender, RoutedEventArgs e)
+        {
+            await CloudMusicService.LogoutAsync();
+            IsFirstNavigate = true;
+            MainWindow.NavigateTo("CloudMusicSub.Login");
         }
     }
 }
