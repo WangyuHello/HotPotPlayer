@@ -79,14 +79,7 @@
             <animations:Implicit.HideAnimations>
                 <animations:OpacityAnimation Duration="0:0:0.4" From="1.0" To="0.0" />
                 <animations:TranslationAnimation Duration="0:0:0.4" From="0,0,0" To="0,-80,0" />
-            </animations:Implicit.HideAnimations>        
+            </animations:Implicit.HideAnimations>
         </controls:Toast>
-
-        <Grid x:Name="AppTitleBar" VerticalAlignment="Top" Margin="60,0,0,0" Height="42">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition x:Name="DragColumn" Width="*"/>
-                <ColumnDefinition x:Name="RightPaddingColumn" Width="0"/>
-            </Grid.ColumnDefinitions>
-        </Grid>
     </Grid>
 </Window>

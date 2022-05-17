@@ -79,7 +79,7 @@ namespace HotPotPlayer.Pages
         protected override void OnNavigatedFrom(NavigationEventArgs e)
         {
             base.OnNavigatedFrom(e);
-            MainWindow.SetDragRegionForCustomTitleBar();
+            //MainWindow.SetDragRegionForCustomTitleBar();
         }
 
         string GetCount(ObservableCollection<CloudMusicItem> musics)
@@ -113,10 +113,10 @@ namespace HotPotPlayer.Pages
             var offset1 = Search.ActualOffset;
             var width = Search.ActualWidth;
             xs.Add((offset1.X, offset1.X + width));
-            offset1 = UserAvatar.ActualOffset;
-            width = UserAvatar.ActualWidth;
-            xs.Add((offset1.X, offset1.X + width));
-            MainWindow.SetDragRegionForCustomTitleBar(dragRegionExcept: xs);
+            //offset1 = UserAvatar.ActualOffset;
+            //width = UserAvatar.ActualWidth;
+            //xs.Add((offset1.X, offset1.X + width));
+            //MainWindow.SetDragRegionForCustomTitleBar(dragRegionExcept: xs);
         }
 
         private void Root_Loaded(object sender, RoutedEventArgs e)

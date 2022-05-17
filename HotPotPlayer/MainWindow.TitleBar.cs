@@ -37,8 +37,8 @@ namespace HotPotPlayer
                 titleBar.ButtonBackgroundColor = Colors.Transparent;
                 titleBar.ButtonInactiveBackgroundColor = Colors.Transparent;
                 titleBar.ButtonForegroundColor = Colors.Black;
-                AppTitleBar.Loaded += AppTitleBar_Loaded;
-                AppTitleBar.SizeChanged += AppTitleBar_SizeChanged;
+                Root.Loaded += AppTitleBar_Loaded;
+                Root.SizeChanged += AppTitleBar_SizeChanged;
                 MusicPlayer.PropertyChanged += MusicPlayer_PropertyChanged;
             }
             else
@@ -46,7 +46,7 @@ namespace HotPotPlayer
                 // Title bar customization using these APIs is currently
                 // supported only on Windows 11. In other cases, hide
                 // the custom title bar element.
-                AppTitleBar.Visibility = Visibility.Collapsed;
+                //AppTitleBar.Visibility = Visibility.Collapsed;
 
                 // Show alternative UI for any functionality in
                 // the title bar, such as search.
@@ -108,21 +108,21 @@ namespace HotPotPlayer
                     case AppWindowPresenterKind.CompactOverlay:
                         // Compact overlay - hide custom title bar
                         // and use the default system title bar instead.
-                        AppTitleBar.Visibility = Visibility.Collapsed;
+                        //AppTitleBar.Visibility = Visibility.Collapsed;
                         sender.TitleBar.ResetToDefault();
                         break;
 
                     case AppWindowPresenterKind.FullScreen:
                         // Full screen - hide the custom title bar
                         // and the default system title bar.
-                        AppTitleBar.Visibility = Visibility.Collapsed;
+                        //AppTitleBar.Visibility = Visibility.Collapsed;
                         sender.TitleBar.ExtendsContentIntoTitleBar = true;
                         break;
 
                     case AppWindowPresenterKind.Overlapped:
                         // Normal - hide the system title bar
                         // and use the custom title bar instead.
-                        AppTitleBar.Visibility = Visibility.Visible;
+                        //AppTitleBar.Visibility = Visibility.Visible;
                         sender.TitleBar.ExtendsContentIntoTitleBar = true;
                         SetDragRegionForCustomTitleBar(sender);
                         break;
@@ -142,7 +142,7 @@ namespace HotPotPlayer
             {
                 double scaleAdjustment = Root.XamlRoot.RasterizationScale;
 
-                RightPaddingColumn.Width = new GridLength(appWindow.TitleBar.RightInset / scaleAdjustment);
+                //RightPaddingColumn.Width = new GridLength(appWindow.TitleBar.RightInset / scaleAdjustment);
 
                 List<RectInt32> dragRectsList = new();
 
@@ -151,8 +151,8 @@ namespace HotPotPlayer
                     RectInt32 rect;
                     rect.X = (int)(60 * scaleAdjustment);
                     rect.Y = 0;
-                    rect.Height = (int)(AppTitleBar.ActualHeight * scaleAdjustment);
-                    rect.Width = (int)(AppTitleBar.ActualWidth * scaleAdjustment - appWindow.TitleBar.RightInset);
+                    rect.Height = (int)(42 * scaleAdjustment);
+                    rect.Width = (int)((Root.ActualWidth - 60 - 300) * scaleAdjustment);
                     dragRectsList.Add(rect);
                 }
                 else
@@ -160,7 +160,7 @@ namespace HotPotPlayer
                     RectInt32 first;
                     first.X = (int)(60 * scaleAdjustment);
                     first.Y = 0;
-                    first.Height = (int)(AppTitleBar.ActualHeight * scaleAdjustment);
+                    first.Height = (int)(42 * scaleAdjustment);
                     first.Width = (int)(dragRegionExcept[0].x1 * scaleAdjustment);
                     dragRectsList.Add(first);
 
@@ -172,7 +172,7 @@ namespace HotPotPlayer
                             {
                                 X = (int)((60 + dragRegionExcept[0].x2) * scaleAdjustment),
                                 Y = 0,
-                                Height = (int)(AppTitleBar.ActualHeight * scaleAdjustment),
+                                Height = (int)(42 * scaleAdjustment),
                                 Width = (int)((dragRegionExcept[1].x1 - dragRegionExcept[0].x2) * scaleAdjustment)
                             });
                         }
@@ -181,8 +181,8 @@ namespace HotPotPlayer
                     RectInt32 last;
                     last.X = (int)((60 + dragRegionExcept.Last().x2) * scaleAdjustment);
                     last.Y = 0;
-                    last.Height = (int)(AppTitleBar.ActualHeight * scaleAdjustment);
-                    last.Width = (int)((AppTitleBar.ActualWidth - dragRegionExcept.Last().x2) * scaleAdjustment - appWindow.TitleBar.RightInset);
+                    last.Height = (int)(42 * scaleAdjustment);
+                    last.Width = (int)((Root.ActualWidth - 60 - dragRegionExcept.Last().x2 - 300) * scaleAdjustment);
                     dragRectsList.Add(last);
                 }
 
