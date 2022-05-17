@@ -112,6 +112,9 @@ namespace HotPotPlayer.Pages
             var offset1 = Search.ActualOffset;
             var width = Search.ActualWidth;
             xs.Add((offset1.X, offset1.X + width));
+            offset1 = UserAvatar.ActualOffset;
+            width = UserAvatar.ActualWidth;
+            xs.Add((offset1.X, offset1.X + width));
             MainWindow.SetDragRegionForCustomTitleBar(dragRegionExcept: xs);
         }
 
