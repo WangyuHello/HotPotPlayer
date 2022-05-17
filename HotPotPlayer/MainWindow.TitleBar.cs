@@ -135,8 +135,9 @@ namespace HotPotPlayer
             }
         }
 
-        private void SetDragRegionForCustomTitleBar(AppWindow appWindow)
+        public void SetDragRegionForCustomTitleBar(AppWindow appWindow = null, List<(double x1, double x2)> dragRegionExcept = null)
         {
+            appWindow ??= m_AppWindow;
             if (AppWindowTitleBar.IsCustomizationSupported() && appWindow.TitleBar.ExtendsContentIntoTitleBar)
             {
                 double scaleAdjustment = Root.XamlRoot.RasterizationScale;
@@ -145,12 +146,46 @@ namespace HotPotPlayer
 
                 List<RectInt32> dragRectsList = new();
 
-                RectInt32 dragRectL;
-                dragRectL.X = (int)(60 * scaleAdjustment);
-                dragRectL.Y = 0;
-                dragRectL.Height = (int)(AppTitleBar.ActualHeight * scaleAdjustment);
-                dragRectL.Width = (int)(AppTitleBar.ActualWidth * scaleAdjustment - appWindow.TitleBar.RightInset);
-                dragRectsList.Add(dragRectL);
+                if (dragRegionExcept == null)
+                {
+                    RectInt32 rect;
+                    rect.X = (int)(60 * scaleAdjustment);
+                    rect.Y = 0;
+                    rect.Height = (int)(AppTitleBar.ActualHeight * scaleAdjustment);
+                    rect.Width = (int)(AppTitleBar.ActualWidth * scaleAdjustment - appWindow.TitleBar.RightInset);
+                    dragRectsList.Add(rect);
+                }
+                else
+                {
+                    RectInt32 first;
+                    first.X = (int)(60 * scaleAdjustment);
+                    first.Y = 0;
+                    first.Height = (int)(AppTitleBar.ActualHeight * scaleAdjustment);
+                    first.Width = (int)(dragRegionExcept[0].x1 * scaleAdjustment);
+                    dragRectsList.Add(first);
+
+                    if (dragRegionExcept.Count > 1)
+                    {
+                        for (int i = 0; i < dragRegionExcept.Count - 1; i++)
+                        {
+                            dragRectsList.Add(new RectInt32
+                            {
+                                X = (int)((60 + dragRegionExcept[0].x2) * scaleAdjustment),
+                                Y = 0,
+                                Height = (int)(AppTitleBar.ActualHeight * scaleAdjustment),
+                                Width = (int)((dragRegionExcept[1].x1 - dragRegionExcept[0].x2) * scaleAdjustment)
+                            });
+                        }
+                    }
+
+                    RectInt32 last;
+                    last.X = (int)((60 + dragRegionExcept.Last().x2) * scaleAdjustment);
+                    last.Y = 0;
+                    last.Height = (int)(AppTitleBar.ActualHeight * scaleAdjustment);
+                    last.Width = (int)((AppTitleBar.ActualWidth - dragRegionExcept.Last().x2) * scaleAdjustment - appWindow.TitleBar.RightInset);
+                    dragRectsList.Add(last);
+                }
+
 
                 RectInt32[] dragRects = dragRectsList.ToArray();
 

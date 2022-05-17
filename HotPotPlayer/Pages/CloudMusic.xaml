@@ -15,7 +15,7 @@
     Background="#F5F7FD"
     >
 
-    <Grid Padding="28,0,0,0">
+    <Grid x:Name="Root" Padding="28,0,0,0" Loaded="Root_Loaded">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
@@ -23,7 +23,7 @@
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
 
-        <AutoSuggestBox Margin="0,16" QueryIcon="Find" PlaceholderText="搜索" VerticalAlignment="Center" HorizontalAlignment="Left" Width="260" CornerRadius="16" TextMemberPath="Title" />
+        <AutoSuggestBox x:Name="Search" Margin="0,16" QueryIcon="Find" PlaceholderText="搜索" VerticalAlignment="Center" HorizontalAlignment="Left" Width="260" CornerRadius="16" TextMemberPath="Title" />
         <StackPanel x:Name="UserAvatar" Margin="0,0,160,0" Orientation="Horizontal" VerticalAlignment="Center" HorizontalAlignment="Right" Spacing="8">
             <cont2:ImageEx2 
                 Source="{x:Bind CloudMusicService.Avatar, Mode=OneWay}" 

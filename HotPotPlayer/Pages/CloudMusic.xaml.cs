@@ -75,6 +75,12 @@ namespace HotPotPlayer.Pages
             IsFirstNavigate = false;
         }
 
+        protected override void OnNavigatedFrom(NavigationEventArgs e)
+        {
+            base.OnNavigatedFrom(e);
+            MainWindow.SetDragRegionForCustomTitleBar();
+        }
+
         string GetCount(ObservableCollection<CloudMusicItem> musics)
         {
             return musics == null ? "" : musics.Count + "首";
@@ -98,6 +104,20 @@ namespace HotPotPlayer.Pages
             //anim.Configuration = new BasicConnectedAnimationConfiguration();
             //await RecListView.TryStartConnectedAnimationAsync(anim, SelectedPlayList, "CloudPlayListCardConnectedElement");
             PlayListPopupOverlay.Visibility = Visibility.Collapsed;
+        }
+
+        void SetDragRegionExcept()
+        {
+            List<(double, double)> xs = new();
+            var offset1 = Search.ActualOffset;
+            var width = Search.ActualWidth;
+            xs.Add((offset1.X, offset1.X + width));
+            MainWindow.SetDragRegionForCustomTitleBar(dragRegionExcept: xs);
+        }
+
+        private void Root_Loaded(object sender, RoutedEventArgs e)
+        {
+            SetDragRegionExcept();
         }
     }
 }
