@@ -24,18 +24,36 @@
         </Grid.RowDefinitions>
 
         <AutoSuggestBox x:Name="Search" Margin="0,16" QueryIcon="Find" PlaceholderText="搜索" VerticalAlignment="Center" HorizontalAlignment="Left" Width="260" CornerRadius="16" TextMemberPath="Title" />
-        <StackPanel x:Name="UserAvatar" Margin="0,0,160,0" Orientation="Horizontal" VerticalAlignment="Center" HorizontalAlignment="Right" Spacing="8">
+        <StackPanel x:Name="UserAvatar" Margin="0,0,160,0" Orientation="Horizontal" VerticalAlignment="Center" HorizontalAlignment="Right" Spacing="8" Tapped="UserAvatar_Tapped">
             <cont2:ImageEx2 
-                Source="{x:Bind CloudMusicService.Avatar, Mode=OneWay}" 
+                Source="{x:Bind CloudMusicService.Self.AvatarUrl, Mode=OneWay}" 
                 Style="{StaticResource LocalMusicImageStyle}" 
                 Width="32" Height="32"
                 CornerRadius="16"
                 />
             <TextBlock 
                 VerticalAlignment="Center" 
-                Text="{x:Bind CloudMusicService.NickName, Mode=OneWay}" 
+                Text="{x:Bind CloudMusicService.Self.NickName, Mode=OneWay}" 
                 FontFamily="{ThemeResource MiSansRegular}"
                 />
+
+            <StackPanel.ContextFlyout>
+                <Flyout>
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                        </Grid.RowDefinitions>
+                        <cont2:ImageEx2 Grid.Row="0" Margin="-16,-16,-16,0" Source="{x:Bind CloudMusicService.Self.BackgroundUrl, Mode=OneWay}" HorizontalAlignment="Center" Style="{StaticResource LocalMusicImageStyle}" Width="340" Height="140" />
+                        <cont2:ImageEx2 Grid.Row="1" Margin="0,-30,0,8" Source="{x:Bind CloudMusicService.Self.AvatarUrl, Mode=OneWay}" HorizontalAlignment="Center" Style="{StaticResource LocalMusicImageStyle}" Width="56" Height="56" CornerRadius="28" />
+                        <TextBlock Grid.Row="2" Text="{x:Bind CloudMusicService.Self.NickName, Mode=OneWay}" HorizontalAlignment="Center" FontFamily="{StaticResource MiSansMedium}" />
+                    </Grid>
+                </Flyout>
+            </StackPanel.ContextFlyout>
         </StackPanel>
 
         <TextBlock Grid.Row="1" Text="推荐歌单" FontSize="20" FontFamily="{StaticResource MiSansMedium}" />

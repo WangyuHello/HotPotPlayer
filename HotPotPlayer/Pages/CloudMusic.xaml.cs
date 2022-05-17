@@ -122,5 +122,10 @@ namespace HotPotPlayer.Pages
         {
             SetDragRegionExcept();
         }
+
+        private void UserAvatar_Tapped(object sender, TappedRoutedEventArgs e)
+        {
+            UserAvatar.ContextFlyout.ShowAt(UserAvatar);
+        }
     }
 }

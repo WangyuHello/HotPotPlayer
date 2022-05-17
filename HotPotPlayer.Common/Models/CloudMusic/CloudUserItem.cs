@@ -17,5 +17,17 @@ namespace HotPotPlayer.Models.CloudMusic
 
         [JsonProperty("avatarUrl")]
         public string AvatarUrl { get; set; }
+
+        [JsonProperty("backgroundUrl")]
+        public string BackgroundUrl { get; set; }
+
+        [JsonProperty("signature")]
+        public string Signature { get; set; }
+
+        [JsonProperty("province")]
+        public long Province { get; set; }
+
+        [JsonProperty("city")]
+        public long City { get; set; }
     }
 }
