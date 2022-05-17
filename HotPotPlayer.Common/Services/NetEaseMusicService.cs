@@ -323,6 +323,7 @@ namespace HotPotPlayer.Services
             if (code == 200)
             {
                 Api.ClearCookie();
+                Api.ClearCache();
                 return true;
             }
             return false;

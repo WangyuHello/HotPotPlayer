@@ -36,36 +36,28 @@ namespace HotPotPlayer.Pages.CloudMusicSub
         NetEaseMusicService CloudMusicService => ((App)Application.Current).NetEaseMusicService;
         MainWindow MainWindow => ((App)Application.Current).MainWindow;
 
-        protected override void OnNavigatedTo(NavigationEventArgs e)
+        protected override async void OnNavigatedTo(NavigationEventArgs e)
         {
             base.OnNavigatedTo(e);
-            SetQRCodeAndWait();
+            _ui = DispatcherQueue.GetForCurrentThread();
+            await SetQRCodeAndWait();
+            MainWindow.NavigateTo("CloudMusic");
         }
 
         string qrKey;
         DispatcherQueue _ui;
 
-        private void SetQRCodeAndWait()
+        private async Task SetQRCodeAndWait()
         {
-            Task.Run(async () =>
-            {
-                qrKey = await CloudMusicService.GetQrKeyAsync();
-                var qrData = CloudMusicService.GetQrImgByte(qrKey);
-                var stream = new InMemoryRandomAccessStream();
-                await stream.WriteAsync(qrData.AsBuffer());
-                stream.Seek(0);
-                _ui.TryEnqueue(async () =>
-                {
-                    BitmapImage image = new();
-                    await image.SetSourceAsync(stream);
-                    QR.Source = image;
-                });
-                await CheckLogin();
-                _ui.TryEnqueue(() =>
-                {
-                    MainWindow.NavigateTo("CloudMusic");
-                });
-            });
+            qrKey = await CloudMusicService.GetQrKeyAsync();
+            var qrData = CloudMusicService.GetQrImgByte(qrKey);
+            BitmapImage image = new();
+            var stream = new InMemoryRandomAccessStream();
+            await stream.WriteAsync(qrData.AsBuffer());
+            stream.Seek(0);
+            await image.SetSourceAsync(stream);
+            QR.Source = image;
+            await Task.Run(CheckLogin);
         }
 
         public async Task CheckLogin()
