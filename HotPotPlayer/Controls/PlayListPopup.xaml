@@ -39,9 +39,9 @@
                 <Button Style="{StaticResource AlbumPlayButton}" Click="PlayListPlay">
                     <SymbolIcon Symbol="Play" />
                 </Button>
-                <SplitButton Padding="6">
+                <!--<SplitButton Padding="6">
                     <SymbolIcon Symbol="Add" />
-                </SplitButton>
+                </SplitButton>-->
             </StackPanel>
         </Grid>
 

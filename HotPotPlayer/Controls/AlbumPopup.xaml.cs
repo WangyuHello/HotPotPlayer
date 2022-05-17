@@ -55,7 +55,7 @@ namespace HotPotPlayer.Controls
         private static void AlbumChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
             var @this = (AlbumPopup)d;
-            AlbumHelper.InitSplitButtonFlyout(@this.AlbumSplitButton, @this.Album);
+            //AlbumHelper.InitSplitButtonFlyout(@this.AlbumSplitButton, @this.Album);
         }
 
         private void ListView_ItemClick(object sender, ItemClickEventArgs e)

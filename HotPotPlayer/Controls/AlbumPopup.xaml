@@ -69,9 +69,9 @@
                     <Button Grid.Column="0" Margin="0,0,8,0" Style="{StaticResource AlbumPlayButton}" Click="{x:Bind helper:AlbumHelper.AlbumPlay}" Tag="{x:Bind Album, Mode=OneWay}">
                         <SymbolIcon Symbol="Play" />
                     </Button>
-                    <SplitButton x:Name="AlbumSplitButton" Grid.Column="1" Padding="6" Click="{x:Bind helper:AlbumHelper.AlbumAdd}" Tag="{x:Bind Album, Mode=OneWay}" >
+                    <!--<SplitButton x:Name="AlbumSplitButton" Grid.Column="1" Padding="6" Click="{x:Bind helper:AlbumHelper.AlbumAdd}" Tag="{x:Bind Album, Mode=OneWay}" >
                         <SymbolIcon Symbol="Add" />
-                    </SplitButton>
+                    </SplitButton>-->
                     <Button Grid.Column="3" Click="{x:Bind helper:AlbumHelper.AlbumDetailClick}" Tag="{x:Bind Album, Mode=OneWay}">
                         <SymbolIcon Symbol="FullScreen" />
                     </Button>

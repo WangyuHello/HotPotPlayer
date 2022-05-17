@@ -42,5 +42,4 @@
         <GradientStop Color="#C1BFCD" Offset="1.0" />
     </LinearGradientBrush>
 
-    <AcrylicBrush x:Key="MainSideBarBackground" />
 </ResourceDictionary>
