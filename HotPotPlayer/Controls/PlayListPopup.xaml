@@ -31,7 +31,7 @@
             </Grid.RowDefinitions>
             
             <cont2:ImageEx2 Grid.RowSpan="3" VerticalAlignment="Top" Source="{x:Bind PlayList.Cover, Mode=OneWay}" Style="{StaticResource LocalMusicImageStyle}"/>
-            <TextBlock Margin="16,0,0,0" Grid.Column="1" Text="{x:Bind PlayList.Title, Mode=OneWay}" MaxLines="2" FontSize="32" TextWrapping="Wrap" FontWeight="Medium" TextTrimming="CharacterEllipsis" IsTextSelectionEnabled="True" FontFamily="{ThemeResource MiSansRegular}"/>
+            <TextBlock Margin="16,0,0,0" Grid.Column="1" Text="{x:Bind PlayList.Title, Mode=OneWay}" MaxLines="2" FontSize="32" TextWrapping="Wrap" FontWeight="Medium" TextTrimming="CharacterEllipsis" IsTextSelectionEnabled="True" FontFamily="{ThemeResource MiSansMedium}"/>
             <ScrollViewer Margin="16,0,0,0" Grid.Column="1" Grid.Row="1">
                 <TextBlock Text="{x:Bind GetDescription(PlayList), Mode=OneWay}" TextWrapping="Wrap" TextTrimming="CharacterEllipsis" FontFamily="{StaticResource MiSansRegular}" IsTextSelectionEnabled="True"/>
             </ScrollViewer>
