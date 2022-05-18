@@ -50,9 +50,12 @@
             Grid.Row="2" 
             ItemsSource="{x:Bind SelectedAlbum.MusicItems, Mode=OneWay}" 
             ItemTemplateSelector="{StaticResource EvenOldMusicListInAlbumTemplate}" 
-            Style="{StaticResource GeneralListViewWithFooterStyle}"
+            Style="{StaticResource GeneralListViewStyle}"
             ItemClick="ListView_ItemClick"
             >
+            <ListView.Footer>
+                <Grid Height="100" />
+            </ListView.Footer>
         </ListView>
 
     </Grid>

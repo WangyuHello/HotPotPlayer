@@ -49,13 +49,7 @@ namespace HotPotPlayer.Pages.MusicSub
             }
         }
 
-        private ObservableGroupedCollection<int, AlbumItem> _localAlbum { get; set; } = new();
-
-        private ReadOnlyObservableGroupedCollection<int, AlbumItem> _localAlbum2;
-        public ReadOnlyObservableGroupedCollection<int, AlbumItem> LocalAlbum
-        {
-            get => _localAlbum2 ??= new(_localAlbum);
-        }
+        public ObservableCollection<AlbumItem> LocalAlbumMusic { get; set; } = new();
         public ObservableCollection<MusicItem> LocalArtistMusic { get; set; } = new();
 
         private string _artistName;
@@ -79,11 +73,11 @@ namespace HotPotPlayer.Pages.MusicSub
             var artistName = (string)e.Parameter;
             ArtistName = artistName;
 
-            var (albumGroupList, musicList) = await GetArtistWorksAsync(artistName);
-            _localAlbum.Clear();
-            foreach (var item in albumGroupList)
+            var (albumList, musicList) = await GetArtistWorksAsync(artistName);
+            LocalAlbumMusic.Clear();
+            foreach (var item in albumList)
             {
-                _localAlbum.AddGroup(item.Key, item);
+                LocalAlbumMusic.Add(item);
             }
             LocalArtistMusic.Clear();
             foreach (var item in musicList)
@@ -93,37 +87,31 @@ namespace HotPotPlayer.Pages.MusicSub
             base.OnNavigatedTo(e);
         }
 
-        static async Task<(IEnumerable<IGrouping<int, AlbumItem>>, IEnumerable<MusicItem>)> GetArtistWorksAsync(string name)
+        static async Task<(IEnumerable<AlbumItem>, IEnumerable<MusicItem>)> GetArtistWorksAsync(string name)
         {
-            var albumGroup = await Task.Run(() =>
+            var albums = await Task.Run(() =>
             {
                 var musicService = ((App)Application.Current).LocalMusicService;
-                var albumGroup = musicService.GetArtistAlbumGroup(name);
-                return albumGroup;
+                var albums = musicService.GetArtistAlbumGroup(name);
+                return albums;
             });
-            return albumGroup;
-        }
-
-        private void AllMusicList_ItemClick(object sender, ItemClickEventArgs e)
-        {
-            var music = e.ClickedItem as MusicItem;
-            MusicPlayer.PlayNext(music, LocalArtistMusic);
+            return albums;
         }
 
         private async void AlbumPopupOverlay_Tapped(object sender, TappedRoutedEventArgs e)
         {
             var anim = ConnectedAnimationService.GetForCurrentView().PrepareToAnimate("backwardsAnimation", AlbumPopupTarget);
             anim.Configuration = new BasicConnectedAnimationConfiguration();
-            await AlbumGridView.TryStartConnectedAnimationAsync(anim, SelectedAlbum, "AlbumCardConnectedElement");
+            await AlbumListView.TryStartConnectedAnimationAsync(anim, SelectedAlbum, "AlbumCardConnectedElement");
             AlbumPopupOverlay.Visibility = Visibility.Collapsed;
         }
 
-        private void AlbumGridView_ItemClick(object sender, ItemClickEventArgs e)
+        private void AlbumListView_ItemClick(object sender, ItemClickEventArgs e)
         {
             var album = e.ClickedItem as AlbumItem;
             SelectedAlbum = album;
 
-            var ani = AlbumGridView.PrepareConnectedAnimation("forwardAnimation", album, "AlbumCardConnectedElement");
+            var ani = AlbumListView.PrepareConnectedAnimation("forwardAnimation", album, "AlbumCardConnectedElement");
             ani.Configuration = new BasicConnectedAnimationConfiguration();
             ani.TryStart(AlbumPopupTarget);
 

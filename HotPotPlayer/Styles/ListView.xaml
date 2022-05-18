@@ -516,14 +516,6 @@
         </Setter>
     </Style>
 
-    <Style x:Key="GeneralListViewWithFooterStyle" TargetType="ListView" BasedOn="{StaticResource GeneralListViewStyle}">
-        <Setter Property="Footer">
-            <Setter.Value>
-                <Grid Height="100"/>
-            </Setter.Value>
-        </Setter>
-    </Style>
-
     <Style TargetType="ListViewItem" x:Key="GeneralListContainerCompactStyle" BasedOn="{StaticResource GeneralListContainerStyle}" >
         <Setter Property="MinHeight" Value="0" />
         <Setter Property="MinWidth" Value="0" />

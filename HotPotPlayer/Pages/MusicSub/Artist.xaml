@@ -6,44 +6,43 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:cont3="using:HotPotPlayer.Controls"
     xmlns:helper="using:HotPotPlayer.Pages.Helper"
+    xmlns:animations="using:CommunityToolkit.WinUI.UI.Animations"
     mc:Ignorable="d"
-    Background="White" >
+    Background="{ThemeResource ApplicationPageBackgroundThemeBrush}" >
 
     <Page.Resources>
-        <CollectionViewSource x:Name="LocalAlbumGroups" Source="{x:Bind LocalAlbum}" IsSourceGrouped="True" />
+
     </Page.Resources>
 
-    <Grid Padding="36,28,0,0">
+    <Grid Padding="36,42,0,0" >
         <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
-        <TextBlock Margin="12,0,32,12" Text="{x:Bind ArtistName}" FontSize="24" FontWeight="Medium" TextWrapping="Wrap"/>
-        <Pivot Grid.Row="1" HeaderTemplate="{StaticResource GeneralPivotHeaderTemplate}">
-            <PivotItem Header="专辑" Margin="0">
-                <SemanticZoom>
-                    <SemanticZoom.ZoomedInView>
-                        <GridView x:Name="AlbumGridView" ItemsSource="{x:Bind LocalAlbumGroups.View}" Style="{StaticResource AlbumCardViewStyle}" ItemTemplate="{StaticResource AlbumCardViewTemplate}"  ItemClick="AlbumGridView_ItemClick" >
-                            <GridView.GroupStyle>
-                                <GroupStyle HeaderTemplate="{StaticResource GeneralZoomedInGroupHeaderTemplate}" />
-                            </GridView.GroupStyle>
-                            <GridView.Footer>
-                                <Grid Height="100" />
-                            </GridView.Footer>
-                        </GridView>
-                    </SemanticZoom.ZoomedInView>
-                    <SemanticZoom.ZoomedOutView>
-                        <GridView ItemsSource="{x:Bind LocalAlbumGroups.View.CollectionGroups}" Style="{StaticResource GeneralZoomOutGridViewStyle}"/>
-                    </SemanticZoom.ZoomedOutView>
-                </SemanticZoom>
-            </PivotItem>
-            <PivotItem Header="列表" Margin="0">
-                <ListView x:Name="AllMusicList" ItemsSource="{x:Bind LocalArtistMusic, Mode=OneWay}" Style="{StaticResource GeneralListViewWithFooterStyle}" ItemTemplateSelector="{StaticResource EvenOldMusicListInArtistMusicListTemplate}" ItemClick="AllMusicList_ItemClick"/>
-            </PivotItem>
-        </Pivot>
 
-        <Grid Grid.RowSpan="2" x:Name="AlbumPopupOverlay" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Visibility="Collapsed" Background="#00FFFFFF" Tapped="AlbumPopupOverlay_Tapped">
-            <cont3:AlbumPopup x:Name="AlbumPopupTarget" Margin="0,-60,0,0" Album="{x:Bind SelectedAlbum, Mode=OneWay}" Tapped="{x:Bind helper:AlbumHelper.SuppressTap}"/>
+        <TextBlock Margin="0,0,0,16" Text="{x:Bind ArtistName, Mode=OneWay}" FontSize="32" TextWrapping="Wrap" FontFamily="{StaticResource MiSansMedium}"/>
+        <TextBlock Grid.Row="2" Text="专辑" FontSize="20" FontFamily="{StaticResource MiSansMedium}" />
+        <ListView Grid.Row="3" x:Name="AlbumListView" Margin="-36,0,0,0" Padding="28,0,0,0" Height="252" ItemsSource="{x:Bind LocalAlbumMusic, Mode=OneWay}" Style="{StaticResource HorizontalListViewStyle}" ItemTemplate="{StaticResource AlbumCardViewInArtistTemplate}" ItemClick="AlbumListView_ItemClick"/>
+        <TextBlock Grid.Row="4" Margin="0,8" Text="歌曲" FontSize="20" FontFamily="{StaticResource MiSansMedium}" />
+        <ListView Grid.Row="5" Margin="-28,0,0,0" Padding="24,0,28,0" ItemsSource="{x:Bind LocalArtistMusic, Mode=OneWay}" Style="{StaticResource GeneralListViewStyle}" ItemTemplate="{StaticResource CloudMusicCardViewInArtistTemplate}" ItemContainerStyle="{StaticResource GeneralListContainerWithPadding2Style}" ItemClick="{x:Bind helper:ListHelper.PlayMusicInList}">
+            <ListView.Footer>
+                <Grid Height="100" />
+            </ListView.Footer>
+        </ListView>
+        <Grid Grid.RowSpan="6" x:Name="AlbumPopupOverlay" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Visibility="Collapsed" Background="#00FFFFFF" Tapped="AlbumPopupOverlay_Tapped">
+            <cont3:AlbumPopup x:Name="AlbumPopupTarget" Margin="0,-60,0,0" Album="{x:Bind SelectedAlbum, Mode=OneWay}" Tapped="{x:Bind helper:AlbumHelper.SuppressTap}">
+                <animations:Implicit.HideAnimations>
+                    <animations:OpacityAnimation Duration="0:0:0.45" From="1" To="0" />
+                </animations:Implicit.HideAnimations>
+
+                <animations:Implicit.ShowAnimations>
+                    <animations:OpacityAnimation Duration="0:0:0.01" From="0" To="1" />
+                </animations:Implicit.ShowAnimations>
+            </cont3:AlbumPopup>
         </Grid>
     </Grid>
 </Page>
