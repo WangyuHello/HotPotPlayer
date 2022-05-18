@@ -52,6 +52,12 @@
             Style="{StaticResource GeneralListViewStyle}"
             ItemClick="ListView_ItemClick"
             >
+            <ListView.ItemContainerTransitions>
+                <TransitionCollection>
+                    <AddDeleteThemeTransition />
+                    <RepositionThemeTransition />
+                </TransitionCollection>
+            </ListView.ItemContainerTransitions>
 
         </ListView>
     </Grid>
