@@ -7,6 +7,7 @@
     xmlns:cont2="using:HotPotPlayer.UI.Controls"
     xmlns:ui="using:CommunityToolkit.WinUI.UI"
     xmlns:conv="using:HotPotPlayer.Converters"
+    xmlns:helper="using:HotPotPlayer.Pages.Helper"
     >
 
     <DataTemplate x:Key="MusicCardViewTemplate" x:DataType="models:MusicItem">
@@ -339,8 +340,7 @@
     </DataTemplate>
 
     <DataTemplate x:Key="CloudMusicCardViewInArtistTemplate" x:DataType="models:MusicItem">
-        <Grid Padding="8" Background="White" CornerRadius="4" ui:VisualExtensions.NormalizedCenterPoint="0.5" Loaded="Root_Loaded2"
-              >
+        <Grid Padding="8" Background="White" CornerRadius="4" ui:VisualExtensions.NormalizedCenterPoint="0.5" Loaded="Root_Loaded2" RightTapped="{x:Bind helper:ListHelper.RightTapMusicInListClick}">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="24" />
                 <ColumnDefinition Width="Auto" />
@@ -356,8 +356,8 @@
             <TextBlock Grid.Column="3" FontSize="14" TextTrimming="CharacterEllipsis" VerticalAlignment="Center" Text="{x:Bind Title}" FontFamily="{ThemeResource MiSansMedium}" ToolTipService.ToolTip="{x:Bind Title}"/>
             <TextBlock Grid.Column="4" Text="{x:Bind GetArtists()}" FontSize="12" TextTrimming="CharacterEllipsis" FontFamily="{ThemeResource MiSansRegular}" Foreground="Gray" VerticalAlignment="Center" ToolTipService.ToolTip="{x:Bind Album}"/>
             <TextBlock Grid.Column="5" Text="{x:Bind Duration.ToString('mm\\\\:ss')}" FontSize="12" FontFamily="{ThemeResource MiSansRegular}" Foreground="Gray" VerticalAlignment="Center"/>
-            <Button Grid.Column="6" Style="{StaticResource FullTransparentButton}" Margin="16,0,8,0" VerticalAlignment="Center">
-                <FontIcon FontFamily="Segoe Fluent Icons" Glyph="&#xE006;" FontWeight="Bold" Foreground="#BEC2CE" FontSize="16" VerticalAlignment="Center"/>
+            <Button Grid.Column="6" Style="{StaticResource TransparentButton}" Margin="16,0,0,0" CornerRadius="4" Padding="4" Tag="{x:Bind }" Click="{x:Bind helper:ListHelper.RightTapMusicInListClick}">
+                <SymbolIcon Symbol="More" />
             </Button>
         </Grid>
     </DataTemplate>
