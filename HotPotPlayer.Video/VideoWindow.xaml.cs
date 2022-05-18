@@ -36,6 +36,13 @@ namespace HotPotPlayer.Video
             mpv.API.SetPropertyString("vo", "gpu");
             mpv.API.SetPropertyString("gpu-context", "d3d11");
             mpv.API.SetPropertyString("hwdec", "d3d11va");
+
+            this.Closed += VideoWindow_Closed;
+        }
+
+        private void VideoWindow_Closed(object sender, WindowEventArgs args)
+        {
+            mpv.Stop();
         }
 
         public MpvPlayer mpv;

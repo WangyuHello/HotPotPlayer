@@ -11,6 +11,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using WinUIEx;
 
 namespace HotPotPlayer
 {
@@ -24,13 +25,7 @@ namespace HotPotPlayer
             {
                 MediaFile = video
             };
-            v.Activate();
-            v.Closed += VideoWindowClosed;
-        }
-
-        private void VideoWindowClosed(object sender, WindowEventArgs args)
-        {
-            MainWindow.Activate();
+            v.Show();
         }
 
         public override void ShowToast(ToastInfo toast)
