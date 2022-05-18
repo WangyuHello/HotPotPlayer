@@ -36,6 +36,11 @@
                             <GridView.GroupStyle>
                                 <GroupStyle HeaderTemplate="{StaticResource GeneralZoomedInGroupHeaderTemplate}" />
                             </GridView.GroupStyle>
+                            <GridView.ItemContainerTransitions>
+                                <TransitionCollection>
+                                    
+                                </TransitionCollection>
+                            </GridView.ItemContainerTransitions>
                         </GridView>
                     </SemanticZoom.ZoomedInView>
                     <SemanticZoom.ZoomedOutView>
