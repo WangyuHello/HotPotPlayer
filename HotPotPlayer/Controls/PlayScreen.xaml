@@ -27,7 +27,7 @@
             <ColumnDefinition Width="*" />
             <ColumnDefinition Width="*" />
         </Grid.ColumnDefinitions>
-        <Button Margin="0,8" Style="{StaticResource PlayOtherButton}" Click="{x:Bind MusicPlayer.ToggleShowPlayScreen}">
+        <Button Margin="-52,8,0,0" Style="{StaticResource PlayOtherButton}" Click="{x:Bind MusicPlayer.ToggleShowPlayScreen}">
             <SymbolIcon Symbol="Clear" />
         </Button>
         <Grid Grid.Row="1" Grid.ColumnSpan="1" Margin="0,0,32,0">
