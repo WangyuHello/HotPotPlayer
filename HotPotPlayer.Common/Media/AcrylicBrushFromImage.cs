@@ -35,7 +35,7 @@ namespace HotPotPlayer.Media
             var file = await ImageCacheEx.Instance.GetFileFromCacheAsync(uri);
             if (file == null) 
             {
-                await ImageCacheEx.Instance.PreCacheAsync(uri);
+                await ImageCacheEx.Instance.PreCacheAsync(uri, storeToMemoryCache: true);
                 goto Start;
             }
             using var image = Image.Load<Rgba32>(file.Path);
