@@ -6,6 +6,8 @@
     <Nullable>enable</Nullable>
     <UseWindowsForms>true</UseWindowsForms>
     <Platforms>x64</Platforms>
+	<SelfContained>true</SelfContained>
+	<RuntimeIdentifier>win10-x64</RuntimeIdentifier>
   </PropertyGroup>
 
   <ItemGroup>

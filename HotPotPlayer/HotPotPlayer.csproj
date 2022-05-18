@@ -116,7 +116,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\HotPotPlayer.Common\HotPotPlayer.Common.csproj" />
-    <ProjectReference Include="..\HotPotPlayer.VideoHost\HotPotPlayer.VideoHost.csproj" />
     <ProjectReference Include="..\HotPotPlayer.Video\HotPotPlayer.Video.csproj" />
     <ProjectReference Include="..\libvlcsharp\src\LibVLCSharp\LibVLCSharp.csproj" />
   </ItemGroup>
