@@ -12,6 +12,7 @@
     <None Remove="SoftwareVideoHost.xaml" />
     <None Remove="VideoControl.xaml" />
     <None Remove="VideoControl2.xaml" />
+    <None Remove="VideoWindow.xaml" />
   </ItemGroup>
   <ItemGroup>
     <AdditionalFiles Include="NativeMethods.txt" />
@@ -28,12 +29,19 @@
 	  <PackageReference Include="Silk.NET.Direct3D11" Version="2.15.0" />
 	  <PackageReference Include="Silk.NET.DXGI" Version="2.15.0" />
 	  <!--<PackageReference Include="HotPotPlayer.Interop.Projection" Version="0.1.0" />-->
+	  <PackageReference Include="WinUIEx" Version="1.3.0" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\HotPotPlayer.Common\HotPotPlayer.Common.csproj" />
     <ProjectReference Include="..\HotPotPlayer.Native\HotPotPlayer.Native.csproj" />
     <ProjectReference Include="..\libvlcsharp\src\LibVLCSharp\LibVLCSharp.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Page Update="VideoWindow.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
   </ItemGroup>
 
   <ItemGroup>

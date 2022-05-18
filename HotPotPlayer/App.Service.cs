@@ -1,5 +1,6 @@
 ﻿using HotPotPlayer.Models;
 using HotPotPlayer.Services;
+using HotPotPlayer.Video;
 using Microsoft.UI.Xaml;
 using System;
 using System.Collections.Generic;
@@ -19,14 +20,17 @@ namespace HotPotPlayer
 
         public void PlayVideo(FileInfo video)
         {
-            var path = Convert.ToBase64String(Encoding.UTF8.GetBytes(video.FullName));
-            var info = new ProcessStartInfo("HotPotPlayer.VideoHost.exe", path)
+            VideoWindow v = new VideoWindow()
             {
-                WindowStyle = ProcessWindowStyle.Normal,
-                UseShellExecute = false
+                MediaFile = video
             };
-            Process.Start(info);
-            //VideoHost.Program.Start(video);
+            v.Activate();
+            v.Closed += VideoWindowClosed;
+        }
+
+        private void VideoWindowClosed(object sender, WindowEventArgs args)
+        {
+            MainWindow.Activate();
         }
 
         public override void ShowToast(ToastInfo toast)
