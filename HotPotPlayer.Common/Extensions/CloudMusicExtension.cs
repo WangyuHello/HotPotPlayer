@@ -91,10 +91,8 @@ namespace HotPotPlayer.Extensions
                 arpath = "ar";
             var al = new CloudAlbumItem
             {
-                Alias = album["alias"] != null
-                ? string.Join(" / ", album["alias"].ToArray().Select(t => t.ToString()))
-                : "",
-                Cover = new Uri(album["picUrl"].ToString()),
+                Alias = album["alias"] != null ? string.Join(" / ", album["alias"].ToArray().Select(t => t.ToString())) : "",
+                Cover = album["picUrl"] != null ? new Uri(album["picUrl"].ToString()) : null,
                 Description = album["description"] != null ? album["description"].ToString() : "",
                 Id = album["id"].ToString(),
                 Title = album["name"].ToString(),
@@ -121,6 +119,8 @@ namespace HotPotPlayer.Extensions
                 art.Alias = string.Join(" / ", artist["alias"].Select(t => t.ToString()).ToArray());
             if (artist["trans"] != null) art.TransName = artist["trans"].ToString();
             if (artist["picUrl"] != null) art.Avatar = artist["picUrl"].ToString();
+            if (artist["cover"] != null) art.Avatar = artist["cover"].ToString();
+            if (artist["briefDesc"] != null) art.BriefDescription = artist["briefDesc"].ToString();
             return art;
         }
 

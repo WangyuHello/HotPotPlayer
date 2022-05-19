@@ -59,6 +59,7 @@
     <None Remove="Pages\Bilibili.xaml" />
     <None Remove="Pages\CloudMusic.xaml" />
     <None Remove="Pages\CloudMusicSub\Album.xaml" />
+    <None Remove="Pages\CloudMusicSub\Artist.xaml" />
     <None Remove="Pages\CloudMusicSub\Login.xaml" />
     <None Remove="Pages\CloudMusicSub\Self.xaml" />
     <None Remove="Pages\Music.xaml" />
@@ -109,6 +110,9 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Page Update="Pages\CloudMusicSub\Artist.xaml">
+      <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
+    </Page>
     <Page Update="Pages\Setting.xaml">
       <Generator>MSBuild:Compile</Generator>
     </Page>

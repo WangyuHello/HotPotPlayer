@@ -103,8 +103,15 @@ namespace HotPotPlayer.Pages.Helper
             }
             else if (sender is MenuFlyoutItem menuItem)
             {
-                var artist = menuItem.Text;
-                MainWindow.NavigateTo("MusicSub.Artist", artist);
+                if (menuItem.Tag is CloudArtistItem c)
+                {
+                    MainWindow.NavigateTo("CloudMusicSub.Artist", c);
+                }
+                else
+                {
+                    var artist = menuItem.Text;
+                    MainWindow.NavigateTo("MusicSub.Artist", artist);
+                }
             }
         }
 

@@ -98,8 +98,8 @@
     <DataTemplate x:Key="AlbumCardViewInArtistTemplate" x:DataType="models:AlbumItem">
         <StackPanel 
             Width="140"
-            Spacing="8" 
-            Padding="0,0,0,12" 
+            Spacing="4" 
+            Padding="0,0,0,0" 
             x:Name="AlbumCardConnectedElement"
             BorderBrush="{ThemeResource ButtonBorderBrush}"
             BorderThickness="{ThemeResource ButtonBorderThemeThickness}"
@@ -122,7 +122,7 @@
                 MaxLines="2" 
                 TextTrimming="CharacterEllipsis" 
                 TextWrapping="Wrap" 
-                Height="40" 
+                Height="38" 
                 ToolTipService.ToolTip="{x:Bind Title}" 
                 x:Phase="0" 
                 FontFamily="{ThemeResource MiSansBold}"
@@ -347,7 +347,7 @@
                 <ColumnDefinition Width="Auto" />
                 <ColumnDefinition Width="1.4*" />
                 <ColumnDefinition Width="*" />
-                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="1.4*" />
                 <ColumnDefinition Width="Auto" />
                 <ColumnDefinition Width="Auto" />
             </Grid.ColumnDefinitions>

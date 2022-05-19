@@ -1,5 +1,6 @@
 ﻿using HotPotPlayer.Extensions;
 using HotPotPlayer.Models;
+using HotPotPlayer.Models.CloudMusic;
 using HotPotPlayer.Pages.Helper;
 using HotPotPlayer.Services;
 using Microsoft.UI.Xaml;
@@ -142,20 +143,38 @@ namespace HotPotPlayer.Controls
         private void SubtitleClick(object sender, RoutedEventArgs e)
         {
             var button = sender as Button;
-
-            var artists = MusicPlayer.CurrentPlaying.GetArtists().GetArtists();
-
             var flyout = new MenuFlyout();
-            foreach (var a in artists)
+
+            if (MusicPlayer.CurrentPlaying is CloudMusicItem c)
             {
-                var item = new MenuFlyoutItem
+                var artists = c.Artists2;
+                foreach (var a in artists)
                 {
-                    Text = a,
-                    Icon = new SymbolIcon { Symbol = Symbol.Contact }
-                };
-                item.Click += AlbumHelper.ArtistClick;
-                flyout.Items.Add(item);
+                    var item = new MenuFlyoutItem
+                    {
+                        Text = a.Name,
+                        Icon = new SymbolIcon { Symbol = Symbol.Contact },
+                        Tag = a
+                    };
+                    item.Click += AlbumHelper.ArtistClick;
+                    flyout.Items.Add(item);
+                }
             }
+            else
+            {
+                var artists = MusicPlayer.CurrentPlaying.GetArtists().GetArtists();
+                foreach (var a in artists)
+                {
+                    var item = new MenuFlyoutItem
+                    {
+                        Text = a,
+                        Icon = new SymbolIcon { Symbol = Symbol.Contact }
+                    };
+                    item.Click += AlbumHelper.ArtistClick;
+                    flyout.Items.Add(item);
+                }
+            }
+
             flyout.Items.Add(new MenuFlyoutSeparator());
             var item2 = new MenuFlyoutItem
             {

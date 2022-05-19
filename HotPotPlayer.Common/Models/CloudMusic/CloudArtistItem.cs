@@ -13,5 +13,6 @@ namespace HotPotPlayer.Models.CloudMusic
         public string Id { get; set; }
         public string Name { get; set; }
         public string TransName { get; set; }
+        public string BriefDescription { get; set; }
     }
 }
