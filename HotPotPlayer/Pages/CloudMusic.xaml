@@ -99,7 +99,7 @@
 
                 <Grid Grid.Row="1" CornerRadius="8" Background="White" Padding="16">
                     <TextBlock Text="热门歌手" FontSize="20" FontFamily="{StaticResource MiSansMedium}"/>
-                    <ListView Margin="-16,36,-16,0" Padding="8,0,0,0" ItemsSource="{x:Bind CloudMusicService.TopArtists, Mode=OneWay}" Style="{StaticResource HorizontalListViewStyle}" ItemContainerStyle="{StaticResource GeneralListContainerCompactPaddingStyle}" ItemTemplate="{StaticResource CloudArtistCardViewTemplate}"/>
+                    <ListView x:Name="TopArtistsList" Margin="-16,36,-16,0" Padding="8,0,0,0" ItemsSource="{x:Bind CloudMusicService.TopArtists, Mode=OneWay}" Style="{StaticResource HorizontalListViewStyle}" ItemContainerStyle="{StaticResource GeneralListContainerCompactPaddingStyle}" ItemTemplate="{StaticResource CloudArtistCardViewTemplate}" ItemClick="TopArtistsList_ItemClick"/>
                 </Grid>
                 
                 <Grid Grid.Row="2" Margin="0,8" CornerRadius="8" Background="White" Padding="16">

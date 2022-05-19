@@ -156,5 +156,11 @@ namespace HotPotPlayer.Pages
             IsFirstNavigate = true;
             MainWindow.NavigateTo("CloudMusicSub.Login");
         }
+
+        private void TopArtistsList_ItemClick(object sender, ItemClickEventArgs e)
+        {
+            var ar = e.ClickedItem as CloudArtistItem;
+            MainWindow.NavigateTo("CloudMusicSub.Artist", ar);
+        }
     }
 }
