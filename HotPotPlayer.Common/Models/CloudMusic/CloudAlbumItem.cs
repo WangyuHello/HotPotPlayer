@@ -19,7 +19,9 @@ namespace HotPotPlayer.Models.CloudMusic
 
         public override string[] AllArtists 
         {
-            get => new List<CloudArtistItem> { AlbumArtist }.Concat(Artists2).Where(a => a!=null).Select(a => a.Name).ToArray();
+            get => AllArtist2.Select(a => a.Name).ToArray();
         }
+
+        public IEnumerable<CloudArtistItem> AllArtist2 => new List<CloudArtistItem> { AlbumArtist }.Concat(Artists2).Where(a => a != null);
     }
 }

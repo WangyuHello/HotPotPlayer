@@ -75,30 +75,61 @@ namespace HotPotPlayer.Pages.Helper
             Player.HidePlayScreen();
             if (sender is HyperlinkButton button)
             {
-                var artist = (string)button.Content;
-                var segs = artist.GetArtists();
-                if (segs.Length == 1)
+                if (button.Tag is CloudMusicItem cm)
                 {
-                    MainWindow.NavigateTo("MusicSub.Artist", artist);
+                    var artist = cm.Artists2;
+                    if (artist.Count == 1)
+                    {
+                        MainWindow.NavigateTo("CloudMusicSub.Artist", artist[0]);
+                    }
+                    else
+                    {
+                        if (button.ContextFlyout == null)
+                        {
+                            var flyout = new MenuFlyout();
+                            foreach (var a in artist)
+                            {
+                                var item = new MenuFlyoutItem
+                                {
+                                    Text = a.Name,
+                                    Icon = new SymbolIcon { Symbol = Symbol.Contact },
+                                    Tag = a
+                                };
+                                item.Click += ArtistClick;
+                                flyout.Items.Add(item);
+                            }
+                            button.ContextFlyout = flyout;
+                        }
+                        button.ContextFlyout.ShowAt(button);
+                    }
                 }
                 else
                 {
-                    if (button.ContextFlyout == null)
+                    var artist = (string)button.Content;
+                    var segs = artist.GetArtists();
+                    if (segs.Length == 1)
                     {
-                        var flyout = new MenuFlyout();
-                        foreach (var a in segs)
-                        {
-                            var item = new MenuFlyoutItem
-                            {
-                                Text = a,
-                                Icon = new SymbolIcon { Symbol = Symbol.Contact }
-                            };
-                            item.Click += ArtistClick;
-                            flyout.Items.Add(item);
-                        }
-                        button.ContextFlyout = flyout;
+                        MainWindow.NavigateTo("MusicSub.Artist", artist);
                     }
-                    button.ContextFlyout.ShowAt(button);
+                    else
+                    {
+                        if (button.ContextFlyout == null)
+                        {
+                            var flyout = new MenuFlyout();
+                            foreach (var a in segs)
+                            {
+                                var item = new MenuFlyoutItem
+                                {
+                                    Text = a,
+                                    Icon = new SymbolIcon { Symbol = Symbol.Contact }
+                                };
+                                item.Click += ArtistClick;
+                                flyout.Items.Add(item);
+                            }
+                            button.ContextFlyout = flyout;
+                        }
+                        button.ContextFlyout.ShowAt(button);
+                    }
                 }
             }
             else if (sender is MenuFlyoutItem menuItem)
@@ -113,32 +144,102 @@ namespace HotPotPlayer.Pages.Helper
                     MainWindow.NavigateTo("MusicSub.Artist", artist);
                 }
             }
+            else if (sender is TextBlock t)
+            {
+                if (t.Tag is CloudMusicItem cm)
+                {
+                    var artist = cm.Artists2;
+                    if (artist.Count == 1)
+                    {
+                        MainWindow.NavigateTo("CloudMusicSub.Artist", artist[0]);
+                    }
+                    else
+                    {
+                        if (t.ContextFlyout == null)
+                        {
+                            var flyout = new MenuFlyout();
+                            foreach (var a in artist)
+                            {
+                                var item = new MenuFlyoutItem
+                                {
+                                    Text = a.Name,
+                                    Icon = new SymbolIcon { Symbol = Symbol.Contact },
+                                    Tag = a
+                                };
+                                item.Click += ArtistClick;
+                                flyout.Items.Add(item);
+                            }
+                            t.ContextFlyout = flyout;
+                        }
+                        t.ContextFlyout.ShowAt(t);
+                    }
+                }
+                else
+                {
+                    var artist = t.Text;
+                    var segs = artist.GetArtists();
+                    if (segs.Length == 1)
+                    {
+                        MainWindow.NavigateTo("MusicSub.Artist", artist);
+                    }
+                    else
+                    {
+                        if (t.ContextFlyout == null)
+                        {
+                            var flyout = new MenuFlyout();
+                            foreach (var a in segs)
+                            {
+                                var item = new MenuFlyoutItem
+                                {
+                                    Text = a,
+                                    Icon = new SymbolIcon { Symbol = Symbol.Contact }
+                                };
+                                item.Click += ArtistClick;
+                                flyout.Items.Add(item);
+                            }
+                            t.ContextFlyout = flyout;
+                        }
+                        t.ContextFlyout.ShowAt(t);
+                    }
+                }
+            }
         }
 
         internal static void ArtistClick2(object sender, RoutedEventArgs e)
         {
             var button = sender as HyperlinkButton;
-            var artist = (string)button.Content;
-            var segs = artist.GetArtists();
-            if (segs.Length == 1)
+            if (button.Tag is CloudAlbumItem c)
             {
-                MainWindow.NavigateTo("MusicSub.Artist", artist);
+                var artist = c.AlbumArtist;
+                if (artist != null)
+                {
+                    MainWindow.NavigateTo("CloudMusicSub.Artist", artist);
+                }
             }
             else
             {
-                var flyout = new MenuFlyout();
-                foreach (var a in segs)
+                var artist = (string)button.Content;
+                var segs = artist.GetArtists();
+                if (segs.Length == 1)
                 {
-                    var item = new MenuFlyoutItem
-                    {
-                        Text = a,
-                        Icon = new SymbolIcon { Symbol = Symbol.Contact }
-                    };
-                    item.Click += ArtistClick;
-                    flyout.Items.Add(item);
+                    MainWindow.NavigateTo("MusicSub.Artist", artist);
                 }
-                button.ContextFlyout = flyout;
-                button.ContextFlyout.ShowAt(button);
+                else
+                {
+                    var flyout = new MenuFlyout();
+                    foreach (var a in segs)
+                    {
+                        var item = new MenuFlyoutItem
+                        {
+                            Text = a,
+                            Icon = new SymbolIcon { Symbol = Symbol.Contact }
+                        };
+                        item.Click += ArtistClick;
+                        flyout.Items.Add(item);
+                    }
+                    button.ContextFlyout = flyout;
+                    button.ContextFlyout.ShowAt(button);
+                }
             }
         }
 

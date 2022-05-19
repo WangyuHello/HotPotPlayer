@@ -70,7 +70,7 @@ namespace HotPotPlayer.Pages.MusicSub
             {
                 return;
             }
-            AlbumHelper.InitSplitButtonFlyout(AlbumSplitButton, SelectedAlbum);
+            //AlbumHelper.InitSplitButtonFlyout(AlbumSplitButton, SelectedAlbum);
         }
 
         static async Task<AlbumItem> GetAlbumAsync(MusicItem m)

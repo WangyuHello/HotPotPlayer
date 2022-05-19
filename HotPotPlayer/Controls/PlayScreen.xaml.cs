@@ -215,10 +215,5 @@ namespace HotPotPlayer.Controls
             var music = e.ClickedItem as CloudMusicItem;
             MusicPlayer.PlayNext(music);
         }
-
-        private void Album_Tapped(object sender, TappedRoutedEventArgs e)
-        {
-            AlbumHelper.AlbumInfoClick(sender, null);
-        }
     }
 }

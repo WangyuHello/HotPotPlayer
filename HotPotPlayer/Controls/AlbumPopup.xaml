@@ -55,7 +55,7 @@
                 <TextBlock Text="{x:Bind Album.Year, Mode=OneWay}" FontSize="18" Margin="0,4,0,0" FontFamily="{ThemeResource MiSansRegular}">
 
                 </TextBlock>
-                <HyperlinkButton Content="{x:Bind Album.GetArtists(), Mode=OneWay}" Padding="0,4" FontSize="18" Margin="0,4,0,0" Click="{x:Bind helper:AlbumHelper.ArtistClick2}" FontFamily="{ThemeResource MiSansRegular}">
+                <HyperlinkButton Content="{x:Bind Album.GetArtists(), Mode=OneWay}" Padding="0,4" FontSize="18" Margin="0,4,0,0" Tag="{x:Bind Album, Mode=OneWay}" Click="{x:Bind helper:AlbumHelper.ArtistClick2}" FontFamily="{ThemeResource MiSansRegular}">
 
                 </HyperlinkButton>
                 <Grid Margin="0,12,0,0">
