@@ -101,9 +101,14 @@ namespace HotPotPlayer.Pages.CloudMusicSub
         {
             var albums = await Task.Run(async () =>
             {
-                var songs = await CloudMusicService.GetArtistSongsAsync(ar.Id);
-                var albums = await CloudMusicService.GetArtistAlbumsAsync(ar.Id);
-                var detail = await CloudMusicService.GetArtistDetailAsync(ar.Id);
+                var t1 = CloudMusicService.GetArtistSongsAsync(ar.Id);
+                var t2 = CloudMusicService.GetArtistAlbumsAsync(ar.Id);
+                var t3 = CloudMusicService.GetArtistDetailAsync(ar.Id);
+                //await Task.WhenAll(t1, t2, t3);
+                //https://stackoverflow.com/questions/17197699/awaiting-multiple-tasks-with-different-results
+                var songs = await t1;
+                var albums = await t2;
+                var detail = await t3;
                 return (albums, songs, detail);
             });
             return albums;
