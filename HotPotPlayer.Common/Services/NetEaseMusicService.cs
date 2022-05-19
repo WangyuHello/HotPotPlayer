@@ -91,19 +91,17 @@ namespace HotPotPlayer.Services
 
         public async Task InitAsync()
         {
+            //https://stackoverflow.com/questions/17197699/awaiting-multiple-tasks-with-different-results
             var likeList = await GetLikeListAsync();
-            LikeList ??= new(likeList);
-            
             var recList = await GetRecommendListAsync();
-            RecommedList ??= new(recList);
-
             var recPlayList = await GetRecommendPlayListAsync();
-            RecommedPlayList ??= new(recPlayList);
-
             var topL = await GetTopListDigestAsync();
-            TopList ??= new(topL);
-
             var topA = await GetTopArtistsAsync();
+
+            LikeList ??= new(likeList);
+            RecommedList ??= new(recList);
+            RecommedPlayList ??= new(recPlayList);
+            TopList ??= new(topL);
             TopArtists ??= new(topA);
         }
 
