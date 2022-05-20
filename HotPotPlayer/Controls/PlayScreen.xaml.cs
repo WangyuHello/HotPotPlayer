@@ -145,23 +145,8 @@ namespace HotPotPlayer.Controls
             e.Handled = true;
         }
 
-        public string GetLikeButtonGlyph(MusicItem m)
-        {
-            if (m is CloudMusicItem c)
-            {
-                return CloudMusicService.GetSongLiked(c) ? "\uEB52" : "\uEB51";
-            }
-            return "\uEB51";
-        }
 
-        public SolidColorBrush GetLikeButtonForeground(MusicItem m)
-        {
-            if (m is CloudMusicItem c)
-            {
-                return CloudMusicService.GetSongLiked(c) ? new SolidColorBrush(Colors.Red) : new SolidColorBrush(Colors.Black);
-            }
-            return new SolidColorBrush(Colors.Black);
-        }
+
 
         public string GetAlias(MusicItem m)
         {

@@ -436,6 +436,10 @@ namespace HotPotPlayer.Services
 
         public bool GetSongLiked(CloudMusicItem c)
         {
+            if (LikeList == null)
+            {
+                return false;
+            }
             if (LikeList.MusicItems.Contains(c, new CloudMusicItemComparer()))
             {
                 return true;

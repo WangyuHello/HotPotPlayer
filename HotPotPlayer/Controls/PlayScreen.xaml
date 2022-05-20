@@ -74,8 +74,8 @@
             <Button Style="{StaticResource FullTransparentButton}" >
                 <FontIcon FontFamily="Segoe Fluent Icons" Glyph="&#xE134;" />
             </Button>
-            <Button Style="{StaticResource FullTransparentButton}" Foreground="{x:Bind GetLikeButtonForeground(MusicPlayer.CurrentPlaying), Mode=OneWay}">
-                <FontIcon FontFamily="Segoe Fluent Icons" Glyph="{x:Bind GetLikeButtonGlyph(MusicPlayer.CurrentPlaying), Mode=OneWay}" />
+            <Button Style="{StaticResource FullTransparentButton}" Foreground="{x:Bind helper:LikeHelper.GetLikeButtonForeground(MusicPlayer.CurrentPlaying), Mode=OneWay}">
+                <FontIcon FontFamily="Segoe Fluent Icons" Glyph="{x:Bind helper:LikeHelper.GetLikeButtonGlyph(MusicPlayer.CurrentPlaying), Mode=OneWay}" />
             </Button>
         </StackPanel>
         <TextBlock Grid.Row="6" Text="相似歌曲" Margin="0,24,0,4" FontSize="16" FontFamily="{StaticResource MiSansMedium}" />
