@@ -489,7 +489,7 @@ namespace HotPotPlayer.Services
             }
             catch (Exception ex)
             {
-                e.Result = ex;
+                e.Result = (index, ex);
             }
 
             _isMusicSwitching = false;
@@ -574,10 +574,12 @@ namespace HotPotPlayer.Services
                 RaisePropertyChanged(nameof(Volume));
                 RaisePropertyChanged(nameof(CurrentPlayingDuration));
             }
-            else if(e.Result is Exception _playException)
+            else if(e.Result is (int index2, Exception _playException))
             {
                 App?.ShowToast(new ToastInfo { Text = "播放错误 " + _playException.Message });
                 HasError = true;
+                CurrentPlayingIndex = index2;
+                PlayNext();
             }
         }
 
