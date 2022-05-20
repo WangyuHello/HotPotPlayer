@@ -68,6 +68,13 @@ namespace HotPotPlayer.Services
             set => Set(ref _userPlayLists, value);
         }
 
+        private ObservableCollection<CloudPlayListItem> _subscribePlayLists;
+        public ObservableCollection<CloudPlayListItem> SubscribePlayLists
+        {
+            get => _subscribePlayLists;
+            set => Set(ref _subscribePlayLists, value);
+        }
+
         private ObservableCollection<CloudMusicItem> _recommedList;
         public ObservableCollection<CloudMusicItem> RecommedList
         {
@@ -120,7 +127,8 @@ namespace HotPotPlayer.Services
         {
             var (likeList, lists) = await GetLikeListAsync();
             LikeList = likeList;
-            UserPlayLists ??= new(lists);
+            UserPlayLists ??= new(lists.Where(l => !l.Subscribed));
+            SubscribePlayLists ??= new(lists.Where(l => l.Subscribed));
         }
 
         public async Task<JObject> LoginAsync(string phone, string password)

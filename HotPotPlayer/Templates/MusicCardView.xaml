@@ -163,6 +163,8 @@
                 FontSize="18" 
                 TextTrimming="CharacterEllipsis" 
                 TextWrapping="Wrap" 
+                MaxLines="2"
+                Height="48"
                 ToolTipService.ToolTip="{x:Bind Title}" 
                 FontFamily="{ThemeResource MiSansMedium}"
                 />

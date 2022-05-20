@@ -29,6 +29,13 @@
                     </GridView.Footer>
                 </GridView>
             </PivotItem>
+            <PivotItem Header="收藏歌单" Margin="0" >
+                <GridView x:Name="SubscribePlayLists" ItemsSource="{x:Bind CloudMusicService.SubscribePlayLists, Mode=OneWay}" Style="{StaticResource CardGridViewStyle}" ItemTemplate="{StaticResource PlayListCardViewTemplate}" ItemClick="PlayLists_ItemClick">
+                    <GridView.Footer>
+                        <Grid Height="100" />
+                    </GridView.Footer>
+                </GridView>
+            </PivotItem>
         </Pivot>
 
         <Grid x:Name="PlayListPopupOverlay" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Visibility="Collapsed" Background="#00ffffff" Tapped="PlayListPopupOverlay_Tapped">
