@@ -484,5 +484,15 @@ namespace HotPotPlayer.Services
                 App.ShowToast(new ToastInfo { Text = $"已将 {c.Title} 添加到 {pl.Title}" });
             }
         }
+
+        public async void Like(CloudMusicItem c, bool like = true)
+        {
+            var json = await Api.RequestAsync(CloudMusicApiProviders.Like, new Dictionary<string, object> { ["id"] = c.SId, ["like"] = like });
+            NotifiyWhenFail(json);
+            if (json["code"].Value<int>() == 200)
+            {
+                App.ShowToast(new ToastInfo { Text = $"已喜欢 {c.Title}" });
+            }
+        }
     }
 }
