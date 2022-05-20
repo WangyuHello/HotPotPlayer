@@ -11,7 +11,7 @@
 
     <UserControl.Resources>
         <DataTemplate x:Key="PlayListBarListTemplate" x:DataType="model:MusicItem">
-            <Grid RightTapped="{x:Bind helper:AlbumHelper.MusicClick2}">
+            <Grid RightTapped="{x:Bind helper:ListHelper.RightTapMusicInCurrentPlayListClick}">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="32" />
                     <ColumnDefinition Width="*" />
@@ -23,14 +23,14 @@
                     <TextBlock Foreground="WhiteSmoke" Text="{x:Bind GetArtists()}" FontSize="12" TextTrimming="CharacterEllipsis" FontFamily="{ThemeResource MiSansRegular}"/>
                 </StackPanel>
                 <TextBlock Grid.Column="2" Foreground="White" Text="{x:Bind Duration.ToString('mm\\\\:ss')}" VerticalAlignment="Center" FontFamily="{ThemeResource MiSansRegular}"/>
-                <Button Grid.Column="3" Foreground="White" Style="{StaticResource TransparentWhiteButton}" Margin="8,0,0,0" Padding="4" CornerRadius="8" Tag="{x:Bind }" Click="{x:Bind helper:AlbumHelper.MusicClick2}">
+                <Button Grid.Column="3" Foreground="White" Style="{StaticResource TransparentWhiteButton}" Margin="8,0,0,0" Padding="4" CornerRadius="8" Tag="{x:Bind }" Click="{x:Bind helper:ListHelper.RightTapMusicInCurrentPlayListClick}">
                     <SymbolIcon Symbol="More" />
                 </Button>
             </Grid>
         </DataTemplate>
 
         <DataTemplate x:Key="PlayListBarListSelectedTemplate" x:DataType="model:MusicItem">
-            <Grid RightTapped="{x:Bind helper:AlbumHelper.MusicClick2}">
+            <Grid RightTapped="{x:Bind helper:ListHelper.RightTapMusicInCurrentPlayListClick}">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="32" />
                     <ColumnDefinition Width="*" />
@@ -43,7 +43,7 @@
                     <TextBlock Foreground="WhiteSmoke" Text="{x:Bind GetArtists()}" FontSize="12" TextTrimming="CharacterEllipsis" FontFamily="{ThemeResource MiSansRegular}"/>
                 </StackPanel>
                 <TextBlock Grid.Column="2" Foreground="White" Text="{x:Bind Duration.ToString('mm\\\\:ss')}" VerticalAlignment="Center" FontFamily="{ThemeResource MiSansRegular}"/>
-                <Button Grid.Column="3" Foreground="White" Style="{StaticResource TransparentWhiteButton}" Margin="8,0,0,0" Padding="4" CornerRadius="8" Tag="{x:Bind }" Click="{x:Bind helper:AlbumHelper.MusicClick2}">
+                <Button Grid.Column="3" Foreground="White" Style="{StaticResource TransparentWhiteButton}" Margin="8,0,0,0" Padding="4" CornerRadius="8" Tag="{x:Bind }" Click="{x:Bind helper:ListHelper.RightTapMusicInCurrentPlayListClick}">
                     <SymbolIcon Symbol="More" />
                 </Button>
             </Grid>

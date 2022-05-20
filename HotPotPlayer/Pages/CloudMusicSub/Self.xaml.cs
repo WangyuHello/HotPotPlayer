@@ -48,19 +48,9 @@ namespace HotPotPlayer.Pages.CloudMusicSub
         NetEaseMusicService CloudMusicService => ((App)Application.Current).NetEaseMusicService;
         MusicPlayer Player => ((App)Application.Current).MusicPlayer;
 
-        bool IsFirstNavigate = true;
-
-        protected override async void OnNavigatedTo(NavigationEventArgs e)
+        protected override void OnNavigatedTo(NavigationEventArgs e)
         {
             base.OnNavigatedTo(e);
-            if (!IsFirstNavigate)
-            {
-                return;
-            }
-
-            await CloudMusicService.InitUserAsync();
-
-            IsFirstNavigate = false;
         }
 
         private CloudPlayListItem _selectedPlayList;

@@ -115,6 +115,8 @@ namespace HotPotPlayer.Services
             RecommedPlayList ??= new(recPlayList);
             TopList ??= new(topL);
             TopArtists ??= new(topA);
+
+            await InitUserAsync();
         }
 
         public async Task InitLevelAsync()
@@ -471,6 +473,16 @@ namespace HotPotPlayer.Services
             var json = await Api.RequestAsync(CloudMusicApiProviders.ArtistDetail, new Dictionary<string, object> { ["id"] = id });
             var ar = json["data"]["artist"].ToArtist();
             return ar;
+        }
+
+        public async void AddMusicToPlayList(CloudPlayListItem pl, CloudMusicItem c)
+        {
+            var json = await Api.RequestAsync(CloudMusicApiProviders.PlaylistTracks, new Dictionary<string, object> { ["op"] = "add", ["pid"] = pl.PlId, ["tracks"] = c.SId });
+            NotifiyWhenFail(json);
+            if (json["code"].Value<int>() == 200)
+            {
+                App.ShowToast(new ToastInfo { Text = $"已将 {c.Title} 添加到 {pl.Title}" });
+            }
         }
     }
 }

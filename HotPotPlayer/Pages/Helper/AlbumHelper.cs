@@ -317,76 +317,7 @@ namespace HotPotPlayer.Pages.Helper
             button.ContextFlyout.ShowAt(button);
         }
 
-        internal static void MusicClick2(object sender, RoutedEventArgs e)
-        {
-            FrameworkElement target = null;
-            MusicItem music = null;
-            if (sender is Button button)
-            {
-                music = (MusicItem)button.Tag;
-                target = button;
-            }
-            else if(sender is Grid g)
-            {
-                var e2 = e as RightTappedRoutedEventArgs;
-                music = ((FrameworkElement)e2.OriginalSource).DataContext as MusicItem;
-                target = g;
-            }
-            if (target == null || music == null) return;
-
-            if (target.ContextFlyout == null)
-            {
-                var flyout = new MenuFlyout();
-                var sub = new MenuFlyoutSubItem
-                {
-                    Text = "添加到",
-                    Icon = new SymbolIcon { Symbol = Symbol.Add },
-                };
-                var i = new MenuFlyoutItem
-                {
-                    Text = "当前列表",
-                    Icon = new SymbolIcon { Symbol = Symbol.MusicInfo },
-                };
-                i.Click += (s, e) => Player.AddToPlayListLast(music);
-                sub.Items.Add(i);
-                sub.Items.Add(new MenuFlyoutSeparator());
-                i = new MenuFlyoutItem
-                {
-                    Text = "新建播放队列",
-                    Icon = new SymbolIcon { Symbol = Symbol.Add },
-                };
-                i.Click += (s, e) => AddToNewPlayList(music);
-                sub.Items.Add(i);
-
-                foreach (var item in MusicService.LocalPlayListList)
-                {
-                    i = new MenuFlyoutItem
-                    {
-                        Text = item.Title,
-                    };
-                    i.Click += (s, e) => MusicAddToPlayList(item.Title, music);
-                    sub.Items.Add(i);
-                }
-                flyout.Items.Add(sub);
-                i = new MenuFlyoutItem
-                {
-                    Text = "属性",
-                    Icon = new FontIcon { FontFamily = new FontFamily("Segoe Fluent Icons"), Glyph = "\uE946" },
-                };
-                i.Click += (s, e) => MainWindow.NavigateTo("MusicSub.Info", music, new SlideNavigationTransitionInfo() { Effect = SlideNavigationTransitionEffect.FromRight });
-                flyout.Items.Add(i);
-                flyout.Items.Add(new MenuFlyoutSeparator());
-                i = new MenuFlyoutItem
-                {
-                    Text = "选择",
-                    Icon = new FontIcon { FontFamily = new FontFamily("Segoe Fluent Icons"), Glyph = "\uE762" },
-                };
-                flyout.Items.Add(i);
-
-                target.ContextFlyout = flyout;
-            }
-            target.ContextFlyout.ShowAt(target);
-        }
+        
 
         internal static void MusicItemClick(object sender, RoutedEventArgs e)
         {
