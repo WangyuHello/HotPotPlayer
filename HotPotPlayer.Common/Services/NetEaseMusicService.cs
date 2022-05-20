@@ -54,11 +54,18 @@ namespace HotPotPlayer.Services
             set => Set(ref _level, value);
         }
 
-        private ObservableCollection<CloudMusicItem> _likeList;
-        public ObservableCollection<CloudMusicItem> LikeList
+        private CloudPlayListItem _likeList;
+        public CloudPlayListItem LikeList
         {
             get => _likeList;
             set => Set(ref _likeList, value);
+        }
+
+        private ObservableCollection<CloudPlayListItem> _userPlayLists;
+        public ObservableCollection<CloudPlayListItem> UserPlayLists
+        {
+            get => _userPlayLists;
+            set => Set(ref _userPlayLists, value);
         }
 
         private ObservableCollection<CloudMusicItem> _recommedList;
@@ -111,8 +118,9 @@ namespace HotPotPlayer.Services
 
         public async Task InitUserAsync()
         {
-            var likeList = await GetLikeListAsync();
-            LikeList ??= new(likeList);
+            var (likeList, lists) = await GetLikeListAsync();
+            LikeList = likeList;
+            UserPlayLists ??= new(lists);
         }
 
         public async Task<JObject> LoginAsync(string phone, string password)
@@ -212,19 +220,14 @@ namespace HotPotPlayer.Services
             return true;
         }
 
-        public async Task<List<CloudMusicItem>> GetLikeListAsync()
+        public async Task<(CloudPlayListItem like, List<CloudPlayListItem> lists)> GetLikeListAsync()
         {
             return await Task.Run(async () =>
             {
                 var json = await Api.RequestAsync(CloudMusicApiProviders.UserPlaylist, new Dictionary<string, object> { ["uid"] = Self.UserId });
-                json = await Api.RequestAsync(CloudMusicApiProviders.PlaylistDetail, new Dictionary<string, object> { ["id"] = json["playlist"][0]["id"] });
-                int[] trackIds = json["playlist"]["trackIds"].Select(t => (int)t["id"]).ToArray();
-                json = await Api.RequestAsync(CloudMusicApiProviders.SongDetail, new Dictionary<string, object> { ["ids"] = string.Join(",", trackIds) });
-                return json["songs"].ToArray().Select(s => {
-                    var i = s.ToMusicItem();
-                    i.GetSource = () => GetSongSourceAsync(i.SId, i.OriginalTitle, i.Artists).Result;
-                    return i;
-                }).ToList();
+                var playlists = json["playlist"].ToArray().Select(s => s.ToPlayListItem()).ToList();
+                var like = await GetPlayListAsync(playlists[0].PlId);
+                return (like, playlists.Skip(1).ToList());
             });
         }
 
@@ -423,7 +426,7 @@ namespace HotPotPlayer.Services
 
         public bool GetSongLiked(CloudMusicItem c)
         {
-            if (LikeList.Contains(c, new CloudMusicItemComparer()))
+            if (LikeList.MusicItems.Contains(c, new CloudMusicItemComparer()))
             {
                 return true;
             }

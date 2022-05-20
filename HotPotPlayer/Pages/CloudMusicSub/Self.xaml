@@ -8,12 +8,23 @@
     mc:Ignorable="d"
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
 
-    <Grid Padding="36,28,16,0">
-        <Grid.RowDefinitions>
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="*" />
-        </Grid.RowDefinitions>
-        <TextBlock Margin="8,0" FontSize="24" FontFamily="{StaticResource MiSansMedium}">我喜欢的音乐</TextBlock>
-        <GridView x:Name="LikeList" Grid.Row="1" Padding="0,8,0,0" ItemsSource="{x:Bind CloudMusicService.LikeList, Mode=OneWay}" Style="{StaticResource CardGridViewStyle}" ItemTemplate="{StaticResource MusicCardViewTemplate}" ItemClick="LikeList_ItemClick"/>
+    <Grid Padding="36,28,0,0">
+        <Pivot HeaderTemplate="{StaticResource GeneralPivotHeaderTemplate}" >
+            <PivotItem Header="我喜欢的音乐" Margin="0" >
+                <GridView x:Name="LikeList" ItemsSource="{x:Bind CloudMusicService.LikeList.MusicItems, Mode=OneWay}" Style="{StaticResource CardGridViewStyle}" ItemTemplate="{StaticResource MusicCardViewTemplate}" ItemClick="LikeList_ItemClick">
+                    <GridView.Footer>
+                        <Grid Height="100" />
+                    </GridView.Footer>
+                </GridView>
+            </PivotItem>
+            <PivotItem Header="歌单" Margin="0" >
+                <GridView x:Name="PlayLists" ItemsSource="{x:Bind CloudMusicService.UserPlayLists, Mode=OneWay}" Style="{StaticResource CardGridViewStyle}" ItemTemplate="{StaticResource PlayListCardViewTemplate}" ItemClick="PlayLists_ItemClick">
+                    <GridView.Footer>
+                        <Grid Height="100" />
+                    </GridView.Footer>
+                </GridView>
+            </PivotItem>
+        </Pivot>
+
     </Grid>
 </Page>

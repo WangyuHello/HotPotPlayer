@@ -52,5 +52,11 @@ namespace HotPotPlayer.Pages.CloudMusicSub
             var m = e.ClickedItem as MusicItem;
             Player.PlayNext(m, CloudMusicService.LikeList);
         }
+
+        private void PlayLists_ItemClick(object sender, ItemClickEventArgs e)
+        {
+            var m = e.ClickedItem as PlayListItem;
+            
+        }
     }
 }

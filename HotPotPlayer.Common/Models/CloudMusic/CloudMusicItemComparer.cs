@@ -3,16 +3,19 @@ using System.Diagnostics.CodeAnalysis;
 
 namespace HotPotPlayer.Models.CloudMusic
 {
-    internal class CloudMusicItemComparer : IEqualityComparer<CloudMusicItem>
+    internal class CloudMusicItemComparer : IEqualityComparer<MusicItem>
     {
-        public bool Equals(CloudMusicItem x, CloudMusicItem y)
+        public bool Equals(MusicItem x, MusicItem y)
         {
-            return x.SId.Equals(y.SId);
+            var x1 = x as CloudMusicItem;
+            var y1 = y as CloudMusicItem;
+            return x1.SId.Equals(y1.SId);
         }
 
-        public int GetHashCode([DisallowNull] CloudMusicItem obj)
+        public int GetHashCode([DisallowNull] MusicItem obj)
         {
-            return obj.SId.GetHashCode();
+            var x1 = obj as CloudMusicItem;
+            return x1.SId.GetHashCode();
         }
     }
 }
