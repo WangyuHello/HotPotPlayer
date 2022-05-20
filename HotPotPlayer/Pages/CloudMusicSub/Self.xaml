@@ -10,6 +10,7 @@
     xmlns:helper="using:HotPotPlayer.Pages.Helper"
     xmlns:ui="using:CommunityToolkit.WinUI.UI"
     mc:Ignorable="d"
+    NavigationCacheMode="Enabled"
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
 
     <Grid Padding="36,28,0,0">
