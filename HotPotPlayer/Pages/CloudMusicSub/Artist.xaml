@@ -43,14 +43,14 @@
                 <animations:Implicit.HideAnimations>
                     <animations:OpacityAnimation Duration="0:0:0.45" From="1" To="0" />
                     <animations:ScaleAnimation Duration="0:0:0.45" From="1,1,1" To="0.9,0.9,1" />
-                    <animations:OffsetAnimation Duration="0:0:0.45" From="0,-40" To="0,-60" />
+                    <animations:OffsetAnimation Duration="0:0:0.45" From="0,-60" To="0,-80" />
                 </animations:Implicit.HideAnimations>
 
 
                 <animations:Implicit.ShowAnimations>
                     <animations:OpacityAnimation Duration="0:0:0.45" From="0" To="1" />
                     <animations:ScaleAnimation Duration="0:0:0.45" From="0.9,0.9,1" To="1,1,1" />
-                    <animations:OffsetAnimation Duration="0:0:0.45" From="0,-60" To="0,-40" />
+                    <animations:OffsetAnimation Duration="0:0:0.45" From="0,-80" To="0,-60" />
                 </animations:Implicit.ShowAnimations>
             </cont3:AlbumPopup>
         </Grid>
