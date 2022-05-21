@@ -155,23 +155,20 @@ namespace HotPotPlayer.Pages.Helper
                     }
                     else
                     {
-                        if (t.ContextFlyout == null)
-                        {
-                            var flyout = new MenuFlyout();
-                            foreach (var a in artist)
-                            {
-                                var item = new MenuFlyoutItem
-                                {
-                                    Text = a.Name,
-                                    Icon = new SymbolIcon { Symbol = Symbol.Contact },
-                                    Tag = a
-                                };
-                                item.Click += ArtistClick;
-                                flyout.Items.Add(item);
-                            }
-                            t.ContextFlyout = flyout;
-                        }
-                        t.ContextFlyout.ShowAt(t);
+                        //var flyout = new MenuFlyout();
+                        //foreach (var a in artist)
+                        //{
+                        //    var item = new MenuFlyoutItem
+                        //    {
+                        //        Text = a.Name,
+                        //        Icon = new SymbolIcon { Symbol = Symbol.Contact },
+                        //        Tag = a
+                        //    };
+                        //    item.Click += ArtistClick;
+                        //    flyout.Items.Add(item);
+                        //}
+                        //t.ContextFlyout = flyout;
+                        //t.ContextFlyout.ShowAt(t);
                     }
                 }
                 else
