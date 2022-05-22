@@ -221,4 +221,15 @@
             </StackPanel>
         </Grid>
     </DataTemplate>
+
+    <DataTemplate x:Key="SearchMusicListTemplate" x:DataType="modelsC:CloudMusicItem">
+        <Grid Padding="0">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+            <cont2:ImageEx2 Margin="0,0,8,0" Grid.RowSpan="2" Source="{x:Bind Cover}" Height="36" Width="36" CornerRadius="4" Style="{StaticResource LocalMusicImageStyle}"/>
+            <TextBlock Grid.Column="1" Text="{x:Bind Title}" TextTrimming="CharacterEllipsis" VerticalAlignment="Center" FontFamily="{ThemeResource MiSansRegular}"/>
+        </Grid>
+    </DataTemplate>
 </ResourceDictionary>

@@ -498,5 +498,25 @@ namespace HotPotPlayer.Services
                 App.ShowToast(new ToastInfo { Text = $"已喜欢 {c.Title}" });
             }
         }
+
+        public async Task<List<CloudMusicItem>> SearchSong(string keyword)
+        {
+            if (string.IsNullOrEmpty(keyword))
+            {
+                return null;
+            }
+            var json = await Api.RequestAsync(CloudMusicApiProviders.Cloudsearch, new Dictionary<string, object> { ["keywords"] = keyword });
+            if (json["result"]["songs"] != null)
+            {
+                var songs = json["result"]["songs"].ToArray().Select(s =>
+                {
+                    var i = s.ToMusicItem();
+                    i.GetSource = () => GetSongSourceAsync(i.SId, i.OriginalTitle, i.Artists).Result;
+                    return i;
+                }).ToList();
+                return songs;
+            }
+            return null;
+        }
     }
 }

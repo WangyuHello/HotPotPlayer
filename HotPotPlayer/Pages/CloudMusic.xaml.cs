@@ -46,6 +46,7 @@ namespace HotPotPlayer.Pages
             }
         }
         NetEaseMusicService CloudMusicService => ((App)Application.Current).NetEaseMusicService;
+        MusicPlayer MusicPlayer => ((App)Application.Current).MusicPlayer;
         MainWindow MainWindow => ((App)Application.Current).MainWindow;
 
         bool IsFirstNavigate = true;
@@ -161,6 +162,27 @@ namespace HotPotPlayer.Pages
         {
             var ar = e.ClickedItem as CloudArtistItem;
             MainWindow.NavigateTo("CloudMusicSub.Artist", ar);
+        }
+
+        private async void Search_TextChanged(AutoSuggestBox sender, AutoSuggestBoxTextChangedEventArgs args)
+        {
+            if (args.Reason == AutoSuggestionBoxTextChangeReason.UserInput)
+            {
+                var songs = await CloudMusicService.SearchSong(sender.Text);
+                sender.ItemsSource = songs;
+            }
+        }
+
+        private async void Search_QuerySubmitted(AutoSuggestBox sender, AutoSuggestBoxQuerySubmittedEventArgs args)
+        {
+            var songs = await CloudMusicService.SearchSong(sender.Text);
+            sender.ItemsSource = songs;
+        }
+
+        private void Search_SuggestionChosen(AutoSuggestBox sender, AutoSuggestBoxSuggestionChosenEventArgs args)
+        {
+            var music = args.SelectedItem as MusicItem;
+            MusicPlayer.PlayNext(music);
         }
     }
 }

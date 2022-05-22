@@ -23,7 +23,7 @@
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
 
-        <AutoSuggestBox x:Name="Search" Margin="0,16" QueryIcon="Find" PlaceholderText="搜索" VerticalAlignment="Center" HorizontalAlignment="Left" Width="260" CornerRadius="16" TextMemberPath="Title" />
+        <AutoSuggestBox x:Name="Search" Margin="0,16" QueryIcon="Find" PlaceholderText="搜索" VerticalAlignment="Center" HorizontalAlignment="Left" Width="260" CornerRadius="16" TextMemberPath="Title" ItemTemplate="{StaticResource SearchMusicListTemplate}" TextChanged="Search_TextChanged" QuerySubmitted="Search_QuerySubmitted" SuggestionChosen="Search_SuggestionChosen"/>
         <StackPanel x:Name="UserAvatar" Margin="0,0,160,0" Orientation="Horizontal" VerticalAlignment="Center" HorizontalAlignment="Right" Spacing="8" Tapped="UserAvatar_Tapped">
             <cont2:ImageEx2 
                 Source="{x:Bind CloudMusicService.Self.AvatarUrl, Mode=OneWay}" 
