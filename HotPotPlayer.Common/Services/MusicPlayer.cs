@@ -469,15 +469,9 @@ namespace HotPotPlayer.Services
 
             try
             {
-                if (_outputDevice == null)
-                {
-                    _outputDevice = new WaveOutEvent();
-                    _outputDevice.PlaybackStopped += OnPlaybackStopped;
-                }
-                else
-                {
-                    _outputDevice.Stop();
-                }
+                _outputDevice?.Dispose();
+                _outputDevice = new WaveOutEvent { DeviceNumber = -1 };
+                _outputDevice.PlaybackStopped += OnPlaybackStopped;
                 var intercept = LoadMusic(music);
                 _outputDevice.Play();
                 e.Result = ValueTuple.Create(index, intercept);
@@ -578,8 +572,11 @@ namespace HotPotPlayer.Services
             {
                 App?.ShowToast(new ToastInfo { Text = "播放错误 " + _playException.Message });
                 HasError = true;
-                CurrentPlayingIndex = index2;
-                PlayNext();
+                if (index2 != CurrentPlayList.Count - 1)
+                {
+                    CurrentPlayingIndex = index2;
+                    PlayNext();
+                }
             }
         }
 
