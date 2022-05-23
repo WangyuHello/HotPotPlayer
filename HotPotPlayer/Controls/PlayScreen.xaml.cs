@@ -145,8 +145,10 @@ namespace HotPotPlayer.Controls
             e.Handled = true;
         }
 
-
-
+        Visibility GetOpenFolderVisible(MusicItem m)
+        {
+            return m is CloudMusicItem c ? Visibility.Collapsed : Visibility.Visible;
+        }
 
         public string GetAlias(MusicItem m)
         {

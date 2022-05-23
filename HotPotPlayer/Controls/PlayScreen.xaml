@@ -64,18 +64,21 @@
             Width="360" Height="360"
             Source="{x:Bind MusicPlayer.CurrentPlaying.Cover, Mode=OneWay}" 
             />
-        <StackPanel Grid.Row="5" Orientation="Horizontal" Spacing="40" Margin="0,32,0,0">
-            <Button x:Name="OpenFolder" Style="{StaticResource FullTransparentButton}" Click="OpenFolder_Click">
+        <StackPanel Grid.Row="5" Orientation="Horizontal" Margin="0,32,0,0">
+            <Button x:Name="OpenFolder" Margin="0,0,40,0" Style="{StaticResource FullTransparentButton}" Click="OpenFolder_Click" Visibility="{x:Bind GetOpenFolderVisible(MusicPlayer.CurrentPlaying), Mode=OneWay}">
                 <FontIcon FontFamily="Segoe Fluent Icons" Glyph="&#xE8B7;" />
             </Button>
-            <Button x:Name="Share" Style="{StaticResource FullTransparentButton}" Click="Share_Click">
+            <Button x:Name="Share" Margin="0,0,40,0" Style="{StaticResource FullTransparentButton}" Click="Share_Click">
                 <FontIcon FontFamily="Segoe Fluent Icons" Glyph="&#xE72D;" />
             </Button>
-            <Button Style="{StaticResource FullTransparentButton}" >
+            <Button Margin="0,0,40,0" Style="{StaticResource FullTransparentButton}" >
                 <FontIcon FontFamily="Segoe Fluent Icons" Glyph="&#xE134;" />
             </Button>
-            <Button Style="{StaticResource FullTransparentButton}" Foreground="{x:Bind helper:LikeHelper.GetLikeButtonForeground(MusicPlayer.CurrentPlaying), Mode=OneWay}">
+            <Button Margin="0,0,40,0" Style="{StaticResource FullTransparentButton}" Foreground="{x:Bind helper:LikeHelper.GetLikeButtonForeground(MusicPlayer.CurrentPlaying), Mode=OneWay}">
                 <FontIcon FontFamily="Segoe Fluent Icons" Glyph="{x:Bind helper:LikeHelper.GetLikeButtonGlyph(MusicPlayer.CurrentPlaying), Mode=OneWay}" />
+            </Button>
+            <Button Style="{StaticResource FullTransparentButton}" Click="{x:Bind helper:PlayListHelper.AddToPlayListClick}" Tag="{x:Bind MusicPlayer.CurrentPlaying, Mode=OneWay}">
+                <FontIcon FontFamily="Segoe Fluent Icons" Glyph="&#xE109;" />
             </Button>
         </StackPanel>
         <TextBlock Grid.Row="6" Text="相似歌曲" Margin="0,24,0,4" FontSize="16" FontFamily="{StaticResource MiSansMedium}" />
