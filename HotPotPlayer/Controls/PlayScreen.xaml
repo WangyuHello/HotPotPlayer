@@ -30,6 +30,9 @@
         <Button Margin="-52,8,0,0" Style="{StaticResource PlayOtherButton}" Click="{x:Bind MusicPlayer.ToggleShowPlayScreen}">
             <SymbolIcon Symbol="Clear" />
         </Button>
+        <Button x:Name="ShowPlayBar" Margin="-52,0,0,8" Grid.RowSpan="8" Style="{StaticResource PlayOtherButton}" VerticalAlignment="Bottom" Visibility="{x:Bind GetShowPlayBarVisible(MusicPlayer.IsPlayBarVisible, MusicPlayer.CurrentPlaying), Mode=OneWay}" Click="{x:Bind MusicPlayer.ShowPlayBar}">
+            <SymbolIcon Symbol="Tag" />
+        </Button>
         <Grid Grid.Row="1" Grid.ColumnSpan="1" Margin="0,0,32,0">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*" />

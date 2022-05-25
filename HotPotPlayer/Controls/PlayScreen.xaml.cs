@@ -168,6 +168,15 @@ namespace HotPotPlayer.Controls
             return Visibility.Collapsed;
         }
 
+        public Visibility GetShowPlayBarVisible(bool playbarVisible, MusicItem currentPlaying)
+        {
+            if (currentPlaying == null)
+            {
+                return Visibility.Collapsed;
+            }
+            return playbarVisible ? Visibility.Collapsed : Visibility.Visible;
+        }
+
         private async void OpenFolder_Click(object sender, RoutedEventArgs e)
         {
             DirectoryInfo path = MusicPlayer.CurrentPlaying?.Source?.Directory;

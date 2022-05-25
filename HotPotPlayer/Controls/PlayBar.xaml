@@ -36,7 +36,7 @@
 
     </UserControl.Resources>
 
-    <Grid Background="{ThemeResource PlayBarBackground}" CornerRadius="8" Height="80">
+    <Grid Background="{ThemeResource PlayBarBackground}" CornerRadius="8" Height="80" >
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="*" />
             <ColumnDefinition Width="1*" />

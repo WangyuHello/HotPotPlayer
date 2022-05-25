@@ -27,7 +27,9 @@
         </Grid.RowDefinitions>
 
         <TextBlock Margin="0,0,0,16" Text="{x:Bind ArtistName, Mode=OneWay}" FontSize="32" TextWrapping="Wrap" FontFamily="{StaticResource MiSansMedium}" IsTextSelectionEnabled="True"/>
-        <TextBlock Grid.Row="1" Margin="0,0,168,16" Text="{x:Bind CloudArtist.BriefDescription, Mode=OneWay}" ToolTipService.ToolTip="{x:Bind CloudArtist.BriefDescription, Mode=OneWay}" TextWrapping="Wrap" FontFamily="{StaticResource MiSansRegular}" IsTextSelectionEnabled="True" MaxLines="3" TextTrimming="CharacterEllipsis"/>
+        <ScrollViewer Grid.Row="1" Margin="0,0,168,16" Height="60">
+            <TextBlock Text="{x:Bind CloudArtist.BriefDescription, Mode=OneWay}" TextWrapping="Wrap" FontFamily="{StaticResource MiSansRegular}" IsTextSelectionEnabled="True" />
+        </ScrollViewer>
         <cont2:ImageEx2 Grid.RowSpan="2" Margin="0,0,28,0" CornerRadius="4" HorizontalAlignment="Right" VerticalAlignment="Top" Source="{x:Bind CloudArtist.Avatar, Mode=OneWay}" Style="{StaticResource LocalMusicImageStyle}" Width="120" Height="120"/>
         
         <TextBlock Grid.Row="2" Text="专辑" FontSize="20" FontFamily="{StaticResource MiSansMedium}" />

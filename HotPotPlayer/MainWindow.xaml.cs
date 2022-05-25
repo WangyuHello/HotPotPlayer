@@ -94,7 +94,7 @@ namespace HotPotPlayer
 
         Thickness GetPlayBarMargin(bool isPlayScreenVisible)
         {
-            return isPlayScreenVisible ? new Thickness(24, 0, 24, 16) : new Thickness(80, 0, 24, 16);
+            return isPlayScreenVisible ? new Thickness(24, 0, 24, 8) : new Thickness(80, 0, 24, 16);
         }
 
 
