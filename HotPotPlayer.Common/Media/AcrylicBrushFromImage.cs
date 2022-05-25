@@ -1,4 +1,5 @@
 ﻿using HotPotPlayer.Helpers;
+using Microsoft.UI;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Media;
 using SixLabors.ImageSharp;
@@ -31,15 +32,29 @@ namespace HotPotPlayer.Media
 
         private async void SetImage(Uri uri)
         {
-            Start:
-            var file = await ImageCacheEx.Instance.GetFileFromCacheAsync(uri);
-            if (file == null) 
+            var color = await Task.Run(async () =>
             {
-                await ImageCacheEx.Instance.PreCacheAsync(uri, storeToMemoryCache: true);
-                goto Start;
-            }
-            using var image = Image.Load<Rgba32>(file.Path);
-            var color = GetMainColor(image);
+                Start:
+                var file = await ImageCacheEx.Instance.GetFileFromCacheAsync(uri);
+                if (file == null)
+                {
+                    await ImageCacheEx.Instance.PreCacheAsync(uri, storeToMemoryCache: true);
+                    goto Start;
+                }
+                Windows.UI.Color color;
+                try
+                {
+                    using var image = Image.Load<Rgba32>(file.Path);
+                    color = GetMainColor(image);
+                }
+                catch (Exception)
+                {
+                    color = Colors.White;
+                }
+
+                return color;
+            });
+
             TintColor = color;
         }
 
