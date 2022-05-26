@@ -22,7 +22,8 @@ namespace HotPotPlayer.Pages.Helper
         {
             var s = (FrameworkElement)sender;
             var m = s.DataContext as CloudMusicItem;
-            CloudMusicService.Like(m);
+            var isLike = CloudMusicService.GetSongLiked(m);
+            CloudMusicService.Like(m, !isLike);
         }
 
         public static SolidColorBrush GetLikeButtonForeground(MusicItem m)
@@ -41,19 +42,6 @@ namespace HotPotPlayer.Pages.Helper
                 return CloudMusicService.GetSongLiked(c) ? "\uEB52" : "\uEB51";
             }
             return "\uEB51";
-        }
-    }
-
-    public class LikeForegroundConvert : IValueConverter
-    {
-        public object Convert(object value, Type targetType, object parameter, string language)
-        {
-            return LikeHelper.GetLikeButtonForeground((MusicItem)value);
-        }
-
-        public object ConvertBack(object value, Type targetType, object parameter, string language)
-        {
-            throw new NotImplementedException();
         }
     }
 

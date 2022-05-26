@@ -493,9 +493,14 @@ namespace HotPotPlayer.Services
         {
             var json = await Api.RequestAsync(CloudMusicApiProviders.Like, new Dictionary<string, object> { ["id"] = c.SId, ["like"] = like });
             NotifiyWhenFail(json);
+            var (likeList, lists) = await GetLikeListAsync();
+            LikeList = likeList;
+            UserPlayLists = new(lists.Where(l => !l.Subscribed));
+            SubscribePlayLists = new(lists.Where(l => l.Subscribed));
             if (json["code"].Value<int>() == 200)
             {
-                App.ShowToast(new ToastInfo { Text = $"已喜欢 {c.Title}" });
+                var likeStr = like ? $"已喜欢 {c.Title}" : $"已取消喜欢 {c.Title}";
+                App.ShowToast(new ToastInfo { Text = likeStr });
             }
         }
 
