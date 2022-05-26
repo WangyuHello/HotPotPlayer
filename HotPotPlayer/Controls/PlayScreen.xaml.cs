@@ -177,6 +177,15 @@ namespace HotPotPlayer.Controls
             return playbarVisible ? Visibility.Collapsed : Visibility.Visible;
         }
 
+        public bool GetLike(MusicItem m)
+        {
+            if (m is CloudMusicItem c)
+            {
+                return CloudMusicService.GetSongLiked(c);
+            }
+            return false;
+        }
+
         private async void OpenFolder_Click(object sender, RoutedEventArgs e)
         {
             DirectoryInfo path = MusicPlayer.CurrentPlaying?.Source?.Directory;
@@ -210,6 +219,15 @@ namespace HotPotPlayer.Controls
         {
             var music = e.ClickedItem as CloudMusicItem;
             MusicPlayer.PlayNext(music);
+        }
+
+        private void Like_Click(object sender, RoutedEventArgs e)
+        {
+            if (MusicPlayer.CurrentPlaying is CloudMusicItem c)
+            {
+                var like = CloudMusicService.GetSongLiked(c);
+                CloudMusicService.Like(c, !like);
+            }
         }
     }
 }
