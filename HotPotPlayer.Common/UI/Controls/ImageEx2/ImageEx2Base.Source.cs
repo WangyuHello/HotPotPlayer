@@ -160,7 +160,7 @@ namespace HotPotPlayer.UI.Controls
                 if (IsCacheEnabled)
                 {
                     var img = await ProvideCachedResourceAsync(imageUri, token);
-
+                    SourceGotFromCache?.Invoke(img);
                     if (!_tokenSource.IsCancellationRequested)
                     {
                         // Only attach our image if we still have a valid request.
@@ -241,5 +241,7 @@ namespace HotPotPlayer.UI.Controls
             var image = await ImageCacheEx.Instance.GetFromCacheAsync(imageUri, true, token, propValues);
             return image;
         }
+
+        public event Action<ImageSource> SourceGotFromCache;
     }
 }

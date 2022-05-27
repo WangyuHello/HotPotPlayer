@@ -12,9 +12,11 @@ using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Navigation;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices.WindowsRuntime;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
@@ -24,13 +26,24 @@ using Windows.Foundation.Collections;
 
 namespace HotPotPlayer.Controls
 {
-    public sealed partial class PlayBar : UserControl
+    public sealed partial class PlayBar : UserControl, INotifyPropertyChanged
     {
         public PlayBar()
         {
             this.InitializeComponent();
             PlaySlider.AddHandler(PointerReleasedEvent, new PointerEventHandler(PlaySlider_OnPointerReleased), true);
             PlaySlider.AddHandler(PointerPressedEvent, new PointerEventHandler(PlaySlider_OnPointerPressed), true);
+        }
+
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        public void Set<T>(ref T oldValue, T newValue, [CallerMemberName] string propertyName = "")
+        {
+            if (!EqualityComparer<T>.Default.Equals(oldValue, newValue))
+            {
+                oldValue = newValue;
+                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+            }
         }
 
         MusicPlayer MusicPlayer => ((App)Application.Current).MusicPlayer;
@@ -188,5 +201,17 @@ namespace HotPotPlayer.Controls
             button.ContextFlyout.ShowAt(button);
         }
 
+        private Uri _coverImage;
+
+        public Uri CoverImage
+        {
+            get => _coverImage;
+            set => Set(ref _coverImage, value);
+        }
+
+        private void Cover_SourceGotFromCache(ImageSource obj)
+        {
+            CoverImage = MusicPlayer.CurrentPlaying.Cover;
+        }
     }
 }
