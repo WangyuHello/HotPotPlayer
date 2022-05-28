@@ -34,6 +34,7 @@ namespace HotPotPlayer.Pages.Helper
                 DefaultButton = ContentDialogButton.Close,
                 Content = new CommentFloorDialog(l, comment),
                 XamlRoot = App.MainWindow.Content.XamlRoot,
+                Style = App.Resources["DefaultContentDialogStyle"] as Style
             };
 
             var result = await dialog.ShowAsync();
