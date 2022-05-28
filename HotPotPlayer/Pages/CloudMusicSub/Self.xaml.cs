@@ -27,26 +27,12 @@ namespace HotPotPlayer.Pages.CloudMusicSub
     /// <summary>
     /// An empty page that can be used on its own or navigated to within a Frame.
     /// </summary>
-    public sealed partial class Self : Page, INotifyPropertyChanged
+    public sealed partial class Self : PageBase
     {
         public Self()
         {
             this.InitializeComponent();
         }
-
-        public event PropertyChangedEventHandler PropertyChanged;
-
-        public void Set<T>(ref T oldValue, T newValue, [CallerMemberName] string propertyName = "")
-        {
-            if (!EqualityComparer<T>.Default.Equals(oldValue, newValue))
-            {
-                oldValue = newValue;
-                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-            }
-        }
-
-        NetEaseMusicService CloudMusicService => ((App)Application.Current).NetEaseMusicService;
-        MusicPlayer Player => ((App)Application.Current).MusicPlayer;
 
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
@@ -63,13 +49,13 @@ namespace HotPotPlayer.Pages.CloudMusicSub
         private void LikeList_ItemClick(object sender, ItemClickEventArgs e)
         {
             var m = e.ClickedItem as MusicItem;
-            Player.PlayNext(m, CloudMusicService.LikeList);
+            MusicPlayer.PlayNext(m, NetEaseMusicService.LikeList);
         }
 
         private async void PlayLists_ItemClick(object sender, ItemClickEventArgs e)
         {
             var m = e.ClickedItem as CloudPlayListItem;
-            SelectedPlayList = await CloudMusicService.GetPlayListAsync(m.PlId);
+            SelectedPlayList = await NetEaseMusicService.GetPlayListAsync(m.PlId);
             PlayListPopupOverlay.Visibility = Visibility.Visible;
         }
 

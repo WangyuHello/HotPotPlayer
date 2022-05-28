@@ -29,25 +29,12 @@ namespace HotPotPlayer.Pages.CloudMusicSub
     /// <summary>
     /// An empty page that can be used on its own or navigated to within a Frame.
     /// </summary>
-    public sealed partial class Album : Page, INotifyPropertyChanged
+    public sealed partial class Album : PageBase
     {
         public Album()
         {
             this.InitializeComponent();
         }
-
-        public event PropertyChangedEventHandler PropertyChanged;
-
-        public void Set<T>(ref T oldValue, T newValue, [CallerMemberName] string propertyName = "")
-        {
-            if (!EqualityComparer<T>.Default.Equals(oldValue, newValue))
-            {
-                oldValue = newValue;
-                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-            }
-        }
-        static MusicPlayer MusicPlayer => ((App)Application.Current).MusicPlayer;
-        NetEaseMusicService CloudMusicService => ((App)Application.Current).NetEaseMusicService;
 
         private CloudAlbumItem _selectedAlbum;
         public CloudAlbumItem SelectedAlbum
@@ -63,7 +50,7 @@ namespace HotPotPlayer.Pages.CloudMusicSub
             base.OnNavigatedTo(e);
             var (album, music) = e.Parameter switch
             {
-                CloudMusicItem c => await CloudMusicService.GetAlbumAsync(c.Album2.Id),
+                CloudMusicItem c => await NetEaseMusicService.GetAlbumAsync(c.Album2.Id),
                 _ => throw new NotImplementedException()
             };
 

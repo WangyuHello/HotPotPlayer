@@ -26,14 +26,13 @@ namespace HotPotPlayer.Pages.CloudMusicSub
     /// <summary>
     /// An empty page that can be used on its own or navigated to within a Frame.
     /// </summary>
-    public sealed partial class Login : Page
+    public sealed partial class Login : PageBase
     {
         public Login()
         {
             this.InitializeComponent();
             _ui = DispatcherQueue.GetForCurrentThread();
         }
-        NetEaseMusicService CloudMusicService => ((App)Application.Current).NetEaseMusicService;
         MainWindow MainWindow => ((App)Application.Current).MainWindow;
 
         protected override async void OnNavigatedTo(NavigationEventArgs e)
@@ -49,8 +48,8 @@ namespace HotPotPlayer.Pages.CloudMusicSub
 
         private async Task SetQRCodeAndWait()
         {
-            qrKey = await CloudMusicService.GetQrKeyAsync();
-            var qrData = CloudMusicService.GetQrImgByte(qrKey);
+            qrKey = await NetEaseMusicService.GetQrKeyAsync();
+            var qrData = NetEaseMusicService.GetQrImgByte(qrKey);
             BitmapImage image = new();
             var stream = new InMemoryRandomAccessStream();
             await stream.WriteAsync(qrData.AsBuffer());
@@ -64,7 +63,7 @@ namespace HotPotPlayer.Pages.CloudMusicSub
         {
             while (true)
             {
-                var (code, message) = await CloudMusicService.GetQrCheckAsync(qrKey);
+                var (code, message) = await NetEaseMusicService.GetQrCheckAsync(qrKey);
                 _ui.TryEnqueue(() =>
                 {
                     Status.Text = message;

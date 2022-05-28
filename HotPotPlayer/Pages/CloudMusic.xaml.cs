@@ -28,25 +28,12 @@ namespace HotPotPlayer.Pages
     /// <summary>
     /// An empty page that can be used on its own or navigated to within a Frame.
     /// </summary>
-    public sealed partial class CloudMusic : Page, INotifyPropertyChanged
+    public sealed partial class CloudMusic : PageBase
     {
         public CloudMusic()
         {
             this.InitializeComponent();
         }
-
-        public event PropertyChangedEventHandler PropertyChanged;
-
-        public void Set<T>(ref T oldValue, T newValue, [CallerMemberName] string propertyName = "")
-        {
-            if (!EqualityComparer<T>.Default.Equals(oldValue, newValue))
-            {
-                oldValue = newValue;
-                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-            }
-        }
-        NetEaseMusicService CloudMusicService => ((App)Application.Current).NetEaseMusicService;
-        MusicPlayer MusicPlayer => ((App)Application.Current).MusicPlayer;
         MainWindow MainWindow => ((App)Application.Current).MainWindow;
 
         bool IsFirstNavigate = true;
@@ -66,13 +53,13 @@ namespace HotPotPlayer.Pages
             {
                 return;
             }
-            if (!await CloudMusicService.IsLoginAsync())
+            if (!await NetEaseMusicService.IsLoginAsync())
             {
                 MainWindow.NavigateTo("CloudMusicSub.Login");
                 return;
             }
 
-            await CloudMusicService.InitAsync();
+            await NetEaseMusicService.InitAsync();
 
             IsFirstNavigate = false;
         }
@@ -91,7 +78,7 @@ namespace HotPotPlayer.Pages
         private async void RecListView_ItemClick(object sender, ItemClickEventArgs e)
         {
             var playList = e.ClickedItem as CloudPlayListItem;
-            SelectedPlayList = await CloudMusicService.GetPlayListAsync(playList.PlId);
+            SelectedPlayList = await NetEaseMusicService.GetPlayListAsync(playList.PlId);
 
             //var ani = RecListView.PrepareConnectedAnimation("forwardAnimation2", playList, "CloudPlayListCardConnectedElement");
             //ani.Configuration = new BasicConnectedAnimationConfiguration();
@@ -127,7 +114,7 @@ namespace HotPotPlayer.Pages
 
         private async void UserAvatar_Tapped(object sender, TappedRoutedEventArgs e)
         {
-            await CloudMusicService.InitLevelAsync();
+            await NetEaseMusicService.InitLevelAsync();
             UserAvatar.ContextFlyout.ShowAt(UserAvatar);
         }
 
@@ -153,7 +140,7 @@ namespace HotPotPlayer.Pages
 
         private async void LogOut_Click(object sender, RoutedEventArgs e)
         {
-            await CloudMusicService.LogoutAsync();
+            await NetEaseMusicService.LogoutAsync();
             IsFirstNavigate = true;
             MainWindow.NavigateTo("CloudMusicSub.Login");
         }
@@ -168,14 +155,14 @@ namespace HotPotPlayer.Pages
         {
             if (args.Reason == AutoSuggestionBoxTextChangeReason.UserInput)
             {
-                var songs = await CloudMusicService.SearchSong(sender.Text);
+                var songs = await NetEaseMusicService.SearchSong(sender.Text);
                 sender.ItemsSource = songs;
             }
         }
 
         private async void Search_QuerySubmitted(AutoSuggestBox sender, AutoSuggestBoxQuerySubmittedEventArgs args)
         {
-            var songs = await CloudMusicService.SearchSong(sender.Text);
+            var songs = await NetEaseMusicService.SearchSong(sender.Text);
             sender.ItemsSource = songs;
         }
 

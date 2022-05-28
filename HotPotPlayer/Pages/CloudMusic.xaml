@@ -1,7 +1,8 @@
-﻿<Page
+﻿<base:PageBase
     x:Class="HotPotPlayer.Pages.CloudMusic"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:base="using:HotPotPlayer"
     xmlns:local="using:HotPotPlayer.Pages"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
@@ -26,14 +27,14 @@
         <AutoSuggestBox x:Name="Search" Margin="0,16" QueryIcon="Find" PlaceholderText="搜索" VerticalAlignment="Center" HorizontalAlignment="Left" Width="260" CornerRadius="16" TextMemberPath="Title" ItemTemplate="{StaticResource SearchMusicListTemplate}" TextChanged="Search_TextChanged" QuerySubmitted="Search_QuerySubmitted" SuggestionChosen="Search_SuggestionChosen"/>
         <StackPanel x:Name="UserAvatar" Margin="0,0,160,0" Orientation="Horizontal" VerticalAlignment="Center" HorizontalAlignment="Right" Spacing="8" Tapped="UserAvatar_Tapped">
             <cont2:ImageEx2 
-                Source="{x:Bind CloudMusicService.Self.AvatarUrl, Mode=OneWay}" 
+                Source="{x:Bind NetEaseMusicService.Self.AvatarUrl, Mode=OneWay}" 
                 Style="{StaticResource LocalMusicImageStyle}" 
                 Width="32" Height="32"
                 CornerRadius="16"
                 />
             <TextBlock 
                 VerticalAlignment="Center" 
-                Text="{x:Bind CloudMusicService.Self.NickName, Mode=OneWay}" 
+                Text="{x:Bind NetEaseMusicService.Self.NickName, Mode=OneWay}" 
                 FontFamily="{ThemeResource MiSansRegular}"
                 />
 
@@ -47,13 +48,13 @@
                             <RowDefinition Height="Auto" />
                             <RowDefinition Height="Auto" />
                         </Grid.RowDefinitions>
-                        <cont2:ImageEx2 Grid.Row="0" Margin="-16,-16,-16,0" Source="{x:Bind CloudMusicService.Self.BackgroundUrl, Mode=OneWay}" HorizontalAlignment="Center" Style="{StaticResource LocalMusicImageStyle}" Width="340" Height="140" />
-                        <cont2:ImageEx2 Grid.Row="1" Margin="0,-30,0,8" Source="{x:Bind CloudMusicService.Self.AvatarUrl, Mode=OneWay}" HorizontalAlignment="Center" Style="{StaticResource LocalMusicImageStyle}" Width="64" Height="64" CornerRadius="32" />
-                        <TextBlock Grid.Row="2" Text="{x:Bind CloudMusicService.Self.NickName, Mode=OneWay}" FontSize="16" HorizontalAlignment="Center" FontFamily="{StaticResource MiSansMedium}" />
+                        <cont2:ImageEx2 Grid.Row="0" Margin="-16,-16,-16,0" Source="{x:Bind NetEaseMusicService.Self.BackgroundUrl, Mode=OneWay}" HorizontalAlignment="Center" Style="{StaticResource LocalMusicImageStyle}" Width="340" Height="140" />
+                        <cont2:ImageEx2 Grid.Row="1" Margin="0,-30,0,8" Source="{x:Bind NetEaseMusicService.Self.AvatarUrl, Mode=OneWay}" HorizontalAlignment="Center" Style="{StaticResource LocalMusicImageStyle}" Width="64" Height="64" CornerRadius="32" />
+                        <TextBlock Grid.Row="2" Text="{x:Bind NetEaseMusicService.Self.NickName, Mode=OneWay}" FontSize="16" HorizontalAlignment="Center" FontFamily="{StaticResource MiSansMedium}" />
                         <StackPanel Grid.Row="3" Margin="0,8,0,0" HorizontalAlignment="Center" Orientation="Horizontal" Spacing="16">
-                            <TextBlock Text="{x:Bind GetFollows(CloudMusicService.Self), Mode=OneWay}" Foreground="Gray" FontFamily="{StaticResource MiSansRegular}"/>
-                            <TextBlock Text="{x:Bind GetFolloweds(CloudMusicService.Self), Mode=OneWay}" Foreground="Gray" FontFamily="{StaticResource MiSansRegular}"/>
-                            <TextBlock Text="{x:Bind GetLv(CloudMusicService.Level), Mode=OneWay}" Foreground="Gray" FontFamily="{StaticResource MiSansRegular}"/>
+                            <TextBlock Text="{x:Bind GetFollows(NetEaseMusicService.Self), Mode=OneWay}" Foreground="Gray" FontFamily="{StaticResource MiSansRegular}"/>
+                            <TextBlock Text="{x:Bind GetFolloweds(NetEaseMusicService.Self), Mode=OneWay}" Foreground="Gray" FontFamily="{StaticResource MiSansRegular}"/>
+                            <TextBlock Text="{x:Bind GetLv(NetEaseMusicService.Level), Mode=OneWay}" Foreground="Gray" FontFamily="{StaticResource MiSansRegular}"/>
                         </StackPanel>
                         <StackPanel Grid.Row="4" Margin="0,16,0,0" HorizontalAlignment="Center" Orientation="Horizontal" Spacing="8">
                             <Button x:Name="UserDetail" Width="80" Click="UserDetail_Click">详情</Button>
@@ -66,7 +67,7 @@
 
         <TextBlock Grid.Row="1" Text="推荐歌单" FontSize="20" FontFamily="{StaticResource MiSansMedium}" />
 
-        <ListView x:Name="RecListView" Margin="-28,0,0,0" Padding="22,0,0,0" Height="242" Grid.Row="2" ItemsSource="{x:Bind CloudMusicService.RecommedPlayList, Mode=OneWay}" Style="{StaticResource HorizontalListViewStyle}" ItemTemplate="{StaticResource CloudPlayListCardViewTemplate}" ItemClick="RecListView_ItemClick"/>
+        <ListView x:Name="RecListView" Margin="-28,0,0,0" Padding="22,0,0,0" Height="242" Grid.Row="2" ItemsSource="{x:Bind NetEaseMusicService.RecommedPlayList, Mode=OneWay}" Style="{StaticResource HorizontalListViewStyle}" ItemTemplate="{StaticResource CloudPlayListCardViewTemplate}" ItemClick="RecListView_ItemClick"/>
 
         <Grid Grid.Row="3" Margin="0,4,0,0">
             <Grid.ColumnDefinitions>
@@ -81,8 +82,8 @@
                     <RowDefinition Height="*" />
                 </Grid.RowDefinitions>
                 <TextBlock Text="每日推荐" FontSize="20" FontFamily="{StaticResource MiSansMedium}" />
-                <TextBlock Grid.Row="1" Text="{x:Bind GetCount(CloudMusicService.RecommedList), Mode=OneWay}" Margin="0,4" Foreground="Gray" FontFamily="{StaticResource MiSansRegular}" />
-                <ListView Grid.Row="2" Margin="-28,4,-8,0" Padding="24,0,12,0" ItemsSource="{x:Bind CloudMusicService.RecommedList, Mode=OneWay}" Style="{StaticResource GeneralListViewStyle}" ItemTemplate="{StaticResource CloudMusicCardViewTemplate}" ItemContainerStyle="{StaticResource GeneralListContainerWithPadding2Style}" ItemClick="{x:Bind helper:ListHelper.PlayMusicInList}">
+                <TextBlock Grid.Row="1" Text="{x:Bind GetCount(NetEaseMusicService.RecommedList), Mode=OneWay}" Margin="0,4" Foreground="Gray" FontFamily="{StaticResource MiSansRegular}" />
+                <ListView Grid.Row="2" Margin="-28,4,-8,0" Padding="24,0,12,0" ItemsSource="{x:Bind NetEaseMusicService.RecommedList, Mode=OneWay}" Style="{StaticResource GeneralListViewStyle}" ItemTemplate="{StaticResource CloudMusicCardViewTemplate}" ItemContainerStyle="{StaticResource GeneralListContainerWithPadding2Style}" ItemClick="{x:Bind helper:ListHelper.PlayMusicInList}">
                     <ListView.Footer>
                         <Grid Height="100" />
                     </ListView.Footer>
@@ -99,13 +100,13 @@
 
                 <Grid Grid.Row="1" CornerRadius="8" Background="White" Padding="16">
                     <TextBlock Text="热门歌手" FontSize="20" FontFamily="{StaticResource MiSansMedium}"/>
-                    <ListView x:Name="TopArtistsList" Margin="-16,36,-16,0" Padding="8,0,0,0" ItemsSource="{x:Bind CloudMusicService.TopArtists, Mode=OneWay}" Style="{StaticResource HorizontalListViewStyle}" ItemContainerStyle="{StaticResource GeneralListContainerCompactPaddingStyle}" ItemTemplate="{StaticResource CloudArtistCardViewTemplate}" ItemClick="TopArtistsList_ItemClick"/>
+                    <ListView x:Name="TopArtistsList" Margin="-16,36,-16,0" Padding="8,0,0,0" ItemsSource="{x:Bind NetEaseMusicService.TopArtists, Mode=OneWay}" Style="{StaticResource HorizontalListViewStyle}" ItemContainerStyle="{StaticResource GeneralListContainerCompactPaddingStyle}" ItemTemplate="{StaticResource CloudArtistCardViewTemplate}" ItemClick="TopArtistsList_ItemClick"/>
                 </Grid>
                 
                 <Grid Grid.Row="2" Margin="0,8" CornerRadius="8" Background="White" Padding="16">
-                    <TextBlock Text="{x:Bind CloudMusicService.TopList[0].Name, Mode=OneWay}" FontSize="20" FontFamily="{StaticResource MiSansMedium}" />
-                    <TextBlock Margin="0,8,0,0" HorizontalAlignment="Right" Text="{x:Bind CloudMusicService.TopList[0].UpdateFrequency, Mode=OneWay}" Foreground="Gray" FontSize="10" FontFamily="{StaticResource MiSansRegular}" />
-                    <ListView Margin="-16,40,-16,-8" ItemsSource="{x:Bind CloudMusicService.TopList[0].Tracks, Mode=OneWay}" Style="{StaticResource GeneralListViewStyle}" ItemTemplate="{StaticResource TopListTemplate}" ItemContainerStyle="{StaticResource GeneralListContainerCompactStyle}"/>
+                    <TextBlock Text="{x:Bind NetEaseMusicService.TopList[0].Name, Mode=OneWay}" FontSize="20" FontFamily="{StaticResource MiSansMedium}" />
+                    <TextBlock Margin="0,8,0,0" HorizontalAlignment="Right" Text="{x:Bind NetEaseMusicService.TopList[0].UpdateFrequency, Mode=OneWay}" Foreground="Gray" FontSize="10" FontFamily="{StaticResource MiSansRegular}" />
+                    <ListView Margin="-16,40,-16,-8" ItemsSource="{x:Bind NetEaseMusicService.TopList[0].Tracks, Mode=OneWay}" Style="{StaticResource GeneralListViewStyle}" ItemTemplate="{StaticResource TopListTemplate}" ItemContainerStyle="{StaticResource GeneralListContainerCompactStyle}"/>
                 </Grid>
             </Grid>
         </Grid>
@@ -127,4 +128,4 @@
             </cont3:PlayListPopup>
         </Grid>
     </Grid>
-</Page>
+</base:PageBase>
