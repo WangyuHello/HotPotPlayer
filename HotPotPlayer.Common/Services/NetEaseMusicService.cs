@@ -373,6 +373,19 @@ namespace HotPotPlayer.Services
             });
         }
 
+        public async Task<List<CloudCommentItem>> GetSongCommentFloorAsync(string songid, long id)
+        {
+            return await Task.Run(async () =>
+            {
+                var json = await Api.RequestAsync(CloudMusicApiProviders.CommentFloor, new Dictionary<string, object> { ["parentCommentId"] = id, ["type"] = 0, ["id"] = songid });
+                var l = json["data"]["comments"].ToArray().Select(s => {
+                    var i = s.ToComment();
+                    return i;
+                }).ToList();
+                return l;
+            });
+        }
+
         public async Task<List<CloudMusicItem>> GetSimilarSongAsync(string id)
         {
             return await Task.Run(async () =>
