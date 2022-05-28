@@ -1,5 +1,7 @@
-﻿using HotPotPlayer.Services;
+﻿using HotPotPlayer.Models;
+using HotPotPlayer.Services;
 using Microsoft.UI.Xaml;
+using Microsoft.UI.Xaml.Media.Animation;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,5 +16,7 @@ namespace HotPotPlayer
         public NetEaseMusicService NetEaseMusicService { get; }
         public LocalMusicService LocalMusicService { get; }
         public MusicPlayer MusicPlayer { get; }
+        public void ShowToast(ToastInfo toast);
+        public void NavigateTo(string name, object parameter = null, NavigationTransitionInfo trans = null);
     }
 }

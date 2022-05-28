@@ -3,6 +3,7 @@ using HotPotPlayer.Models;
 using HotPotPlayer.Services;
 using Microsoft.UI.Dispatching;
 using Microsoft.UI.Xaml;
+using Microsoft.UI.Xaml.Media.Animation;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
@@ -34,7 +35,7 @@ namespace HotPotPlayer
         public MusicPlayer MusicPlayer => musicPlayer ??= new MusicPlayer(Config, UIQueue, this);
 
         public abstract void ShowToast(ToastInfo toast);
-
+        public abstract void NavigateTo(string name, object parameter = null, NavigationTransitionInfo trans = null);
         public abstract IntPtr MainWindowHandle { get; }
 
         TaskbarHelper _taskbar;

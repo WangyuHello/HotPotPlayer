@@ -34,7 +34,6 @@ namespace HotPotPlayer.Pages
         {
             this.InitializeComponent();
         }
-        MainWindow MainWindow => ((App)Application.Current).MainWindow;
 
         bool IsFirstNavigate = true;
 
@@ -55,7 +54,7 @@ namespace HotPotPlayer.Pages
             }
             if (!await NetEaseMusicService.IsLoginAsync())
             {
-                MainWindow.NavigateTo("CloudMusicSub.Login");
+                NavigateTo("CloudMusicSub.Login");
                 return;
             }
 
@@ -135,20 +134,20 @@ namespace HotPotPlayer.Pages
 
         private void UserDetail_Click(object sender, RoutedEventArgs e)
         {
-            MainWindow.NavigateTo("CloudMusicSub.Self");
+            NavigateTo("CloudMusicSub.Self");
         }
 
         private async void LogOut_Click(object sender, RoutedEventArgs e)
         {
             await NetEaseMusicService.LogoutAsync();
             IsFirstNavigate = true;
-            MainWindow.NavigateTo("CloudMusicSub.Login");
+            NavigateTo("CloudMusicSub.Login");
         }
 
         private void TopArtistsList_ItemClick(object sender, ItemClickEventArgs e)
         {
             var ar = e.ClickedItem as CloudArtistItem;
-            MainWindow.NavigateTo("CloudMusicSub.Artist", ar);
+            NavigateTo("CloudMusicSub.Artist", ar);
         }
 
         private async void Search_TextChanged(AutoSuggestBox sender, AutoSuggestBoxTextChangedEventArgs args)

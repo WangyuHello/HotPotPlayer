@@ -21,6 +21,7 @@ using Windows.Foundation;
 using Windows.Foundation.Collections;
 using WinUIEx;
 using Microsoft.UI.Windowing;
+using Microsoft.UI.Xaml.Media.Animation;
 
 // To learn more about WinUI, the WinUI project structure,
 // and more about our project templates, see: http://aka.ms/winui-project-info.
@@ -79,6 +80,11 @@ namespace HotPotPlayer
             }
 
             Config.MainWindowHandle = MainWindowHandle;
+        }
+
+        public override void NavigateTo(string name, object parameter = null, NavigationTransitionInfo trans = null)
+        {
+            MainWindow.NavigateTo(name, parameter, trans);
         }
 
         public MainWindow MainWindow;

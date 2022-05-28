@@ -33,14 +33,12 @@ namespace HotPotPlayer.Pages.CloudMusicSub
             this.InitializeComponent();
             _ui = DispatcherQueue.GetForCurrentThread();
         }
-        MainWindow MainWindow => ((App)Application.Current).MainWindow;
-
         protected override async void OnNavigatedTo(NavigationEventArgs e)
         {
             base.OnNavigatedTo(e);
             _ui = DispatcherQueue.GetForCurrentThread();
             await SetQRCodeAndWait();
-            MainWindow.NavigateTo("CloudMusic");
+            NavigateTo("CloudMusic");
         }
 
         string qrKey;

@@ -1,6 +1,8 @@
-﻿using HotPotPlayer.Services;
+﻿using HotPotPlayer.Models;
+using HotPotPlayer.Services;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
+using Microsoft.UI.Xaml.Media.Animation;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -20,6 +22,16 @@ namespace HotPotPlayer
         public LocalMusicService LocalMusicService => ((IComponentServiceLocator)Application.Current).LocalMusicService;
 
         public MusicPlayer MusicPlayer => ((IComponentServiceLocator)Application.Current).MusicPlayer;
+
+        public void NavigateTo(string name, object parameter = null, NavigationTransitionInfo trans = null)
+        {
+            ((IComponentServiceLocator)Application.Current).NavigateTo(name, parameter, trans);
+        }
+
+        public void ShowToast(ToastInfo toast)
+        {
+            ((IComponentServiceLocator)Application.Current).ShowToast(toast);
+        }
 
         public event PropertyChangedEventHandler PropertyChanged;
         public void Set<T>(ref T oldValue, T newValue, [CallerMemberName] string propertyName = "")
