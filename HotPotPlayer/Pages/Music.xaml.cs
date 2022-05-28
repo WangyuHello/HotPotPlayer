@@ -92,6 +92,10 @@ namespace HotPotPlayer.Pages
             anim.Configuration = new BasicConnectedAnimationConfiguration();
             await AlbumGridView.TryStartConnectedAnimationAsync(anim, SelectedAlbum, "AlbumCardConnectedElement");
             AlbumPopupOverlay.Visibility = Visibility.Collapsed;
+
+            var container = (GridViewItem)AlbumGridView.ContainerFromItem(SelectedAlbum);
+            var root = container.ContentTemplateRoot;
+            root.Opacity = 1;
         }
 
         private async void PlayListPopupOverlay_Tapped(object sender, TappedRoutedEventArgs e)
@@ -112,6 +116,10 @@ namespace HotPotPlayer.Pages
             ani.TryStart(AlbumPopupTarget);
 
             AlbumPopupOverlay.Visibility = Visibility.Visible;
+
+            var container = (GridViewItem)AlbumGridView.ContainerFromItem(SelectedAlbum);
+            var root = container.ContentTemplateRoot;
+            root.Opacity = 0;
         }
 
         private void PlayListGridView_ItemClick(object sender, ItemClickEventArgs e)
