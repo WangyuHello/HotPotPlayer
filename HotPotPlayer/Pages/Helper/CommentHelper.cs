@@ -29,7 +29,7 @@ namespace HotPotPlayer.Pages.Helper
 
             ContentDialog dialog = new()
             {
-                Title = "回复",
+                Title = $"回复({l.Count})",
                 CloseButtonText = "关闭",
                 DefaultButton = ContentDialogButton.Close,
                 Content = new CommentFloorDialog(l, comment),
