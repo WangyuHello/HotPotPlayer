@@ -13,7 +13,7 @@ using System.Threading.Tasks;
 
 namespace HotPotPlayer
 {
-    public abstract class AppBase: Application
+    public abstract class AppBase: Application, IComponentServiceLocator
     {
         ConfigBase config;
         public ConfigBase Config => config ??= new AppConfig();

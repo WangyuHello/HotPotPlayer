@@ -10,9 +10,9 @@ namespace HotPotPlayer
 {
     public interface IComponentServiceLocator
     {
-        ConfigBase Config => ((AppBase)Application.Current).Config;
-        NetEaseMusicService CloudMusicService => ((AppBase)Application.Current).NetEaseMusicService;
-        LocalMusicService LocalMusicService => ((AppBase)Application.Current).LocalMusicService;
-        MusicPlayer MusicPlayer => ((AppBase)Application.Current).MusicPlayer;
+        public ConfigBase Config { get; }
+        public NetEaseMusicService NetEaseMusicService { get; }
+        public LocalMusicService LocalMusicService { get; }
+        public MusicPlayer MusicPlayer { get; }
     }
 }

@@ -35,7 +35,7 @@ namespace HotPotPlayer.Pages
     /// <summary>
     /// An empty page that can be used on its own or navigated to within a Frame.
     /// </summary>
-    public sealed partial class Music : Page, INotifyPropertyChanged
+    public sealed partial class Music : PageBase
     {
         public Music()
         {
@@ -55,8 +55,6 @@ namespace HotPotPlayer.Pages
             set => Set(ref _selectedPlayList, value);
         }
 
-        LocalMusicService MusicService => ((App)Application.Current).LocalMusicService;
-
         bool IsFirstNavigate = true;
 
         protected override void OnNavigatedTo(NavigationEventArgs e)
@@ -66,18 +64,7 @@ namespace HotPotPlayer.Pages
             if (IsFirstNavigate)
             {
                 IsFirstNavigate = false;
-                MusicService.StartLoadLocalMusic();
-            }
-        }
-
-        public event PropertyChangedEventHandler PropertyChanged;
-
-        public void Set<T>(ref T oldValue, T newValue, [CallerMemberName] string propertyName = "")
-        {
-            if (!EqualityComparer<T>.Default.Equals(oldValue, newValue))
-            {
-                oldValue = newValue;
-                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+                LocalMusicService.StartLoadLocalMusic();
             }
         }
 

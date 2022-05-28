@@ -1,4 +1,6 @@
-﻿using Microsoft.UI.Xaml.Controls;
+﻿using HotPotPlayer.Services;
+using Microsoft.UI.Xaml;
+using Microsoft.UI.Xaml.Controls;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -11,6 +13,14 @@ namespace HotPotPlayer
 {
     public class UserControlBase: UserControl, INotifyPropertyChanged, IComponentServiceLocator
     {
+        public ConfigBase Config => ((IComponentServiceLocator)Application.Current).Config;
+
+        public NetEaseMusicService NetEaseMusicService => ((IComponentServiceLocator)Application.Current).NetEaseMusicService;
+
+        public LocalMusicService LocalMusicService => ((IComponentServiceLocator)Application.Current).LocalMusicService;
+
+        public MusicPlayer MusicPlayer => ((IComponentServiceLocator)Application.Current).MusicPlayer;
+
         public event PropertyChangedEventHandler PropertyChanged;
         public void Set<T>(ref T oldValue, T newValue, [CallerMemberName] string propertyName = "")
         {
