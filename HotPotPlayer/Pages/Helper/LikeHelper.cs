@@ -1,4 +1,5 @@
-﻿using HotPotPlayer.Models;
+﻿using HotPotPlayer.Helpers;
+using HotPotPlayer.Models;
 using HotPotPlayer.Models.CloudMusic;
 using HotPotPlayer.Services;
 using Microsoft.UI;
@@ -14,23 +15,21 @@ using System.Threading.Tasks;
 
 namespace HotPotPlayer.Pages.Helper
 {
-    public static class LikeHelper
-    {
-        static NetEaseMusicService CloudMusicService => ((App) Application.Current).NetEaseMusicService;
-        
+    public class LikeHelper: HelperBase
+    {        
         public static void Like(object sender, RoutedEventArgs e)
         {
             var s = (FrameworkElement)sender;
             var m = s.DataContext as CloudMusicItem;
-            var isLike = CloudMusicService.GetSongLiked(m);
-            CloudMusicService.Like(m, !isLike);
+            var isLike = NetEaseMusicService.GetSongLiked(m);
+            NetEaseMusicService.Like(m, !isLike);
         }
 
         public static SolidColorBrush GetLikeButtonForeground(MusicItem m)
         {
             if (m is CloudMusicItem c)
             {
-                return CloudMusicService.GetSongLiked(c) ? new SolidColorBrush(Colors.Red) : new SolidColorBrush(Colors.Black);
+                return NetEaseMusicService.GetSongLiked(c) ? new SolidColorBrush(Colors.Red) : new SolidColorBrush(Colors.Black);
             }
             return new SolidColorBrush(Colors.Black);
         }
@@ -39,7 +38,7 @@ namespace HotPotPlayer.Pages.Helper
         {
             if (m is CloudMusicItem c)
             {
-                return CloudMusicService.GetSongLiked(c) ? "\uEB52" : "\uEB51";
+                return NetEaseMusicService.GetSongLiked(c) ? "\uEB52" : "\uEB51";
             }
             return "\uEB51";
         }

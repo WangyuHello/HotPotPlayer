@@ -1,4 +1,5 @@
-﻿using HotPotPlayer.Models;
+﻿using HotPotPlayer.Helpers;
+using HotPotPlayer.Models;
 using HotPotPlayer.Models.CloudMusic;
 using HotPotPlayer.Services;
 using Microsoft.UI.Xaml;
@@ -14,20 +15,15 @@ using System.Threading.Tasks;
 
 namespace HotPotPlayer.Pages.Helper
 {
-    internal static class ListHelper
+    internal class ListHelper: HelperBase
     {
-        static App App => (App)Application.Current;
-        static MusicPlayer Player => ((App)Application.Current).MusicPlayer;
-        static LocalMusicService MusicService => ((App) Application.Current).LocalMusicService;
-        static NetEaseMusicService CloudMusicService => ((App) Application.Current).NetEaseMusicService;
-        static MainWindow MainWindow => ((App)Application.Current).MainWindow;
         public static void PlayMusicInList(object sender, ItemClickEventArgs e)
         {
             if (sender is ListViewBase g)
             {
                 var list = (IEnumerable<MusicItem>)g.ItemsSource;
                 var music = e.ClickedItem as MusicItem;
-                Player.PlayNext(music, list);
+                MusicPlayer.PlayNext(music, list);
             }
         }
 
@@ -50,14 +46,14 @@ namespace HotPotPlayer.Pages.Helper
                     Text = "播放",
                     Icon = new SymbolIcon { Symbol = Symbol.Play },
                 };
-                i.Click += (s, e) => Player.PlayNext(music);
+                i.Click += (s, e) => MusicPlayer.PlayNext(music);
                 flyout.Items.Add(i);
                 i = new MenuFlyoutItem
                 {
                     Text = "下一个播放",
                     Icon = new FontIcon { FontFamily = new FontFamily("Segoe Fluent Icons"), Glyph = "\uECC8" },
                 };
-                i.Click += (s, e) => Player.AddToPlayListNext(music);
+                i.Click += (s, e) => MusicPlayer.AddToPlayListNext(music);
                 flyout.Items.Add(i);
                 flyout.Items.Add(new MenuFlyoutSeparator());
                 var sub = new MenuFlyoutSubItem
@@ -70,7 +66,7 @@ namespace HotPotPlayer.Pages.Helper
                     Text = "当前列表",
                     Icon = new SymbolIcon { Symbol = Symbol.MusicInfo },
                 };
-                i.Click += (s, e) => Player.AddToPlayListLast(music);
+                i.Click += (s, e) => MusicPlayer.AddToPlayListLast(music);
                 sub.Items.Add(i);
                 sub.Items.Add(new MenuFlyoutSeparator());
                 i = new MenuFlyoutItem
@@ -83,19 +79,19 @@ namespace HotPotPlayer.Pages.Helper
 
                 if (music is CloudMusicItem c)
                 {
-                    foreach (var item in CloudMusicService.UserPlayLists)
+                    foreach (var item in NetEaseMusicService.UserPlayLists)
                     {
                         i = new MenuFlyoutItem
                         {
                             Text = item.Title,
                         };
-                        i.Click += (s, e) => CloudMusicService.AddMusicToPlayList(item, c);
+                        i.Click += (s, e) => NetEaseMusicService.AddMusicToPlayList(item, c);
                         sub.Items.Add(i);
                     }
                 }
                 else
                 {
-                    foreach (var item in MusicService.LocalPlayListList)
+                    foreach (var item in LocalMusicService.LocalPlayListList)
                     {
                         i = new MenuFlyoutItem
                         {
@@ -112,7 +108,7 @@ namespace HotPotPlayer.Pages.Helper
                     Text = "属性",
                     Icon = new FontIcon { FontFamily = new FontFamily("Segoe Fluent Icons"), Glyph = "\uE946" },
                 };
-                i.Click += (s, e) => MainWindow.NavigateTo("MusicSub.Info", music, new SlideNavigationTransitionInfo() { Effect = SlideNavigationTransitionEffect.FromRight });
+                i.Click += (s, e) => App.NavigateTo("MusicSub.Info", music, new SlideNavigationTransitionInfo() { Effect = SlideNavigationTransitionEffect.FromRight });
                 flyout.Items.Add(i);
                 flyout.Items.Add(new MenuFlyoutSeparator());
                 i = new MenuFlyoutItem
@@ -140,14 +136,14 @@ namespace HotPotPlayer.Pages.Helper
                     Text = "播放",
                     Icon = new SymbolIcon { Symbol = Symbol.Play },
                 };
-                i.Click += (s, e) => Player.PlayNext(music);
+                i.Click += (s, e) => MusicPlayer.PlayNext(music);
                 flyout.Items.Add(i);
                 i = new MenuFlyoutItem
                 {
                     Text = "下一个播放",
                     Icon = new FontIcon { FontFamily = new FontFamily("Segoe Fluent Icons"), Glyph = "\uECC8" },
                 };
-                i.Click += (s, e) => Player.AddToPlayListNext(music);
+                i.Click += (s, e) => MusicPlayer.AddToPlayListNext(music);
                 flyout.Items.Add(i);
                 flyout.Items.Add(new MenuFlyoutSeparator());
                 var sub = new MenuFlyoutSubItem
@@ -160,7 +156,7 @@ namespace HotPotPlayer.Pages.Helper
                     Text = "当前列表",
                     Icon = new SymbolIcon { Symbol = Symbol.MusicInfo },
                 };
-                i.Click += (s, e) => Player.AddToPlayListLast(music);
+                i.Click += (s, e) => MusicPlayer.AddToPlayListLast(music);
                 sub.Items.Add(i);
                 sub.Items.Add(new MenuFlyoutSeparator());
                 i = new MenuFlyoutItem
@@ -172,19 +168,19 @@ namespace HotPotPlayer.Pages.Helper
 
                 if (music is CloudMusicItem c)
                 {
-                    foreach (var item in CloudMusicService.UserPlayLists)
+                    foreach (var item in NetEaseMusicService.UserPlayLists)
                     {
                         i = new MenuFlyoutItem
                         {
                             Text = item.Title,
                         };
-                        i.Click += (s, e) => CloudMusicService.AddMusicToPlayList(item, c);
+                        i.Click += (s, e) => NetEaseMusicService.AddMusicToPlayList(item, c);
                         sub.Items.Add(i);
                     }
                 }
                 else
                 {
-                    foreach (var item in MusicService.LocalPlayListList)
+                    foreach (var item in LocalMusicService.LocalPlayListList)
                     {
                         i = new MenuFlyoutItem
                         {
@@ -202,28 +198,28 @@ namespace HotPotPlayer.Pages.Helper
                     Text = "删除",
                     Icon = new SymbolIcon { Symbol = Symbol.Clear },
                 };
-                i.Click += (s, e) => MusicService.PlayListMusicDelete(music);
+                i.Click += (s, e) => LocalMusicService.PlayListMusicDelete(music);
                 flyout.Items.Add(i);
                 i = new MenuFlyoutItem
                 {
                     Text = "上移",
                     Icon = new SymbolIcon { Symbol = Symbol.Up },
                 };
-                i.Click += (s, e) => MusicService.PlayListMusicUp(music);
+                i.Click += (s, e) => LocalMusicService.PlayListMusicUp(music);
                 flyout.Items.Add(i);
                 i = new MenuFlyoutItem
                 {
                     Text = "下移",
                     Icon = new FontIcon { FontFamily = new FontFamily("Segoe Fluent Icons"), Glyph = "\uE74B" },
                 };
-                i.Click += (s, e) => MusicService.PlayListMusicDown(music);
+                i.Click += (s, e) => LocalMusicService.PlayListMusicDown(music);
                 flyout.Items.Add(i);
                 i = new MenuFlyoutItem
                 {
                     Text = "属性",
                     Icon = new FontIcon { FontFamily = new FontFamily("Segoe Fluent Icons"), Glyph = "\uE946" },
                 };
-                i.Click += (s, e) => MainWindow.NavigateTo("MusicSub.Info", music, new SlideNavigationTransitionInfo() { Effect = SlideNavigationTransitionEffect.FromRight });
+                i.Click += (s, e) => App.NavigateTo("MusicSub.Info", music, new SlideNavigationTransitionInfo() { Effect = SlideNavigationTransitionEffect.FromRight });
                 flyout.Items.Add(i);
                 flyout.Items.Add(new MenuFlyoutSeparator());
                 i = new MenuFlyoutItem
@@ -251,14 +247,14 @@ namespace HotPotPlayer.Pages.Helper
                     Text = "播放",
                     Icon = new SymbolIcon { Symbol = Symbol.Play },
                 };
-                i.Click += (s, e) => Player.PlayNext(music);
+                i.Click += (s, e) => MusicPlayer.PlayNext(music);
                 flyout.Items.Add(i);
                 i = new MenuFlyoutItem
                 {
                     Text = "下一个播放",
                     Icon = new FontIcon { FontFamily = new FontFamily("Segoe Fluent Icons"), Glyph = "\uECC8" },
                 };
-                i.Click += (s, e) => Player.AddToPlayListNext(music);
+                i.Click += (s, e) => MusicPlayer.AddToPlayListNext(music);
                 flyout.Items.Add(i);
                 flyout.Items.Add(new MenuFlyoutSeparator());
                 var sub = new MenuFlyoutSubItem
@@ -271,7 +267,7 @@ namespace HotPotPlayer.Pages.Helper
                     Text = "当前列表",
                     Icon = new SymbolIcon { Symbol = Symbol.MusicInfo },
                 };
-                i.Click += (s, e) => Player.AddToPlayListLast(music);
+                i.Click += (s, e) => MusicPlayer.AddToPlayListLast(music);
                 sub.Items.Add(i);
                 sub.Items.Add(new MenuFlyoutSeparator());
                 i = new MenuFlyoutItem
@@ -283,19 +279,19 @@ namespace HotPotPlayer.Pages.Helper
 
                 if (music is CloudMusicItem c)
                 {
-                    foreach (var item in CloudMusicService.UserPlayLists)
+                    foreach (var item in NetEaseMusicService.UserPlayLists)
                     {
                         i = new MenuFlyoutItem
                         {
                             Text = item.Title,
                         };
-                        i.Click += (s, e) => CloudMusicService.AddMusicToPlayList(item, c);
+                        i.Click += (s, e) => NetEaseMusicService.AddMusicToPlayList(item, c);
                         sub.Items.Add(i);
                     }
                 }
                 else
                 {
-                    foreach (var item in MusicService.LocalPlayListList)
+                    foreach (var item in LocalMusicService.LocalPlayListList)
                     {
                         i = new MenuFlyoutItem
                         {
@@ -312,7 +308,7 @@ namespace HotPotPlayer.Pages.Helper
                     Text = "属性",
                     Icon = new FontIcon { FontFamily = new FontFamily("Segoe Fluent Icons"), Glyph = "\uE946" },
                 };
-                i.Click += (s, e) => MainWindow.NavigateTo("MusicSub.Info", music, new SlideNavigationTransitionInfo() { Effect = SlideNavigationTransitionEffect.FromRight });
+                i.Click += (s, e) => App.NavigateTo("MusicSub.Info", music, new SlideNavigationTransitionInfo() { Effect = SlideNavigationTransitionEffect.FromRight });
                 flyout.Items.Add(i);
                 flyout.Items.Add(new MenuFlyoutSeparator());
                 i = new MenuFlyoutItem
@@ -357,7 +353,7 @@ namespace HotPotPlayer.Pages.Helper
                     Text = "当前列表",
                     Icon = new SymbolIcon { Symbol = Symbol.MusicInfo },
                 };
-                i.Click += (s, e) => Player.AddToPlayListLast(music);
+                i.Click += (s, e) => MusicPlayer.AddToPlayListLast(music);
                 sub.Items.Add(i);
                 sub.Items.Add(new MenuFlyoutSeparator());
                 i = new MenuFlyoutItem
@@ -370,19 +366,19 @@ namespace HotPotPlayer.Pages.Helper
 
                 if (music is CloudMusicItem c)
                 {
-                    foreach (var item in CloudMusicService.UserPlayLists)
+                    foreach (var item in NetEaseMusicService.UserPlayLists)
                     {
                         i = new MenuFlyoutItem
                         {
                             Text = item.Title,
                         };
-                        i.Click += (s, e) => CloudMusicService.AddMusicToPlayList(item, c);
+                        i.Click += (s, e) => NetEaseMusicService.AddMusicToPlayList(item, c);
                         sub.Items.Add(i);
                     }
                 }
                 else
                 {
-                    foreach (var item in MusicService.LocalPlayListList)
+                    foreach (var item in LocalMusicService.LocalPlayListList)
                     {
                         i = new MenuFlyoutItem
                         {
@@ -399,7 +395,7 @@ namespace HotPotPlayer.Pages.Helper
                     Text = "属性",
                     Icon = new FontIcon { FontFamily = new FontFamily("Segoe Fluent Icons"), Glyph = "\uE946" },
                 };
-                i.Click += (s, e) => MainWindow.NavigateTo("MusicSub.Info", music, new SlideNavigationTransitionInfo() { Effect = SlideNavigationTransitionEffect.FromRight });
+                i.Click += (s, e) => App.NavigateTo("MusicSub.Info", music, new SlideNavigationTransitionInfo() { Effect = SlideNavigationTransitionEffect.FromRight });
                 flyout.Items.Add(i);
                 flyout.Items.Add(new MenuFlyoutSeparator());
                 i = new MenuFlyoutItem

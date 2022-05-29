@@ -1,4 +1,5 @@
-﻿using HotPotPlayer.Models;
+﻿using HotPotPlayer.Helpers;
+using HotPotPlayer.Models;
 using HotPotPlayer.Models.CloudMusic;
 using HotPotPlayer.Services;
 using Microsoft.UI.Xaml;
@@ -11,11 +12,8 @@ using System.Threading.Tasks;
 
 namespace HotPotPlayer.Pages.Helper
 {
-    internal static class PlayListHelper
+    internal class PlayListHelper: HelperBase
     {
-        static LocalMusicService MusicService => ((App)Application.Current).LocalMusicService;
-        static NetEaseMusicService CloudMusicService => ((App)Application.Current).NetEaseMusicService;
-
         public static void AddToPlayListClick(object sender, RoutedEventArgs e)
         {
             var button = (Button)sender;
@@ -24,19 +22,19 @@ namespace HotPotPlayer.Pages.Helper
             MenuFlyoutItem i;
             if (music is CloudMusicItem c)
             {
-                foreach (var item in CloudMusicService.UserPlayLists)
+                foreach (var item in NetEaseMusicService.UserPlayLists)
                 {
                     i = new MenuFlyoutItem
                     {
                         Text = item.Title,
                     };
-                    i.Click += (s, e) => CloudMusicService.AddMusicToPlayList(item, c);
+                    i.Click += (s, e) => NetEaseMusicService.AddMusicToPlayList(item, c);
                     flyout.Items.Add(i);
                 }
             }
             else
             {
-                foreach (var item in MusicService.LocalPlayListList)
+                foreach (var item in LocalMusicService.LocalPlayListList)
                 {
                     i = new MenuFlyoutItem
                     {
