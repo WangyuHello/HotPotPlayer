@@ -48,6 +48,14 @@ namespace HotPotPlayer.Pages
         protected override async void OnNavigatedTo(NavigationEventArgs e)
         {
             base.OnNavigatedTo(e);
+            if (PlayListPopupOverlay.Visibility == Visibility.Visible)
+            {
+                MusicPlayer.SuppressTogglePlayListBar = true;
+            }
+            else
+            {
+                MusicPlayer.SuppressTogglePlayListBar = false;
+            }
             if (!IsFirstNavigate)
             {
                 return;
@@ -67,6 +75,7 @@ namespace HotPotPlayer.Pages
         {
             base.OnNavigatedFrom(e);
             //MainWindow.SetDragRegionForCustomTitleBar();
+            MusicPlayer.SuppressTogglePlayListBar = false;
         }
 
         string GetCount(ObservableCollection<CloudMusicItem> musics)
@@ -82,7 +91,7 @@ namespace HotPotPlayer.Pages
             //var ani = RecListView.PrepareConnectedAnimation("forwardAnimation2", playList, "CloudPlayListCardConnectedElement");
             //ani.Configuration = new BasicConnectedAnimationConfiguration();
             //ani.TryStart(PlayListPopupTarget);
-
+            MusicPlayer.SuppressTogglePlayListBar = true;
             PlayListPopupOverlay.Visibility = Visibility.Visible;
         }
 
@@ -91,6 +100,7 @@ namespace HotPotPlayer.Pages
             //var anim = ConnectedAnimationService.GetForCurrentView().PrepareToAnimate("backwardsAnimation2", PlayListPopupTarget);
             //anim.Configuration = new BasicConnectedAnimationConfiguration();
             //await RecListView.TryStartConnectedAnimationAsync(anim, SelectedPlayList, "CloudPlayListCardConnectedElement");
+            MusicPlayer.SuppressTogglePlayListBar = false;
             PlayListPopupOverlay.Visibility = Visibility.Collapsed;
         }
 

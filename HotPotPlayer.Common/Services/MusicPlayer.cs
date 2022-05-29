@@ -212,9 +212,14 @@ namespace HotPotPlayer.Services
             return smtc;
         }
 
+        public bool SuppressTogglePlayListBar { get; set; }
+
         public void TogglePlayListBarVisibility()
         {
-            IsPlayListBarVisible = !IsPlayListBarVisible;
+            if (!SuppressTogglePlayListBar || IsPlayScreenVisible)
+            {
+                IsPlayListBarVisible = !IsPlayListBarVisible;
+            }
         }
 
         public void PlayNext(MusicItem music)
