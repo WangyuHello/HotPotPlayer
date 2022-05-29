@@ -39,6 +39,7 @@ namespace HotPotPlayer
         public abstract void ShowToast(ToastInfo toast);
         public abstract void NavigateTo(string name, object parameter = null, NavigationTransitionInfo trans = null);
         public abstract IntPtr MainWindowHandle { get; }
+        public abstract XamlRoot XamlRoot { get; }
 
         TaskbarHelper _taskbar;
         public TaskbarHelper Taskbar => _taskbar ??= new TaskbarHelper(MainWindowHandle);

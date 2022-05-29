@@ -1,5 +1,6 @@
 ﻿using HotPotPlayer.Controls;
 using HotPotPlayer.Extensions;
+using HotPotPlayer.Helpers;
 using HotPotPlayer.Models;
 using HotPotPlayer.Models.CloudMusic;
 using HotPotPlayer.Services;
@@ -16,12 +17,8 @@ using System.Threading.Tasks;
 
 namespace HotPotPlayer.Pages.Helper
 {
-    internal class AlbumHelper
+    internal class AlbumHelper: HelperBase
     {
-        static MusicPlayer Player => ((App)Application.Current).MusicPlayer;
-        static MainWindow MainWindow => ((App)Application.Current).MainWindow;
-        static LocalMusicService MusicService => ((App) Application.Current).LocalMusicService;
-        static App App => (App)Application.Current;
         internal static void AlbumAdd(SplitButton sender, SplitButtonClickEventArgs args)
         {
             var selectedAlbum = sender.Tag as AlbumItem;
@@ -30,29 +27,29 @@ namespace HotPotPlayer.Pages.Helper
 
         internal static void AlbumAddOne(AlbumItem selectedAlbum)
         {
-            Player.AddToPlayList(selectedAlbum);
+            MusicPlayer.AddToPlayList(selectedAlbum);
         }
 
         internal static void AlbumAddToPlayList(string playList, AlbumItem selectedAlbum)
         {
-            MusicService.AddAlbumToPlayList(playList, selectedAlbum);
+            LocalMusicService.AddAlbumToPlayList(playList, selectedAlbum);
         }
 
         internal static void MusicAddToPlayList(string playList, MusicItem music)
         {
-            MusicService.AddMusicToPlayList(playList, music);
+            LocalMusicService.AddMusicToPlayList(playList, music);
         }
 
         internal static void AlbumDetailClick(object sender, RoutedEventArgs e)
         {
             var button = sender as Button;
             var selectedAlbum = button.Tag as AlbumItem;
-            MainWindow.NavigateTo("MusicSub.Album", selectedAlbum);
+            App.NavigateTo("MusicSub.Album", selectedAlbum);
         }
 
         internal static void AlbumInfoClick(object sender, RoutedEventArgs e)
         {
-            Player.HidePlayScreen();
+            MusicPlayer.HidePlayScreen();
             var el = sender as FrameworkElement;
             var music = el.Tag as MusicItem;
             var targetPage = music switch
@@ -60,19 +57,19 @@ namespace HotPotPlayer.Pages.Helper
                 CloudMusicItem => "CloudMusicSub.Album",
                 _ => "MusicSub.Album"
             };
-            MainWindow.NavigateTo(targetPage, music);
+            App.NavigateTo(targetPage, music);
         }
 
         internal static void AlbumPlay(object sender, RoutedEventArgs e)
         {
             var button = sender as Button;
             var selectedAlbum = button.Tag as AlbumItem;
-            Player.PlayNext(selectedAlbum);
+            MusicPlayer.PlayNext(selectedAlbum);
         }
 
         internal static void ArtistClick(object sender, RoutedEventArgs e)
         {
-            Player.HidePlayScreen();
+            MusicPlayer.HidePlayScreen();
             if (sender is HyperlinkButton button)
             {
                 if (button.Tag is CloudMusicItem cm)
@@ -80,7 +77,7 @@ namespace HotPotPlayer.Pages.Helper
                     var artist = cm.Artists2;
                     if (artist.Count == 1)
                     {
-                        MainWindow.NavigateTo("CloudMusicSub.Artist", artist[0]);
+                        App.NavigateTo("CloudMusicSub.Artist", artist[0]);
                     }
                     else
                     {
@@ -109,7 +106,7 @@ namespace HotPotPlayer.Pages.Helper
                     var segs = artist.GetArtists();
                     if (segs.Length == 1)
                     {
-                        MainWindow.NavigateTo("MusicSub.Artist", artist);
+                        App.NavigateTo("MusicSub.Artist", artist);
                     }
                     else
                     {
@@ -136,12 +133,12 @@ namespace HotPotPlayer.Pages.Helper
             {
                 if (menuItem.Tag is CloudArtistItem c)
                 {
-                    MainWindow.NavigateTo("CloudMusicSub.Artist", c);
+                    App.NavigateTo("CloudMusicSub.Artist", c);
                 }
                 else
                 {
                     var artist = menuItem.Text;
-                    MainWindow.NavigateTo("MusicSub.Artist", artist);
+                    App.NavigateTo("MusicSub.Artist", artist);
                 }
             }
             else if (sender is TextBlock t)
@@ -151,7 +148,7 @@ namespace HotPotPlayer.Pages.Helper
                     var artist = cm.Artists2;
                     if (artist.Count == 1)
                     {
-                        MainWindow.NavigateTo("CloudMusicSub.Artist", artist[0]);
+                        App.NavigateTo("CloudMusicSub.Artist", artist[0]);
                     }
                     else
                     {
@@ -177,7 +174,7 @@ namespace HotPotPlayer.Pages.Helper
                     var segs = artist.GetArtists();
                     if (segs.Length == 1)
                     {
-                        MainWindow.NavigateTo("MusicSub.Artist", artist);
+                        App.NavigateTo("MusicSub.Artist", artist);
                     }
                     else
                     {
@@ -210,7 +207,7 @@ namespace HotPotPlayer.Pages.Helper
                 var artist = c.AlbumArtist;
                 if (artist != null)
                 {
-                    MainWindow.NavigateTo("CloudMusicSub.Artist", artist);
+                    App.NavigateTo("CloudMusicSub.Artist", artist);
                 }
             }
             else
@@ -219,7 +216,7 @@ namespace HotPotPlayer.Pages.Helper
                 var segs = artist.GetArtists();
                 if (segs.Length == 1)
                 {
-                    MainWindow.NavigateTo("MusicSub.Artist", artist);
+                    App.NavigateTo("MusicSub.Artist", artist);
                 }
                 else
                 {
@@ -253,14 +250,14 @@ namespace HotPotPlayer.Pages.Helper
                     Text = "播放", 
                     Icon = new SymbolIcon { Symbol = Symbol.Play },
                 };
-                i.Click += (s, e) => Player.PlayNext(music);
+                i.Click += (s, e) => MusicPlayer.PlayNext(music);
                 flyout.Items.Add(i);
                 i = new MenuFlyoutItem
                 {
                     Text = "下一个播放",
                     Icon = new FontIcon { FontFamily = new FontFamily("Segoe Fluent Icons"), Glyph = "\uECC8" },
                 };
-                i.Click += (s, e) => Player.AddToPlayListNext(music);
+                i.Click += (s, e) => MusicPlayer.AddToPlayListNext(music);
                 flyout.Items.Add(i);
                 flyout.Items.Add(new MenuFlyoutSeparator());
                 var sub = new MenuFlyoutSubItem
@@ -273,7 +270,7 @@ namespace HotPotPlayer.Pages.Helper
                     Text = "当前列表",
                     Icon = new SymbolIcon { Symbol = Symbol.MusicInfo },
                 };
-                i.Click += (s, e) => Player.AddToPlayListLast(music);
+                i.Click += (s, e) => MusicPlayer.AddToPlayListLast(music);
                 sub.Items.Add(i);
                 sub.Items.Add(new MenuFlyoutSeparator());
                 i = new MenuFlyoutItem
@@ -284,7 +281,7 @@ namespace HotPotPlayer.Pages.Helper
                 i.Click += (s, e) => AddToNewPlayList(music);
                 sub.Items.Add(i);
 
-                foreach (var item in MusicService.LocalPlayListList)
+                foreach (var item in LocalMusicService.LocalPlayListList)
                 {
                     i = new MenuFlyoutItem
                     {
@@ -299,7 +296,7 @@ namespace HotPotPlayer.Pages.Helper
                     Text = "属性",
                     Icon = new FontIcon { FontFamily = new FontFamily("Segoe Fluent Icons"), Glyph = "\uE946" },
                 };
-                i.Click += (s , e) => MainWindow.NavigateTo("MusicSub.Info", music, new SlideNavigationTransitionInfo() { Effect = SlideNavigationTransitionEffect.FromRight });
+                i.Click += (s , e) => App.NavigateTo("MusicSub.Info", music, new SlideNavigationTransitionInfo() { Effect = SlideNavigationTransitionEffect.FromRight });
                 flyout.Items.Add(i);
                 flyout.Items.Add(new MenuFlyoutSeparator());
                 i = new MenuFlyoutItem
@@ -321,13 +318,13 @@ namespace HotPotPlayer.Pages.Helper
             if (sender is Button button)
             {
                 var music = (MusicItem)button.Tag;
-                Player.PlayNextContinue(music);
+                MusicPlayer.PlayNextContinue(music);
             }
             else if(sender is ListView l)
             {
                 var e2 = e as ItemClickEventArgs;
                 var music = e2.ClickedItem as MusicItem;
-                Player.PlayNextContinue(music);
+                MusicPlayer.PlayNextContinue(music);
             }
 
         }
@@ -345,14 +342,14 @@ namespace HotPotPlayer.Pages.Helper
                     Text = "播放",
                     Icon = new SymbolIcon { Symbol = Symbol.Play },
                 };
-                i.Click += (s, e) => Player.PlayNext(music);
+                i.Click += (s, e) => MusicPlayer.PlayNext(music);
                 flyout.Items.Add(i);
                 i = new MenuFlyoutItem
                 {
                     Text = "下一个播放",
                     Icon = new FontIcon { FontFamily = new FontFamily("Segoe Fluent Icons"), Glyph = "\uECC8" },
                 };
-                i.Click += (s, e) => Player.AddToPlayListNext(music);
+                i.Click += (s, e) => MusicPlayer.AddToPlayListNext(music);
                 flyout.Items.Add(i);
                 flyout.Items.Add(new MenuFlyoutSeparator());
                 var sub = new MenuFlyoutSubItem
@@ -365,7 +362,7 @@ namespace HotPotPlayer.Pages.Helper
                     Text = "当前列表",
                     Icon = new SymbolIcon { Symbol = Symbol.MusicInfo },
                 };
-                i.Click += (s, e) => Player.AddToPlayListLast(music);
+                i.Click += (s, e) => MusicPlayer.AddToPlayListLast(music);
                 sub.Items.Add(i);
                 sub.Items.Add(new MenuFlyoutSeparator());
                 i = new MenuFlyoutItem
@@ -375,7 +372,7 @@ namespace HotPotPlayer.Pages.Helper
                 };
                 sub.Items.Add(i);
 
-                foreach (var item in MusicService.LocalPlayListList)
+                foreach (var item in LocalMusicService.LocalPlayListList)
                 {
                     i = new MenuFlyoutItem
                     {
@@ -390,28 +387,28 @@ namespace HotPotPlayer.Pages.Helper
                     Text = "删除",
                     Icon = new SymbolIcon { Symbol = Symbol.Clear },
                 };
-                i.Click += (s, e) => MusicService.PlayListMusicDelete(music);
+                i.Click += (s, e) => LocalMusicService.PlayListMusicDelete(music);
                 flyout.Items.Add(i);
                 i = new MenuFlyoutItem
                 {
                     Text = "上移",
                     Icon = new SymbolIcon { Symbol = Symbol.Up },
                 };
-                i.Click += (s, e) => MusicService.PlayListMusicUp(music);
+                i.Click += (s, e) => LocalMusicService.PlayListMusicUp(music);
                 flyout.Items.Add(i);
                 i = new MenuFlyoutItem
                 {
                     Text = "下移",
                     Icon = new FontIcon { FontFamily = new FontFamily("Segoe Fluent Icons"), Glyph = "\uE74B" },
                 };
-                i.Click += (s, e) => MusicService.PlayListMusicDown(music);
+                i.Click += (s, e) => LocalMusicService.PlayListMusicDown(music);
                 flyout.Items.Add(i);
                 i = new MenuFlyoutItem
                 {
                     Text = "属性",
                     Icon = new FontIcon { FontFamily = new FontFamily("Segoe Fluent Icons"), Glyph = "\uE946" },
                 };
-                i.Click += (s, e) => MainWindow.NavigateTo("MusicSub.Info", music, new SlideNavigationTransitionInfo() { Effect = SlideNavigationTransitionEffect.FromRight });
+                i.Click += (s, e) => App.NavigateTo("MusicSub.Info", music, new SlideNavigationTransitionInfo() { Effect = SlideNavigationTransitionEffect.FromRight });
                 flyout.Items.Add(i);
                 flyout.Items.Add(new MenuFlyoutSeparator());
                 i = new MenuFlyoutItem
@@ -435,7 +432,7 @@ namespace HotPotPlayer.Pages.Helper
                 CloseButtonText = "取消",
                 DefaultButton = ContentDialogButton.Primary,
                 Content = new NewPlayListDialog(),
-                XamlRoot = App.MainWindow.Content.XamlRoot
+                XamlRoot = XamlRoot
             };
 
             var result = await dialog.ShowAsync();
@@ -446,7 +443,7 @@ namespace HotPotPlayer.Pages.Helper
                 var title = page.Title.Text;
                 if (!string.IsNullOrEmpty(title))
                 {
-                    MusicService.NewPlayList(title, music);
+                    LocalMusicService.NewPlayList(title, music);
                 }
             }
         }
@@ -463,7 +460,7 @@ namespace HotPotPlayer.Pages.Helper
                 Text = "当前列表",
                 Icon = new SymbolIcon { Symbol = Symbol.MusicInfo },
             };
-            i1.Click += (s, a) => AlbumHelper.AlbumAddOne(album);
+            i1.Click += (s, a) => AlbumAddOne(album);
             flyout.Items.Add(i1);
             var i2 = new MenuFlyoutSeparator();
             flyout.Items.Add(i2);
@@ -473,14 +470,14 @@ namespace HotPotPlayer.Pages.Helper
                 Icon = new SymbolIcon { Symbol = Symbol.Add },
             };
             flyout.Items.Add(i1);
-            foreach (var item in MusicService.LocalPlayListList)
+            foreach (var item in LocalMusicService.LocalPlayListList)
             {
                 var i = new MenuFlyoutItem
                 {
                     Text = item.Title,
                     Tag = item
                 };
-                i.Click += (s, a) => AlbumHelper.AlbumAddToPlayList(item.Title, album);
+                i.Click += (s, a) => AlbumAddToPlayList(item.Title, album);
                 flyout.Items.Add(i);
             }
             targetButton.Flyout = flyout;
