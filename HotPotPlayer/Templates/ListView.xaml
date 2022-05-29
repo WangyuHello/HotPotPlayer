@@ -262,4 +262,23 @@
             <TextBlock Grid.Column="1" Text="{x:Bind Title}" TextTrimming="CharacterEllipsis" VerticalAlignment="Center" FontFamily="{ThemeResource MiSansRegular}"/>
         </Grid>
     </DataTemplate>
+
+    <DataTemplate x:Key="CloudMusicCardViewInPlayListTemplate" x:DataType="models:MusicItem">
+        <Grid Padding="8" RightTapped="{x:Bind helper:ListHelper.RightTapMusicInPlayListClick}">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="24" />
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="1.4*" />
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
+            <TextBlock HorizontalAlignment="Center" Text="{Binding RelativeSource={RelativeSource Mode=TemplatedParent}, Converter={StaticResource IndexConverter}}" FontSize="12" FontFamily="{ThemeResource MiSansBold}" VerticalAlignment="Center"/>
+            <cont2:ImageEx2 Margin="4,0,8,0" Grid.Column="1" Source="{x:Bind Cover}" Style="{StaticResource LocalMusicImageStyle}" Height="32" Width="32" CornerRadius="4" EnableLazyLoading="False"/>
+            <TextBlock Grid.Column="2" FontSize="14" TextTrimming="CharacterEllipsis" VerticalAlignment="Center" Text="{x:Bind Title}" FontFamily="{ThemeResource MiSansMedium}" ToolTipService.ToolTip="{x:Bind Title}"/>
+            <HyperlinkButton Grid.Column="3" Content="{x:Bind GetArtists()}" VerticalAlignment="Center" Click="{x:Bind helper:AlbumHelper.ArtistClick}" Tag="{x:Bind }" FontFamily="{ThemeResource MiSansRegular}"/>
+            <Button Grid.Column="4" Margin="4,0,4,0" Style="{StaticResource TransparentButton}" CornerRadius="4" Padding="4" Tag="{x:Bind }" Click="{x:Bind helper:ListHelper.RightTapMusicInPlayListClick}">
+                <SymbolIcon Symbol="More" />
+            </Button>
+        </Grid>
+    </DataTemplate>
 </ResourceDictionary>
