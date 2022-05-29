@@ -16,6 +16,8 @@ namespace HotPotPlayer
 {
     public abstract class AppBase: Application, IComponentServiceLocator
     {
+        public AppBase App => this;
+
         ConfigBase config;
         public ConfigBase Config => config ??= new AppConfig();
 

@@ -1,4 +1,5 @@
 ﻿using HotPotPlayer.Models;
+using HotPotPlayer.Services;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Controls.Primitives;
@@ -27,21 +28,11 @@ namespace HotPotPlayer.Pages
     /// <summary>
     /// An empty page that can be used on its own or navigated to within a Frame.
     /// </summary>
-    public sealed partial class Setting : Page, INotifyPropertyChanged
+    public sealed partial class Setting : PageBase
     {
         public Setting()
         {
             this.InitializeComponent();
-        }
-
-        public event PropertyChangedEventHandler PropertyChanged;
-        public void Set<T>(ref T oldValue, T newValue, [CallerMemberName] string propertyName = "")
-        {
-            if (!EqualityComparer<T>.Default.Equals(oldValue, newValue))
-            {
-                oldValue = newValue;
-                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-            }
         }
 
         public bool GetLibraryWarningVisible(ObservableCollection<LibraryItem> lib)
@@ -49,10 +40,6 @@ namespace HotPotPlayer.Pages
             //return true;
             return lib == null;
         }
-
-        static App App => (App)Application.Current;
-
-        static ConfigBase Config => App.Config;
 
         private bool _isVideoLibraryWarningVisible;
 
@@ -218,12 +205,12 @@ namespace HotPotPlayer.Pages
 
         private void ReloadVideoLibrary(object sender, RoutedEventArgs e)
         {
-            App.LocalVideoService.StartLoadLocalVideo();
+            LocalVideoService.StartLoadLocalVideo();
         }
 
         private void ReloadMusicLibrary(object sender, RoutedEventArgs e)
         {
-            App.LocalMusicService.StartLoadLocalMusic();
+            LocalMusicService.StartLoadLocalMusic();
         }
     }
 }

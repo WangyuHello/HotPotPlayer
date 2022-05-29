@@ -1,7 +1,8 @@
-﻿<Page
+﻿<base:PageBase
     x:Class="HotPotPlayer.Pages.Setting"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:base="using:HotPotPlayer"
     xmlns:local="using:HotPotPlayer.Pages"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
@@ -10,7 +11,7 @@
     NavigationCacheMode="Enabled"
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
 
-    <Page.Resources>
+    <base:PageBase.Resources>
         <DataTemplate x:Key="MusicLibraryListTemplate" x:DataType="model:LibraryItem">
             <Grid HorizontalAlignment="Stretch">
                 <Grid.ColumnDefinitions>
@@ -52,7 +53,7 @@
             <Setter Property="Padding" Value="4" />
             <Setter Property="Margin" Value="0" />
         </Style>
-    </Page.Resources>
+    </base:PageBase.Resources>
     
     <Grid Background="White" Padding="0,28,0,0">
         <Grid.RowDefinitions>
@@ -131,4 +132,4 @@
             <Button Click="ClearCacheClick" Style="{ThemeResource AccentButtonStyle}">删除缓存</Button>
         </StackPanel>
     </Grid>
-</Page>
+</base:PageBase>

@@ -15,11 +15,14 @@ namespace HotPotPlayer
 {
     public class PageBase: Page, INotifyPropertyChanged, IComponentServiceLocator
     {
+        public AppBase App => (AppBase)Application.Current;
+
         public ConfigBase Config => ((IComponentServiceLocator)Application.Current).Config;
 
         public NetEaseMusicService NetEaseMusicService => ((IComponentServiceLocator)Application.Current).NetEaseMusicService;
 
         public LocalMusicService LocalMusicService => ((IComponentServiceLocator)Application.Current).LocalMusicService;
+        public LocalVideoService LocalVideoService => ((IComponentServiceLocator)Application.Current).LocalVideoService;
 
         public MusicPlayer MusicPlayer => ((IComponentServiceLocator)Application.Current).MusicPlayer;
 
