@@ -27,26 +27,14 @@ namespace HotPotPlayer.Pages.MusicSub
     /// <summary>
     /// An empty page that can be used on its own or navigated to within a Frame.
     /// </summary>
-    public sealed partial class Info : Page, INotifyPropertyChanged
+    public sealed partial class Info : PageBase
     {
         public Info()
         {
             this.InitializeComponent();
         }
 
-        public event PropertyChangedEventHandler PropertyChanged;
-
-        public void Set<T>(ref T oldValue, T newValue, [CallerMemberName] string propertyName = "")
-        {
-            if (!EqualityComparer<T>.Default.Equals(oldValue, newValue))
-            {
-                oldValue = newValue;
-                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-            }
-        }
-
         private MusicItem _music;
-
         public MusicItem Music
         {
             get => _music;

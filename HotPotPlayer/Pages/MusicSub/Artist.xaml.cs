@@ -31,22 +31,11 @@ namespace HotPotPlayer.Pages.MusicSub
     /// <summary>
     /// An empty page that can be used on its own or navigated to within a Frame.
     /// </summary>
-    public sealed partial class Artist : Page, INotifyPropertyChanged
+    public sealed partial class Artist : PageBase
     {
         public Artist()
         {
             this.InitializeComponent();
-        }
-
-        public event PropertyChangedEventHandler PropertyChanged;
-
-        public void Set<T>(ref T oldValue, T newValue, [CallerMemberName] string propertyName = "")
-        {
-            if (!EqualityComparer<T>.Default.Equals(oldValue, newValue))
-            {
-                oldValue = newValue;
-                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-            }
         }
 
         public ObservableCollection<AlbumItem> LocalAlbumMusic { get; set; } = new();
@@ -65,8 +54,6 @@ namespace HotPotPlayer.Pages.MusicSub
             get => _selectedAlbum;
             set => Set(ref _selectedAlbum, value);
         }
-
-        static MusicPlayer MusicPlayer => ((App)Application.Current).MusicPlayer;
 
         protected override async void OnNavigatedTo(NavigationEventArgs e)
         {

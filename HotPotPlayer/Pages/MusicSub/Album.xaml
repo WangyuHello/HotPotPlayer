@@ -1,8 +1,9 @@
-﻿<Page
+﻿<base:PageBase
     x:Class="HotPotPlayer.Pages.MusicSub.Album"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:local="using:HotPotPlayer.Pages.MusicSub"
+    xmlns:base="using:HotPotPlayer"
     xmlns:pages="using:HotPotPlayer.Pages"
     xmlns:tplt="using:HotPotPlayer.Templates"
     xmlns:models="using:HotPotPlayer.Models"
@@ -59,4 +60,4 @@
         </ListView>
 
     </Grid>
-</Page>
+</base:PageBase>
