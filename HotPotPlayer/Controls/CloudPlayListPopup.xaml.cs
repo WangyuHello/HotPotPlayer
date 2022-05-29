@@ -28,6 +28,7 @@ namespace HotPotPlayer.Controls
         public CloudPlayListPopup()
         {
             this.InitializeComponent();
+
         }
 
         public PlayListItem PlayList
@@ -57,6 +58,13 @@ namespace HotPotPlayer.Controls
         {
             var music = e.ClickedItem as MusicItem;
             MusicPlayer.PlayNext(music, PlayList);
+        }
+
+        bool coverOpened = false;
+        private void Cover_Tapped(object sender, TappedRoutedEventArgs e)
+        {
+            CoverHeight.Height = new GridLength(coverOpened ? 200 : 320);
+            coverOpened = !coverOpened;
         }
     }
 }

@@ -18,12 +18,14 @@
 
         <Grid>
             <Grid.RowDefinitions>
-                <RowDefinition Height="Auto" />
+                <RowDefinition x:Name="CoverHeight" Height="200" />
                 <RowDefinition Height="Auto" />
                 <RowDefinition Height="*" />
             </Grid.RowDefinitions>
-            
-            <cont2:ImageEx2 VerticalAlignment="Top" Source="{x:Bind PlayList.Cover, Mode=OneWay}" Style="{StaticResource LocalMusicImageStyle}" Width="320" Height="200" Stretch="UniformToFill"/>
+
+            <cont2:ImageEx2 x:Name="Cover" VerticalAlignment="Center" Source="{x:Bind PlayList.Cover, Mode=OneWay}" Style="{StaticResource LocalMusicImageStyle}" Width="320" Height="320" Stretch="UniformToFill" Tapped="Cover_Tapped">
+                
+            </cont2:ImageEx2>
             <Button Margin="0,0,32,-20" Width="40" Height="40" CornerRadius="20" VerticalAlignment="Bottom" HorizontalAlignment="Right" Style="{StaticResource AlbumPlayButton}" Click="PlayListPlay">
                 <SymbolIcon Symbol="Play" />
             </Button>
