@@ -44,6 +44,7 @@
     <None Remove="Assets\Font\MiSans-Thin.ttf" />
     <None Remove="Assets\nico.png" />
     <None Remove="Controls\AlbumPopup.xaml" />
+    <None Remove="Controls\CloudPlayListPopup.xaml" />
     <None Remove="Controls\CommentFloorDialog.xaml" />
     <None Remove="Controls\CurrentPlayListBar.xaml" />
     <None Remove="Controls\ImageEx2.xaml" />
@@ -112,6 +113,10 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Page Update="Controls\CloudPlayListPopup.xaml">
+      <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Update="Pages\CloudMusicSub\Artist.xaml">
       <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
     </Page>

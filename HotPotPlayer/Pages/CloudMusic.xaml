@@ -116,7 +116,7 @@
         </Grid>
 
         <Grid x:Name="PlayListPopupOverlay" Grid.RowSpan="4" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Visibility="Collapsed" Background="#00ffffff" Tapped="PlayListPopupOverlay_Tapped">
-            <cont3:PlayListPopup x:Name="PlayListPopupTarget" Margin="0,-60,0,0" PlayList="{x:Bind SelectedPlayList, Mode=OneWay}" Tapped="{x:Bind helper:AlbumHelper.SuppressTap}" ui:VisualExtensions.NormalizedCenterPoint="0.5">
+            <cont3:CloudPlayListPopup x:Name="PlayListPopupTarget" Margin="0,-60,0,0" PlayList="{x:Bind SelectedPlayList, Mode=OneWay}" Tapped="{x:Bind helper:AlbumHelper.SuppressTap}" ui:VisualExtensions.NormalizedCenterPoint="0.5">
                 <animations:Implicit.HideAnimations>
                     <animations:OpacityAnimation Duration="0:0:0.45" From="1" To="0" />
                     <animations:ScaleAnimation Duration="0:0:0.45" From="1,1,1" To="0.9,0.9,1" />
@@ -129,7 +129,7 @@
                     <animations:ScaleAnimation Duration="0:0:0.45" From="0.9,0.9,1" To="1,1,1" />
                     <animations:OffsetAnimation Duration="0:0:0.45" From="0,-80" To="0,-60" />
                 </animations:Implicit.ShowAnimations>
-            </cont3:PlayListPopup>
+            </cont3:CloudPlayListPopup>
         </Grid>
     </Grid>
 </base:PageBase>
