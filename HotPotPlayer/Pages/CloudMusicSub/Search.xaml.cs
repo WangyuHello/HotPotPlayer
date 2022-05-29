@@ -1,4 +1,5 @@
 ﻿using HotPotPlayer.Models;
+using HotPotPlayer.Models.CloudMusic;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Controls.Primitives;
@@ -29,18 +30,31 @@ namespace HotPotPlayer.Pages.CloudMusicSub
             this.InitializeComponent();
         }
 
+        private List<CloudSearchHotItem> _searchHotItems;
+        public List<CloudSearchHotItem> SearchHotItems
+        {
+            get => _searchHotItems;
+            set => Set(ref _searchHotItems, value);
+        }
+
+        protected override async void OnNavigatedTo(NavigationEventArgs e)
+        {
+            base.OnNavigatedTo(e);
+            SearchHotItems = await NetEaseMusicService.SearchHotDetailAsync();
+        }
+
         private async void Search_TextChanged(AutoSuggestBox sender, AutoSuggestBoxTextChangedEventArgs args)
         {
-            if (args.Reason == AutoSuggestionBoxTextChangeReason.UserInput)
+            if (args.Reason == AutoSuggestionBoxTextChangeReason.UserInput || args.Reason == AutoSuggestionBoxTextChangeReason.ProgrammaticChange)
             {
-                var songs = await NetEaseMusicService.SearchSong(sender.Text);
+                var songs = await NetEaseMusicService.SearchSongAsync(sender.Text);
                 sender.ItemsSource = songs;
             }
         }
 
         private async void Search_QuerySubmitted(AutoSuggestBox sender, AutoSuggestBoxQuerySubmittedEventArgs args)
         {
-            var songs = await NetEaseMusicService.SearchSong(sender.Text);
+            var songs = await NetEaseMusicService.SearchSongAsync(sender.Text);
             sender.ItemsSource = songs;
         }
 
@@ -48,6 +62,12 @@ namespace HotPotPlayer.Pages.CloudMusicSub
         {
             var music = args.SelectedItem as MusicItem;
             MusicPlayer.PlayNext(music);
+        }
+
+        private void SearchHotGridView_ItemClick(object sender, ItemClickEventArgs e)
+        {
+            var hot = e.ClickedItem as CloudSearchHotItem;
+            SearchBox.Text = hot.SearchWord;
         }
     }
 }

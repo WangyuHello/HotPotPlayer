@@ -517,7 +517,7 @@ namespace HotPotPlayer.Services
             }
         }
 
-        public async Task<List<CloudMusicItem>> SearchSong(string keyword)
+        public async Task<List<CloudMusicItem>> SearchSongAsync(string keyword)
         {
             if (string.IsNullOrEmpty(keyword))
             {
@@ -537,6 +537,11 @@ namespace HotPotPlayer.Services
             return null;
         }
 
-
+        public async Task<List<CloudSearchHotItem>> SearchHotDetailAsync()
+        {
+            var json = await Api.RequestAsync(CloudMusicApiProviders.SearchHotDetail);
+            var hots = json["data"].ToArray().Select(s => s.ToSearchHotItem()).ToList();
+            return hots;
+        }
     }
 }

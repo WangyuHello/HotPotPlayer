@@ -147,5 +147,11 @@ namespace HotPotPlayer.Extensions
             var t = JsonConvert.DeserializeObject<LevelItem>(j.ToString());
             return t;
         }
+
+        public static CloudSearchHotItem ToSearchHotItem(this JToken j)
+        {
+            var t = JsonConvert.DeserializeObject<CloudSearchHotItem>(j.ToString());
+            return t;
+        }
     }
 }

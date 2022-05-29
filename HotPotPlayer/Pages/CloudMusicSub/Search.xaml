@@ -14,7 +14,10 @@
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
 
-        <AutoSuggestBox x:Name="SearchBox" Margin="120,64" MinWidth="500" QueryIcon="Find" PlaceholderText="搜索" VerticalAlignment="Center" HorizontalAlignment="Center" CornerRadius="16" TextMemberPath="Title" ItemTemplate="{StaticResource SearchMusicListTemplate}" TextChanged="Search_TextChanged" QuerySubmitted="Search_QuerySubmitted" SuggestionChosen="Search_SuggestionChosen"/>
+        <AutoSuggestBox x:Name="SearchBox" Margin="120,64,120,40" MinWidth="500" QueryIcon="Find" PlaceholderText="搜索" VerticalAlignment="Center" HorizontalAlignment="Center" CornerRadius="16" TextMemberPath="Title" ItemTemplate="{StaticResource SearchMusicListTemplate}" TextChanged="Search_TextChanged" QuerySubmitted="Search_QuerySubmitted" SuggestionChosen="Search_SuggestionChosen"/>
 
+        <GridView Grid.Row="1" Margin="120,0" Style="{StaticResource CardGridViewStyle}" ItemTemplate="{StaticResource CloudSearchHotTemplate}" ItemsSource="{x:Bind SearchHotItems, Mode=OneWay}" ItemClick="SearchHotGridView_ItemClick">
+            
+        </GridView>
     </Grid>
 </base:PageBase>

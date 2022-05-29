@@ -319,6 +319,7 @@
     </DataTemplate>
 
     <conv:IndexConverter x:Key="IndexConverter" />
+    <conv:GridIndexConverter x:Key="GridIndexConverter" />
 
     <DataTemplate x:Key="CloudMusicCardViewTemplate" x:DataType="models:MusicItem">
         <Grid Padding="8" Background="White" CornerRadius="4" ui:VisualExtensions.NormalizedCenterPoint="0.5" Loaded="Root_Loaded2">
@@ -337,7 +338,7 @@
             <TextBlock Grid.Column="3" FontSize="14" TextTrimming="CharacterEllipsis" VerticalAlignment="Center" Text="{x:Bind Title}" FontFamily="{ThemeResource MiSansMedium}" ToolTipService.ToolTip="{x:Bind Title}"/>
             <TextBlock Grid.Column="4" Text="{x:Bind GetArtists()}" FontSize="12" TextTrimming="CharacterEllipsis" FontFamily="{ThemeResource MiSansRegular}" Foreground="Gray" VerticalAlignment="Center" ToolTipService.ToolTip="{x:Bind Album}"/>
             <TextBlock Grid.Column="5" Text="{x:Bind Duration.ToString('mm\\\\:ss')}" FontSize="12" FontFamily="{ThemeResource MiSansRegular}" Foreground="Gray" VerticalAlignment="Center"/>
-            <ToggleButton x:Name="B" Grid.Column="6" Style="{StaticResource LikeButton}" IsChecked="{x:Bind IsLike, Mode=OneWay}" Margin="16,0,8,0" VerticalAlignment="Center" Click="{x:Bind helper:LikeHelper.Like}" >
+            <ToggleButton x:Name="B" Grid.Column="6" Style="{StaticResource LikeButton}" IsChecked="{x:Bind IsLike}" Margin="16,0,8,0" VerticalAlignment="Center" Click="{x:Bind helper:LikeHelper.Like}" >
                 <FontIcon FontFamily="Segoe Fluent Icons" Glyph="{Binding ElementName=B, Path=IsChecked, Converter={StaticResource LikeGlyphConverter}}" FontWeight="Bold" FontSize="16" VerticalAlignment="Center"/>
             </ToggleButton>
         </Grid>
@@ -385,5 +386,20 @@
                 ToolTipService.ToolTip="{x:Bind Title}" 
                 />
         </StackPanel>
+    </DataTemplate>
+
+    <DataTemplate x:Key="CloudSearchHotTemplate" x:DataType="modelsC:CloudSearchHotItem">
+        <Grid
+            Width="172"
+            Background="White"
+            Padding="8,8,8,8"
+            x:Name="CloudSearchHotTemplateConnectedElement"
+            ui:VisualExtensions.NormalizedCenterPoint="0.5"
+            Loaded="Root_Loaded"
+            CornerRadius="4"
+            >
+            <TextBlock Text="{Binding RelativeSource={RelativeSource Mode=TemplatedParent}, Converter={StaticResource GridIndexConverter}}" FontFamily="{ThemeResource MiSansRegular}" />
+            <TextBlock Margin="20,0,0,0" Text="{x:Bind SearchWord}" FontFamily="{ThemeResource MiSansRegular}" TextTrimming="CharacterEllipsis"/>
+        </Grid>
     </DataTemplate>
 </ResourceDictionary>
