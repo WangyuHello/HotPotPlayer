@@ -26,7 +26,7 @@ using Windows.Foundation.Collections;
 
 namespace HotPotPlayer.Controls
 {
-    public sealed partial class PlayBar : UserControl, INotifyPropertyChanged
+    public sealed partial class PlayBar : UserControlBase
     {
         public PlayBar()
         {
@@ -34,19 +34,6 @@ namespace HotPotPlayer.Controls
             PlaySlider.AddHandler(PointerReleasedEvent, new PointerEventHandler(PlaySlider_OnPointerReleased), true);
             PlaySlider.AddHandler(PointerPressedEvent, new PointerEventHandler(PlaySlider_OnPointerPressed), true);
         }
-
-        public event PropertyChangedEventHandler PropertyChanged;
-
-        public void Set<T>(ref T oldValue, T newValue, [CallerMemberName] string propertyName = "")
-        {
-            if (!EqualityComparer<T>.Default.Equals(oldValue, newValue))
-            {
-                oldValue = newValue;
-                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-            }
-        }
-
-        MusicPlayer MusicPlayer => ((App)Application.Current).MusicPlayer;
 
         string GetSubtitle(MusicItem music)
         {

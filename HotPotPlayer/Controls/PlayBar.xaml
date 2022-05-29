@@ -1,8 +1,9 @@
-﻿<UserControl
+﻿<base:UserControlBase
     x:Class="HotPotPlayer.Controls.PlayBar"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:local="using:HotPotPlayer.Controls"
+    xmlns:base="using:HotPotPlayer"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:controls="using:CommunityToolkit.WinUI.UI.Controls"
@@ -13,7 +14,7 @@
     xmlns:model="using:HotPotPlayer.Models"
     mc:Ignorable="d">
 
-    <UserControl.Resources>
+    <base:UserControlBase.Resources>
         <convs:SliderThumbConverter x:Key="SliderThumbConverter" TotalTime="{x:Bind MusicPlayer.CurrentPlayingDuration, Mode=OneWay}"/>
         <convs:SliderVolumeConverter x:Key="SliderVolumeConverter" />
         <convs:ColorConverter x:Key="ColorConverter" />
@@ -34,7 +35,7 @@
         </Style>
 
 
-    </UserControl.Resources>
+    </base:UserControlBase.Resources>
 
     <Grid Background="{ThemeResource PlayBarBackground}" CornerRadius="8" Height="80" >
         <Grid.ColumnDefinitions>
@@ -109,4 +110,4 @@
             </Button>
         </StackPanel>
     </Grid>
-</UserControl>
+</base:UserControlBase>

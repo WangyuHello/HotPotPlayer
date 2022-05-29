@@ -20,14 +20,12 @@ using Windows.Foundation.Collections;
 
 namespace HotPotPlayer.Controls
 {
-    public sealed partial class CurrentPlayListBar : UserControl
+    public sealed partial class CurrentPlayListBar : UserControlBase
     {
         public CurrentPlayListBar()
         {
             this.InitializeComponent();
         }
-
-        MusicPlayer MusicPlayer => ((App)Application.Current).MusicPlayer;
 
         private void RootTapped(object sender, TappedRoutedEventArgs e)
         {

@@ -1,7 +1,8 @@
-﻿<UserControl
+﻿<base:UserControlBase
     x:Class="HotPotPlayer.Controls.CurrentPlayListBar"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:base="using:HotPotPlayer"
     xmlns:local="using:HotPotPlayer.Controls"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
@@ -9,7 +10,7 @@
     xmlns:helper="using:HotPotPlayer.Pages.Helper"
     mc:Ignorable="d">
 
-    <UserControl.Resources>
+    <base:UserControlBase.Resources>
         <DataTemplate x:Key="PlayListBarListTemplate" x:DataType="model:MusicItem">
             <Grid RightTapped="{x:Bind helper:ListHelper.RightTapMusicInCurrentPlayListClick}">
                 <Grid.ColumnDefinitions>
@@ -59,7 +60,7 @@
         </Style>
         
 
-    </UserControl.Resources>
+    </base:UserControlBase.Resources>
 
     <Grid x:Name="Root" Tapped="RootTapped" Background="#00000000" >
         <Grid Background="{StaticResource PlayListBarBackground}" Padding="0,36,0,0" Width="400" HorizontalAlignment="Right" Tapped="InnerTapped">
@@ -92,4 +93,4 @@
         </Grid>
     </Grid>
 
-</UserControl>
+</base:UserControlBase>

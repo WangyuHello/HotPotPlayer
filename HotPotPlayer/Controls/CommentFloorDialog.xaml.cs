@@ -26,24 +26,13 @@ namespace HotPotPlayer.Controls
     /// <summary>
     /// An empty page that can be used on its own or navigated to within a Frame.
     /// </summary>
-    public sealed partial class CommentFloorDialog : Page, INotifyPropertyChanged
+    public sealed partial class CommentFloorDialog : PageBase
     {
         public CommentFloorDialog(ObservableCollection<CloudCommentItem> comments, CloudCommentItem current)
         {
             Current = current;
             Comments = comments;
             this.InitializeComponent();
-        }
-
-        public event PropertyChangedEventHandler PropertyChanged;
-
-        public void Set<T>(ref T oldValue, T newValue, [CallerMemberName] string propertyName = "")
-        {
-            if (!EqualityComparer<T>.Default.Equals(oldValue, newValue))
-            {
-                oldValue = newValue;
-                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-            }
         }
 
         CloudCommentItem Current;

@@ -30,23 +30,12 @@ using Windows.System;
 
 namespace HotPotPlayer.Controls
 {
-    public sealed partial class PlayScreen : UserControl, INotifyPropertyChanged
+    public sealed partial class PlayScreen : UserControlBase
     {
         public PlayScreen()
         {
             this.InitializeComponent();
             MusicPlayer.PropertyChanged += MusicPlayer_PropertyChanged;
-        }
-
-        public event PropertyChangedEventHandler PropertyChanged;
-
-        public void Set<T>(ref T oldValue, T newValue, [CallerMemberName] string propertyName = "")
-        {
-            if (!EqualityComparer<T>.Default.Equals(oldValue, newValue))
-            {
-                oldValue = newValue;
-                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-            }
         }
 
         bool _pendingChange = true;
@@ -61,8 +50,8 @@ namespace HotPotPlayer.Controls
                     {
                         Comments ??= new ObservableCollection<CloudCommentItem>();
                         Comments.Clear();
-                        var l = await CloudMusicService.GetSongCommentAsync(c.SId);
-                        //await CloudMusicService.GetSimilarUserAsync(c.SId);
+                        var l = await NetEaseMusicService.GetSongCommentAsync(c.SId);
+                        //await NetEaseMusicService.GetSimilarUserAsync(c.SId);
                         foreach (var item in l)
                         {
                             Comments.Add(item);
@@ -70,12 +59,12 @@ namespace HotPotPlayer.Controls
 
                         SimiSongs ??= new ObservableCollection<CloudMusicItem>();
                         SimiSongs.Clear();
-                        var ss = await CloudMusicService.GetSimilarSongAsync(c.SId);
+                        var ss = await NetEaseMusicService.GetSimilarSongAsync(c.SId);
                         foreach (var item in ss)
                         {
                             SimiSongs.Add(item);
                         }
-                        Lyric = await CloudMusicService.GetLyric(c.SId);
+                        Lyric = await NetEaseMusicService.GetLyric(c.SId);
                         _pendingChange = false;
                     }
                 }
@@ -84,19 +73,19 @@ namespace HotPotPlayer.Controls
                     if (m.IsPlayScreenVisible)
                     {
                         Comments.Clear();
-                        var l = await CloudMusicService.GetSongCommentAsync(c.SId);
-                        //await CloudMusicService.GetSimilarUserAsync(c.SId);
+                        var l = await NetEaseMusicService.GetSongCommentAsync(c.SId);
+                        //await NetEaseMusicService.GetSimilarUserAsync(c.SId);
                         foreach (var item in l)
                         {
                             Comments.Add(item);
                         }
                         SimiSongs.Clear();
-                        var ss = await CloudMusicService.GetSimilarSongAsync(c.SId);
+                        var ss = await NetEaseMusicService.GetSimilarSongAsync(c.SId);
                         foreach (var item in ss)
                         {
                             SimiSongs.Add(item);
                         }
-                        Lyric = await CloudMusicService.GetLyric(c.SId);
+                        Lyric = await NetEaseMusicService.GetLyric(c.SId);
                     }
                     else
                     {
@@ -126,10 +115,6 @@ namespace HotPotPlayer.Controls
             get => _lyric;
             set => Set(ref _lyric, value);
         }
-
-        NetEaseMusicService CloudMusicService => ((App)Application.Current).NetEaseMusicService;
-        MusicPlayer MusicPlayer => ((App)Application.Current).MusicPlayer;
-        App App => (App)Application.Current;
 
         private void PlayScreen_PointerReleased(object sender, PointerRoutedEventArgs e)
         {
@@ -181,7 +166,7 @@ namespace HotPotPlayer.Controls
         {
             if (m is CloudMusicItem c)
             {
-                return CloudMusicService.GetSongLiked(c);
+                return NetEaseMusicService.GetSongLiked(c);
             }
             return false;
         }
@@ -225,8 +210,8 @@ namespace HotPotPlayer.Controls
         {
             if (MusicPlayer.CurrentPlaying is CloudMusicItem c)
             {
-                var like = CloudMusicService.GetSongLiked(c);
-                CloudMusicService.Like(c, !like);
+                var like = NetEaseMusicService.GetSongLiked(c);
+                NetEaseMusicService.Like(c, !like);
             }
         }
     }

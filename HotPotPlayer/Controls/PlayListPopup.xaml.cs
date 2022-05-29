@@ -23,22 +23,11 @@ using Windows.Foundation.Collections;
 
 namespace HotPotPlayer.Controls
 {
-    public sealed partial class PlayListPopup : UserControl, INotifyPropertyChanged
+    public sealed partial class PlayListPopup : UserControlBase
     {
         public PlayListPopup()
         {
             this.InitializeComponent();
-        }
-
-        public event PropertyChangedEventHandler PropertyChanged;
-
-        public void Set<T>(ref T oldValue, T newValue, [CallerMemberName] string propertyName = "")
-        {
-            if (!EqualityComparer<T>.Default.Equals(oldValue, newValue))
-            {
-                oldValue = newValue;
-                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-            }
         }
 
         public PlayListItem PlayList
@@ -59,8 +48,6 @@ namespace HotPotPlayer.Controls
             }
             return string.Empty;
         }
-
-        static MusicPlayer MusicPlayer => ((App)Application.Current).MusicPlayer;
         private void PlayListPlay(object sender, RoutedEventArgs e)
         {
             MusicPlayer.PlayNext(PlayList);

@@ -23,25 +23,12 @@ using Windows.Foundation.Collections;
 
 namespace HotPotPlayer.Controls
 {
-    public sealed partial class AlbumPopup : UserControl, INotifyPropertyChanged
+    public sealed partial class AlbumPopup : UserControlBase
     {
         public AlbumPopup()
         {
             this.InitializeComponent();
         }
-
-        public event PropertyChangedEventHandler PropertyChanged;
-
-        public void Set<T>(ref T oldValue, T newValue, [CallerMemberName] string propertyName = "")
-        {
-            if (!EqualityComparer<T>.Default.Equals(oldValue, newValue))
-            {
-                oldValue = newValue;
-                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-            }
-        }
-
-        static MusicPlayer MusicPlayer => ((App)Application.Current).MusicPlayer;
 
         public AlbumItem Album
         {
