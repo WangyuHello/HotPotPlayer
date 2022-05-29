@@ -205,14 +205,5 @@ namespace HotPotPlayer.Controls
             var music = e.ClickedItem as CloudMusicItem;
             MusicPlayer.PlayNext(music);
         }
-
-        private void Like_Click(object sender, RoutedEventArgs e)
-        {
-            if (MusicPlayer.CurrentPlaying is CloudMusicItem c)
-            {
-                var like = NetEaseMusicService.GetSongLiked(c);
-                NetEaseMusicService.Like(c, !like);
-            }
-        }
     }
 }

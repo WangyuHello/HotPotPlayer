@@ -13,6 +13,10 @@
     PointerReleased="PlayScreen_PointerReleased"
     >
 
+    <base:UserControlBase.Resources>
+        <helper:LikeGlyphConverter x:Key="LikeGlyphConverter" />
+    </base:UserControlBase.Resources>
+
     <Grid x:Name="Root" Padding="64,0" Background="{StaticResource PlayScreenBackground}" x:Load="{x:Bind MusicPlayer.IsPlayScreenVisible, Mode=OneWay}">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
@@ -78,8 +82,8 @@
             <Button Margin="0,0,40,0" Style="{StaticResource FullTransparentButton}" >
                 <FontIcon FontFamily="Segoe Fluent Icons" Glyph="&#xE134;" />
             </Button>
-            <ToggleButton x:Name="Like" Margin="0,0,40,0" Style="{StaticResource LikeButton2}" IsChecked="{x:Bind GetLike(MusicPlayer.CurrentPlaying), Mode=OneWay}" Click="Like_Click">
-                <FontIcon FontFamily="Segoe Fluent Icons" Glyph="{x:Bind helper:LikeHelper.GetLikeButtonGlyph(MusicPlayer.CurrentPlaying), Mode=OneWay}" />
+            <ToggleButton x:Name="Like" Margin="0,0,40,0" Style="{StaticResource LikeButton2}" IsChecked="{x:Bind MusicPlayer.CurrentPlaying.IsLike, Mode=OneWay}" Click="{x:Bind helper:LikeHelper.PlayScreenLike}">
+                <FontIcon FontFamily="Segoe Fluent Icons" Glyph="{Binding ElementName=B, Path=IsChecked, Converter={StaticResource LikeGlyphConverter}}" />
             </ToggleButton>
             <Button Style="{StaticResource FullTransparentButton}" Click="{x:Bind helper:PlayListHelper.AddToPlayListClick}" Tag="{x:Bind MusicPlayer.CurrentPlaying, Mode=OneWay}">
                 <FontIcon FontFamily="Segoe Fluent Icons" Glyph="&#xE109;" />

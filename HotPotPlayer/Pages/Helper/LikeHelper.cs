@@ -22,25 +22,16 @@ namespace HotPotPlayer.Pages.Helper
             var s = (FrameworkElement)sender;
             var m = s.DataContext as CloudMusicItem;
             var isLike = NetEaseMusicService.GetSongLiked(m);
-            NetEaseMusicService.Like(m, !isLike);
+            //NetEaseMusicService.Like(m, !isLike);
         }
 
-        public static SolidColorBrush GetLikeButtonForeground(MusicItem m)
+        public static void PlayScreenLike()
         {
-            if (m is CloudMusicItem c)
+            if (MusicPlayer.CurrentPlaying is CloudMusicItem c)
             {
-                return NetEaseMusicService.GetSongLiked(c) ? new SolidColorBrush(Colors.Red) : new SolidColorBrush(Colors.Black);
+                var like = NetEaseMusicService.GetSongLiked(c);
+                //NetEaseMusicService.Like(c, !like);
             }
-            return new SolidColorBrush(Colors.Black);
-        }
-
-        public static string GetLikeButtonGlyph(MusicItem m)
-        {
-            if (m is CloudMusicItem c)
-            {
-                return NetEaseMusicService.GetSongLiked(c) ? "\uEB52" : "\uEB51";
-            }
-            return "\uEB51";
         }
     }
 
@@ -48,7 +39,8 @@ namespace HotPotPlayer.Pages.Helper
     {
         public object Convert(object value, Type targetType, object parameter, string language)
         {
-            return LikeHelper.GetLikeButtonGlyph((MusicItem)value);
+            var chk = (bool)value;
+            return chk ? "\uEB52" : "\uEB51";
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, string language)

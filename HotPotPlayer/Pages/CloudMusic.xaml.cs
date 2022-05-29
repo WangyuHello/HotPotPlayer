@@ -150,25 +150,9 @@ namespace HotPotPlayer.Pages
             NavigateTo("CloudMusicSub.Artist", ar);
         }
 
-        private async void Search_TextChanged(AutoSuggestBox sender, AutoSuggestBoxTextChangedEventArgs args)
+        private void Search_Tapped(object sender, TappedRoutedEventArgs e)
         {
-            if (args.Reason == AutoSuggestionBoxTextChangeReason.UserInput)
-            {
-                var songs = await NetEaseMusicService.SearchSong(sender.Text);
-                sender.ItemsSource = songs;
-            }
-        }
-
-        private async void Search_QuerySubmitted(AutoSuggestBox sender, AutoSuggestBoxQuerySubmittedEventArgs args)
-        {
-            var songs = await NetEaseMusicService.SearchSong(sender.Text);
-            sender.ItemsSource = songs;
-        }
-
-        private void Search_SuggestionChosen(AutoSuggestBox sender, AutoSuggestBoxSuggestionChosenEventArgs args)
-        {
-            var music = args.SelectedItem as MusicItem;
-            MusicPlayer.PlayNext(music);
+            NavigateTo("CloudMusicSub.Search", null, new SlideNavigationTransitionInfo());
         }
     }
 }

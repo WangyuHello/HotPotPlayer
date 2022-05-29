@@ -62,6 +62,7 @@
     <None Remove="Pages\CloudMusicSub\Album.xaml" />
     <None Remove="Pages\CloudMusicSub\Artist.xaml" />
     <None Remove="Pages\CloudMusicSub\Login.xaml" />
+    <None Remove="Pages\CloudMusicSub\Search.xaml" />
     <None Remove="Pages\CloudMusicSub\Self.xaml" />
     <None Remove="Pages\Music.xaml" />
     <None Remove="Pages\MusicSub\Info.xaml" />
@@ -123,6 +124,12 @@
     <ProjectReference Include="..\HotPotPlayer.Common\HotPotPlayer.Common.csproj" />
     <ProjectReference Include="..\HotPotPlayer.Video\HotPotPlayer.Video.csproj" />
     <ProjectReference Include="..\libvlcsharp\src\LibVLCSharp\LibVLCSharp.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Page Update="Pages\CloudMusicSub\Search.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
   </ItemGroup>
 
   <ItemGroup>

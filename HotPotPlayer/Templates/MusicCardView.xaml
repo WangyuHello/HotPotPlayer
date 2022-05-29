@@ -337,8 +337,8 @@
             <TextBlock Grid.Column="3" FontSize="14" TextTrimming="CharacterEllipsis" VerticalAlignment="Center" Text="{x:Bind Title}" FontFamily="{ThemeResource MiSansMedium}" ToolTipService.ToolTip="{x:Bind Title}"/>
             <TextBlock Grid.Column="4" Text="{x:Bind GetArtists()}" FontSize="12" TextTrimming="CharacterEllipsis" FontFamily="{ThemeResource MiSansRegular}" Foreground="Gray" VerticalAlignment="Center" ToolTipService.ToolTip="{x:Bind Album}"/>
             <TextBlock Grid.Column="5" Text="{x:Bind Duration.ToString('mm\\\\:ss')}" FontSize="12" FontFamily="{ThemeResource MiSansRegular}" Foreground="Gray" VerticalAlignment="Center"/>
-            <ToggleButton x:Name="B" Grid.Column="6" Style="{StaticResource LikeButton}" Margin="16,0,8,0" VerticalAlignment="Center" Click="{x:Bind helper:LikeHelper.Like}" >
-                <FontIcon FontFamily="Segoe Fluent Icons" Glyph="{x:Bind Converter={StaticResource LikeGlyphConverter}}" FontWeight="Bold" FontSize="16" VerticalAlignment="Center"/>
+            <ToggleButton x:Name="B" Grid.Column="6" Style="{StaticResource LikeButton}" IsChecked="{x:Bind IsLike, Mode=OneWay}" Margin="16,0,8,0" VerticalAlignment="Center" Click="{x:Bind helper:LikeHelper.Like}" >
+                <FontIcon FontFamily="Segoe Fluent Icons" Glyph="{Binding ElementName=B, Path=IsChecked, Converter={StaticResource LikeGlyphConverter}}" FontWeight="Bold" FontSize="16" VerticalAlignment="Center"/>
             </ToggleButton>
         </Grid>
     </DataTemplate>

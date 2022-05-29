@@ -29,6 +29,7 @@ namespace HotPotPlayer.Models
         public DateTime LastWriteTime { get; set; }
         public string[] AlbumArtists { get; set; }
         public int Disc { get; set; }
+        public bool IsLike { get; set; }
 
         public AlbumItem AlbumRef { get; set; }
 
