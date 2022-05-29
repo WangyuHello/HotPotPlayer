@@ -4,7 +4,14 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:local="using:HotPotPlayer.Controls"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:cont="using:HotPotPlayer.UI.Controls"
+    xmlns:ani="using:CommunityToolkit.WinUI.UI.Animations"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:ui="using:CommunityToolkit.WinUI.UI"
+    xmlns:interactivity="using:Microsoft.Xaml.Interactivity"
+    xmlns:interactions="using:Microsoft.Xaml.Interactions.Core"
+    xmlns:behaviors="using:CommunityToolkit.WinUI.UI.Behaviors"
+    xmlns:core="using:Microsoft.Xaml.Interactions.Core"
     mc:Ignorable="d">
 
     <UserControl.Resources>
@@ -39,8 +46,19 @@
         <Button Grid.Row="5" Margin="0,4" x:Name="CloudMusic" Style="{StaticResource MainNavButton}" Click="NavigateClick" Tag="CloudMusic" IsEnabled="{x:Bind GetEnableState('CloudMusic', SelectedPageName), Mode=OneWay}">
             <SymbolIcon Symbol="World" />
         </Button>
-        <Button x:Name="ShowPlayBar" Grid.Row="6" Style="{StaticResource MainNavButton}" VerticalAlignment="Bottom" Visibility="{x:Bind GetShowPlayBarVisible(MusicPlayer.IsPlayBarVisible, MusicPlayer.CurrentPlaying), Mode=OneWay}" Click="{x:Bind MusicPlayer.ShowPlayBar}">
-            <SymbolIcon Symbol="Tag" />
+        <Button x:Name="ShowPlayBar" Grid.Row="6" Style="{StaticResource MainNavButton}" VerticalAlignment="Bottom" Visibility="{x:Bind GetShowPlayBarVisible(MusicPlayer.IsPlayBarVisible, MusicPlayer.CurrentPlaying), Mode=OneWay}" x:Load="{x:Bind GetShowPlayBarLoad(MusicPlayer.IsPlayBarVisible, MusicPlayer.CurrentPlaying), Mode=OneWay}" Click="{x:Bind MusicPlayer.ShowPlayBar}" ui:VisualExtensions.NormalizedCenterPoint="0.5" Loaded="ShowPlayBar_Loaded">
+            <cont:ImageEx2 Style="{StaticResource LocalMusicImageStyle}" Width="32" Height="32" CornerRadius="16" Source="{x:Bind MusicPlayer.CurrentPlaying.Cover, Mode=OneWay}"/>
+
+            <ani:Explicit.Animations>
+                <ani:AnimationSet x:Name="RotateAnimation">
+                    <ani:RotationInDegreesAnimation From="0"
+                                        To="360"
+                                        Duration="0:0:5"
+                                        EasingType="Linear"
+                                        EasingMode="{x:Null}"
+                                        Repeat="Forever"/>
+                </ani:AnimationSet>
+            </ani:Explicit.Animations>
         </Button>
         <Button x:Name="Setting" Grid.Row="7" Style="{StaticResource MainNavButton}" Click="NavigateClick" Tag="Setting" IsEnabled="{x:Bind GetEnableState('Setting', SelectedPageName), Mode=OneWay}">
             <SymbolIcon Symbol="Setting" />

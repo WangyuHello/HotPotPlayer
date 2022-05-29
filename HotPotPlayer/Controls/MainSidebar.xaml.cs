@@ -11,6 +11,7 @@ using Microsoft.UI.Xaml.Media.Imaging;
 using Microsoft.UI.Xaml.Navigation;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
@@ -27,6 +28,22 @@ namespace HotPotPlayer.Controls
         public MainSidebar()
         {
             this.InitializeComponent();
+            MusicPlayer.PropertyChanged += MusicPlayer_PropertyChanged;
+        }
+
+        private void MusicPlayer_PropertyChanged(object sender, PropertyChangedEventArgs e)
+        {
+            if (e.PropertyName == "IsPlaying" && ShowPlayBar != null && ShowPlayBar.IsLoaded)
+            {
+                if (MusicPlayer.IsPlaying)
+                {
+                    RotateAnimation.Start();
+                }
+                else
+                {
+                    RotateAnimation.Stop();
+                }
+            }
         }
 
         public bool IsBackEnable
@@ -133,6 +150,20 @@ namespace HotPotPlayer.Controls
                 return Visibility.Collapsed;
             }
             return playbarVisible ? Visibility.Collapsed : Visibility.Visible;
+        }
+
+        public bool GetShowPlayBarLoad(bool playbarVisible, MusicItem currentPlaying)
+        {
+            if (currentPlaying == null)
+            {
+                return false;
+            }
+            return playbarVisible ? false : true;
+        }
+
+        private void ShowPlayBar_Loaded(object sender, RoutedEventArgs e)
+        {
+            RotateAnimation.Start();
         }
     }
 }
