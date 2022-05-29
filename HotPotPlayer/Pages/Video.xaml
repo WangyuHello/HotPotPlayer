@@ -1,7 +1,8 @@
-﻿<Page
+﻿<base:PageBase
     x:Class="HotPotPlayer.Pages.Video"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:base="using:HotPotPlayer"
     xmlns:local="using:HotPotPlayer.Pages"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:models="using:HotPotPlayer.Models"
@@ -16,10 +17,10 @@
     xmlns:collection="using:CommunityToolkit.Common.Collections"
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
 
-    <Page.Resources>
+    <base:PageBase.Resources>
         <CollectionViewSource x:Name="LocalSingleVideosGroups" Source="{x:Bind VideoService.LocalVideoGroup}" IsSourceGrouped="True" />
         <CollectionViewSource x:Name="LocalSeriesGroups" Source="{x:Bind VideoService.LocalSeriesGroup}" IsSourceGrouped="True" />
-    </Page.Resources>
+    </base:PageBase.Resources>
 
     <Grid Background="White" Padding="36,28,0,0">
         <Pivot HeaderTemplate="{StaticResource GeneralPivotHeaderTemplate}">
@@ -120,4 +121,4 @@
             </Grid>
         </Grid>-->
     </Grid>
-</Page>
+</base:PageBase>

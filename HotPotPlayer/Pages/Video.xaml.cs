@@ -31,7 +31,7 @@ namespace HotPotPlayer.Pages
     /// <summary>
     /// An empty page that can be used on its own or navigated to within a Frame.
     /// </summary>
-    public sealed partial class Video : Page, INotifyPropertyChanged
+    public sealed partial class Video : PageBase
     {
         public Video()
         {
@@ -45,10 +45,7 @@ namespace HotPotPlayer.Pages
             set => Set(ref _selectedSeries, value);
         }
 
-        static App App => (App)Application.Current;
-
-
-        private static void PlayVideo(VideoItem video)
+        private void PlayVideo(VideoItem video)
         {
             App.PlayVideo(video.Source);
         }
@@ -83,16 +80,6 @@ namespace HotPotPlayer.Pages
             {
                 IsFirstNavigate = false;
                 VideoService.StartLoadLocalVideo();
-            }
-        }
-
-        public event PropertyChangedEventHandler PropertyChanged;
-        public void Set<T>(ref T oldValue, T newValue, [CallerMemberName] string propertyName = "")
-        {
-            if (!EqualityComparer<T>.Default.Equals(oldValue, newValue))
-            {
-                oldValue = newValue;
-                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
             }
         }
 

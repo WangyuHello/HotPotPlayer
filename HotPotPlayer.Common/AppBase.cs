@@ -42,5 +42,7 @@ namespace HotPotPlayer
 
         TaskbarHelper _taskbar;
         public TaskbarHelper Taskbar => _taskbar ??= new TaskbarHelper(MainWindowHandle);
+
+        public abstract void PlayVideo(FileInfo video);
     }
 }

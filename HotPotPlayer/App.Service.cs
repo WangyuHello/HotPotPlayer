@@ -19,7 +19,7 @@ namespace HotPotPlayer
     {
         public FileInfo InitMediaFile { get; set; }
 
-        public void PlayVideo(FileInfo video)
+        public override void PlayVideo(FileInfo video)
         {
             VideoWindow v = new VideoWindow()
             {
