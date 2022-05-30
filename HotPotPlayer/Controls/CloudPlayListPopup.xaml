@@ -3,6 +3,7 @@
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:base="using:HotPotPlayer"
+    xmlns:modc="using:HotPotPlayer.Models.CloudMusic"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:animations="using:CommunityToolkit.WinUI.UI.Animations"
@@ -20,6 +21,7 @@
             <Grid.RowDefinitions>
                 <RowDefinition x:Name="CoverHeight" Height="200" />
                 <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
                 <RowDefinition Height="*" />
             </Grid.RowDefinitions>
 
@@ -30,8 +32,15 @@
                 <SymbolIcon Symbol="Play" />
             </Button>
 
-            <TextBlock Grid.Row="1" Margin="12,24,8,16" Grid.Column="1" Text="{x:Bind PlayList.Title, Mode=OneWay}" MaxLines="2" FontSize="18" TextWrapping="Wrap" TextTrimming="CharacterEllipsis" IsTextSelectionEnabled="True" FontFamily="{ThemeResource MiSansMedium}"/>
-            <ScrollViewer Grid.Row="2" Margin="12,0,0,0" Grid.Column="1" >
+            <TextBlock Grid.Row="1" Margin="12,24,8,8" Grid.Column="1" Text="{x:Bind PlayList.Title, Mode=OneWay}" MaxLines="2" FontSize="18" TextWrapping="Wrap" TextTrimming="CharacterEllipsis" IsTextSelectionEnabled="True" FontFamily="{ThemeResource MiSansMedium}"/>
+
+            <StackPanel Grid.Row="2" Margin="12,0,8,8" Orientation="Horizontal" Spacing="8">
+                <cont2:ImageEx2 x:Name="CreatorAvatar" VerticalAlignment="Center" Source="{x:Bind ((modc:CloudPlayListItem)PlayList).Creator.AvatarUrl, Mode=OneWay}" Style="{StaticResource LocalMusicImageStyle}" Width="32" Height="32" CornerRadius="16"  />
+
+                <TextBlock FontSize="15" FontWeight="Bold" VerticalAlignment="Center" Text="{x:Bind ((modc:CloudPlayListItem)PlayList).Creator.NickName, Mode=OneWay}" FontFamily="{StaticResource MiSansRegular}" IsTextSelectionEnabled="True"/>
+            </StackPanel>
+
+            <ScrollViewer Grid.Row="3" Margin="12,0,0,0" Grid.Column="1" >
                 <TextBlock Text="{x:Bind GetDescription(PlayList), Mode=OneWay}" TextWrapping="Wrap" TextTrimming="CharacterEllipsis" FontFamily="{StaticResource MiSansRegular}" IsTextSelectionEnabled="True"/>
             </ScrollViewer>
         </Grid>

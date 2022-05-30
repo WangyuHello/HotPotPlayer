@@ -83,6 +83,10 @@ namespace HotPotPlayer.Extensions
             {
                 ncp.Tags = json["tags"].Select(t => t.Value<string>()).ToArray();
             }
+            if (json["creator"] != null)
+            {
+                ncp.Creator = json["creator"].ToUser();
+            }
 
             return ncp;
         }
