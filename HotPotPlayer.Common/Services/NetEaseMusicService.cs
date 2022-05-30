@@ -401,6 +401,15 @@ namespace HotPotPlayer.Services
             });
         }
 
+        public void GetSimilarPlayList(string id)
+        {
+            Task.Run(async () =>
+            {
+                var json = await Api.RequestAsync(CloudMusicApiProviders.SimiPlayList, new Dictionary<string, object> { ["id"] = id });
+
+            });
+        }
+
         public async Task GetSimilarUserAsync(string id)
         {
             var json = await Api.RequestAsync(CloudMusicApiProviders.SimiUser, new Dictionary<string, object> { ["id"] = id });

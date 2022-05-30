@@ -10,13 +10,13 @@
     xmlns:helper="using:HotPotPlayer.Pages.Helper"
     mc:Ignorable="d">
 
-    <Grid VerticalAlignment="Center" HorizontalAlignment="Center" Width="860" MinHeight="460" MaxHeight="560" CornerRadius="8" Background="White" >
+    <Grid VerticalAlignment="Center" HorizontalAlignment="Center" Width="860" MinHeight="460" MaxHeight="560" CornerRadius="8" Background="White" BorderThickness="{ThemeResource ButtonBorderThemeThickness}" BorderBrush="{ThemeResource ButtonBorderThemeBrush}">
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="320" />
             <ColumnDefinition Width="*" />
         </Grid.ColumnDefinitions>
 
-        <Grid>
+        <Grid Background="#E8ECEF">
             <Grid.RowDefinitions>
                 <RowDefinition x:Name="CoverHeight" Height="200" />
                 <RowDefinition Height="Auto" />

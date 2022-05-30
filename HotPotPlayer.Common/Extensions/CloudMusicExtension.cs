@@ -79,6 +79,10 @@ namespace HotPotPlayer.Extensions
             {
                 ncp.TrackIds = json["trackIds"].Select(t => t["id"].Value<string>()).ToArray();
             }
+            if (json["tags"] != null)
+            {
+                ncp.Tags = json["tags"].Select(t => t.Value<string>()).ToArray();
+            }
 
             return ncp;
         }

@@ -16,7 +16,7 @@ namespace HotPotPlayer.Models.CloudMusic
         public long PlayCount { get; set; }
         public long TrackCount { get; set; }
         public string[] TrackIds { get; set; }
-
+        public string[] Tags { get; set; }
         public override Uri Cover => Cover2;
 
         public string GetPlayCount()

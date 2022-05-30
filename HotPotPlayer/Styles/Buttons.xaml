@@ -659,7 +659,7 @@
     </Style>
 
     <Style x:Name="AlbumPlayButton" TargetType="Button">
-        <Setter Property="Background" Value="CadetBlue" />
+        <Setter Property="Background" Value="#6BA2FC" />
         <Setter Property="BackgroundSizing" Value="OuterBorderEdge" />
         <Setter Property="Foreground" Value="White" />
         <Setter Property="CornerRadius" Value="4" />
