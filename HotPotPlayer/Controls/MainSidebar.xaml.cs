@@ -163,7 +163,10 @@ namespace HotPotPlayer.Controls
 
         private void ShowPlayBar_Loaded(object sender, RoutedEventArgs e)
         {
-            RotateAnimation.Start();
+            if (MusicPlayer.IsPlaying)
+            {
+                RotateAnimation.Start();
+            }
         }
     }
 }
