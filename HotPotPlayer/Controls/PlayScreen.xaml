@@ -55,16 +55,14 @@
         <TextBlock Grid.Row="2" Text="{x:Bind GetAlias(MusicPlayer.CurrentPlaying), Mode=OneWay}" Visibility="{x:Bind GetAliasVisible(MusicPlayer.CurrentPlaying), Mode=OneWay}" Foreground="Gray" MaxLines="2" TextWrapping="Wrap" TextTrimming="CharacterEllipsis" FontFamily="{StaticResource MiSansRegular}" IsTextSelectionEnabled="True"/>
         <Grid Grid.Row="3" Grid.ColumnSpan="1" Margin="0,24,32,0">
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="Auto" />
-                <ColumnDefinition Width="Auto" />
-                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="*" />
                 <ColumnDefinition Width="*" />
             </Grid.ColumnDefinitions>
-            <TextBlock Text="艺术家:" Margin="0,0,4,0" Foreground="Gray" FontFamily="{StaticResource MiSansRegular}" />
-            <TextBlock Grid.Column="1" Text="{x:Bind MusicPlayer.CurrentPlaying.GetArtists(), Mode=OneWay}" FontFamily="{StaticResource MiSansMedium}" Tag="{x:Bind MusicPlayer.CurrentPlaying, Mode=OneWay}" Tapped="{x:Bind helper:AlbumHelper.ArtistClick}">
+            <TextBlock Text="艺术家:" Foreground="Gray" FontFamily="{StaticResource MiSansRegular}" />
+            <TextBlock Padding="0" Margin="52,0,8,0" VerticalAlignment="Top" Text="{x:Bind MusicPlayer.CurrentPlaying.GetArtists(), Mode=OneWay}" FontFamily="{StaticResource MiSansMedium}" Tag="{x:Bind MusicPlayer.CurrentPlaying, Mode=OneWay}" TextWrapping="Wrap" MaxLines="2" TextTrimming="CharacterEllipsis" Tapped="{x:Bind helper:AlbumHelper.ArtistClick}">
             </TextBlock>
-            <TextBlock Grid.Column="2" Margin="28,0,4,0" Text="专辑:" Foreground="Gray" FontFamily="{StaticResource MiSansRegular}"/>
-            <TextBlock Grid.Column="3" x:Name="Album" FontFamily="{StaticResource MiSansMedium}" Tag="{x:Bind MusicPlayer.CurrentPlaying, Mode=OneWay}" Text="{x:Bind MusicPlayer.CurrentPlaying.Album, Mode=OneWay}" TextWrapping="Wrap" MaxLines="2" TextTrimming="CharacterEllipsis" Tapped="{x:Bind helper:AlbumHelper.AlbumInfoClick}" >
+            <TextBlock Grid.Column="1" Text="专辑:" Foreground="Gray" FontFamily="{StaticResource MiSansRegular}"/>
+            <TextBlock Grid.Column="1" Margin="42,0,0,0" x:Name="Album" FontFamily="{StaticResource MiSansMedium}" Tag="{x:Bind MusicPlayer.CurrentPlaying, Mode=OneWay}" Text="{x:Bind MusicPlayer.CurrentPlaying.Album, Mode=OneWay}" TextWrapping="Wrap" MaxLines="2" TextTrimming="CharacterEllipsis" Tapped="{x:Bind helper:AlbumHelper.AlbumInfoClick}" >
             </TextBlock>
         </Grid>
         <cont:ImageEx2 Grid.Row="4" x:Name="Cover" Margin="0,32,0,0"

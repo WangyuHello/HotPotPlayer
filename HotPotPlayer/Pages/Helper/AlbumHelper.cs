@@ -69,7 +69,6 @@ namespace HotPotPlayer.Pages.Helper
 
         internal static void ArtistClick(object sender, RoutedEventArgs e)
         {
-            MusicPlayer.HidePlayScreen();
             if (sender is HyperlinkButton button)
             {
                 if (button.Tag is CloudMusicItem cm)
@@ -77,6 +76,7 @@ namespace HotPotPlayer.Pages.Helper
                     var artist = cm.Artists2;
                     if (artist.Count == 1)
                     {
+                        MusicPlayer.HidePlayScreen();
                         App.NavigateTo("CloudMusicSub.Artist", artist[0]);
                     }
                     else
@@ -106,6 +106,7 @@ namespace HotPotPlayer.Pages.Helper
                     var segs = artist.GetArtists();
                     if (segs.Length == 1)
                     {
+                        MusicPlayer.HidePlayScreen();
                         App.NavigateTo("MusicSub.Artist", artist);
                     }
                     else
@@ -131,6 +132,7 @@ namespace HotPotPlayer.Pages.Helper
             }
             else if (sender is MenuFlyoutItem menuItem)
             {
+                MusicPlayer.HidePlayScreen();
                 if (menuItem.Tag is CloudArtistItem c)
                 {
                     App.NavigateTo("CloudMusicSub.Artist", c);
@@ -148,24 +150,25 @@ namespace HotPotPlayer.Pages.Helper
                     var artist = cm.Artists2;
                     if (artist.Count == 1)
                     {
+                        MusicPlayer.HidePlayScreen();
                         App.NavigateTo("CloudMusicSub.Artist", artist[0]);
                     }
                     else
                     {
-                        //var flyout = new MenuFlyout();
-                        //foreach (var a in artist)
-                        //{
-                        //    var item = new MenuFlyoutItem
-                        //    {
-                        //        Text = a.Name,
-                        //        Icon = new SymbolIcon { Symbol = Symbol.Contact },
-                        //        Tag = a
-                        //    };
-                        //    item.Click += ArtistClick;
-                        //    flyout.Items.Add(item);
-                        //}
-                        //t.ContextFlyout = flyout;
-                        //t.ContextFlyout.ShowAt(t);
+                        var flyout = new MenuFlyout();
+                        foreach (var a in artist)
+                        {
+                            var item = new MenuFlyoutItem
+                            {
+                                Text = a.Name,
+                                Icon = new SymbolIcon { Symbol = Symbol.Contact },
+                                Tag = a
+                            };
+                            item.Click += ArtistClick;
+                            flyout.Items.Add(item);
+                        }
+                        t.ContextFlyout = flyout;
+                        t.ContextFlyout.ShowAt(t);
                     }
                 }
                 else
@@ -174,6 +177,7 @@ namespace HotPotPlayer.Pages.Helper
                     var segs = artist.GetArtists();
                     if (segs.Length == 1)
                     {
+                        MusicPlayer.HidePlayScreen();
                         App.NavigateTo("MusicSub.Artist", artist);
                     }
                     else
