@@ -40,6 +40,13 @@ namespace HotPotPlayer.Controls
         public static readonly DependencyProperty PlayListProperty =
             DependencyProperty.Register("PlayList", typeof(PlayListItem), typeof(PlayListPopup), new PropertyMetadata(default(PlayListItem)));
 
+        private Uri _coverImage;
+
+        public Uri CoverImage
+        {
+            get => _coverImage;
+            set => Set(ref _coverImage, value);
+        }
 
         string GetDescription(PlayListItem p)
         {
@@ -65,6 +72,11 @@ namespace HotPotPlayer.Controls
         {
             CoverHeight.Height = new GridLength(coverOpened ? 200 : 320);
             coverOpened = !coverOpened;
+        }
+
+        private void Cover_SourceGotFromCache(ImageSource obj)
+        {
+            CoverImage = PlayList.Cover;
         }
     }
 }

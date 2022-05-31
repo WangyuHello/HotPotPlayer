@@ -302,7 +302,7 @@ namespace HotPotPlayer.Services
                 var json = await Api.RequestAsync(CloudMusicApiProviders.PlaylistDetail, new Dictionary<string, object> { ["id"] = playListId });
                 if(!NotifiyWhenFail(json)) return null;
                 var playList = json["playlist"].ToPlayListItem(true);
-                var json2 = await Api.RequestAsync(CloudMusicApiProviders.SongDetail, new Dictionary<string, object> { ["ids"] = string.Join(",", playList.TrackIds) });
+                var json2 = await Api.RequestAsync(CloudMusicApiProviders.SongDetail, new Dictionary<string, object> { ["ids"] = string.Join(",", playList.TrackIds.Take(500)) });
                 if(!NotifiyWhenFail(json2)) return null;
                 playList.MusicItems = new ObservableCollection<MusicItem>(json2["songs"].ToArray().Select(s =>
                 {

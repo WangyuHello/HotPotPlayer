@@ -53,9 +53,12 @@ namespace HotPotPlayer.Extensions
             {
                 return null;
             }
-            var m = int.Parse(ts[0]);
-            var sc = int.Parse(ts[1]);
-            var f = int.Parse(ts[2]);
+            var b = int.TryParse(ts[0], out var m);
+            if (!b) return null;
+            b = int.TryParse(ts[1], out var sc);
+            if (!b) return null;
+            b = int.TryParse(ts[2], out var f);
+            if (!b) return null;
             var content = s[ci..];
             return new LyricItem
             {

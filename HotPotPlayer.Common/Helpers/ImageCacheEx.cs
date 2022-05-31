@@ -43,7 +43,7 @@ namespace HotPotPlayer.Helpers
             DispatcherQueue = dispatcherQueue ?? DispatcherQueue.GetForCurrentThread();
             _extendedPropertyNames.Add(DateAccessedProperty);
             MaxMemoryCacheCount = 200;
-            CacheDuration = TimeSpan.FromDays(1);
+            CacheDuration = TimeSpan.FromDays(7);
         }
 
         /// <summary>

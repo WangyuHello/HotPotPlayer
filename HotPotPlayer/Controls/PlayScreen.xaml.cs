@@ -203,7 +203,8 @@ namespace HotPotPlayer.Controls
         private void SimiSongsList_ItemClick(object sender, ItemClickEventArgs e)
         {
             var music = e.ClickedItem as CloudMusicItem;
-            MusicPlayer.PlayNext(music);
+            MusicPlayer.AddToPlayListNext(music);
+            MusicPlayer.PlayNext();
         }
     }
 }
