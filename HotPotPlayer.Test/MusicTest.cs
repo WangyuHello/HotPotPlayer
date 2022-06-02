@@ -61,7 +61,7 @@ namespace HotPotPlayer.Test
         private void MusicService_PropertyChanged(object sender, PropertyChangedEventArgs e)
         {
             var service = (LocalMusicService)sender;
-            if (e.PropertyName == "State" && service.State == LocalMusicService.LocalMusicState.Complete)
+            if (e.PropertyName == "State" && service.State == LocalServiceState.Complete)
             {
                 var m1 = service.LocalAlbumGroup[0][3].MusicItems[0];
                 var m2 = service.LocalAlbumGroup[0][4].MusicItems[1];

@@ -31,8 +31,10 @@ namespace HotPotPlayer.Services.FFmpeg
                 .ThrowExceptionIfError();
             _pCodecContext = ffmpeg.avcodec_alloc_context3(codec);
             if (HWDeviceType != AVHWDeviceType.AV_HWDEVICE_TYPE_NONE)
-                ffmpeg.av_hwdevice_ctx_create(&_pCodecContext->hw_device_ctx, HWDeviceType, null, null, 0)
-                    .ThrowExceptionIfError();
+            {
+                ffmpeg.av_hwdevice_ctx_create(&_pCodecContext->hw_device_ctx, HWDeviceType, null, null, 0).ThrowExceptionIfError();
+            }
+
             ffmpeg.avcodec_parameters_to_context(_pCodecContext, _pFormatContext->streams[_streamIndex]->codecpar)
                 .ThrowExceptionIfError();
             ffmpeg.avcodec_open2(_pCodecContext, codec, null).ThrowExceptionIfError();
@@ -152,12 +154,20 @@ namespace HotPotPlayer.Services.FFmpeg
 
             if (_pCodecContext->hw_device_ctx != null)
             {
-                ffmpeg.av_hwframe_transfer_data(_receivedFrame, _pFrame, 0).ThrowExceptionIfError();
-                frame = *_receivedFrame;
+                try
+                {
+                    ffmpeg.av_hwframe_transfer_data(_receivedFrame, _pFrame, 0).ThrowExceptionIfError();
+                    frame = *_receivedFrame;
+                }
+                catch (AccessViolationException)
+                {
+                    frame = default;
+                    return false;
+                }
             }
             else
                 frame = *_pFrame;
-
+            
             return true;
         }
 

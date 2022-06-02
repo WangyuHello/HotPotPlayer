@@ -135,8 +135,8 @@ namespace HotPotPlayer
             exitSaveActions.Add(action);
         }
 
-        public abstract string[] AudioSupportedExt { get; }
-        public abstract string[] VideoSupportedExt { get; }
+        public virtual string[] AudioSupportedExt => new[] { ".flac", ".wav", ".m4a", ".mp3", ".opus", ".ogg" };
+        public virtual string[] VideoSupportedExt => new[] { ".mkv", ".mp4" };
 
         public List<FileInfo> GetMusicFilesFromLibrary()
         {
