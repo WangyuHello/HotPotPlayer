@@ -34,6 +34,7 @@
       <PackageReference Include="NAudio" Version="2.1.0" />
       <PackageReference Include="FFmpeg.AutoGen" Version="5.0.0" />
       <PackageReference Include="TagLibSharp" Version="2.2.0" />
+	  <PackageReference Include="DirectNCore" Version="1.13.0" />
   </ItemGroup>
 
   <ItemGroup>

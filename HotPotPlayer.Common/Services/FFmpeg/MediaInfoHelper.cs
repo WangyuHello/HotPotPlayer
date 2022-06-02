@@ -39,52 +39,9 @@ namespace HotPotPlayer.Services.FFmpeg
             var vsd = new VideoStreamDecoder(url, HWDevice);
             //var info = vsd.GetContextInfo();
             var sourceSize = vsd.FrameSize;
-            var sourcePixelFormat = HWDevice == AVHWDeviceType.AV_HWDEVICE_TYPE_NONE
+            var sourcePixelFormat = vsd.OutHWType == AVHWDeviceType.AV_HWDEVICE_TYPE_NONE
                 ? vsd.PixelFormat
-                : FFmpegHelper.GetHWPixelFormat(HWDevice);
-            var destinationSize = sourceSize;
-            var destinationPixelFormat = AVPixelFormat.AV_PIX_FMT_BGR24;
-            using var vfc = new VideoFrameConverter(sourceSize, sourcePixelFormat, destinationSize, destinationPixelFormat);
-
-            try
-            {
-                var suc = vsd.TryDecodeMiddleFrame(out var frame);
-                if (suc)
-                {
-                    var convertedFrame = vfc.Convert(frame);
-
-                    var ptr = (IntPtr)convertedFrame.data[0];
-                    var data = new Span<byte>((byte*)ptr, convertedFrame.linesize[0] * convertedFrame.height);
-
-                    Image<Bgr24> image = Image.LoadPixelData<Bgr24>(data, convertedFrame.width, convertedFrame.height);
-                    var stream = new MemoryStream();
-                    image.SaveAsPng(stream);
-                    return stream;
-                }
-                else
-                {
-                    return SoftDecodeOneFrame(url);
-                }
-
-            }
-            catch (Exception)
-            {
-                return SoftDecodeOneFrame(url);
-            }
-            finally
-            {
-                vsd.Dispose();
-            }
-        }
-
-        static unsafe MemoryStream SoftDecodeOneFrame(string url)
-        {
-            var vsd = new VideoStreamDecoder(url, AVHWDeviceType.AV_HWDEVICE_TYPE_NONE);
-            //var info = vsd.GetContextInfo();
-            var sourceSize = vsd.FrameSize;
-            var sourcePixelFormat = HWDevice == AVHWDeviceType.AV_HWDEVICE_TYPE_NONE
-                ? vsd.PixelFormat
-                : FFmpegHelper.GetHWPixelFormat(HWDevice);
+                : FFmpegHelper.GetHWPixelFormat(vsd.OutHWType);
             var destinationSize = sourceSize;
             var destinationPixelFormat = AVPixelFormat.AV_PIX_FMT_BGR24;
             using var vfc = new VideoFrameConverter(sourceSize, sourcePixelFormat, destinationSize, destinationPixelFormat);
@@ -107,7 +64,7 @@ namespace HotPotPlayer.Services.FFmpeg
             }
             catch (Exception)
             {
-
+                
             }
             finally
             {

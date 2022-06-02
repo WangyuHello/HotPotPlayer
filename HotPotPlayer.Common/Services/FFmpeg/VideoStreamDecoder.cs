@@ -1,4 +1,5 @@
-﻿using FFmpeg.AutoGen;
+﻿using DirectN;
+using FFmpeg.AutoGen;
 using SixLabors.ImageSharp;
 using System;
 using System.Collections.Generic;
@@ -17,7 +18,7 @@ namespace HotPotPlayer.Services.FFmpeg
         private readonly AVPacket* _pPacket;
         private readonly AVFrame* _receivedFrame;
         private readonly int _streamIndex;
-
+        public AVHWDeviceType OutHWType { get; set; }
         public VideoStreamDecoder(string url, AVHWDeviceType HWDeviceType = AVHWDeviceType.AV_HWDEVICE_TYPE_NONE)
         {
             _pFormatContext = ffmpeg.avformat_alloc_context();
@@ -30,8 +31,19 @@ namespace HotPotPlayer.Services.FFmpeg
                 .av_find_best_stream(_pFormatContext, AVMediaType.AVMEDIA_TYPE_VIDEO, -1, -1, &codec, 0)
                 .ThrowExceptionIfError();
             _pCodecContext = ffmpeg.avcodec_alloc_context3(codec);
+            if (codec->id == AVCodecID.AV_CODEC_ID_AV1)
+            {
+                HWDeviceType = AVHWDeviceType.AV_HWDEVICE_TYPE_NONE;
+            }
             if (HWDeviceType != AVHWDeviceType.AV_HWDEVICE_TYPE_NONE)
             {
+                //var dxgiFactory = DXGIFunctions.CreateDXGIFactory2();
+                //var adapters = dxgiFactory.EnumAdapters();
+                //foreach (var item in adapters)
+                //{
+                //    var des = item.Object.GetDesc();
+                //    var ind = item.Object.GetIndex();
+                //}
                 ffmpeg.av_hwdevice_ctx_create(&_pCodecContext->hw_device_ctx, HWDeviceType, null, null, 0).ThrowExceptionIfError();
             }
 
@@ -45,6 +57,8 @@ namespace HotPotPlayer.Services.FFmpeg
 
             _pPacket = ffmpeg.av_packet_alloc();
             _pFrame = ffmpeg.av_frame_alloc();
+
+            OutHWType = HWDeviceType;
         }
 
         public string CodecName { get; }
