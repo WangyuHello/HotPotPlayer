@@ -23,40 +23,28 @@ using Windows.Foundation.Collections;
 
 namespace HotPotPlayer.Controls
 {
-    public sealed partial class CloudPlayListPopup : UserControlBase
+    public sealed partial class CloudAlbumPopup : UserControlBase
     {
-        public CloudPlayListPopup()
+        public CloudAlbumPopup()
         {
             this.InitializeComponent();
 
         }
 
-        public PlayListItem PlayList
+        public AlbumItem Album
         {
-            get { return (PlayListItem)GetValue(PlayListProperty); }
-            set { SetValue(PlayListProperty, value); }
+            get { return (AlbumItem)GetValue(AlbumProperty); }
+            set { SetValue(AlbumProperty, value); }
         }
 
-        public static readonly DependencyProperty PlayListProperty =
-            DependencyProperty.Register("PlayList", typeof(PlayListItem), typeof(PlayListPopup), new PropertyMetadata(default(PlayListItem)));
+        public static readonly DependencyProperty AlbumProperty =
+            DependencyProperty.Register("Album", typeof(AlbumItem), typeof(AlbumPopup), new PropertyMetadata(default(AlbumItem)));
 
-        private Uri _coverImage;
-
-        public Uri CoverImage
-        {
-            get => _coverImage;
-            set => Set(ref _coverImage, value);
-        }
-
-        private void PlayListPlay(object sender, RoutedEventArgs e)
-        {
-            MusicPlayer.PlayNext(PlayList);
-        }
 
         private void ListView_ItemClick(object sender, ItemClickEventArgs e)
         {
             var music = e.ClickedItem as MusicItem;
-            MusicPlayer.PlayNext(music, PlayList);
+            MusicPlayer.PlayNext(music, Album);
         }
 
         bool coverOpened = false;
@@ -66,9 +54,5 @@ namespace HotPotPlayer.Controls
             coverOpened = !coverOpened;
         }
 
-        private void Cover_SourceGotFromCache(ImageSource obj)
-        {
-            CoverImage = PlayList.Cover;
-        }
     }
 }

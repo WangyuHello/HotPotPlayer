@@ -44,6 +44,7 @@
     <None Remove="Assets\Font\MiSans-Thin.ttf" />
     <None Remove="Assets\nico.png" />
     <None Remove="Controls\AlbumPopup.xaml" />
+    <None Remove="Controls\CloudAlbumPopup.xaml" />
     <None Remove="Controls\CloudPlayListPopup.xaml" />
     <None Remove="Controls\CommentFloorDialog.xaml" />
     <None Remove="Controls\CurrentPlayListBar.xaml" />
@@ -113,6 +114,10 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Page Update="Controls\CloudAlbumPopup.xaml">
+      <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Update="Controls\CloudPlayListPopup.xaml">
       <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
       <SubType>Designer</SubType>

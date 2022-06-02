@@ -287,9 +287,39 @@
         </Grid>
     </DataTemplate>
 
+    <DataTemplate x:Key="CloudMusicCardViewInAlbumTemplate" x:DataType="models:MusicItem">
+        <Grid Padding="8" CornerRadius="4" RightTapped="{x:Bind helper:ListHelper.RightTapMusicInCloudPlayListClick}">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="24" />
+                <ColumnDefinition Width="2*" />
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="52" />
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
+            <TextBlock HorizontalAlignment="Center" Text="{Binding RelativeSource={RelativeSource Mode=TemplatedParent}, Converter={StaticResource IndexConverter}}" FontSize="12" FontFamily="{ThemeResource MiSansBold}" VerticalAlignment="Center"/>
+            <TextBlock Grid.Column="1" VerticalAlignment="Center" FontSize="14" TextTrimming="CharacterEllipsis" Text="{x:Bind Title}" FontFamily="{ThemeResource MiSansMedium}" ToolTipService.ToolTip="{x:Bind Title}"/>
+            <HyperlinkButton Grid.Column="2" Content="{x:Bind GetArtists()}" VerticalAlignment="Center" Click="{x:Bind helper:AlbumHelper.ArtistClick}" Tag="{x:Bind }" FontFamily="{ThemeResource MiSansRegular}" />
+            <TextBlock Grid.Column="3" Text="{x:Bind Duration.ToString('mm\\\\:ss')}" VerticalAlignment="Center" FontFamily="{ThemeResource MiSansRegular}"/>
+            <Button Grid.Column="4" Margin="4,0,4,0" Style="{StaticResource TransparentButton}" CornerRadius="4" Padding="4" Tag="{x:Bind }" Click="{x:Bind helper:ListHelper.RightTapMusicInCloudPlayListClick}">
+                <SymbolIcon Symbol="More" />
+            </Button>
+        </Grid>
+    </DataTemplate>
+
     <DataTemplate x:Key="TagWrapTemplate" x:DataType="x:String">
         <Grid BorderBrush="Gray" BorderThickness="1" CornerRadius="10" Padding="8,0">
             <TextBlock Text="{x:Bind }" FontFamily="{StaticResource MiSansRegular}"/>
+        </Grid>
+    </DataTemplate>
+
+    <DataTemplate x:Key="ArtistWrapTemplate" x:DataType="modelsC:CloudArtistItem">
+        <Grid BorderBrush="Gray" BorderThickness="1" CornerRadius="12" Padding="0,0">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+            <cont2:ImageEx2 Source="{x:Bind Avatar}" Style="{StaticResource LocalMusicImageStyle}" Width="24" Height="24" />
+            <TextBlock Grid.Column="1" VerticalAlignment="Center" Margin="8,0" Text="{x:Bind Name}" FontFamily="{StaticResource MiSansRegular}"/>
         </Grid>
     </DataTemplate>
 </ResourceDictionary>
