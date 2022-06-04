@@ -3,9 +3,9 @@
     <TargetFramework>net6.0-windows10.0.19041.0</TargetFramework>
     <TargetPlatformMinVersion>10.0.19041.0</TargetPlatformMinVersion>
     <RootNamespace>HotPotPlayer.Video</RootNamespace>
-    <RuntimeIdentifiers>win10-x64</RuntimeIdentifiers>
+    <RuntimeIdentifiers>win10-x86;win10-x64;win10-arm64</RuntimeIdentifiers>
     <UseWinUI>true</UseWinUI>
-    <Platforms>x64</Platforms>
+    <Platforms>x86;x64;arm64</Platforms>
   </PropertyGroup>
   <ItemGroup>
     <None Remove="NativeMethods.txt" />
