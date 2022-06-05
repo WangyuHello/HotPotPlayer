@@ -36,6 +36,14 @@ namespace HotPotPlayer
         MusicPlayer musicPlayer;
         public MusicPlayer MusicPlayer => musicPlayer ??= new MusicPlayer(Config, UIQueue, this);
 
+        public void ShutDown()
+        {
+            localMusicService?.Dispose();
+            netEaseMusicService?.Dispose();
+            localVideoService?.Dispose();
+            musicPlayer?.Dispose();
+        }
+
         public abstract void ShowToast(ToastInfo toast);
         public abstract void NavigateTo(string name, object parameter = null, NavigationTransitionInfo trans = null);
         public abstract IntPtr MainWindowHandle { get; }

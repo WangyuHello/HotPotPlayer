@@ -57,6 +57,7 @@ namespace HotPotPlayer
         private void MainWindow_Closed(object sender, WindowEventArgs args)
         {
             Config.SaveSettings();
+            ShutDown();
         }
 
         private void InitMainWindow(Microsoft.UI.Xaml.LaunchActivatedEventArgs args)
