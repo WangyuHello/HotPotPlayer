@@ -69,8 +69,12 @@ namespace HotPotPlayer
             {
                 if (((App)Application.Current).Config.AudioSupportedExt.Contains(initMedia.Extension))
                 {
-                    var music = initMedia.ToMusicItem();
-                    MusicPlayer.PlayNext(music);
+                    var dir = initMedia.Directory;
+                    var musicsFiles = app.Config.GetMusicFilesFromDirectory(dir);
+                    var musics = musicsFiles.Select(f => f.ToMusicItem()).ToList();
+                    var names = musicsFiles.Select(s => s.Name).ToList();
+                    var index = names.IndexOf(initMedia.Name);
+                    MusicPlayer.PlayNext(index, musics);
                 }
                 else
                 {

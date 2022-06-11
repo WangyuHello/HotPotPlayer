@@ -235,6 +235,12 @@ namespace HotPotPlayer.Services
             PlayNext(index);
         }
 
+        public void PlayNext(int index, IEnumerable<MusicItem> list)
+        {
+            CurrentPlayList = new ObservableCollection<MusicItem>(list);
+            PlayNext(index);
+        }
+
         public void PlayNextContinue(MusicItem music)
         {
             var index = CurrentPlayList?.IndexOf(music);

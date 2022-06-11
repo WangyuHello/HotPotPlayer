@@ -152,6 +152,13 @@ namespace HotPotPlayer
             return files;
         }
 
+        public List<FileInfo> GetMusicFilesFromDirectory(DirectoryInfo dir)
+        {
+            List<FileInfo> files = new();
+            files.AddRange(dir.GetFiles("*.*", SearchOption.AllDirectories).Where(f => AudioSupportedExt.Contains(f.Extension)));
+            return files;
+        }
+
         public List<FileInfo> GetPlaylistFilesFromLibrary()
         {
             var libs = MusicPlayListDirectory.Select(s => s.Path);
