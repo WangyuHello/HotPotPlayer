@@ -23,8 +23,15 @@ namespace HotPotPlayer.Services
             if (!EqualityComparer<T>.Default.Equals(oldValue, newValue))
             {
                 oldValue = newValue;
-                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-                callback?.Invoke(newValue);
+                try
+                {
+                    PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+                    callback?.Invoke(newValue);
+                }
+                catch (Exception)
+                {
+
+                }
             }
         }
 

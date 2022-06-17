@@ -226,9 +226,9 @@ namespace HotPotPlayer
                 m_micaController.AddSystemBackdropTarget(this.As<Microsoft.UI.Composition.ICompositionSupportsSystemBackdrop>());
                 m_micaController.SetSystemBackdropConfiguration(m_configurationSource);
                 m_micaController.FallbackColor = Color.FromArgb(255, 0xf1, 0xf3, 0xf6);
-                m_micaController.TintColor = Color.FromArgb(255, 0xf1, 0xf3, 0xf6);
-                m_micaController.TintOpacity = 0.8f;
-                m_micaController.LuminosityOpacity = 0.65f;
+                //m_micaController.TintColor = Color.FromArgb(255, 0xf1, 0xf3, 0xf6);
+                //m_micaController.TintOpacity = 0.8f;
+                //m_micaController.LuminosityOpacity = 0.65f;
                 return true; // succeeded
             }
 
