@@ -567,27 +567,34 @@ namespace HotPotPlayer.Services
         private void PlayerStarterCompleted(object sender, RunWorkerCompletedEventArgs e)
         {
             IsPlayBarVisible = true;
-            if (e.Result is (int index, bool intercept))
+            try
             {
-                HasError = false;
-                IsPlaying = true;
-                var music = CurrentPlayList[index];
-                music.IsIntercept = intercept;
-                CurrentPlaying = music;
-                CurrentPlayingIndex = index;
-                _playerTimer.Start();
-                RaisePropertyChanged(nameof(Volume));
-                RaisePropertyChanged(nameof(CurrentPlayingDuration));
-            }
-            else if(e.Result is (int index2, Exception _playException))
-            {
-                App?.ShowToast(new ToastInfo { Text = "播放错误 " + _playException.Message });
-                HasError = true;
-                if (index2 != CurrentPlayList.Count - 1)
+                if (e.Result is (int index, bool intercept))
                 {
-                    CurrentPlayingIndex = index2;
-                    PlayNext();
+                    HasError = false;
+                    IsPlaying = true;
+                    var music = CurrentPlayList[index];
+                    music.IsIntercept = intercept;
+                    CurrentPlaying = music;
+                    CurrentPlayingIndex = index;
+                    _playerTimer.Start();
+                    RaisePropertyChanged(nameof(Volume));
+                    RaisePropertyChanged(nameof(CurrentPlayingDuration));
                 }
+                else if (e.Result is (int index2, Exception _playException))
+                {
+                    App?.ShowToast(new ToastInfo { Text = "播放错误 " + _playException.Message });
+                    HasError = true;
+                    if (index2 != CurrentPlayList.Count - 1)
+                    {
+                        CurrentPlayingIndex = index2;
+                        PlayNext();
+                    }
+                }
+            }
+            catch (Exception)
+            {
+
             }
         }
 

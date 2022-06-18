@@ -101,13 +101,6 @@ namespace HotPotPlayer
             return isPlayScreenVisible ? new Thickness(24, 0, 24, 8) : new Thickness(80, 0, 24, 16);
         }
 
-        Visibility GetContentRootVisible(bool isPlayScreenVisible)
-        {
-            return isPlayScreenVisible ? Visibility.Collapsed : Visibility.Visible;
-        }
-
-
-
         //private void Tray_TrayIconLeftMouseDown(object sender, EventArgs e)
         //{
         //    this.Show();

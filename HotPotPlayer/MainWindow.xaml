@@ -15,7 +15,7 @@
     >
 
     <Grid x:Name="Root" Loaded="MainWindow_Loaded" PointerReleased="MainWindow_PointerReleased" >
-        <Grid x:Name="ContentRoot" ui:VisualExtensions.NormalizedCenterPoint="0.5" ui:VisualExtensions.RotationAxis="0,1,0" Visibility="{x:Bind GetContentRootVisible(MusicPlayer.IsPlayScreenVisible), Mode=OneWay}">
+        <Grid x:Name="ContentRoot" ui:VisualExtensions.NormalizedCenterPoint="0.5" ui:VisualExtensions.RotationAxis="0,1,0" >
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="60" />
                 <ColumnDefinition Width="*" />
@@ -27,8 +27,8 @@
                 OnBackClick="MainSidebar_OnBackClick">
                 
                 <animations:Implicit.ShowAnimations>
-                    <animations:OpacityAnimation Duration="0:0:1" From="0.0" To="1.0" Delay="0:0:0.5"/>
-                    <animations:TranslationAnimation Duration="0:0:1" From="-60,0,0" To="0,0,0" Delay="0:0:0.5" EasingMode="EaseOut"/>
+                    <animations:OpacityAnimation Duration="0:0:1" From="0.0" To="1.0"/>
+                    <animations:TranslationAnimation Duration="0:0:1" From="-60,0,0" To="0,0,0" EasingMode="EaseOut"/>
                 </animations:Implicit.ShowAnimations>
                 
             </controls:MainSidebar>
@@ -40,13 +40,15 @@
             </animations:Implicit.Animations>
         </Grid>
 
-        <controls:PlayScreen x:Name="PlayScreen" Visibility="{x:Bind MusicPlayer.IsPlayScreenVisible, Mode=OneWay}" >
-            <!--<animations:Implicit.ShowAnimations>
+        <controls:PlayScreen x:Name="PlayScreen" Visibility="{x:Bind MusicPlayer.IsPlayScreenVisible, Mode=OneWay}" ui:VisualExtensions.NormalizedCenterPoint="0.5">
+            <animations:Implicit.ShowAnimations>
                 <animations:OpacityAnimation Duration="0:0:0.4" From="0.0" To="1.0" />
+                <animations:ScaleAnimation Duration="0:0:0.4" From="0.9,0.9,1" To="1,1,1" />
             </animations:Implicit.ShowAnimations>
             <animations:Implicit.HideAnimations>
                 <animations:OpacityAnimation Duration="0:0:1" From="1.0" To="0.0" />
-            </animations:Implicit.HideAnimations>-->
+                <animations:ScaleAnimation Duration="0:0:1" From="1,1,1" To="0.9,0.9,1" />
+            </animations:Implicit.HideAnimations>
         </controls:PlayScreen>
 
         <!--<Image Source="Assets/nico.png" HorizontalAlignment="Right" VerticalAlignment="Top" Width="130" Margin="0,0,170,0"/>-->

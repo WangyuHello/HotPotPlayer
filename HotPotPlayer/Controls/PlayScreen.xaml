@@ -17,7 +17,7 @@
         <helper:LikeGlyphConverter x:Key="LikeGlyphConverter" />
     </base:UserControlBase.Resources>
 
-    <Grid x:Name="Root" Padding="64,0" x:Load="{x:Bind MusicPlayer.IsPlayScreenVisible, Mode=OneWay}">
+    <Grid x:Name="Root" Padding="64,0" Background="{StaticResource PlayScreenBackground}" x:Load="{x:Bind MusicPlayer.IsPlayScreenVisible, Mode=OneWay}">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
