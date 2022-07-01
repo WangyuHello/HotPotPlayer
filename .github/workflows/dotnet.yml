@@ -85,6 +85,7 @@ jobs:
         $pfx_cert_byte = [System.Convert]::FromBase64String("${{ secrets.Base64_Encoded_Pfx }}")
         $certificatePath = Join-Path -Path $env:Project_Directory -ChildPath HotPotPlayer_TemporaryKey.pfx
         [IO.File]::WriteAllBytes("$certificatePath", $pfx_cert_byte)
+        Get-ChildItem .
 
     # Create the app package by building and packaging the Windows Application Packaging project
     - name: Create the app package
