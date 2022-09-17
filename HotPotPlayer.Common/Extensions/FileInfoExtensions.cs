@@ -39,15 +39,25 @@ namespace HotPotPlayer.Extensions
 
         public static VideoItem ToVideoItem(this FileInfo f)
         {
-            using var tfile = TagLib.File.Create(f.FullName);
-            var tTitle = tfile.Tag.Title;
-            var title = string.IsNullOrEmpty(tTitle) ? Path.GetFileNameWithoutExtension(f.Name) : tTitle;
+            string title = "";
+            TimeSpan dur = TimeSpan.Zero;
+            try
+            {
+                using var tfile = TagLib.File.Create(f.FullName);
+                var tTitle = tfile.Tag.Title;
+                title = string.IsNullOrEmpty(tTitle) ? Path.GetFileNameWithoutExtension(f.Name) : tTitle;
+                dur = tfile.Properties.Duration;
+            }
+            catch (Exception)
+            {
+
+            }
 
             return new VideoItem
             {
                 Source = f,
                 Title = title,
-                Duration = tfile.Properties.Duration,
+                Duration = dur,
                 Cover = new Uri(f.FullName),
                 LastWriteTime = f.LastWriteTime
             };

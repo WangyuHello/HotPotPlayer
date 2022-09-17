@@ -21,11 +21,12 @@ namespace HotPotPlayer
 
         public override void PlayVideo(FileInfo video)
         {
-            VideoWindow v = new VideoWindow()
-            {
-                MediaFile = video
-            };
-            v.Show();
+            //VideoWindow v = new VideoWindow()
+            //{
+            //    MediaFile = video
+            //};
+            //v.Show();
+            MainWindow.NavigateToVideo(video);
         }
 
         public override void ShowToast(ToastInfo toast)

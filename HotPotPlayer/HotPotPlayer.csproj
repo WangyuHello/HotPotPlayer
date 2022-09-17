@@ -57,6 +57,7 @@
     <None Remove="Pages\MusicSub\Info.xaml" />
     <None Remove="Pages\Setting.xaml" />
     <None Remove="Pages\Video.xaml" />
+    <None Remove="Pages\VideoPlayPage.xaml" />
     <None Remove="Styles\Buttons.xaml" />
     <None Remove="Styles\Colors.xaml" />
     <None Remove="Styles\GridView.xaml" />
@@ -158,6 +159,10 @@
   <ItemGroup>
     <Page Update="Controls\AlbumPopup.xaml">
       <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Update="Pages\VideoPlayPage.xaml">
+      <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
+      <SubType>Designer</SubType>
     </Page>
   </ItemGroup>
 

@@ -6,10 +6,13 @@ using Microsoft.UI.Xaml.Navigation;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.IO;
 using System.Linq;
+using System.Reflection.Metadata;
 using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
+using System.Xml.Linq;
 
 namespace HotPotPlayer
 {
@@ -70,6 +73,13 @@ namespace HotPotPlayer
                 MusicPlayer.HidePlayBar();
                 MusicPlayer.IsPlayListBarVisible = false;
             }
+        }
+
+        public void NavigateToVideo(FileInfo source)
+        {
+            var trans = new DrillInNavigationTransitionInfo();
+            MainFrame.Navigate(Type.GetType("HotPotPlayer.Pages.VideoPlayPage"), source, trans);
+            SelectedPageName = "VideoPlayPage";
         }
     }
 }

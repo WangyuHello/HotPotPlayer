@@ -12,6 +12,7 @@
     <None Remove="SoftwareVideoHost.xaml" />
     <None Remove="VideoControl.xaml" />
     <None Remove="VideoControl2.xaml" />
+    <None Remove="VideoControl3.xaml" />
     <None Remove="VideoWindow.xaml" />
   </ItemGroup>
   <ItemGroup>
@@ -36,6 +37,12 @@
     <ProjectReference Include="..\HotPotPlayer.Common\HotPotPlayer.Common.csproj" />
     <ProjectReference Include="..\HotPotPlayer.Native\HotPotPlayer.Native.csproj" />
     <ProjectReference Include="..\libvlcsharp\src\LibVLCSharp\LibVLCSharp.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Page Update="VideoControl3.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
   </ItemGroup>
 
   <ItemGroup>
