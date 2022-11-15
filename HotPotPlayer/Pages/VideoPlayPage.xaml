@@ -9,5 +9,5 @@
     mc:Ignorable="d"
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
 
-    <video:VideoControl3 x:Name="VideoPlayer" Source="{x:Bind Source, Mode=OneWay}" />
+    <video:VideoControl x:Name="VideoPlayer" Source="{x:Bind Source, Mode=OneWay}" />
 </base:PageBase>

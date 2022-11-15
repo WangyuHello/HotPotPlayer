@@ -1,4 +1,5 @@
-﻿using HotPotPlayer.Video.GlesInterop;
+﻿using DirectN;
+using HotPotPlayer.Video.GlesInterop;
 using Microsoft.UI.Dispatching;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
@@ -15,10 +16,13 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Runtime.InteropServices.WindowsRuntime;
 using System.Threading.Tasks;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
+using WinRT;
+
 
 // To learn more about WinUI, the WinUI project structure,
 // and more about our project templates, see: http://aka.ms/winui-project-info.
@@ -30,9 +34,6 @@ namespace HotPotPlayer.Video
         public VideoControl()
         {
             this.InitializeComponent();
-            lastCompositionScaleX = Host.CompositionScaleX;
-            lastCompositionScaleY = Host.CompositionScaleY;
-            ContentsScale = Host.CompositionScaleX;
         }
 
         public FileInfo Source
@@ -50,172 +51,76 @@ namespace HotPotPlayer.Video
             h.StartPlay((FileInfo)e.NewValue);
         }
 
-        public IntPtr Hwnd { get; set; }
-
-        GlesContext glcontext;
         MpvPlayer _mpv;
-        DispatcherQueueController _eventLoop;
-        DispatcherQueue _eventQueue;
-
-        private bool isVisible = true;
-        private bool isLoaded = false;
-        private double lastCompositionScaleX = 0.0;
-        private double lastCompositionScaleY = 0.0;
-
-        int width;
-        int height;
-        public double ContentsScale { get; private set; }
-
-        private bool pendingSizeChange = false;
 
         MpvPlayer Mpv
         {
             get
             {
-                if (_mpv == null)
-                {
-                    _mpv = new MpvPlayer(@"NativeLibs\mpv-2.dll", GetProcAddress)
+                _mpv ??= new MpvPlayer(@"NativeLibs\mpv-2.dll")
                     {
                         AutoPlay = true,
                         Volume = 100,
                         LogLevel = MpvLogLevel.Debug
                     };
-                }
+                _mpv.SetGpuNextD3DInitCallback(GpuNextD3DInitCallback);
                 return _mpv;
             }
         }
 
-        private IntPtr GetProcAddress(IntPtr ctx, string name)
+        IDXGISwapChain1 _swapChain1;
+        DirectN.ID3D11Device1 _device;
+
+        private void GpuNextD3DInitCallback(IntPtr d3d11Device, IntPtr swapChain)
         {
-            return Egl.eglGetProcAddress(name);
+            //_swapChain1 = (IDXGISwapChain1)Marshal.GetObjectForIUnknown(swapChain);
+            _swapChain1 = ObjectReference<IDXGISwapChain1>.FromAbi(swapChain).Vftbl;
         }
 
         private void StartPlay(FileInfo file)
         {
-            Task.Run(() =>
-            {
-                if (_eventLoop == null)
-                {
-                    _eventLoop = DispatcherQueueController.CreateOnDedicatedThread();
-                    _eventQueue = _eventLoop.DispatcherQueue;
-                }
-
-
-                Mpv.API.RenderContextSetUpdateCallback(OnMpvRenderUpdate, IntPtr.Zero);
-
-                Mpv.API.SetPropertyString("gpu-context", "d3d11");
-                Mpv.API.SetPropertyString("hwdec", "d3d11va");
+            Mpv.API.SetPropertyString("vo", "gpu-next");
+            Mpv.API.SetPropertyString("gpu-context", "d3d11");
+            Mpv.API.SetPropertyString("hwdec", "d3d11va");
 #if DEBUG
-                Mpv.API.Command("script-binding", "stats/display-stats-toggle");
+            Mpv.API.Command("script-binding", "stats/display-stats-toggle");
 #endif
-                Mpv.LoadAsync(file.FullName);
-            });
-        }
+            Mpv.LoadAsync(file.FullName);
 
-        private void OnMpvRenderUpdate(IntPtr cbCtx)
-        {
-            _eventQueue.TryEnqueue(() =>
-            {
-                var flags = Mpv.API.RenderContextUpdate();
-                if (flags == MpvRenderUpdateFlag.MPV_RENDER_UPDATE_FRAME)
-                {
-                    RenderFrame();
-                }
-            });
+            var nativepanel = Host.As<ISwapChainPanelNative>();
+            nativepanel.SetSwapChain(_swapChain1);
         }
 
         private void Host_Loaded(object sender, RoutedEventArgs e)
         {
-            isLoaded = true;
-            ContentsScale = Host.CompositionScaleX;
-            glcontext = new GlesContext();
-            EnsureRenderSurface();
+
         }
 
         private void Host_CompositionScaleChanged(SwapChainPanel sender, object args)
         {
-            if (lastCompositionScaleX == Host.CompositionScaleX && lastCompositionScaleY == Host.CompositionScaleY)
-            {
-                return;
-            }
 
-            lastCompositionScaleX = Host.CompositionScaleX;
-            lastCompositionScaleY = Host.CompositionScaleY;
-
-            pendingSizeChange = true;
-
-            ContentsScale = Host.CompositionScaleX;
-
-            DestroyRenderSurface();
-            EnsureRenderSurface();
         }
 
         private void Host_SizeChanged(object sender, SizeChangedEventArgs e)
         {
-            pendingSizeChange = true;
-            width = (int)Host.ActualWidth;
-            height = (int)Host.ActualHeight;
-            EnsureRenderSurface();
-        }
 
-        private void EnsureRenderSurface()
-        {
-            if (isLoaded && glcontext?.HasSurface != true && ActualWidth > 0 && ActualHeight > 0)
-            {
-                // detach and re-attach the size events as we need to go after the event added by ANGLE
-                // otherwise our size will still be the old size
-
-                Host.SizeChanged -= Host_SizeChanged;
-                Host.CompositionScaleChanged -= Host_CompositionScaleChanged;
-
-                glcontext.CreateSurface(Host, null, Host.CompositionScaleX, Hwnd);
-
-                Host.SizeChanged += Host_SizeChanged;
-                Host.CompositionScaleChanged += Host_CompositionScaleChanged;
-            }
-        }
-
-        private void DestroyRenderSurface()
-        {
-            glcontext?.DestroySurface();
-        }
-
-        private void RenderFrame()
-        {
-            if (!isLoaded || !isVisible || glcontext?.HasSurface != true)
-                return;
-
-            glcontext.MakeCurrent();
-
-            if (pendingSizeChange)
-            {
-                pendingSizeChange = false;
-            }
-
-            glcontext.GetSurfaceDimensions(out var panelWidth, out var panelHeight);
-            glcontext.SetViewportSize(panelWidth, panelHeight);
-
-            //MPV渲染
-            Mpv.API.RenderContextRenderGL(width, height);
-
-            if (!glcontext.SwapBuffers())
-            {
-                // The call to eglSwapBuffers might not be successful (i.e. due to Device Lost)
-                // If the call fails, then we must reinitialize EGL and the GL resources.
-            }
         }
 
         private void Host_Unloaded(object sender, RoutedEventArgs e)
         {
-            Host.CompositionScaleChanged -= Host_CompositionScaleChanged;
-            Host.SizeChanged -= Host_SizeChanged;
 
-            DestroyRenderSurface();
-
-            isLoaded = false;
-
-            glcontext?.Dispose();
-            glcontext = null;
         }
+
+        public void Stop()
+        {
+
+        }
+    }
+
+    [ComImport, Guid("63aad0b8-7c24-40ff-85a8-640d944cc325"), InterfaceType(ComInterfaceType.InterfaceIsIUnknown)]
+    public interface ISwapChainPanelNative
+    {
+        [PreserveSig]
+        HRESULT SetSwapChain(IDXGISwapChain swapChain);
     }
 }
