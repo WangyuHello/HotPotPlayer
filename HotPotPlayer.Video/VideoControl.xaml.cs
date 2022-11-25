@@ -11,7 +11,6 @@ using Microsoft.UI.Xaml.Navigation;
 using Mpv.NET.API;
 using Mpv.NET.API.Structs;
 using Mpv.NET.Player;
-using Silk.NET.Direct3D11;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -74,13 +73,13 @@ namespace HotPotPlayer.Video
 
         IDXGISwapChain1 _swapChain1;
         IDXGISwapChain2 _swapChain2;
-        DirectN.ID3D11Device _device;
+        ID3D11Device _device;
 
         private void GpuNextD3DInitCallback(IntPtr d3d11Device, IntPtr swapChain)
         {
             _swapChain1 = (IDXGISwapChain1)Marshal.GetObjectForIUnknown(swapChain);
             _swapChain2 = (IDXGISwapChain2)Marshal.GetObjectForIUnknown(swapChain);
-            _device = (DirectN.ID3D11Device)Marshal.GetObjectForIUnknown(d3d11Device);
+            _device = (ID3D11Device)Marshal.GetObjectForIUnknown(d3d11Device);
             //_swapChain1 = ObjectReference<IDXGISwapChain1>.FromAbi(swapChain).Vftbl;
             var nativepanel = Host.As<ISwapChainPanelNative>();
             _swapChain1.GetDesc1(out var desp);

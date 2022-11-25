@@ -64,7 +64,6 @@
     <None Remove="Styles\Images.xaml" />
     <None Remove="Styles\ListView.xaml" />
     <None Remove="Styles\Sliders.xaml" />
-    <None Remove="Styles\VLC.xaml" />
     <None Remove="Templates\ListView.xaml" />
     <None Remove="Templates\MusicCardView.xaml" />
     <None Remove="Templates\Pivot.xaml" />
@@ -117,7 +116,6 @@
   <ItemGroup>
     <ProjectReference Include="..\HotPotPlayer.Common\HotPotPlayer.Common.csproj" />
     <ProjectReference Include="..\HotPotPlayer.Video\HotPotPlayer.Video.csproj" />
-    <ProjectReference Include="..\libvlcsharp\src\LibVLCSharp\LibVLCSharp.csproj" />
   </ItemGroup>
 
   <ItemGroup>
@@ -231,9 +229,6 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Update="Pages\Music\Artist.xaml">
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Update="Styles\VLC.xaml">
       <Generator>MSBuild:Compile</Generator>
     </Page>
   </ItemGroup>

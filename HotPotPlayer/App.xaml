@@ -13,7 +13,6 @@
                 <ResourceDictionary Source="ms-appx:///Styles/Buttons.xaml" />
                 <ResourceDictionary Source="ms-appx:///Styles/Images.xaml" />
                 <ResourceDictionary Source="ms-appx:///Styles/Sliders.xaml" />
-                <ResourceDictionary Source="ms-appx:///Styles/VLC.xaml" />
                 <ResourceDictionary Source="ms-appx:///Styles/GridView.xaml" />
                 <ResourceDictionary Source="ms-appx:///Styles/ListView.xaml" />
                 <ResourceDictionary Source="ms-appx:///Templates/Pivot.xaml" />
