@@ -84,6 +84,7 @@ namespace HotPotPlayer.Video
             var nativepanel = Host.As<ISwapChainPanelNative>();
             _swapChain1.GetDesc1(out var desp);
             nativepanel.SetSwapChain(_swapChain1);
+            loaded = true;
         }
 
         private void StartPlay(FileInfo file)
@@ -126,6 +127,7 @@ namespace HotPotPlayer.Video
             pendingPlay = false;
         }
 
+        bool loaded;
         FileInfo mediaFile;
         bool pendingPlay;
         object _CriticalLock = new object();
@@ -136,7 +138,7 @@ namespace HotPotPlayer.Video
 
         void UpdateSize()
         {
-            if (Host is null)
+            if (Host is null || !loaded)
                 return;
 
             lock (_CriticalLock)
@@ -147,7 +149,7 @@ namespace HotPotPlayer.Video
 
         void UpdateScale()
         {
-            if (Host is null) return;
+            if (Host is null || !loaded) return;
             Mpv.SetPanelSize((int)CurrentWidth, (int)CurrentHeight, CurrentCompositionScaleX, CurrentCompositionScaleY);
         }
 
