@@ -28,7 +28,7 @@ using WinRT;
 
 namespace HotPotPlayer.Video
 {
-    public sealed partial class VideoControl : UserControl
+    public sealed partial class VideoControl : UserControlBase
     {
         public VideoControl()
         {
@@ -47,7 +47,8 @@ namespace HotPotPlayer.Video
         private static void SourceChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
             var h = (VideoControl)d;
-            h.StartPlay((FileInfo)e.NewValue);
+            h.mediaFile = (FileInfo)e.NewValue;
+            h.pendingPlay = true;
         }
 
         MpvPlayer _mpv;
@@ -58,13 +59,13 @@ namespace HotPotPlayer.Video
             {
                 if (_mpv == null)
                 {
-                    _mpv = new MpvPlayer(IntPtr.Zero, @"NativeLibs\mpv-2.dll")
+                    _mpv = new MpvPlayer(App.MainWindowHandle, @"NativeLibs\mpv-2.dll", (int)Host.ActualWidth, (int)Host.ActualHeight)
                     {
                         AutoPlay = true,
                         Volume = 100,
                         LogLevel = MpvLogLevel.Debug
                     };
-                    _mpv.SetD3DInitCallback(GpuNextD3DInitCallback);
+                    _mpv.SetD3DInitCallback(D3DInitCallback);
                 }
 
                 return _mpv;
@@ -73,7 +74,7 @@ namespace HotPotPlayer.Video
 
         ID3D11Device _device;
 
-        private void GpuNextD3DInitCallback(IntPtr d3d11Device, IntPtr swapChain)
+        private void D3DInitCallback(IntPtr d3d11Device, IntPtr swapChain)
         {
             UpdateSize();
             UpdateScale();
@@ -100,7 +101,10 @@ namespace HotPotPlayer.Video
 
         private void Host_Loaded(object sender, RoutedEventArgs e)
         {
-            
+            if (pendingPlay)
+            {
+                StartPlay(mediaFile);
+            }
         }
 
         private void Host_CompositionScaleChanged(SwapChainPanel sender, object args)
@@ -112,19 +116,21 @@ namespace HotPotPlayer.Video
 
         private void Host_SizeChanged(object sender, SizeChangedEventArgs e)
         {
-            CurrentWidth = (uint)Host.ActualWidth;
-            CurrentHeight = (uint)Host.ActualHeight;
+            CurrentWidth = (int)Host.ActualWidth;
+            CurrentHeight = (int)Host.ActualHeight;
             UpdateSize();
         }
 
         private void Host_Unloaded(object sender, RoutedEventArgs e)
         {
-
+            pendingPlay = false;
         }
 
+        FileInfo mediaFile;
+        bool pendingPlay;
         object _CriticalLock = new object();
-        uint CurrentWidth;
-        uint CurrentHeight;
+        int CurrentWidth;
+        int CurrentHeight;
         float CurrentCompositionScaleX;
         float CurrentCompositionScaleY;
 
@@ -155,6 +161,6 @@ namespace HotPotPlayer.Video
     public interface ISwapChainPanelNative
     {
         [PreserveSig]
-        HRESULT SetSwapChain(IDXGISwapChain swapChain);
+        HRESULT SetSwapChain(IDXGISwapChain1 swapChain);
     }
 }
