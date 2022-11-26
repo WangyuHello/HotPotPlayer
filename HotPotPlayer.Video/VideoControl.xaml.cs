@@ -58,35 +58,31 @@ namespace HotPotPlayer.Video
             {
                 if (_mpv == null)
                 {
-                    _mpv = new MpvPlayer(IntPtr.Zero+1, @"NativeLibs\mpv-2.dll")
+                    _mpv = new MpvPlayer(IntPtr.Zero, @"NativeLibs\mpv-2.dll")
                     {
                         AutoPlay = true,
                         Volume = 100,
                         LogLevel = MpvLogLevel.Debug
                     };
-                    _mpv.SetGpuNextD3DInitCallback(GpuNextD3DInitCallback);
+                    _mpv.SetD3DInitCallback(GpuNextD3DInitCallback);
                 }
 
                 return _mpv;
             }
         }
 
-        IDXGISwapChain1 _swapChain1;
-        IDXGISwapChain2 _swapChain2;
         ID3D11Device _device;
 
         private void GpuNextD3DInitCallback(IntPtr d3d11Device, IntPtr swapChain)
         {
-            _swapChain1 = (IDXGISwapChain1)Marshal.GetObjectForIUnknown(swapChain);
-            _swapChain2 = (IDXGISwapChain2)Marshal.GetObjectForIUnknown(swapChain);
+            UpdateSize();
+            UpdateScale();
+            var _swapChain1 = (IDXGISwapChain1)Marshal.GetObjectForIUnknown(swapChain);
             _device = (ID3D11Device)Marshal.GetObjectForIUnknown(d3d11Device);
             //_swapChain1 = ObjectReference<IDXGISwapChain1>.FromAbi(swapChain).Vftbl;
             var nativepanel = Host.As<ISwapChainPanelNative>();
             _swapChain1.GetDesc1(out var desp);
-            BufferCount = desp.BufferCount;
             nativepanel.SetSwapChain(_swapChain1);
-            UpdateSize();
-            UpdateScale();
         }
 
         private void StartPlay(FileInfo file)
@@ -131,23 +127,22 @@ namespace HotPotPlayer.Video
         uint CurrentHeight;
         float CurrentCompositionScaleX;
         float CurrentCompositionScaleY;
-        uint BufferCount;
 
         void UpdateSize()
         {
-            if (Host is null || _swapChain1 is null)
+            if (Host is null)
                 return;
 
             lock (_CriticalLock)
             {
-                _swapChain1?.ResizeBuffers(BufferCount, CurrentWidth, CurrentHeight, DXGI_FORMAT.DXGI_FORMAT_B8G8R8A8_UNORM, 0);
+                Mpv.SetPanelSize((int)CurrentWidth, (int)CurrentHeight, CurrentCompositionScaleX, CurrentCompositionScaleY);
             }
         }
 
         void UpdateScale()
         {
-            if (Host is null || _swapChain2 is null) return;
-            //_swapChain2.SetMatrixTransform(new DXGI_MATRIX_3X2_F { _11 = 1.0f / CurrentCompositionScaleX, _22 = 1.0f / CurrentCompositionScaleY });
+            if (Host is null) return;
+            Mpv.SetPanelSize((int)CurrentWidth, (int)CurrentHeight, CurrentCompositionScaleX, CurrentCompositionScaleY);
         }
 
         public void Stop()
