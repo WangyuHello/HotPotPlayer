@@ -33,6 +33,17 @@ namespace HotPotPlayer.Video
         public VideoControl()
         {
             this.InitializeComponent();
+            CompositionTarget.Rendering += CompositionTarget_Rendering;
+            UIQueue = DispatcherQueue.GetForCurrentThread();
+        }
+
+        private void CompositionTarget_Rendering(object sender, object e)
+        {
+            if (Host == null || _swapChain1 == null)
+            {
+                return;   
+            }
+            //_swapChain1.Present(0, 0);
         }
 
         public FileInfo Source
@@ -73,18 +84,24 @@ namespace HotPotPlayer.Video
         }
 
         ID3D11Device _device;
+        IDXGISwapChain1 _swapChain1;
+        DispatcherQueue UIQueue;
 
         private void D3DInitCallback(IntPtr d3d11Device, IntPtr swapChain)
         {
             UpdateSize();
             UpdateScale();
-            var _swapChain1 = (IDXGISwapChain1)Marshal.GetObjectForIUnknown(swapChain);
-            _device = (ID3D11Device)Marshal.GetObjectForIUnknown(d3d11Device);
-            //_swapChain1 = ObjectReference<IDXGISwapChain1>.FromAbi(swapChain).Vftbl;
-            var nativepanel = Host.As<ISwapChainPanelNative>();
-            _swapChain1.GetDesc1(out var desp);
-            nativepanel.SetSwapChain(_swapChain1);
-            loaded = true;
+
+            UIQueue.TryEnqueue(() =>
+            {
+                _swapChain1 = (IDXGISwapChain1)Marshal.GetObjectForIUnknown(swapChain);
+                _device = (ID3D11Device)Marshal.GetObjectForIUnknown(d3d11Device);
+                //_swapChain1 = ObjectReference<IDXGISwapChain1>.FromAbi(swapChain).Vftbl;
+                var nativepanel = Host.As<ISwapChainPanelNative>();
+                _swapChain1.GetDesc1(out var desp);
+                nativepanel.SetSwapChain(_swapChain1);
+                loaded = true;
+            });
         }
 
         private void StartPlay(FileInfo file)
