@@ -11,6 +11,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Windows.Foundation;
 
 namespace HotPotPlayer
 {
@@ -47,6 +48,8 @@ namespace HotPotPlayer
         public abstract void ShowToast(ToastInfo toast);
         public abstract void NavigateTo(string name, object parameter = null, NavigationTransitionInfo trans = null);
         public abstract IntPtr MainWindowHandle { get; }
+
+        public abstract Rect Bounds { get; }
         public abstract XamlRoot XamlRoot { get; }
 
         TaskbarHelper _taskbar;

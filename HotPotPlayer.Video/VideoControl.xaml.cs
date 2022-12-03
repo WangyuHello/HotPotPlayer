@@ -60,7 +60,7 @@ namespace HotPotPlayer.Video
                 if (_mpv == null)
                 {
                     //_mpv = new MpvPlayer(@"NativeLibs\mpv-2.dll")
-                    _mpv = new MpvPlayer(App.MainWindowHandle, @"NativeLibs\mpv-2.dll", (int)Math.Ceiling(Host.CompositionScaleX * Host.ActualWidth), (int)Math.Ceiling(Host.CompositionScaleY*Host.ActualHeight), Host.CompositionScaleX, Host.CompositionScaleY)
+                    _mpv = new MpvPlayer(App.MainWindowHandle, @"NativeLibs\mpv-2.dll", (int)Math.Ceiling(Host.CompositionScaleX * Host.ActualWidth), (int)Math.Ceiling(Host.CompositionScaleY*Host.ActualHeight), Host.CompositionScaleX, Host.CompositionScaleY, new System.Drawing.Rectangle { X = (int)App.Bounds.Left, Y = (int)App.Bounds.Right, Width = (int)App.Bounds.Top, Height = (int)App.Bounds.Bottom})
                     {
                         AutoPlay = true,
                         Volume = 100,
