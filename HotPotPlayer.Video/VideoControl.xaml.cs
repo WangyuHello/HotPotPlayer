@@ -60,7 +60,7 @@ namespace HotPotPlayer.Video
                 if (_mpv == null)
                 {
                     //_mpv = new MpvPlayer(@"NativeLibs\mpv-2.dll")
-                    _mpv = new MpvPlayer(App.MainWindowHandle, @"NativeLibs\mpv-2.dll", (int)Host.ActualWidth, (int)Host.ActualHeight)
+                    _mpv = new MpvPlayer(App.MainWindowHandle, @"NativeLibs\mpv-2.dll", (int)Math.Ceiling(Host.CompositionScaleX * Host.ActualWidth), (int)Math.Ceiling(Host.CompositionScaleY*Host.ActualHeight), Host.CompositionScaleX, Host.CompositionScaleY)
                     {
                         AutoPlay = true,
                         Volume = 100,
@@ -113,13 +113,16 @@ namespace HotPotPlayer.Video
         {
             CurrentCompositionScaleX = Host.CompositionScaleX;
             CurrentCompositionScaleY = Host.CompositionScaleY;
-            //UpdateSize();
+            CurrentWidth = (int)Math.Ceiling(Host.CompositionScaleX * Host.ActualWidth);
+            CurrentHeight = (int)Math.Ceiling(Host.CompositionScaleY * Host.ActualHeight);
+            UpdateScale();
+            UpdateSize();
         }
 
         private void Host_SizeChanged(object sender, SizeChangedEventArgs e)
         {
-            CurrentWidth = (int)Math.Ceiling(Host.ActualWidth);
-            CurrentHeight = (int)Math.Ceiling(Host.ActualHeight);
+            CurrentWidth = (int)Math.Ceiling(Host.CompositionScaleX*Host.ActualWidth);
+            CurrentHeight = (int)Math.Ceiling(Host.CompositionScaleY*Host.ActualHeight);
             UpdateSize();
         }
 
@@ -132,6 +135,7 @@ namespace HotPotPlayer.Video
         bool _swapChainLoaded;
         FileInfo mediaFile;
         object _CriticalLock = new object();
+        object _CriticalLock2 = new object();
         int CurrentWidth;
         int CurrentHeight;
         float CurrentCompositionScaleX;
@@ -144,7 +148,18 @@ namespace HotPotPlayer.Video
 
             lock (_CriticalLock)
             {
-                Mpv.SetPanelSize(CurrentWidth, CurrentHeight, CurrentCompositionScaleX, CurrentCompositionScaleY);
+                Mpv.SetPanelSize(CurrentWidth, CurrentHeight);
+            }
+        }
+
+        void UpdateScale()
+        {
+            if (Host is null || !_swapChainLoaded)
+                return;
+
+            lock (_CriticalLock2)
+            {
+                Mpv.SetPanelScale(CurrentCompositionScaleX, CurrentCompositionScaleY);
             }
         }
 
