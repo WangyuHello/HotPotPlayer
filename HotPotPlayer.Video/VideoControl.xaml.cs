@@ -93,8 +93,8 @@ namespace HotPotPlayer.Video
 
         private void StartPlay(FileInfo file)
         {
-            //Mpv.API.SetPropertyString("vo", "gpu");
-            Mpv.API.SetPropertyString("vo", "gpu-next");
+            Mpv.API.SetPropertyString("vo", "gpu");
+            //Mpv.API.SetPropertyString("vo", "gpu-next");
             Mpv.API.SetPropertyString("gpu-context", "d3d11");
             Mpv.API.SetPropertyString("hwdec", "d3d11va");
             Mpv.API.SetPropertyString("d3d11-composition", "yes");
