@@ -33,17 +33,7 @@ namespace HotPotPlayer.Video
         public VideoControl()
         {
             this.InitializeComponent();
-            CompositionTarget.Rendering += CompositionTarget_Rendering;
             UIQueue = DispatcherQueue.GetForCurrentThread();
-        }
-
-        private void CompositionTarget_Rendering(object sender, object e)
-        {
-            if (Host == null || _swapChain1 == null)
-            {
-                return;   
-            }
-            //_swapChain1.Present(0, 0);
         }
 
         public FileInfo Source
@@ -59,7 +49,6 @@ namespace HotPotPlayer.Video
         {
             var h = (VideoControl)d;
             h.mediaFile = (FileInfo)e.NewValue;
-            h.pendingPlay = true;
         }
 
         MpvPlayer _mpv;
@@ -70,6 +59,7 @@ namespace HotPotPlayer.Video
             {
                 if (_mpv == null)
                 {
+                    //_mpv = new MpvPlayer(@"NativeLibs\mpv-2.dll")
                     _mpv = new MpvPlayer(App.MainWindowHandle, @"NativeLibs\mpv-2.dll", (int)Host.ActualWidth, (int)Host.ActualHeight)
                     {
                         AutoPlay = true,
@@ -85,13 +75,10 @@ namespace HotPotPlayer.Video
 
         ID3D11Device _device;
         IDXGISwapChain1 _swapChain1;
-        DispatcherQueue UIQueue;
+        readonly DispatcherQueue UIQueue;
 
         private void D3DInitCallback(IntPtr d3d11Device, IntPtr swapChain)
         {
-            UpdateSize();
-            UpdateScale();
-
             UIQueue.TryEnqueue(() =>
             {
                 _swapChain1 = (IDXGISwapChain1)Marshal.GetObjectForIUnknown(swapChain);
@@ -100,7 +87,7 @@ namespace HotPotPlayer.Video
                 var nativepanel = Host.As<ISwapChainPanelNative>();
                 _swapChain1.GetDesc1(out var desp);
                 nativepanel.SetSwapChain(_swapChain1);
-                loaded = true;
+                _swapChainLoaded = true;
             });
         }
 
@@ -119,34 +106,31 @@ namespace HotPotPlayer.Video
 
         private void Host_Loaded(object sender, RoutedEventArgs e)
         {
-            if (pendingPlay)
-            {
-                StartPlay(mediaFile);
-            }
+            StartPlay(mediaFile);
         }
 
         private void Host_CompositionScaleChanged(SwapChainPanel sender, object args)
         {
             CurrentCompositionScaleX = Host.CompositionScaleX;
             CurrentCompositionScaleY = Host.CompositionScaleY;
-            UpdateScale();
+            //UpdateSize();
         }
 
         private void Host_SizeChanged(object sender, SizeChangedEventArgs e)
         {
-            CurrentWidth = (int)Host.ActualWidth;
-            CurrentHeight = (int)Host.ActualHeight;
+            CurrentWidth = (int)Math.Ceiling(Host.ActualWidth);
+            CurrentHeight = (int)Math.Ceiling(Host.ActualHeight);
             UpdateSize();
         }
 
         private void Host_Unloaded(object sender, RoutedEventArgs e)
         {
-            pendingPlay = false;
+            _swapChainLoaded = false;
+            Mpv.Dispose();
         }
 
-        bool loaded;
+        bool _swapChainLoaded;
         FileInfo mediaFile;
-        bool pendingPlay;
         object _CriticalLock = new object();
         int CurrentWidth;
         int CurrentHeight;
@@ -155,19 +139,13 @@ namespace HotPotPlayer.Video
 
         void UpdateSize()
         {
-            if (Host is null || !loaded)
+            if (Host is null || !_swapChainLoaded)
                 return;
 
             lock (_CriticalLock)
             {
-                Mpv.SetPanelSize((int)CurrentWidth, (int)CurrentHeight, CurrentCompositionScaleX, CurrentCompositionScaleY);
+                Mpv.SetPanelSize(CurrentWidth, CurrentHeight, CurrentCompositionScaleX, CurrentCompositionScaleY);
             }
-        }
-
-        void UpdateScale()
-        {
-            if (Host is null || !loaded) return;
-            Mpv.SetPanelSize((int)CurrentWidth, (int)CurrentHeight, CurrentCompositionScaleX, CurrentCompositionScaleY);
         }
 
         public void Stop()
