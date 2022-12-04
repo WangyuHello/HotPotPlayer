@@ -43,7 +43,6 @@
     <None Remove="Controls\PlayListPopup.xaml" />
     <None Remove="Controls\PlayScreen.xaml" />
     <None Remove="Controls\Toast.xaml" />
-    <None Remove="Controls\VolumePresenter.xaml" />
     <None Remove="Pages\Album.xaml" />
     <None Remove="Pages\Artist.xaml" />
     <None Remove="Pages\Bilibili.xaml" />
@@ -229,12 +228,6 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Update="Pages\Music\Artist.xaml">
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-  </ItemGroup>
-
-  <ItemGroup>
-    <Page Update="Controls\VolumePresenter.xaml">
       <Generator>MSBuild:Compile</Generator>
     </Page>
   </ItemGroup>

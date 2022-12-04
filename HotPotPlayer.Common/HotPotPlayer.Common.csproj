@@ -9,6 +9,8 @@
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
   <ItemGroup>
+    <None Remove="Controls\VolumeIntPresenter.xaml" />
+    <None Remove="Controls\VolumePresenter.xaml" />
     <None Remove="NativeMethods.txt" />
   </ItemGroup>
   <ItemGroup>
@@ -17,6 +19,7 @@
 
   <ItemGroup>
       <PackageReference Include="CommunityToolkit.Common" Version="7.1.2" />
+      <PackageReference Include="CommunityToolkit.Mvvm" Version="7.1.2" />
       <PackageReference Include="CommunityToolkit.WinUI" Version="7.1.2" />
       <PackageReference Include="CommunityToolkit.WinUI.UI" Version="7.1.2" />
       <PackageReference Include="CommunityToolkit.WinUI.UI.Controls.Core" Version="7.1.2" />
@@ -41,5 +44,15 @@
     <ProjectReference Include="..\HotPotPlayer.Native\HotPotPlayer.Native.csproj" />
     <ProjectReference Include="..\Mpv.NET-lib-\src\Mpv.NET\Mpv.NET.csproj" />
     <ProjectReference Include="..\NeteaseCloudMusicApi\NeteaseCloudMusicApi\NeteaseCloudMusicApi.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Page Update="Controls\VolumeIntPresenter.xaml">
+      <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="Controls\VolumePresenter.xaml">
+      <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
+    </Page>
   </ItemGroup>
 </Project>

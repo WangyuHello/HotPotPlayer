@@ -33,7 +33,7 @@ namespace HotPotPlayer.Controls
         }
 
         public static readonly DependencyProperty VolumeProperty =
-            DependencyProperty.Register("Volume", typeof(float?), typeof(VolumePresenter), new PropertyMetadata(0));
+            DependencyProperty.Register("Volume", typeof(float?), typeof(VolumePresenter), new PropertyMetadata(0.0f));
 
            
         string GetVolumeText(float? v)

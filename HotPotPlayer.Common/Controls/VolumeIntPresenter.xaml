@@ -1,0 +1,17 @@
+﻿<UserControl
+    x:Class="HotPotPlayer.Controls.VolumeIntPresenter"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:HotPotPlayer.Controls"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d">
+
+    <Grid>
+        <Rectangle Fill="#40FFFFFF" Margin="-8" Translation="{x:Bind GetVolumeTranslation(Volume), Mode=OneWay}" />
+        <StackPanel Orientation="Horizontal" Spacing="4" VerticalAlignment="Center">
+            <FontIcon FontFamily="Segoe Fluent Icons" Glyph="{x:Bind GetVolumeIcon(Volume), Mode=OneWay}" VerticalAlignment="Center"/>
+            <TextBlock VerticalAlignment="Center" Width="32" HorizontalTextAlignment="End" FontSize="13" Text="{x:Bind GetVolumeText(Volume), Mode=OneWay}"></TextBlock>
+        </StackPanel>
+    </Grid>
+</UserControl>

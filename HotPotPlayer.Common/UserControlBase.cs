@@ -45,5 +45,11 @@ namespace HotPotPlayer
                 PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
             }
         }
+
+        public void OnPropertyChanged(PropertyChangedEventArgs args = null, [CallerMemberName] string propertyName = "")
+        {
+            args ??= new PropertyChangedEventArgs(propertyName);
+            PropertyChanged?.Invoke(this, args);
+        }
     }
 }

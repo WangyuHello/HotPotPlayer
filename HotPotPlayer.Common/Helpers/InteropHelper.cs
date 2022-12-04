@@ -49,7 +49,6 @@ namespace HotPotPlayer.Helpers
 
         public static T GetActivationFactory<T>(Type classType)
         {
-#if NET5_0_OR_GREATER
             try
             {
                 // ToDo: Improve this (performance)!
@@ -60,9 +59,6 @@ namespace HotPotPlayer.Helpers
             {
                 throw new PlatformNotSupportedException("Please use the built-in net5.0 interops!" + Environment.NewLine + "https://docs.microsoft.com/en-us/windows/apps/desktop/modernize/winrt-com-interop-csharp#available-interop-classes");
             }
-#else
-            return (T)WindowsRuntimeMarshal.GetActivationFactory(classType);
-#endif
         }
 
         public static T CastWinRTObject<T>(object value)

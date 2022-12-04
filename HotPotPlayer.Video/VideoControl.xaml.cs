@@ -1,4 +1,6 @@
-﻿using DirectN;
+﻿using CommunityToolkit.Mvvm.ComponentModel;
+using DirectN;
+using HotPotPlayer.Services;
 using HotPotPlayer.Video.GlesInterop;
 using Microsoft.UI.Dispatching;
 using Microsoft.UI.Xaml;
@@ -17,6 +19,7 @@ using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Runtime.InteropServices.WindowsRuntime;
+using System.Threading;
 using System.Threading.Tasks;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
@@ -34,6 +37,9 @@ namespace HotPotPlayer.Video
         {
             this.InitializeComponent();
             UIQueue = DispatcherQueue.GetForCurrentThread();
+
+            PlaySlider.AddHandler(PointerReleasedEvent, new PointerEventHandler(PlaySlider_OnPointerReleased), true);
+            PlaySlider.AddHandler(PointerPressedEvent, new PointerEventHandler(PlaySlider_OnPointerPressed), true);
         }
 
         public FileInfo Source
@@ -51,6 +57,7 @@ namespace HotPotPlayer.Video
             h.mediaFile = (FileInfo)e.NewValue;
         }
 
+        bool playBarVisibleInited;
         MpvPlayer _mpv;
 
         MpvPlayer Mpv
@@ -64,13 +71,57 @@ namespace HotPotPlayer.Video
                     {
                         AutoPlay = true,
                         Volume = 100,
-                        LogLevel = MpvLogLevel.Debug
+                        LogLevel = MpvLogLevel.Debug,
+                        Loop = true,
                     };
                     _mpv.SetD3DInitCallback(D3DInitCallback);
+                    _mpv.MediaResumed += MediaResumed;
+                    _mpv.MediaPaused += MediaPaused;
+                    _mpv.MediaLoaded += MediaLoaded;
+                    _mpv.MediaFinished += MediaFinished;
+                    _mpv.PositionChanged += PositionChanged;
                 }
 
                 return _mpv;
             }
+        }
+
+        private void PositionChanged(object sender, MpvPlayerPositionChangedEventArgs e)
+        {
+            UIQueue.TryEnqueue(() => CurrentTime = e.NewPosition);
+        }
+
+        private void MediaFinished(object sender, EventArgs e)
+        {
+            UIQueue.TryEnqueue(() => IsPlaying = false);
+        }
+
+        private async void MediaLoaded(object sender, EventArgs e)
+        {
+            UIQueue.TryEnqueue(() => 
+            {
+                IsPlaying = true;
+                CurrentPlayingDuration = _mpv.Duration;
+                OnPropertyChanged(propertyName: nameof(Volume));
+
+            });
+
+            await Task.Run(async () =>
+            {
+                await Task.Delay(1000);
+                playBarVisibleInited = true;
+                UIQueue.TryEnqueue(() => PlayBarVisible = true);
+            });
+        }
+
+        private void MediaPaused(object sender, EventArgs e)
+        {
+            UIQueue.TryEnqueue(() => IsPlaying = false);
+        }
+
+        private void MediaResumed(object sender, EventArgs e)
+        {
+            UIQueue.TryEnqueue(() => IsPlaying = true);
         }
 
         ID3D11Device _device;
@@ -94,13 +145,10 @@ namespace HotPotPlayer.Video
         private void StartPlay(FileInfo file)
         {
             Mpv.API.SetPropertyString("vo", "gpu");
-            //Mpv.API.SetPropertyString("vo", "gpu-next");
+            //Mpv.API.SetPropertyString("vo", "gpu-next");                          
             Mpv.API.SetPropertyString("gpu-context", "d3d11");
             Mpv.API.SetPropertyString("hwdec", "d3d11va");
             Mpv.API.SetPropertyString("d3d11-composition", "yes");
-#if DEBUG
-            Mpv.API.Command("script-binding", "stats/display-stats-toggle");
-#endif
             Mpv.LoadAsync(file.FullName);
         }
 
@@ -129,6 +177,10 @@ namespace HotPotPlayer.Video
         private void Host_Unloaded(object sender, RoutedEventArgs e)
         {
             _swapChainLoaded = false;
+            Mpv.MediaPaused -= MediaPaused;
+            Mpv.MediaResumed -= MediaResumed;
+            Mpv.MediaLoaded -= MediaLoaded;
+            Mpv.MediaFinished -= MediaFinished;
             Mpv.Dispose();
         }
 
@@ -166,6 +218,228 @@ namespace HotPotPlayer.Video
         public void Stop()
         {
             Mpv.Stop();
+        }
+
+        [ObservableProperty]
+        private bool isPlaying;
+
+        public bool SuppressCurrentTimeTrigger { get; set; }
+
+        private TimeSpan _currentTime;
+
+        public TimeSpan CurrentTime
+        {
+            get => _currentTime;
+            set
+            {
+                if (SuppressCurrentTimeTrigger) return;
+                Set(ref _currentTime, value);
+            }
+        }
+
+        [ObservableProperty]
+        private TimeSpan? currentPlayingDuration;
+
+        [ObservableProperty]
+        private PlayMode playMode;
+
+        public int Volume
+        {
+            get
+            {
+                if (_mpv == null)
+                {
+                    return 100;
+                }
+                return _mpv.Volume;
+            }
+            set
+            {
+                if (_mpv != null && value != _mpv.Volume)
+                {
+                    _mpv.Volume = value;
+                    OnPropertyChanged();
+                }
+            }
+        }
+
+        DispatcherTimer _inActiveTimer;
+
+        private bool playBarVisible;
+
+        public bool PlayBarVisible
+        {
+            get => playBarVisible;
+            set 
+            {
+                if (playBarVisible != value)
+                {
+                    playBarVisible = value;
+                    OnPropertyChanged();
+                    if (playBarVisible == true)
+                    {
+                        _inActiveTimer ??= InitInActiveTimer();
+                        _inActiveTimer.Start();
+                    }
+                }
+            }
+        }
+
+        void StopInactiveTimer()
+        {
+            if (_inActiveTimer != null)
+            {
+                _inActiveTimer.Stop();
+            }
+        }
+
+        void StartInactiveTimer()
+        {
+            if (_inActiveTimer != null)
+            {
+                _inActiveTimer.Start();
+            }
+        }
+
+        DispatcherTimer InitInActiveTimer()
+        {
+            var t = new DispatcherTimer
+            {
+                Interval = TimeSpan.FromSeconds(5)
+            };
+            t.Tick += InActiveTimerTick;
+            return t;
+        }
+
+        private void InActiveTimerTick(object sender, object e)
+        {
+            _inActiveTimer.Stop();
+            PlayBarVisible = false;
+        }
+
+        Symbol GetPlayButtonSymbol(bool isPlaying, bool hasError)
+        {
+            if (hasError)
+            {
+                return Symbol.Clear;
+            }
+            return isPlaying ? Symbol.Pause : Symbol.Play;
+        }
+
+        double GetSliderValue(TimeSpan current, TimeSpan? total)
+        {
+            if (total == null)
+            {
+                return 0;
+            }
+            return 100 * current.Ticks / ((TimeSpan)total).Ticks;
+        }
+
+        string GetDuration(TimeSpan? duration)
+        {
+            if (duration == null)
+            {
+                return "--:--";
+            }
+            return ((TimeSpan)duration).ToString("mm\\:ss");
+        }
+
+        private void PlayButtonClick(object sender, RoutedEventArgs e)
+        {
+            if(Mpv.IsPlaying)
+            {
+                Mpv.Pause();
+            }
+            else
+            {
+                Mpv.Resume();
+            }
+        }
+
+        private void ToggleStatusClick(object sender, RoutedEventArgs e)
+        {
+            Mpv.API.Command("script-binding", "stats/display-stats-toggle");
+        }
+
+        private void PlaySlider_OnPointerPressed(object sender, PointerRoutedEventArgs e)
+        {
+            SuppressCurrentTimeTrigger = true;
+        }
+
+        private async void PlaySlider_OnPointerReleased(object sender, PointerRoutedEventArgs e)
+        {
+            SuppressCurrentTimeTrigger = false;
+            TimeSpan to = GetToTime();
+            await _mpv.SeekAsync(to);
+        }
+
+        private TimeSpan GetToTime()
+        {
+            if (CurrentPlayingDuration == null)
+            {
+                return TimeSpan.Zero;
+            }
+            var percent100 = (int)PlaySlider.Value;
+            var v = percent100 * ((TimeSpan)CurrentPlayingDuration).Ticks / 100;
+            var to = TimeSpan.FromTicks(v);
+            return to;
+        }
+
+        private void PlayModeButtonClick(object sender, RoutedEventArgs e)
+        {
+            switch (PlayMode)
+            {
+                case PlayMode.Loop:
+                    PlayMode = PlayMode.SingleLoop;
+                    _mpv.Loop = true;
+                    break;
+                case PlayMode.SingleLoop:
+                    PlayMode = PlayMode.Shuffle;
+                    _mpv.Loop = true;
+                    break;
+                case PlayMode.Shuffle:
+                    PlayMode = PlayMode.Loop;
+                    _mpv.Loop = true;
+                    break;
+                default:
+                    break;
+            }
+        }
+
+        const string Loop = "\uE1CD";
+        const string SingleLoop = "\uE1CC";
+        const string Shuffle = "\uE8B1";
+        string GetPlayModeIcon(PlayMode playMode)
+        {
+            return playMode switch
+            {
+                PlayMode.Loop => Loop,
+                PlayMode.SingleLoop => SingleLoop,
+                PlayMode.Shuffle => Shuffle,
+                _ => Loop,
+            };
+        }
+
+        private void Grid_PointerEntered(object sender, PointerRoutedEventArgs e)
+        {
+            if (!playBarVisibleInited) return;
+            PlayBarVisible = true;
+        }
+
+        private void PlayBar_PointerEntered(object sender, PointerRoutedEventArgs e)
+        {
+            StopInactiveTimer();
+        }
+
+        private void PlayBar_PointerExited(object sender, PointerRoutedEventArgs e)
+        {
+            StartInactiveTimer();
+        }
+
+        private void Grid_PointerMoved(object sender, PointerRoutedEventArgs e)
+        {
+            if (!playBarVisibleInited) return;
+            PlayBarVisible = true;
         }
     }
 

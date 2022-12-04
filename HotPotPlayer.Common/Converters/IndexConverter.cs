@@ -10,12 +10,13 @@ using System.Threading.Tasks;
 
 namespace HotPotPlayer.Converters
 {
-    internal class GridIndexConverter : IValueConverter
+    public class IndexConverter : IValueConverter
     {
         public object Convert(object value, Type targetType, object parameter, string language)
         {
             var presenter = value as ContentPresenter;
             var parent = VisualTreeHelper.GetParent(presenter);
+            parent = VisualTreeHelper.GetParent(parent);
             parent = VisualTreeHelper.GetParent(parent);
             var item = parent as SelectorItem;
 
