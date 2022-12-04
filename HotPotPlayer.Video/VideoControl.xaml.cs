@@ -319,6 +319,7 @@ namespace HotPotPlayer.Video
         {
             _inActiveTimer.Stop();
             PlayBarVisible = false;
+            ShowCursor(0);
         }
 
         Symbol GetPlayButtonSymbol(bool isPlaying, bool hasError)
@@ -428,6 +429,7 @@ namespace HotPotPlayer.Video
         {
             if (!playBarVisibleInited) return;
             PlayBarVisible = true;
+            ShowCursor(1);
         }
 
         private void PlayBar_PointerEntered(object sender, PointerRoutedEventArgs e)
@@ -444,6 +446,7 @@ namespace HotPotPlayer.Video
         {
             if (!playBarVisibleInited) return;
             PlayBarVisible = true;
+            ShowCursor(1);
         }
 
         private void NavigateBackClick(object sender, RoutedEventArgs e)
@@ -454,7 +457,12 @@ namespace HotPotPlayer.Video
         private void Host_PointerReleased(object sender, PointerRoutedEventArgs e)
         {
             PlayBarVisible = !PlayBarVisible;
+            ShowCursor(PlayBarVisible ? 1 : 0);
         }
+
+
+        [DllImport("user32.dll", EntryPoint = "ShowCursor", CharSet = CharSet.Auto)]
+        public extern static void ShowCursor(int status);
     }
 
     [ComImport, Guid("63aad0b8-7c24-40ff-85a8-640d944cc325"), InterfaceType(ComInterfaceType.InterfaceIsIUnknown)]
@@ -463,4 +471,5 @@ namespace HotPotPlayer.Video
         [PreserveSig]
         HRESULT SetSwapChain(IDXGISwapChain1 swapChain);
     }
+
 }
