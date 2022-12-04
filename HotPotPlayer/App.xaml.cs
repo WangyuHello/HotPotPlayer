@@ -97,5 +97,7 @@ namespace HotPotPlayer
         public override IntPtr MainWindowHandle => MainWindow.GetWindowHandle();
         public override Rect Bounds => MainWindow.Bounds;
         public override XamlRoot XamlRoot => MainWindow.Content.XamlRoot;
+
+        public override AppWindow AppWindow => MainWindow.GetAppWindow();
     }
 }

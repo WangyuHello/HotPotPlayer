@@ -2,6 +2,7 @@
 using HotPotPlayer.Models;
 using HotPotPlayer.Services;
 using Microsoft.UI.Dispatching;
+using Microsoft.UI.Windowing;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Media.Animation;
 using Newtonsoft.Json.Linq;
@@ -58,6 +59,8 @@ namespace HotPotPlayer
 
         TaskbarHelper _taskbar;
         public TaskbarHelper Taskbar => _taskbar ??= new TaskbarHelper(MainWindowHandle);
+
+        public abstract AppWindow AppWindow { get; }
 
         public abstract void PlayVideo(FileInfo video);
     }

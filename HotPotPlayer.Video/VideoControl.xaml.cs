@@ -3,6 +3,7 @@ using DirectN;
 using HotPotPlayer.Services;
 using HotPotPlayer.Video.GlesInterop;
 using Microsoft.UI.Dispatching;
+using Microsoft.UI.Windowing;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Controls.Primitives;
@@ -145,8 +146,8 @@ namespace HotPotPlayer.Video
 
         private void StartPlay(FileInfo file)
         {
-            Mpv.API.SetPropertyString("vo", "gpu");
-            //Mpv.API.SetPropertyString("vo", "gpu-next");                          
+            //Mpv.API.SetPropertyString("vo", "gpu");
+            Mpv.API.SetPropertyString("vo", "gpu-next");
             Mpv.API.SetPropertyString("gpu-context", "d3d11");
             Mpv.API.SetPropertyString("hwdec", "d3d11va");
             Mpv.API.SetPropertyString("d3d11-composition", "yes");
@@ -216,9 +217,10 @@ namespace HotPotPlayer.Video
             }
         }
 
-        public void Stop()
+        public void Close()
         {
             Mpv.Stop();
+            IsFullScreen = false;
         }
 
         [ObservableProperty]
@@ -463,6 +465,29 @@ namespace HotPotPlayer.Video
 
         [DllImport("user32.dll", EntryPoint = "ShowCursor", CharSet = CharSet.Auto)]
         public extern static void ShowCursor(int status);
+
+        public bool IsFullScreen
+        {
+            get => AppWindow.Presenter.Kind == AppWindowPresenterKind.FullScreen;
+            set
+            {
+                if ((AppWindow.Presenter.Kind == AppWindowPresenterKind.FullScreen) != value)
+                {
+                    AppWindow.SetPresenter(value ? AppWindowPresenterKind.FullScreen : AppWindowPresenterKind.Default);
+                    OnPropertyChanged();
+                }
+            }
+        }
+
+        string GetFullScreenIcon(bool isFullScreen)
+        {
+            return isFullScreen ? "\uE1D8" : "\uE1D9";
+        }
+
+        private void ToggleFullScreenClick(object sender, RoutedEventArgs e)
+        {
+            IsFullScreen = !IsFullScreen;
+        }
     }
 
     [ComImport, Guid("63aad0b8-7c24-40ff-85a8-640d944cc325"), InterfaceType(ComInterfaceType.InterfaceIsIUnknown)]

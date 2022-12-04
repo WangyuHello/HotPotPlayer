@@ -1,5 +1,6 @@
 ﻿using HotPotPlayer.Models;
 using HotPotPlayer.Services;
+using Microsoft.UI.Windowing;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Media.Animation;
@@ -16,6 +17,7 @@ namespace HotPotPlayer
     public class PageBase: Page, INotifyPropertyChanged, IComponentServiceLocator
     {
         public AppBase App => (AppBase)Application.Current;
+        public AppWindow AppWindow => ((IComponentServiceLocator)Application.Current).AppWindow;
 
         public ConfigBase Config => ((IComponentServiceLocator)Application.Current).Config;
 

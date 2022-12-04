@@ -1,5 +1,6 @@
 ﻿using HotPotPlayer.Models;
 using HotPotPlayer.Services;
+using Microsoft.UI.Windowing;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Media.Animation;
@@ -26,6 +27,8 @@ namespace HotPotPlayer
 
         public MusicPlayer MusicPlayer => ((IComponentServiceLocator)Application.Current).MusicPlayer;
         public VideoPlayerService VideoPlayerService => ((IComponentServiceLocator)Application.Current).VideoPlayerService;
+
+        public AppWindow AppWindow => ((IComponentServiceLocator)Application.Current).AppWindow;
 
         public void NavigateTo(string name, object parameter = null, NavigationTransitionInfo trans = null)
         {

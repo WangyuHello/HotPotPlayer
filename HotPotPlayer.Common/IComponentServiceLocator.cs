@@ -1,5 +1,6 @@
 ﻿using HotPotPlayer.Models;
 using HotPotPlayer.Services;
+using Microsoft.UI.Windowing;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Media.Animation;
 using System;
@@ -13,6 +14,7 @@ namespace HotPotPlayer
     public interface IComponentServiceLocator
     {
         public AppBase App { get; }
+        public AppWindow AppWindow { get; }
         public ConfigBase Config { get; }
         public NetEaseMusicService NetEaseMusicService { get; }
         public LocalMusicService LocalMusicService { get; }

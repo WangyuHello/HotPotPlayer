@@ -49,7 +49,7 @@ namespace HotPotPlayer.Pages
         {
             VideoPlayerService.IsVideoPagePresent = false;
             base.OnNavigatingFrom(e);
-            VideoPlayer.Stop();
+            VideoPlayer.Close();
         }
     }
 }

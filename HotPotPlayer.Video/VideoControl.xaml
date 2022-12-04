@@ -83,6 +83,9 @@
                 <Button Style="{StaticResource VideoPlayOtherButton}" Click="ToggleStatusClick">
                     <FontIcon FontFamily="Segoe Fluent Icons" Glyph="&#xE946;" />
                 </Button>
+                <Button Style="{StaticResource VideoPlayOtherButton}" Click="ToggleFullScreenClick">
+                    <FontIcon FontFamily="Segoe Fluent Icons" Glyph="{x:Bind GetFullScreenIcon(IsFullScreen), Mode=OneWay}" />
+                </Button>
                 <Button Style="{StaticResource VideoPlayOtherButton}" >
                     <FontIcon FontFamily="Segoe Fluent Icons" Glyph="&#xE762;" />
                 </Button>
