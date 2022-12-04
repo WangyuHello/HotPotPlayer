@@ -63,7 +63,7 @@ namespace HotPotPlayer
         private void InitMainWindow(Microsoft.UI.Xaml.LaunchActivatedEventArgs args)
         {
             MainWindow.Title = "HotPotPlayer";
-            MainWindow.CenterOnScreen(1260, 960);
+            MainWindow.CenterOnScreen(1420, 1100);
             MainWindow.TrySetAcrylicBackdrop();
             MainWindow.Closed += MainWindow_Closed;
 

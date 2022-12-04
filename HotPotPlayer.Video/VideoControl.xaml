@@ -37,7 +37,7 @@
         <SwapChainPanel x:Name="Host" Loaded="Host_Loaded" CompositionScaleChanged="Host_CompositionScaleChanged" SizeChanged="Host_SizeChanged" Unloaded="Host_Unloaded" PointerReleased="Host_PointerReleased"/>
         
         <!--PlayBar-->
-        <Grid Background="#e0424047" CornerRadius="8" VerticalAlignment="Bottom" Margin="16,0,16,16" Padding="8,6" Visibility="{x:Bind PlayBarVisible, Mode=OneWay}" PointerEntered="PlayBar_PointerEntered" PointerExited="PlayBar_PointerExited">
+        <Grid Background="#e0424047" CornerRadius="8" VerticalAlignment="Bottom" HorizontalAlignment="Stretch" MaxWidth="800" Margin="16,0,16,16" Padding="8,6" Visibility="{x:Bind PlayBarVisible, Mode=OneWay}" PointerEntered="PlayBar_PointerEntered" PointerExited="PlayBar_PointerExited">
 
             <animations:Implicit.ShowAnimations>
                 <animations:TranslationAnimation Duration="0:0:1" From="0,100,0" To="0,0,0" EasingMode="EaseOut"/>
