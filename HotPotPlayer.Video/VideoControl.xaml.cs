@@ -24,6 +24,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
+using Windows.System.Display;
 using WinRT;
 
 
@@ -38,6 +39,7 @@ namespace HotPotPlayer.Video
         {
             this.InitializeComponent();
             UIQueue = DispatcherQueue.GetForCurrentThread();
+            _displayReq = new DisplayRequest();
 
             PlaySlider.AddHandler(PointerReleasedEvent, new PointerEventHandler(PlaySlider_OnPointerReleased), true);
             PlaySlider.AddHandler(PointerPressedEvent, new PointerEventHandler(PlaySlider_OnPointerPressed), true);
@@ -59,6 +61,7 @@ namespace HotPotPlayer.Video
         }
 
         bool playBarVisibleInited;
+        DisplayRequest _displayReq;
         MpvPlayer _mpv;
 
         MpvPlayer Mpv
@@ -67,6 +70,7 @@ namespace HotPotPlayer.Video
             {
                 if (_mpv == null)
                 {
+
                     //_mpv = new MpvPlayer(@"NativeLibs\mpv-2.dll")
                     _mpv = new MpvPlayer(App.MainWindowHandle, @"NativeLibs\mpv-2.dll", (int)Math.Ceiling(Host.CompositionScaleX * Host.ActualWidth), (int)Math.Ceiling(Host.CompositionScaleY*Host.ActualHeight), Host.CompositionScaleX, Host.CompositionScaleY, new System.Drawing.Rectangle { X = (int)App.Bounds.Left, Y = (int)App.Bounds.Right, Width = (int)App.Bounds.Top, Height = (int)App.Bounds.Bottom})
                     {
@@ -95,10 +99,14 @@ namespace HotPotPlayer.Video
         private void MediaFinished(object sender, EventArgs e)
         {
             UIQueue.TryEnqueue(() => IsPlaying = false);
+            _displayReq.RequestRelease();
         }
 
         private async void MediaLoaded(object sender, EventArgs e)
         {
+            App?.Taskbar.AddPlayButtons();
+            _displayReq.RequestActive();
+
             UIQueue.TryEnqueue(() => 
             {
                 Title = _mpv.MediaTitle;
@@ -119,11 +127,13 @@ namespace HotPotPlayer.Video
         private void MediaPaused(object sender, EventArgs e)
         {
             UIQueue.TryEnqueue(() => IsPlaying = false);
+            _displayReq.RequestRelease();
         }
 
         private void MediaResumed(object sender, EventArgs e)
         {
             UIQueue.TryEnqueue(() => IsPlaying = true);
+            _displayReq.RequestActive();
         }
 
         ID3D11Device _device;
@@ -184,6 +194,7 @@ namespace HotPotPlayer.Video
             Mpv.MediaLoaded -= MediaLoaded;
             Mpv.MediaFinished -= MediaFinished;
             Mpv.Dispose();
+            _displayReq.RequestRelease();
         }
 
         bool _swapChainLoaded;

@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using Windows.Win32.UI.Shell;
 using Windows.Win32.Foundation;
 using Windows.Win32;
+using WinRT;
 
 namespace HotPotPlayer.Helpers
 {
@@ -33,6 +34,9 @@ namespace HotPotPlayer.Helpers
             {
                 return;
             }
+
+            var list3 = Instance.As<ITaskbarList3>();
+            //list3.ThumbBarSetImageList(Handle, )
 
             _buttons = new THUMBBUTTON[3];
             _buttons[0].dwMask = THUMBBUTTONMASK.THB_BITMAP | THUMBBUTTONMASK.THB_TOOLTIP | THUMBBUTTONMASK.THB_FLAGS;
