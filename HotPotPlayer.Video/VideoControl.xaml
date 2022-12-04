@@ -37,7 +37,7 @@
         <SwapChainPanel x:Name="Host" Loaded="Host_Loaded" CompositionScaleChanged="Host_CompositionScaleChanged" SizeChanged="Host_SizeChanged" Unloaded="Host_Unloaded" PointerReleased="Host_PointerReleased"/>
         
         <!--PlayBar-->
-        <Grid Background="#e0ffffff" CornerRadius="8" VerticalAlignment="Bottom" Margin="16,0,16,16" Visibility="{x:Bind PlayBarVisible, Mode=OneWay}" PointerEntered="PlayBar_PointerEntered" PointerExited="PlayBar_PointerExited">
+        <Grid Background="#e0424047" CornerRadius="8" VerticalAlignment="Bottom" Margin="16,0,16,16" Padding="8,6" Visibility="{x:Bind PlayBarVisible, Mode=OneWay}" PointerEntered="PlayBar_PointerEntered" PointerExited="PlayBar_PointerExited">
 
             <animations:Implicit.ShowAnimations>
                 <animations:TranslationAnimation Duration="0:0:1" From="0,100,0" To="0,0,0" EasingMode="EaseOut"/>
@@ -46,51 +46,32 @@
                 <animations:TranslationAnimation Duration="0:0:0.8" From="0,0,0" To="0,100,0" />
             </animations:Implicit.HideAnimations>
             
-            <Grid.RowDefinitions>
-                <RowDefinition Height="Auto" />
-                <RowDefinition Height="*" />
-            </Grid.RowDefinitions>
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="Auto" />
                 <ColumnDefinition Width="1*" />
-                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="Auto" />
             </Grid.ColumnDefinitions>
 
-            <Grid Grid.ColumnSpan="3" Margin="12,0">
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="Auto" />
-                    <ColumnDefinition Width="*" />
-                    <ColumnDefinition Width="Auto" />
-                </Grid.ColumnDefinitions>
+            <StackPanel Margin="0,0,8,0" Orientation="Horizontal" Spacing="4">
+                <Button Click="PlayButtonClick" Style="{StaticResource VideoPlayOtherButton}">
+                    <SymbolIcon Symbol="{x:Bind GetPlayButtonSymbol(IsPlaying, x:False), Mode=OneWay}" />
+                </Button>
+                <Button Style="{StaticResource VideoPlayOtherButton}" Click="PlayModeButtonClick">
+                    <FontIcon FontFamily="Segoe Fluent Icons" Glyph="{x:Bind GetPlayModeIcon(PlayMode), Mode=OneWay}" />
+                </Button>
+            </StackPanel>
 
-                <TextBlock Margin="0,0,8,-3" Width="34" VerticalAlignment="Center" Text="{x:Bind CurrentTime.ToString('mm\\\\:ss'), Mode=OneWay}" FontFamily="{ThemeResource MiSansRegular}" FontSize="12"/>
-                <Slider x:Name="PlaySlider" Grid.Column="1" Translation="0,2,0" Style="{StaticResource PlaySliderStyle}" Value="{x:Bind GetSliderValue(CurrentTime, CurrentPlayingDuration), Mode=OneWay}" ThumbToolTipValueConverter="{StaticResource SliderThumbConverter}" >
-                </Slider>
-                <TextBlock Grid.Column="2" Margin="8,0,0,-3" Width="34" VerticalAlignment="Center" Text="{x:Bind GetDuration(CurrentPlayingDuration), Mode=OneWay}" FontFamily="{ThemeResource MiSansRegular}" FontSize="12"/>
-            </Grid>
+            <Slider x:Name="PlaySlider" Margin="8,0" Grid.Column="1" Translation="0,2,0" Style="{StaticResource VideoPlaySliderStyle}" Value="{x:Bind GetSliderValue(CurrentTime, CurrentPlayingDuration), Mode=OneWay}" ThumbToolTipValueConverter="{StaticResource SliderThumbConverter}" >
+            </Slider>
 
-            <!--Left-->
-            <Grid Grid.Row="1">
+            <StackPanel Grid.Column="2" Orientation="Horizontal" Spacing="0">
+                <TextBlock Width="35" VerticalAlignment="Center" Text="{x:Bind CurrentTime.ToString('mm\\\\:ss'), Mode=OneWay}" FontFamily="{ThemeResource MiSansRegular}" FontSize="13" Foreground="White"/>
+                <TextBlock Margin="0,0,2,0" Text="/" VerticalAlignment="Center" FontFamily="{ThemeResource MiSansRegular}" FontSize="13" Foreground="White"/>
+                <TextBlock Width="36" VerticalAlignment="Center" Text="{x:Bind GetDuration(CurrentPlayingDuration), Mode=OneWay}" FontFamily="{ThemeResource MiSansRegular}" FontSize="13" Foreground="White"/>
+            </StackPanel>
 
-            </Grid>
-
-            <!--Center-->
-            <Grid Grid.Column="1" Grid.Row="1" Margin="0,0,0,16">
-                <StackPanel Margin="0,0,0,-8" Orientation="Horizontal" HorizontalAlignment="Center" Spacing="4">
-                    <Button Style="{StaticResource PlayOtherButton}" Click="PlayModeButtonClick">
-                        <FontIcon FontFamily="Segoe Fluent Icons" Glyph="{x:Bind GetPlayModeIcon(PlayMode), Mode=OneWay}" />
-                    </Button>
-                    <Button Click="PlayButtonClick" Style="{StaticResource PlayButton}">
-                        <SymbolIcon Symbol="{x:Bind GetPlayButtonSymbol(IsPlaying, x:False), Mode=OneWay}" />
-                    </Button>
-                    <Button Style="{StaticResource PlayOtherButton}">
-                        <SymbolIcon Symbol="Refresh" />
-                    </Button>
-                </StackPanel>
-            </Grid>
-
-            <!--Right-->
-            <StackPanel Grid.Column="2" Grid.Row="1" Margin="8,0,16,0" Orientation="Horizontal" Spacing="8" HorizontalAlignment="Right">
+            <StackPanel Margin="16,0,0,0" Grid.Column="3" Orientation="Horizontal" Spacing="8">
                 <Button Style="{StaticResource VolumeButton}">
                     <local:VolumeIntPresenter Volume="{x:Bind Volume, Mode=OneWay}"/>
                     <Button.Flyout>
@@ -99,17 +80,17 @@
                         </Flyout>
                     </Button.Flyout>
                 </Button>
-                <Button Style="{StaticResource PlayOtherButton}" Click="ToggleStatusClick">
+                <Button Style="{StaticResource VideoPlayOtherButton}" Click="ToggleStatusClick">
                     <FontIcon FontFamily="Segoe Fluent Icons" Glyph="&#xE946;" />
                 </Button>
-                <Button Style="{StaticResource PlayOtherButton}" >
+                <Button Style="{StaticResource VideoPlayOtherButton}" >
                     <FontIcon FontFamily="Segoe Fluent Icons" Glyph="&#xE762;" />
                 </Button>
             </StackPanel>
         </Grid>
         
         <!--Title-->
-        <Grid VerticalAlignment="Top" Padding="8,8" Background="#e0ffffff" Visibility="{x:Bind PlayBarVisible, Mode=OneWay}" PointerEntered="PlayBar_PointerEntered" PointerExited="PlayBar_PointerExited">
+        <Grid VerticalAlignment="Top" Padding="8,8" Background="#e0424047" Visibility="{x:Bind PlayBarVisible, Mode=OneWay}" PointerEntered="PlayBar_PointerEntered" PointerExited="PlayBar_PointerExited">
             <animations:Implicit.ShowAnimations>
                 <animations:TranslationAnimation Duration="0:0:1" From="0,-50,0" To="0,0,0" EasingMode="EaseOut"/>
             </animations:Implicit.ShowAnimations>
@@ -122,10 +103,10 @@
                 <ColumnDefinition Width="Auto" />
                 <ColumnDefinition Width="*" />
             </Grid.ColumnDefinitions>
-            <Button Style="{StaticResource MainNavBackButton}" Click="NavigateBackClick">
+            <Button Style="{StaticResource VideoPlayOtherButton}" Click="NavigateBackClick">
                 <SymbolIcon Symbol="Back" />
             </Button>
-            <TextBlock Margin="8,0" Grid.Column="1" VerticalAlignment="Center" Text="{x:Bind Title, Mode=OneWay}" FontFamily="{ThemeResource MiSansRegular}" FontSize="14"/>
+            <TextBlock Margin="8,0" Grid.Column="1" Foreground="White" VerticalAlignment="Center" Text="{x:Bind Title, Mode=OneWay}" FontFamily="{ThemeResource MiSansRegular}" FontSize="14"/>
         </Grid>
     </Grid>
     
