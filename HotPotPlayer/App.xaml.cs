@@ -88,6 +88,11 @@ namespace HotPotPlayer
             MainWindow.NavigateTo(name, parameter, trans);
         }
 
+        public override void NavigateBack()
+        {
+            MainWindow.NavigateBack();
+        }
+
         public MainWindow MainWindow;
         public override IntPtr MainWindowHandle => MainWindow.GetWindowHandle();
         public override Rect Bounds => MainWindow.Bounds;

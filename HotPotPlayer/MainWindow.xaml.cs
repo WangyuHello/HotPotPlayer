@@ -49,6 +49,7 @@ namespace HotPotPlayer
         }
 
         MusicPlayer MusicPlayer => ((App)Application.Current).MusicPlayer;
+        VideoPlayerService VideoPlayerService => ((App)Application.Current).VideoPlayerService;
         LocalMusicService MusicService => ((App)Application.Current).LocalMusicService;
         NetEaseMusicService CloudMusicService => ((App)Application.Current).NetEaseMusicService;
         //TrayIcon tray;

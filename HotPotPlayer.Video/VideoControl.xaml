@@ -34,15 +34,16 @@
     </base:UserControlBase.Resources>
 
     <Grid PointerEntered="Grid_PointerEntered" PointerMoved="Grid_PointerMoved">
-        <SwapChainPanel x:Name="Host" Loaded="Host_Loaded" CompositionScaleChanged="Host_CompositionScaleChanged" SizeChanged="Host_SizeChanged" Unloaded="Host_Unloaded"/>
-
+        <SwapChainPanel x:Name="Host" Loaded="Host_Loaded" CompositionScaleChanged="Host_CompositionScaleChanged" SizeChanged="Host_SizeChanged" Unloaded="Host_Unloaded" PointerReleased="Host_PointerReleased"/>
+        
+        <!--PlayBar-->
         <Grid Background="#e0ffffff" CornerRadius="8" VerticalAlignment="Bottom" Margin="16,0,16,16" Visibility="{x:Bind PlayBarVisible, Mode=OneWay}" PointerEntered="PlayBar_PointerEntered" PointerExited="PlayBar_PointerExited">
 
             <animations:Implicit.ShowAnimations>
-                <animations:TranslationAnimation Duration="0:0:1" From="0,80,0" To="0,0,0" EasingMode="EaseOut"/>
+                <animations:TranslationAnimation Duration="0:0:1" From="0,100,0" To="0,0,0" EasingMode="EaseOut"/>
             </animations:Implicit.ShowAnimations>
             <animations:Implicit.HideAnimations>
-                <animations:TranslationAnimation Duration="0:0:0.8" From="0,0,0" To="0,80,0" />
+                <animations:TranslationAnimation Duration="0:0:0.8" From="0,0,0" To="0,100,0" />
             </animations:Implicit.HideAnimations>
             
             <Grid.RowDefinitions>
@@ -106,7 +107,27 @@
                 </Button>
             </StackPanel>
         </Grid>
+        
+        <!--Title-->
+        <Grid VerticalAlignment="Top" Padding="8,8" Background="#e0ffffff" Visibility="{x:Bind PlayBarVisible, Mode=OneWay}" PointerEntered="PlayBar_PointerEntered" PointerExited="PlayBar_PointerExited">
+            <animations:Implicit.ShowAnimations>
+                <animations:TranslationAnimation Duration="0:0:1" From="0,-50,0" To="0,0,0" EasingMode="EaseOut"/>
+            </animations:Implicit.ShowAnimations>
+            <animations:Implicit.HideAnimations>
+                <animations:TranslationAnimation Duration="0:0:0.8" From="0,0,0" To="0,-50,0" />
+            </animations:Implicit.HideAnimations>
+
+
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+            <Button Style="{StaticResource MainNavBackButton}" Click="NavigateBackClick">
+                <SymbolIcon Symbol="Back" />
+            </Button>
+            <TextBlock Margin="8,0" Grid.Column="1" VerticalAlignment="Center" Text="{x:Bind Title, Mode=OneWay}" FontFamily="{ThemeResource MiSansRegular}" FontSize="14"/>
+        </Grid>
     </Grid>
     
-    
+
 </base:UserControlBase>

@@ -35,13 +35,7 @@ namespace HotPotPlayer
 
         private void MainSidebar_OnBackClick()
         {
-            if (!MainFrame.CanGoBack)
-            {
-                return;
-            }
-            var topName = MainFrame.BackStack.Last().SourcePageType.Name;
-            MainFrame.GoBack();
-            SelectedPageName = topName;
+            NavigateBack();
         }
 
         public void NavigateInit()
@@ -59,6 +53,17 @@ namespace HotPotPlayer
             trans ??= new DrillInNavigationTransitionInfo();
             MainFrame.Navigate(Type.GetType("HotPotPlayer.Pages." + name), parameter, trans);
             SelectedPageName = name;
+        }
+
+        public void NavigateBack()
+        {
+            if (!MainFrame.CanGoBack)
+            {
+                return;
+            }
+            var topName = MainFrame.BackStack.Last().SourcePageType.Name;
+            MainFrame.GoBack();
+            SelectedPageName = topName;
         }
 
         private void MainFrame_Navigated(object sender, NavigationEventArgs e)
@@ -80,6 +85,11 @@ namespace HotPotPlayer
             var trans = new DrillInNavigationTransitionInfo();
             MainFrame.Navigate(Type.GetType("HotPotPlayer.Pages.VideoPlayPage"), source, trans);
             SelectedPageName = "VideoPlayPage";
+        }
+
+        public GridLength GetMainSideBarWidth(bool isVideoPlaying)
+        {
+            return new GridLength(isVideoPlaying ? 0 : 60);
         }
     }
 }

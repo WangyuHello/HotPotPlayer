@@ -37,6 +37,9 @@ namespace HotPotPlayer
         MusicPlayer musicPlayer;
         public MusicPlayer MusicPlayer => musicPlayer ??= new MusicPlayer(Config, UIQueue, this);
 
+        VideoPlayerService videoPlayerService;
+        public VideoPlayerService VideoPlayerService => videoPlayerService ??= new VideoPlayerService(Config, UIQueue, this);
+
         public void ShutDown()
         {
             localMusicService?.Dispose();
@@ -47,6 +50,7 @@ namespace HotPotPlayer
 
         public abstract void ShowToast(ToastInfo toast);
         public abstract void NavigateTo(string name, object parameter = null, NavigationTransitionInfo trans = null);
+        public abstract void NavigateBack();
         public abstract IntPtr MainWindowHandle { get; }
 
         public abstract Rect Bounds { get; }

@@ -17,7 +17,7 @@
     <Grid x:Name="Root" Loaded="MainWindow_Loaded" PointerReleased="MainWindow_PointerReleased" >
         <Grid x:Name="ContentRoot" ui:VisualExtensions.NormalizedCenterPoint="0.5" ui:VisualExtensions.RotationAxis="0,1,0" >
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="60" />
+                <ColumnDefinition Width="{x:Bind GetMainSideBarWidth(VideoPlayerService.IsVideoPagePresent), Mode=OneWay}" />
                 <ColumnDefinition Width="*" />
             </Grid.ColumnDefinitions>
             <controls:MainSidebar 

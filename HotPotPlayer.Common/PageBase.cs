@@ -26,11 +26,18 @@ namespace HotPotPlayer
 
         public MusicPlayer MusicPlayer => ((IComponentServiceLocator)Application.Current).MusicPlayer;
 
+        public VideoPlayerService VideoPlayerService => ((IComponentServiceLocator)Application.Current).VideoPlayerService;
+
         public event PropertyChangedEventHandler PropertyChanged;
 
         public void NavigateTo(string name, object parameter = null, NavigationTransitionInfo trans = null)
         {
             ((IComponentServiceLocator)Application.Current).NavigateTo(name, parameter, trans);
+        }
+
+        public void NavigateBack()
+        {
+            ((IComponentServiceLocator)Application.Current).NavigateBack();
         }
 
         public void ShowToast(ToastInfo toast)
@@ -47,5 +54,10 @@ namespace HotPotPlayer
             }
         }
 
+        public void OnPropertyChanged(PropertyChangedEventArgs args = null, [CallerMemberName] string propertyName = "")
+        {
+            args ??= new PropertyChangedEventArgs(propertyName);
+            PropertyChanged?.Invoke(this, args);
+        }
     }
 }

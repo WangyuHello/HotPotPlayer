@@ -100,6 +100,7 @@ namespace HotPotPlayer.Video
         {
             UIQueue.TryEnqueue(() => 
             {
+                Title = _mpv.MediaTitle;
                 IsPlaying = true;
                 CurrentPlayingDuration = _mpv.Duration;
                 OnPropertyChanged(propertyName: nameof(Volume));
@@ -219,6 +220,9 @@ namespace HotPotPlayer.Video
         {
             Mpv.Stop();
         }
+
+        [ObservableProperty]
+        private string title;
 
         [ObservableProperty]
         private bool isPlaying;
@@ -440,6 +444,16 @@ namespace HotPotPlayer.Video
         {
             if (!playBarVisibleInited) return;
             PlayBarVisible = true;
+        }
+
+        private void NavigateBackClick(object sender, RoutedEventArgs e)
+        {
+            App.NavigateBack();
+        }
+
+        private void Host_PointerReleased(object sender, PointerRoutedEventArgs e)
+        {
+            PlayBarVisible = !PlayBarVisible;
         }
     }
 

@@ -39,6 +39,7 @@ namespace HotPotPlayer.Pages
 
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
+            VideoPlayerService.IsVideoPagePresent = true;
             base.OnNavigatedTo(e);
             var source = (FileInfo)e.Parameter;
             Source = source;
@@ -46,6 +47,7 @@ namespace HotPotPlayer.Pages
 
         protected override void OnNavigatingFrom(NavigatingCancelEventArgs e)
         {
+            VideoPlayerService.IsVideoPagePresent = false;
             base.OnNavigatingFrom(e);
             VideoPlayer.Stop();
         }
