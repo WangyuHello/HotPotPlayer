@@ -47,14 +47,28 @@ namespace HotPotPlayer
             if (!EqualityComparer<T>.Default.Equals(oldValue, newValue))
             {
                 oldValue = newValue;
-                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+                try
+                {
+                    PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+                }
+                catch (Exception)
+                {
+
+                }
             }
         }
 
         public void OnPropertyChanged(PropertyChangedEventArgs args = null, [CallerMemberName] string propertyName = "")
         {
             args ??= new PropertyChangedEventArgs(propertyName);
-            PropertyChanged?.Invoke(this, args);
+            try
+            {
+                PropertyChanged?.Invoke(this, args);
+            }
+            catch (Exception)
+            {
+
+            }
         }
 
     }
