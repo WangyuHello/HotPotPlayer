@@ -39,8 +39,6 @@ namespace HotPotPlayer.Video
         {
             this.InitializeComponent();
             UIQueue = DispatcherQueue.GetForCurrentThread();
-            _displayReq = new DisplayRequest();
-
             PlaySlider.AddHandler(PointerReleasedEvent, new PointerEventHandler(PlaySlider_OnPointerReleased), true);
             PlaySlider.AddHandler(PointerPressedEvent, new PointerEventHandler(PlaySlider_OnPointerPressed), true);
         }
@@ -62,6 +60,7 @@ namespace HotPotPlayer.Video
 
         bool playBarVisibleInited;
         DisplayRequest _displayReq;
+        DisplayRequest DisplayReq => _displayReq;
         MpvPlayer _mpv;
 
         MpvPlayer Mpv
@@ -99,13 +98,13 @@ namespace HotPotPlayer.Video
         private void MediaFinished(object sender, EventArgs e)
         {
             UIQueue.TryEnqueue(() => IsPlaying = false);
-            _displayReq.RequestRelease();
+            DisplayReq.RequestRelease();
         }
 
         private async void MediaLoaded(object sender, EventArgs e)
         {
             App?.Taskbar.AddPlayButtons();
-            _displayReq.RequestActive();
+            DisplayReq.RequestActive();
 
             UIQueue.TryEnqueue(() => 
             {
@@ -127,13 +126,13 @@ namespace HotPotPlayer.Video
         private void MediaPaused(object sender, EventArgs e)
         {
             UIQueue.TryEnqueue(() => IsPlaying = false);
-            _displayReq.RequestRelease();
+            DisplayReq.RequestRelease();
         }
 
         private void MediaResumed(object sender, EventArgs e)
         {
             UIQueue.TryEnqueue(() => IsPlaying = true);
-            _displayReq.RequestActive();
+            DisplayReq.RequestActive();
         }
 
         ID3D11Device _device;
@@ -167,6 +166,7 @@ namespace HotPotPlayer.Video
         private void Host_Loaded(object sender, RoutedEventArgs e)
         {
             StartPlay(mediaFile);
+            _displayReq = new DisplayRequest();
         }
 
         private void Host_CompositionScaleChanged(SwapChainPanel sender, object args)
@@ -194,7 +194,7 @@ namespace HotPotPlayer.Video
             Mpv.MediaLoaded -= MediaLoaded;
             Mpv.MediaFinished -= MediaFinished;
             Mpv.Dispose();
-            _displayReq.RequestRelease();
+            DisplayReq.RequestRelease();
         }
 
         bool _swapChainLoaded;

@@ -20,8 +20,7 @@ namespace HotPotPlayer
             {
                 Microsoft.UI.Xaml.Application.Start((p) =>
                 {
-                    var context = new DispatcherQueueSynchronizationContext(
-                        DispatcherQueue.GetForCurrentThread());
+                    var context = new DispatcherQueueSynchronizationContext(DispatcherQueue.GetForCurrentThread());
                     SynchronizationContext.SetSynchronizationContext(context);
                     _ = new App();
                 });
