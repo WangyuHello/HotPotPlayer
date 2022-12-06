@@ -165,7 +165,7 @@ namespace HotPotPlayer.Video
             Mpv.API.SetPropertyString("gpu-context", "d3d11");
             Mpv.API.SetPropertyString("hwdec", "d3d11va");
             Mpv.API.SetPropertyString("d3d11-composition", "yes");
-            Mpv.API.SetPropertyString("target-colorspace-hint", "yes");
+            Mpv.API.SetPropertyString("target-colorspace-hint", "yes"); //HDR passthrough
             Mpv.LoadPlaylist(CurrentPlayList.Select(f => f.FullName));
             Mpv.PlaylistPlayIndex(CurrentPlayIndex);
             //Mpv.Resume();

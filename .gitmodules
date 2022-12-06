@@ -7,6 +7,3 @@
 [submodule "WindowsCompositionSamples"]
 	path = WindowsCompositionSamples
 	url = git@github.com:WangyuHello/WindowsCompositionSamples.git
-[submodule "libvlcsharp"]
-	path = libvlcsharp
-	url = git@github.com:WangyuHello/libvlcsharp.git
