@@ -1,4 +1,5 @@
-﻿using Microsoft.UI.Xaml;
+﻿using HotPotPlayer.Video;
+using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Media.Animation;
@@ -84,6 +85,13 @@ namespace HotPotPlayer
         {
             var trans = new DrillInNavigationTransitionInfo();
             MainFrame.Navigate(Type.GetType("HotPotPlayer.Pages.VideoPlayPage"), source, trans);
+            SelectedPageName = "VideoPlayPage";
+        }
+
+        public void NavigateToVideo(VideoPlayInfo info)
+        {
+            var trans = new DrillInNavigationTransitionInfo();
+            MainFrame.Navigate(Type.GetType("HotPotPlayer.Pages.VideoPlayPage"), info, trans);
             SelectedPageName = "VideoPlayPage";
         }
 

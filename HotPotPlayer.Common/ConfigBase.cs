@@ -186,6 +186,13 @@ namespace HotPotPlayer
             return files;
         }
 
+        public List<FileInfo> GetVideoFilesFromDirectory(DirectoryInfo dir)
+        {
+            List<FileInfo> files = new();
+            files.AddRange(dir.GetFiles("*.*", SearchOption.TopDirectoryOnly).Where(f => VideoSupportedExt.Contains(f.Extension)));
+            return files;
+        }
+
         public virtual string CookieFolder
         {
             get

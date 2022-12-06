@@ -1,4 +1,5 @@
-﻿using Microsoft.UI.Xaml;
+﻿using HotPotPlayer.Video;
+using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Controls.Primitives;
 using Microsoft.UI.Xaml.Data;
@@ -28,20 +29,20 @@ namespace HotPotPlayer.Pages
             this.InitializeComponent();
         }
 
-        public FileInfo Source
+        public VideoPlayInfo Source
         {
-            get { return (FileInfo)GetValue(SourceProperty); }
+            get { return (VideoPlayInfo)GetValue(SourceProperty); }
             set { SetValue(SourceProperty, value); }
         }
 
         public static readonly DependencyProperty SourceProperty =
-            DependencyProperty.Register("Source", typeof(FileInfo), typeof(VideoPlayPage), new PropertyMetadata(default(FileInfo)));
+            DependencyProperty.Register("Source", typeof(VideoPlayInfo), typeof(VideoPlayPage), new PropertyMetadata(default(VideoPlayInfo)));
 
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
             VideoPlayerService.IsVideoPagePresent = true;
             base.OnNavigatedTo(e);
-            var source = (FileInfo)e.Parameter;
+            var source = (VideoPlayInfo)e.Parameter;
             Source = source;
         }
 

@@ -1,4 +1,5 @@
 ﻿using HotPotPlayer.Models;
+using HotPotPlayer.Pages;
 using HotPotPlayer.Services;
 using HotPotPlayer.Video;
 using Microsoft.UI.Xaml;
@@ -19,14 +20,14 @@ namespace HotPotPlayer
     {
         public FileInfo InitMediaFile { get; set; }
 
-        public override void PlayVideo(FileInfo video)
+        public override void PlayVideo(FileInfo file)
         {
-            //VideoWindow v = new VideoWindow()
-            //{
-            //    MediaFile = video
-            //};
-            //v.Show();
-            MainWindow.NavigateToVideo(video);
+            PlayVideos(new List<FileInfo>() { file },  0);
+        }
+
+        public override void PlayVideos(IEnumerable<FileInfo> videos, int index)
+        {
+            MainWindow.NavigateToVideo(new VideoPlayInfo { VideoFiles = videos, Index = index });
         }
 
         public override void ShowToast(ToastInfo toast)

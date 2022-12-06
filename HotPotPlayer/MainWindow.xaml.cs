@@ -77,9 +77,13 @@ namespace HotPotPlayer
                     var index = names.IndexOf(initMedia.Name);
                     MusicPlayer.PlayNext(index, musics);
                 }
-                else
+                else if(((App)Application.Current).Config.VideoSupportedExt.Contains(initMedia.Extension))
                 {
-                    app.PlayVideo(initMedia);
+                    var dir = initMedia.Directory;
+                    var videoFiles = app.Config.GetVideoFilesFromDirectory(dir);
+                    var names = videoFiles.Select(s => s.Name).ToList();
+                    var index = names.IndexOf(initMedia.Name);
+                    app.PlayVideos(videoFiles, index);
                 }
             }
         }

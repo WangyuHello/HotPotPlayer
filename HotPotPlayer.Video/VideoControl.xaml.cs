@@ -43,24 +43,24 @@ namespace HotPotPlayer.Video
             PlaySlider.AddHandler(PointerPressedEvent, new PointerEventHandler(PlaySlider_OnPointerPressed), true);
         }
 
-        public FileInfo Source
+        public VideoPlayInfo Source
         {
-            get { return (FileInfo)GetValue(SourceProperty); }
+            get { return (VideoPlayInfo)GetValue(SourceProperty); }
             set { SetValue(SourceProperty, value); }
         }
 
         public static readonly DependencyProperty SourceProperty =
-            DependencyProperty.Register("Source", typeof(FileInfo), typeof(VideoControl), new PropertyMetadata(default(FileInfo), SourceChanged));
+            DependencyProperty.Register("Source", typeof(VideoPlayInfo), typeof(VideoControl), new PropertyMetadata(default(VideoPlayInfo), SourceChanged));
 
         private static void SourceChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
             var h = (VideoControl)d;
-            h.mediaFile = (FileInfo)e.NewValue;
+            h.mediaFile = (VideoPlayInfo)e.NewValue;
         }
 
         bool playBarVisibleInited;
-        DisplayRequest _displayReq;
-        DisplayRequest DisplayReq => _displayReq;
+        //DisplayRequest _displayReq;
+        //DisplayRequest DisplayReq => _displayReq;
         MpvPlayer _mpv;
 
         MpvPlayer Mpv
@@ -76,7 +76,8 @@ namespace HotPotPlayer.Video
                         AutoPlay = true,
                         Volume = 100,
                         LogLevel = MpvLogLevel.Debug,
-                        Loop = true,
+                        Loop = false,
+                        LoopPlaylist = true,
                     };
                     _mpv.SetD3DInitCallback(D3DInitCallback);
                     _mpv.MediaResumed += MediaResumed;
@@ -98,13 +99,13 @@ namespace HotPotPlayer.Video
         private void MediaFinished(object sender, EventArgs e)
         {
             UIQueue.TryEnqueue(() => IsPlaying = false);
-            DisplayReq.RequestRelease();
+            //DisplayReq.RequestRelease();
         }
 
         private async void MediaLoaded(object sender, EventArgs e)
         {
             App?.Taskbar.AddPlayButtons();
-            DisplayReq.RequestActive();
+            //DisplayReq.RequestActive();
 
             UIQueue.TryEnqueue(() => 
             {
@@ -126,13 +127,13 @@ namespace HotPotPlayer.Video
         private void MediaPaused(object sender, EventArgs e)
         {
             UIQueue.TryEnqueue(() => IsPlaying = false);
-            DisplayReq.RequestRelease();
+            //DisplayReq.RequestRelease();
         }
 
         private void MediaResumed(object sender, EventArgs e)
         {
             UIQueue.TryEnqueue(() => IsPlaying = true);
-            DisplayReq.RequestActive();
+            //DisplayReq.RequestActive();
         }
 
         ID3D11Device _device;
@@ -153,20 +154,22 @@ namespace HotPotPlayer.Video
             });
         }
 
-        private void StartPlay(FileInfo file)
+        private void StartPlay(VideoPlayInfo file)
         {
             //Mpv.API.SetPropertyString("vo", "gpu");
             Mpv.API.SetPropertyString("vo", "gpu-next");
             Mpv.API.SetPropertyString("gpu-context", "d3d11");
             Mpv.API.SetPropertyString("hwdec", "d3d11va");
             Mpv.API.SetPropertyString("d3d11-composition", "yes");
-            Mpv.LoadAsync(file.FullName);
+            Mpv.LoadPlaylist(file.VideoFiles.Select(f => f.FullName));
+            Mpv.PlaylistPlayIndex(file.Index);
+            //Mpv.Resume();
         }
 
         private void Host_Loaded(object sender, RoutedEventArgs e)
         {
             StartPlay(mediaFile);
-            _displayReq = new DisplayRequest();
+            //_displayReq = new DisplayRequest();
         }
 
         private void Host_CompositionScaleChanged(SwapChainPanel sender, object args)
@@ -194,11 +197,11 @@ namespace HotPotPlayer.Video
             Mpv.MediaLoaded -= MediaLoaded;
             Mpv.MediaFinished -= MediaFinished;
             Mpv.Dispose();
-            DisplayReq.RequestRelease();
+            //DisplayReq.RequestRelease();
         }
 
         bool _swapChainLoaded;
-        FileInfo mediaFile;
+        VideoPlayInfo mediaFile;
         object _CriticalLock = new object();
         object _CriticalLock2 = new object();
         int CurrentWidth;
@@ -257,8 +260,35 @@ namespace HotPotPlayer.Video
         [ObservableProperty]
         private TimeSpan? currentPlayingDuration;
 
-        [ObservableProperty]
         private PlayMode playMode;
+
+        public PlayMode PlayMode
+        {
+            get => playMode;
+            set
+            {
+                if(playMode != value)
+                {
+                    Set(ref playMode, value);
+                    switch (playMode)
+                    {
+                        case PlayMode.Loop:
+                            Mpv.Loop = false;
+                            Mpv.LoopPlaylist = true;
+                            break;
+                        case PlayMode.SingleLoop:
+                            Mpv.Loop = true;
+                            break;
+                        case PlayMode.Shuffle:
+                            Mpv.Loop = false;
+                            Mpv.LoopPlaylist = true;
+                            break;
+                        default:
+                            break;
+                    }
+                }
+            }
+        }
 
         public int Volume
         {
@@ -335,13 +365,13 @@ namespace HotPotPlayer.Video
             ShowCursor(0);
         }
 
-        Symbol GetPlayButtonSymbol(bool isPlaying, bool hasError)
+        string GetPlayButtonIcon(bool isPlaying, bool hasError)
         {
             if (hasError)
             {
-                return Symbol.Clear;
+                return "\uE106";
             }
-            return isPlaying ? Symbol.Pause : Symbol.Play;
+            return isPlaying ? "\uE103" : "\uF5B0";
         }
 
         double GetSliderValue(TimeSpan current, TimeSpan? total)
@@ -422,6 +452,11 @@ namespace HotPotPlayer.Video
                 default:
                     break;
             }
+        }
+
+        private void PlayNextButtonClick(object sender, RoutedEventArgs e)
+        {
+            Mpv.PlaylistNext();
         }
 
         const string Loop = "\uE1CD";
