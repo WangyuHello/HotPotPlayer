@@ -7,3 +7,6 @@
 [submodule "WindowsCompositionSamples"]
 	path = WindowsCompositionSamples
 	url = git@github.com:WangyuHello/WindowsCompositionSamples.git
+[submodule "Bili.Uwp"]
+	path = Bili.Uwp
+	url = git@github.com:WangyuHello/Bili.Uwp.git
