@@ -77,7 +77,6 @@ namespace HotPotPlayer
             {
                 
             }
-
         }
 
         private void AppTitleBar_SizeChanged(object sender, SizeChangedEventArgs e)

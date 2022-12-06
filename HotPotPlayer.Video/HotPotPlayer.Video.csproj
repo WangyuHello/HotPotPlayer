@@ -11,6 +11,7 @@
     <None Remove="NativeMethods.txt" />
     <None Remove="VideoControl.xaml" />
     <None Remove="VideoControl3.xaml" />
+    <None Remove="VideoPlayListBar.xaml" />
   </ItemGroup>
   <ItemGroup>
     <AdditionalFiles Include="NativeMethods.txt" />
@@ -34,6 +35,12 @@
   <ItemGroup>
     <ProjectReference Include="..\HotPotPlayer.Common\HotPotPlayer.Common.csproj" />
     <ProjectReference Include="..\HotPotPlayer.Native\HotPotPlayer.Native.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Page Update="VideoPlayListBar.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
   </ItemGroup>
 
   <ItemGroup>

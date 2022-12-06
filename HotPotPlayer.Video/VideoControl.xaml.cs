@@ -2,6 +2,7 @@
 using DirectN;
 using HotPotPlayer.Services;
 using HotPotPlayer.Video.GlesInterop;
+using Microsoft.UI;
 using Microsoft.UI.Dispatching;
 using Microsoft.UI.Windowing;
 using Microsoft.UI.Xaml;
@@ -16,6 +17,7 @@ using Mpv.NET.API.Structs;
 using Mpv.NET.Player;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
@@ -55,7 +57,9 @@ namespace HotPotPlayer.Video
         private static void SourceChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
             var h = (VideoControl)d;
-            h.mediaFile = (VideoPlayInfo)e.NewValue;
+            var info = (VideoPlayInfo)e.NewValue;
+            h.currentPlayList = new ObservableCollection<FileInfo>(info.VideoFiles);
+            h.currentPlayIndex = info.Index;
         }
 
         bool playBarVisibleInited;
@@ -154,21 +158,21 @@ namespace HotPotPlayer.Video
             });
         }
 
-        private void StartPlay(VideoPlayInfo file)
+        private void StartPlay()
         {
             //Mpv.API.SetPropertyString("vo", "gpu");
             Mpv.API.SetPropertyString("vo", "gpu-next");
             Mpv.API.SetPropertyString("gpu-context", "d3d11");
             Mpv.API.SetPropertyString("hwdec", "d3d11va");
             Mpv.API.SetPropertyString("d3d11-composition", "yes");
-            Mpv.LoadPlaylist(file.VideoFiles.Select(f => f.FullName));
-            Mpv.PlaylistPlayIndex(file.Index);
+            Mpv.LoadPlaylist(CurrentPlayList.Select(f => f.FullName));
+            Mpv.PlaylistPlayIndex(CurrentPlayIndex);
             //Mpv.Resume();
         }
 
         private void Host_Loaded(object sender, RoutedEventArgs e)
         {
-            StartPlay(mediaFile);
+            StartPlay();
             //_displayReq = new DisplayRequest();
         }
 
@@ -201,7 +205,45 @@ namespace HotPotPlayer.Video
         }
 
         bool _swapChainLoaded;
-        VideoPlayInfo mediaFile;
+
+        [ObservableProperty]
+        private ObservableCollection<FileInfo> currentPlayList;
+
+        private int currentPlayIndex;
+        public int CurrentPlayIndex
+        {
+            get => currentPlayIndex;
+            set
+            {
+                if (currentPlayIndex != value)
+                {
+                    Set(ref currentPlayIndex, value);
+                    Mpv.PlaylistPlayIndex(currentPlayIndex);
+                }
+            }
+        }
+
+        private bool isPlayListBarVisible;
+        public bool IsPlayListBarVisible
+        {
+            get => isPlayListBarVisible;
+            set
+            {
+                if(isPlayListBarVisible != value)
+                {
+                    Set(ref  isPlayListBarVisible, value);
+                    if (isPlayListBarVisible)
+                    {
+                        AppWindow.TitleBar.ButtonForegroundColor = Colors.White;
+                    }
+                    else
+                    {
+                        AppWindow.TitleBar.ButtonForegroundColor = Colors.Black;
+                    }
+                }
+            }
+        }
+
         object _CriticalLock = new object();
         object _CriticalLock2 = new object();
         int CurrentWidth;
@@ -260,35 +302,8 @@ namespace HotPotPlayer.Video
         [ObservableProperty]
         private TimeSpan? currentPlayingDuration;
 
+        [ObservableProperty]
         private PlayMode playMode;
-
-        public PlayMode PlayMode
-        {
-            get => playMode;
-            set
-            {
-                if(playMode != value)
-                {
-                    Set(ref playMode, value);
-                    switch (playMode)
-                    {
-                        case PlayMode.Loop:
-                            Mpv.Loop = false;
-                            Mpv.LoopPlaylist = true;
-                            break;
-                        case PlayMode.SingleLoop:
-                            Mpv.Loop = true;
-                            break;
-                        case PlayMode.Shuffle:
-                            Mpv.Loop = false;
-                            Mpv.LoopPlaylist = true;
-                            break;
-                        default:
-                            break;
-                    }
-                }
-            }
-        }
 
         public int Volume
         {
@@ -454,9 +469,37 @@ namespace HotPotPlayer.Video
             }
         }
 
+        Random random;
         private void PlayNextButtonClick(object sender, RoutedEventArgs e)
         {
-            Mpv.PlaylistNext();
+            if (CurrentPlayIndex != -1)
+            {
+                if (PlayMode == PlayMode.Loop)
+                {
+                    var index = CurrentPlayIndex + 1;
+                    if (index >= CurrentPlayList.Count)
+                    {
+                        index = 0;
+                    }
+                    PlayNext(index);
+                }
+                else if (PlayMode == PlayMode.SingleLoop)
+                {
+                    PlayNext(CurrentPlayIndex);
+                }
+                else if (PlayMode == PlayMode.Shuffle)
+                {
+                    random ??= new Random();
+                    var index = random.Next(CurrentPlayList.Count);
+                    PlayNext(index);
+                }
+            }
+        }
+
+        void PlayNext(int index)
+        {
+            CurrentPlayIndex = index;
+            Mpv.PlaylistPlayIndex(index);
         }
 
         const string Loop = "\uE1CD";
@@ -533,6 +576,16 @@ namespace HotPotPlayer.Video
         private void ToggleFullScreenClick(object sender, RoutedEventArgs e)
         {
             IsFullScreen = !IsFullScreen;
+        }
+
+        private void VideoPlayListBar_OnDismiss()
+        {
+            IsPlayListBarVisible = false;
+        }
+
+        private void TogglePlayListBarVisibilityClick(object sender, RoutedEventArgs e)
+        {
+            IsPlayListBarVisible = !IsPlayListBarVisible;
         }
     }
 
