@@ -29,6 +29,7 @@ namespace HotPotPlayer
         public VideoPlayerService VideoPlayerService => ((IComponentServiceLocator)Application.Current).VideoPlayerService;
 
         public AppWindow AppWindow => ((IComponentServiceLocator)Application.Current).AppWindow;
+        public Window MainWindow => ((IComponentServiceLocator)Application.Current).MainWindow;
 
         public void NavigateTo(string name, object parameter = null, NavigationTransitionInfo trans = null)
         {

@@ -1,4 +1,5 @@
-﻿using CommunityToolkit.Mvvm.ComponentModel;
+﻿using Bilibili.App.Card.V1;
+using CommunityToolkit.Mvvm.ComponentModel;
 using DirectN;
 using HotPotPlayer.Services;
 using HotPotPlayer.Video.GlesInterop;
@@ -16,6 +17,7 @@ using Mpv.NET.API;
 using Mpv.NET.API.Structs;
 using Mpv.NET.Player;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
@@ -27,6 +29,7 @@ using System.Threading.Tasks;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
 using Windows.System.Display;
+using Windows.UI.Core;
 using WinRT;
 
 
@@ -43,6 +46,35 @@ namespace HotPotPlayer.Video
             UIQueue = DispatcherQueue.GetForCurrentThread();
             PlaySlider.AddHandler(PointerReleasedEvent, new PointerEventHandler(PlaySlider_OnPointerReleased), true);
             PlaySlider.AddHandler(PointerPressedEvent, new PointerEventHandler(PlaySlider_OnPointerPressed), true);
+
+            //Dispatcher.AcceleratorKeyActivated += Dispatcher_AcceleratorKeyActivated;
+        }
+
+        private async void Dispatcher_AcceleratorKeyActivated(CoreDispatcher sender, AcceleratorKeyEventArgs args)
+        {
+            if (args.EventType.ToString().Contains("KeyUP") && mediaInited)
+            {
+                var virtualKey = args.VirtualKey;
+                switch (virtualKey)
+                {
+                    case Windows.System.VirtualKey.LeftButton:
+                        break;
+                    case Windows.System.VirtualKey.RightButton:
+                        break;
+                    case Windows.System.VirtualKey.Left:
+                        await Mpv.SeekAsync(-10, true);
+                        break;
+                    case Windows.System.VirtualKey.Up:
+                        break;
+                    case Windows.System.VirtualKey.Right:
+                        await Mpv.SeekAsync(10, true);
+                        break;
+                    case Windows.System.VirtualKey.Down:
+                        break;
+                    default:
+                        break;
+                }
+            }
         }
 
         public VideoPlayInfo Source
@@ -62,7 +94,7 @@ namespace HotPotPlayer.Video
             h.currentPlayIndex = info.Index;
         }
 
-        bool playBarVisibleInited;
+        bool mediaInited;
         //DisplayRequest _displayReq;
         //DisplayRequest DisplayReq => _displayReq;
         MpvPlayer _mpv;
@@ -123,7 +155,7 @@ namespace HotPotPlayer.Video
             await Task.Run(async () =>
             {
                 await Task.Delay(1000);
-                playBarVisibleInited = true;
+                mediaInited = true;
                 UIQueue.TryEnqueue(() => PlayBarVisible = true);
             });
         }
@@ -519,7 +551,7 @@ namespace HotPotPlayer.Video
 
         private void Grid_PointerEntered(object sender, PointerRoutedEventArgs e)
         {
-            if (!playBarVisibleInited) return;
+            if (!mediaInited) return;
             PlayBarVisible = true;
             ShowCursor(1);
         }
@@ -536,7 +568,7 @@ namespace HotPotPlayer.Video
 
         private void Grid_PointerMoved(object sender, PointerRoutedEventArgs e)
         {
-            if (!playBarVisibleInited) return;
+            if (!mediaInited) return;
             PlayBarVisible = true;
             ShowCursor(1);
         }

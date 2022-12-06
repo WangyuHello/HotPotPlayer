@@ -18,6 +18,7 @@ namespace HotPotPlayer
     {
         public AppBase App => (AppBase)Application.Current;
         public AppWindow AppWindow => ((IComponentServiceLocator)Application.Current).AppWindow;
+        public Window MainWindow => ((IComponentServiceLocator)Application.Current).MainWindow;
 
         public ConfigBase Config => ((IComponentServiceLocator)Application.Current).Config;
 

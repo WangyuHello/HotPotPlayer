@@ -221,7 +221,7 @@ namespace HotPotPlayer
                 m_micaController = new MicaController();
 
                 // Enable the system backdrop.
-                // Note: Be sure to have "using WinRT;" to support the Window.As<...>() call.
+                // Note: Be sure to have "using WinRT;" to support the MainWindow.As<...>() call.
                 m_micaController.AddSystemBackdropTarget(this.As<Microsoft.UI.Composition.ICompositionSupportsSystemBackdrop>());
                 m_micaController.SetSystemBackdropConfiguration(m_configurationSource);
                 m_micaController.FallbackColor = Color.FromArgb(255, 0xf1, 0xf3, 0xf6);
@@ -258,7 +258,7 @@ namespace HotPotPlayer
                 m_acrylicController = new DesktopAcrylicController();
 
                 // Enable the system backdrop.
-                // Note: Be sure to have "using WinRT;" to support the Window.As<...>() call.
+                // Note: Be sure to have "using WinRT;" to support the MainWindow.As<...>() call.
                 m_acrylicController.AddSystemBackdropTarget(this.As<Microsoft.UI.Composition.ICompositionSupportsSystemBackdrop>());
                 m_acrylicController.SetSystemBackdropConfiguration(m_configurationSource);
                 m_acrylicController.FallbackColor = Color.FromArgb(255, 0xf1, 0xf3, 0xf6);

@@ -15,6 +15,7 @@ namespace HotPotPlayer
     {
         public AppBase App { get; }
         public AppWindow AppWindow { get; }
+        public Window MainWindow { get; }
         public ConfigBase Config { get; }
         public NetEaseMusicService NetEaseMusicService { get; }
         public LocalMusicService LocalMusicService { get; }

@@ -49,7 +49,7 @@ namespace HotPotPlayer
         /// <param name="args">Details about the launch request and process.</param>
         protected override void OnLaunched(Microsoft.UI.Xaml.LaunchActivatedEventArgs args)
         {
-            MainWindow = new MainWindow();
+            mainWindow = new MainWindow();
             InitMainWindow(args);
             MainWindow.Activate();
         }
@@ -93,7 +93,8 @@ namespace HotPotPlayer
             MainWindow.NavigateBack();
         }
 
-        public MainWindow MainWindow;
+        private MainWindow mainWindow;
+        public override MainWindow MainWindow => mainWindow;
         public override IntPtr MainWindowHandle => MainWindow.GetWindowHandle();
         public override Rect Bounds => MainWindow.Bounds;
         public override XamlRoot XamlRoot => MainWindow.Content.XamlRoot;
