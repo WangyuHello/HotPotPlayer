@@ -61,7 +61,7 @@ jobs:
     - name: File Regex Replace
       uses: mingjun97/file-regex-replace@v1
       with:
-        regex: 'Version="([0-9\.]*)"'
+        regex: 'Version="1.0.0.0"'
         replacement: 'Version="0.${{ github.run_number }}.${{ github.run_attempt }}.0"'
         include: Package.appxmanifest
 
@@ -101,8 +101,8 @@ jobs:
         Configuration: Release
 
     # Remove the pfx
- #   - name: Remove the pfx
- #     run: Remove-Item -path $env:Wap_Project_Directory\$env:Signing_Certificate
+    - name: Remove the pfx
+      run: Remove-Item -path (Join-Path -Path $env:Project_Directory -ChildPath HotPotPlayer_TemporaryKey.pfx)
 
     - name: Create GH release
       if: startsWith(github.ref, 'refs/tags/')
