@@ -111,7 +111,7 @@ jobs:
       with:
         name: '0.${{ github.run_number }}.${{ github.run_attempt }}.0'
         tag_name: 'v0.${{ github.run_number }}.${{ github.run_attempt }}.0'
-        body: 'To install the MSIX version, you first have to add the certificate included in the MSIX (only need to do that once). To install the unpackaged version, you need to install the x64 WinAppRuntime Installer.'
+        body: '安装方法同 https://github.com/Richasy/Bili.Uwp/wiki/%E4%B8%8B%E8%BD%BD%E5%B9%B6%E5%AE%89%E8%A3%85%E5%93%94%E5%93%A9%E7%9A%84%E8%AF%A6%E7%BB%86%E8%AF%B4%E6%98%8E#%E5%B8%B8%E8%A7%84%E4%BD%BF%E7%94%A8%E5%BA%94%E7%94%A8%E5%AE%89%E8%A3%85%E7%A8%8B%E5%BA%8F-app-installer'
         files: |
           HotPotPlayer/Packages/**/HotPotPlayer*.msix
           HotPotPlayer/Packages/**/HotPotPlayer*.cer
