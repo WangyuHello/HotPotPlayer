@@ -263,7 +263,7 @@
                 x:Phase="2" 
                 />
                 <StackPanel Orientation="Horizontal" VerticalAlignment="Top" HorizontalAlignment="Right" Margin="8" Padding="6,0" Spacing="2" Background="#40000000" CornerRadius="8">
-                    <FontIcon Foreground="White" FontFamily="Segoe Fluent Icons" Glyph="&#xE102;" FontSize="10" FontWeight="Medium"/>
+                    <FontIcon Foreground="White" FontFamily="{ThemeResource SegoeIcons}" Glyph="&#xE102;" FontSize="10" FontWeight="Medium"/>
                     <TextBlock Foreground="White" Text="{x:Bind GetPlayCount()}" FontSize="12" FontFamily="{StaticResource MiSansRegular}" />
                 </StackPanel>
             </Grid>
@@ -334,12 +334,12 @@
             </Grid.ColumnDefinitions>
             <TextBlock HorizontalAlignment="Center" Text="{Binding RelativeSource={RelativeSource Mode=TemplatedParent}, Converter={StaticResource IndexConverter}}" FontSize="12" FontFamily="{ThemeResource MiSansBold}" VerticalAlignment="Center"/>
             <cont2:ImageEx2 Margin="8,0,0,0" Grid.Column="1" Source="{x:Bind Cover}" Style="{StaticResource LocalMusicImageStyle}" Height="40" Width="40" CornerRadius="4" EnableLazyLoading="False"/>
-            <FontIcon Grid.Column="2" Margin="6,0" FontFamily="Segoe Fluent Icons" Glyph="&#xE00F;" Foreground="#BEC2CE" FontSize="16" FontWeight="Bold"/>
+            <FontIcon Grid.Column="2" Margin="6,0" FontFamily="{ThemeResource SegoeIcons}" Glyph="&#xE00F;" Foreground="#BEC2CE" FontSize="16" FontWeight="Bold"/>
             <TextBlock Grid.Column="3" FontSize="14" TextTrimming="CharacterEllipsis" VerticalAlignment="Center" Text="{x:Bind Title}" FontFamily="{ThemeResource MiSansMedium}" ToolTipService.ToolTip="{x:Bind Title}"/>
             <TextBlock Grid.Column="4" Text="{x:Bind GetArtists()}" FontSize="12" TextTrimming="CharacterEllipsis" FontFamily="{ThemeResource MiSansRegular}" Foreground="Gray" VerticalAlignment="Center" ToolTipService.ToolTip="{x:Bind Album}"/>
             <TextBlock Grid.Column="5" Text="{x:Bind Duration.ToString('mm\\\\:ss')}" FontSize="12" FontFamily="{ThemeResource MiSansRegular}" Foreground="Gray" VerticalAlignment="Center"/>
             <ToggleButton x:Name="B" Grid.Column="6" Style="{StaticResource LikeButton}" IsChecked="{x:Bind IsLike}" Margin="16,0,8,0" VerticalAlignment="Center" Click="{x:Bind helper:LikeHelper.Like}" >
-                <FontIcon FontFamily="Segoe Fluent Icons" Glyph="{Binding ElementName=B, Path=IsChecked, Converter={StaticResource LikeGlyphConverter}}" FontWeight="Bold" FontSize="16" VerticalAlignment="Center"/>
+                <FontIcon FontFamily="{ThemeResource SegoeIcons}" Glyph="{Binding ElementName=B, Path=IsChecked, Converter={StaticResource LikeGlyphConverter}}" FontWeight="Bold" FontSize="16" VerticalAlignment="Center"/>
             </ToggleButton>
         </Grid>
     </DataTemplate>
@@ -358,7 +358,7 @@
             </Grid.ColumnDefinitions>
             <TextBlock HorizontalAlignment="Center" Text="{Binding RelativeSource={RelativeSource Mode=TemplatedParent}, Converter={StaticResource IndexConverter}}" FontSize="12" FontFamily="{ThemeResource MiSansBold}" VerticalAlignment="Center"/>
             <!--<cont2:ImageEx2 Margin="8,0,0,0" Grid.Column="1" Source="{x:Bind Cover}" Style="{StaticResource LocalMusicImageStyle}" Height="40" Width="40" CornerRadius="4" EnableLazyLoading="False"/>-->
-            <FontIcon Grid.Column="2" Margin="6,0" FontFamily="Segoe Fluent Icons" Glyph="&#xE00F;" Foreground="#BEC2CE" FontSize="16" FontWeight="Bold"/>
+            <FontIcon Grid.Column="2" Margin="6,0" FontFamily="{ThemeResource SegoeIcons}" Glyph="&#xE00F;" Foreground="#BEC2CE" FontSize="16" FontWeight="Bold"/>
             <TextBlock Grid.Column="3" FontSize="14" TextTrimming="CharacterEllipsis" VerticalAlignment="Center" Text="{x:Bind Title}" FontFamily="{ThemeResource MiSansMedium}" ToolTipService.ToolTip="{x:Bind Title}"/>
             <TextBlock Grid.Column="4" Text="{x:Bind GetArtists()}" FontSize="12" TextTrimming="CharacterEllipsis" FontFamily="{ThemeResource MiSansRegular}" Foreground="Gray" VerticalAlignment="Center" ToolTipService.ToolTip="{x:Bind GetArtists()}"/>
             <TextBlock Grid.Column="5" Text="{x:Bind Album}" FontSize="12" TextTrimming="CharacterEllipsis" FontFamily="{ThemeResource MiSansRegular}" Foreground="Gray" VerticalAlignment="Center" ToolTipService.ToolTip="{x:Bind Album}"/>

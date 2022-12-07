@@ -20,7 +20,7 @@
             <ColumnDefinition Width="Auto" />
         </Grid.ColumnDefinitions>
 
-        <FontIcon FontFamily="Segoe Fluent Icons" Glyph="&#xE946;" />
+        <FontIcon FontFamily="{ThemeResource SegoeIcons}" Glyph="&#xE946;" />
         <TextBlock Margin="8,0" Grid.Column="1" Text="{x:Bind ToastInfo.Text, Mode=OneWay}" />
         <Button Grid.Column="2" Style="{StaticResource FullTransparentButton}" Click="Dismiss">
             <SymbolIcon Symbol="Clear" />

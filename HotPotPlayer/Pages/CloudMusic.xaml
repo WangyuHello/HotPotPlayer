@@ -26,7 +26,7 @@
 
         <Grid x:Name="Search" Margin="0,16" VerticalAlignment="Center" HorizontalAlignment="Left" Height="32" Width="260" CornerRadius="16" Background="White" BorderThickness="0.8" BorderBrush="{ThemeResource ButtonBorderThemeBrush}" Tapped="Search_Tapped">
             <TextBlock Text="搜索" Margin="12,0" HorizontalAlignment="Left" VerticalAlignment="Center"/>
-            <FontIcon FontFamily="Segoe Fluent Icons" Glyph="&#xE11A;" Margin="12,0" HorizontalAlignment="Right" FontSize="16"/>
+            <FontIcon FontFamily="{ThemeResource SegoeIcons}" Glyph="&#xE11A;" Margin="12,0" HorizontalAlignment="Right" FontSize="16"/>
             <Rectangle VerticalAlignment="Bottom" Margin="16,0,16,-1" Fill="{ThemeResource AccentFillColorDefaultBrush}" Height="1" />
         </Grid>
         <StackPanel x:Name="UserAvatar" Margin="0,0,160,0" Orientation="Horizontal" VerticalAlignment="Center" HorizontalAlignment="Right" Spacing="8" Tapped="UserAvatar_Tapped">

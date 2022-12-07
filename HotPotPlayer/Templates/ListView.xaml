@@ -186,7 +186,7 @@
                 <TextBlock FontSize="12" Text="{x:Bind First}" VerticalAlignment="Center" FontFamily="{StaticResource MiSansMedium}"/>
                 <TextBlock FontSize="12" Text="{x:Bind GetSecond()}" Foreground="Gray" TextTrimming="CharacterEllipsis" VerticalAlignment="Center" FontFamily="{StaticResource MiSansRegular}"/>
             </StackPanel>
-            <FontIcon Grid.Column="1" FontFamily="Segoe Fluent Icons" Glyph="&#xE014;" FontSize="12"/>
+            <FontIcon Grid.Column="1" FontFamily="{ThemeResource SegoeIcons}" Glyph="&#xE014;" FontSize="12"/>
         </Grid>
 
     </DataTemplate>
@@ -214,7 +214,7 @@
                 <TextBlock Grid.Column="1" Margin="0,2,0,0" Grid.Row="1" Text="{x:Bind TimeStr}" Foreground="Gray" FontSize="12" FontFamily="{StaticResource MiSansRegular}"/>
                 <TextBlock Grid.Column="2" Grid.RowSpan="2" Text="{x:Bind LikedCount}" VerticalAlignment="Center" Foreground="Gray" FontSize="12" FontFamily="{StaticResource MiSansRegular}"/>
                 <Button Grid.Column="3" Grid.RowSpan="2" Margin="4,0,8,0" VerticalAlignment="Center" Style="{StaticResource FullTransparentButton}" >
-                    <FontIcon FontFamily="Segoe Fluent Icons" Glyph="&#xE19F;" Foreground="Gray" FontSize="14"/>
+                    <FontIcon FontFamily="{ThemeResource SegoeIcons}" Glyph="&#xE19F;" Foreground="Gray" FontSize="14"/>
                 </Button>
             </Grid>
             <TextBlock Grid.Row="1" Margin="42,8,0,0" Text="{x:Bind Content}" TextWrapping="Wrap" FontFamily="{StaticResource MiSansRegular}"/>
@@ -245,7 +245,7 @@
                 <TextBlock Grid.Column="1" Margin="0,2,0,0" Grid.Row="1" Text="{x:Bind TimeStr}" Foreground="Gray" FontSize="12" FontFamily="{StaticResource MiSansRegular}"/>
                 <TextBlock Grid.Column="2" Grid.RowSpan="2" Text="{x:Bind LikedCount}" VerticalAlignment="Center" Foreground="Gray" FontSize="12" FontFamily="{StaticResource MiSansRegular}"/>
                 <Button Grid.Column="3" Grid.RowSpan="2" Margin="4,0,8,0" VerticalAlignment="Center" Style="{StaticResource FullTransparentButton}" >
-                    <FontIcon FontFamily="Segoe Fluent Icons" Glyph="&#xE19F;" Foreground="Gray" FontSize="14"/>
+                    <FontIcon FontFamily="{ThemeResource SegoeIcons}" Glyph="&#xE19F;" Foreground="Gray" FontSize="14"/>
                 </Button>
             </Grid>
             <TextBlock Grid.Row="1" Margin="42,8,0,0" Text="{x:Bind Content}" TextWrapping="Wrap" FontFamily="{StaticResource MiSansRegular}"/>

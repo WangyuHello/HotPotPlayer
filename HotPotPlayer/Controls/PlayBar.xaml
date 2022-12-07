@@ -72,16 +72,16 @@
             
             <StackPanel Margin="0,0,0,-8" Grid.ColumnSpan="3" Orientation="Horizontal" HorizontalAlignment="Center" Spacing="4">
                 <Button Style="{StaticResource PlayOtherButton}" Click="PlayModeButtonClick">
-                    <FontIcon FontFamily="Segoe Fluent Icons" Glyph="{x:Bind GetPlayModeIcon(MusicPlayer.PlayMode), Mode=OneWay}" />
+                    <FontIcon FontFamily="{ThemeResource SegoeIcons}" Glyph="{x:Bind GetPlayModeIcon(MusicPlayer.PlayMode), Mode=OneWay}" />
                 </Button>
                 <Button Style="{StaticResource NextPreviousButton}" Click="PlayPreviousButtonClick">
-                    <FontIcon FontFamily="Segoe Fluent Icons" Glyph="&#xF8AC;" />
+                    <FontIcon FontFamily="{ThemeResource SegoeIcons}" Glyph="&#xF8AC;" />
                 </Button>
                 <Button Click="PlayButtonClick" Style="{StaticResource PlayButton}">
                     <SymbolIcon Symbol="{x:Bind GetPlayButtonSymbol(MusicPlayer.IsPlaying, MusicPlayer.HasError), Mode=OneWay}" />
                 </Button>
                 <Button Style="{StaticResource NextPreviousButton}" Click="PlayNextButtonClick">
-                    <FontIcon FontFamily="Segoe Fluent Icons" Glyph="&#xF8AD;" />
+                    <FontIcon FontFamily="{ThemeResource SegoeIcons}" Glyph="&#xF8AD;" />
                 </Button>
                 <Button Style="{StaticResource PlayOtherButton}">
                     <SymbolIcon Symbol="Refresh" />
@@ -103,10 +103,10 @@
                 </Button.Flyout>
             </Button>
             <Button Style="{StaticResource PlayOtherButton}" Click="{x:Bind MusicPlayer.HidePlayBar}">
-                <FontIcon FontFamily="Segoe Fluent Icons" Glyph="&#xE019;" />
+                <FontIcon FontFamily="{ThemeResource SegoeIcons}" Glyph="&#xE019;" />
             </Button>
             <Button Style="{StaticResource PlayOtherButton}" Click="{x:Bind MusicPlayer.TogglePlayListBarVisibility}">
-                <FontIcon FontFamily="Segoe Fluent Icons" Glyph="&#xE762;" />
+                <FontIcon FontFamily="{ThemeResource SegoeIcons}" Glyph="&#xE762;" />
             </Button>
         </StackPanel>
     </Grid>

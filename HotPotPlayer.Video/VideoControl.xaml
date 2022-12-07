@@ -56,13 +56,13 @@
 
             <StackPanel Margin="0,0,8,0" Orientation="Horizontal" Spacing="4">
                 <Button Click="PlayButtonClick" Style="{StaticResource VideoPlayOtherButton}">
-                    <FontIcon FontFamily="Segoe Fluent Icons" Glyph="{x:Bind GetPlayButtonIcon(IsPlaying, x:False), Mode=OneWay}" />
+                    <FontIcon FontFamily="{ThemeResource SegoeIcons}" Glyph="{x:Bind GetPlayButtonIcon(IsPlaying, x:False), Mode=OneWay}" />
                 </Button>
                 <Button Style="{StaticResource VideoPlayOtherButton}" Click="PlayNextButtonClick">
-                    <FontIcon FontFamily="Segoe Fluent Icons" Glyph="&#xF8AD;" />
+                    <FontIcon FontFamily="{ThemeResource SegoeIcons}" Glyph="&#xF8AD;" />
                 </Button>
                 <Button Style="{StaticResource VideoPlayOtherButton}" Click="PlayModeButtonClick">
-                    <FontIcon FontFamily="Segoe Fluent Icons" Glyph="{x:Bind GetPlayModeIcon(PlayMode), Mode=OneWay}" />
+                    <FontIcon FontFamily="{ThemeResource SegoeIcons}" Glyph="{x:Bind GetPlayModeIcon(PlayMode), Mode=OneWay}" />
                 </Button>
             </StackPanel>
 
@@ -85,13 +85,13 @@
                     </Button.Flyout>
                 </Button>
                 <Button Style="{StaticResource VideoPlayOtherButton}" Click="ToggleStatusClick">
-                    <FontIcon FontFamily="Segoe Fluent Icons" Glyph="&#xE946;" />
+                    <FontIcon FontFamily="{ThemeResource SegoeIcons}" Glyph="&#xE946;" />
                 </Button>
                 <Button Style="{StaticResource VideoPlayOtherButton}" Click="ToggleFullScreenClick">
-                    <FontIcon FontFamily="Segoe Fluent Icons" Glyph="{x:Bind GetFullScreenIcon(IsFullScreen), Mode=OneWay}" />
+                    <FontIcon FontFamily="{ThemeResource SegoeIcons}" Glyph="{x:Bind GetFullScreenIcon(IsFullScreen), Mode=OneWay}" />
                 </Button>
                 <Button Style="{StaticResource VideoPlayOtherButton}" Click="TogglePlayListBarVisibilityClick">
-                    <FontIcon FontFamily="Segoe Fluent Icons" Glyph="&#xE762;" />
+                    <FontIcon FontFamily="{ThemeResource SegoeIcons}" Glyph="&#xE762;" />
                 </Button>
             </StackPanel>
         </Grid>

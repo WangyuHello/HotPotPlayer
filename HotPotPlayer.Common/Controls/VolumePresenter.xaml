@@ -10,7 +10,7 @@
     <Grid>
         <Rectangle Fill="#40FFFFFF" Margin="-8" Translation="{x:Bind GetVolumeTranslation(Volume), Mode=OneWay}" />
         <StackPanel Orientation="Horizontal" Spacing="4" VerticalAlignment="Center">
-            <FontIcon FontFamily="Segoe Fluent Icons" Glyph="{x:Bind GetVolumeIcon(Volume), Mode=OneWay}" VerticalAlignment="Center"/>
+            <FontIcon FontFamily="{ThemeResource SegoeIcons}" Glyph="{x:Bind GetVolumeIcon(Volume), Mode=OneWay}" VerticalAlignment="Center"/>
             <TextBlock VerticalAlignment="Center" Width="32" HorizontalTextAlignment="End" FontSize="13" Text="{x:Bind GetVolumeText(Volume), Mode=OneWay}"></TextBlock>
         </StackPanel>
     </Grid>

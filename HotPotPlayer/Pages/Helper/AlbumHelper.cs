@@ -259,7 +259,7 @@ namespace HotPotPlayer.Pages.Helper
                 i = new MenuFlyoutItem
                 {
                     Text = "下一个播放",
-                    Icon = new FontIcon { FontFamily = new FontFamily("Segoe Fluent Icons"), Glyph = "\uECC8" },
+                    Icon = new FontIcon { FontFamily = new FontFamily("{ThemeResource SegoeIcons}"), Glyph = "\uECC8" },
                 };
                 i.Click += (s, e) => MusicPlayer.AddToPlayListNext(music);
                 flyout.Items.Add(i);
@@ -298,7 +298,7 @@ namespace HotPotPlayer.Pages.Helper
                 i = new MenuFlyoutItem
                 {
                     Text = "属性",
-                    Icon = new FontIcon { FontFamily = new FontFamily("Segoe Fluent Icons"), Glyph = "\uE946" },
+                    Icon = new FontIcon { FontFamily = new FontFamily("{ThemeResource SegoeIcons}"), Glyph = "\uE946" },
                 };
                 i.Click += (s , e) => App.NavigateTo("MusicSub.Info", music, new SlideNavigationTransitionInfo() { Effect = SlideNavigationTransitionEffect.FromRight });
                 flyout.Items.Add(i);
@@ -306,7 +306,7 @@ namespace HotPotPlayer.Pages.Helper
                 i = new MenuFlyoutItem
                 {
                     Text = "选择",
-                    Icon = new FontIcon { FontFamily = new FontFamily("Segoe Fluent Icons"), Glyph = "\uE762" },
+                    Icon = new FontIcon { FontFamily = new FontFamily("{ThemeResource SegoeIcons}"), Glyph = "\uE762" },
                 };
                 flyout.Items.Add(i);
 
@@ -351,7 +351,7 @@ namespace HotPotPlayer.Pages.Helper
                 i = new MenuFlyoutItem
                 {
                     Text = "下一个播放",
-                    Icon = new FontIcon { FontFamily = new FontFamily("Segoe Fluent Icons"), Glyph = "\uECC8" },
+                    Icon = new FontIcon { FontFamily = new FontFamily("{ThemeResource SegoeIcons}"), Glyph = "\uECC8" },
                 };
                 i.Click += (s, e) => MusicPlayer.AddToPlayListNext(music);
                 flyout.Items.Add(i);
@@ -403,14 +403,14 @@ namespace HotPotPlayer.Pages.Helper
                 i = new MenuFlyoutItem
                 {
                     Text = "下移",
-                    Icon = new FontIcon { FontFamily = new FontFamily("Segoe Fluent Icons"), Glyph = "\uE74B" },
+                    Icon = new FontIcon { FontFamily = new FontFamily("{ThemeResource SegoeIcons}"), Glyph = "\uE74B" },
                 };
                 i.Click += (s, e) => LocalMusicService.PlayListMusicDown(music);
                 flyout.Items.Add(i);
                 i = new MenuFlyoutItem
                 {
                     Text = "属性",
-                    Icon = new FontIcon { FontFamily = new FontFamily("Segoe Fluent Icons"), Glyph = "\uE946" },
+                    Icon = new FontIcon { FontFamily = new FontFamily("{ThemeResource SegoeIcons}"), Glyph = "\uE946" },
                 };
                 i.Click += (s, e) => App.NavigateTo("MusicSub.Info", music, new SlideNavigationTransitionInfo() { Effect = SlideNavigationTransitionEffect.FromRight });
                 flyout.Items.Add(i);
@@ -418,7 +418,7 @@ namespace HotPotPlayer.Pages.Helper
                 i = new MenuFlyoutItem
                 {
                     Text = "选择",
-                    Icon = new FontIcon { FontFamily = new FontFamily("Segoe Fluent Icons"), Glyph = "\uE762" },
+                    Icon = new FontIcon { FontFamily = new FontFamily("{ThemeResource SegoeIcons}"), Glyph = "\uE762" },
                 };
                 flyout.Items.Add(i);
 

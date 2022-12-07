@@ -39,7 +39,7 @@
                     <ColumnDefinition Width="38" />
                     <ColumnDefinition Width="Auto" />
                 </Grid.ColumnDefinitions>
-                <FontIcon FontFamily="Segoe Fluent Icons" Glyph="&#xE013;" VerticalAlignment="Center" HorizontalAlignment="Center" Foreground="White"/>
+                <FontIcon FontFamily="{ThemeResource SegoeIcons}" Glyph="&#xE013;" VerticalAlignment="Center" HorizontalAlignment="Center" Foreground="White"/>
                 <Grid Grid.Column="1" Margin="0,0,8,0">
                     <TextBlock Foreground="White" Text="{x:Bind Name}" VerticalAlignment="Center" FontSize="14" TextTrimming="CharacterEllipsis" FontFamily="{ThemeResource MiSansRegular}"/>
                 </Grid>
