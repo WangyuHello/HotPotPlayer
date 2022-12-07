@@ -43,6 +43,7 @@ on:
     branches: [ master ]
     tags:
       - "v*.*.*"
+      - "preview*"
 
 jobs:
   build:
