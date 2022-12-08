@@ -44,6 +44,7 @@ on:
     tags:
       - "v*.*.*"
       - "preview*"
+      - "dev*"
 
 jobs:
   build:
