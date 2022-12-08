@@ -58,7 +58,10 @@ jobs:
       uses: actions/checkout@v2
       with:
         submodules: 'true'
-        
+    
+    - name: Use Dev Package
+      run: Move-Item -Force (Join-Path -Path $env:Project_Directory -ChildPath Package.Dev.appxmanifest) (Join-Path -Path $env:Project_Directory -ChildPath Package.appxmanifest)
+
     - name: File Regex Replace
       uses: mingjun97/file-regex-replace@v1
       with:
