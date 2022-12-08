@@ -56,6 +56,8 @@ namespace HotPotPlayer
 
         private void MainWindow_Closed(object sender, WindowEventArgs args)
         {
+            Config.SetConfig("width", Convert.ToInt32(MainWindow.Bounds.Width));
+            Config.SetConfig("height", Convert.ToInt32(MainWindow.Bounds.Height));
             Config.SaveSettings();
             ShutDown();
         }
@@ -63,7 +65,9 @@ namespace HotPotPlayer
         private void InitMainWindow(Microsoft.UI.Xaml.LaunchActivatedEventArgs args)
         {
             MainWindow.Title = "HotPotPlayer";
-            MainWindow.CenterOnScreen(1420, 1100);
+            var width = Config.GetConfig("width", 1420);
+            var height = Config.GetConfig("height", 1100);
+            MainWindow.CenterOnScreen(width, height);
             MainWindow.TrySetAcrylicBackdrop();
             MainWindow.Closed += MainWindow_Closed;
 

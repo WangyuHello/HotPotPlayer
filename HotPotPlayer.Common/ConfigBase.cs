@@ -77,14 +77,14 @@ namespace HotPotPlayer
             File.WriteAllText(configFile, json);
         }
 
-        public T GetConfig<T>(string key)
+        public T GetConfig<T>(string key, T defaultValue = default)
         {
             var r = Settings.TryGetValue(key, out var value);
             if (r)
             {
                 return value.ToObject<T>();
             }
-            return default;
+            return defaultValue;
         }
 
         public T[] GetConfigArray<T>(string key)
