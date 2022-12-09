@@ -180,7 +180,7 @@ namespace HotPotPlayer.Controls
             {
                 Text = MusicPlayer.CurrentPlaying.Album,
                 Tag = MusicPlayer.CurrentPlaying,
-                Icon = new FontIcon { FontFamily = new FontFamily("{ThemeResource SegoeIcons}"), Glyph = "\uE93C" }
+                Icon = new FontIcon { FontFamily = (FontFamily)Application.Current.Resources["SegoeIcons"], Glyph = "\uE93C" }
             };
             item2.Click += AlbumHelper.AlbumInfoClick;
             flyout.Items.Add(item2);
