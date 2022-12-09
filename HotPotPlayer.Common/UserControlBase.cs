@@ -46,7 +46,7 @@ namespace HotPotPlayer
         }
 
         public event PropertyChangedEventHandler PropertyChanged;
-        public void Set<T>(ref T oldValue, T newValue, [CallerMemberName] string propertyName = "")
+        public void Set<T>(ref T oldValue, T newValue, Action<T> action = null, [CallerMemberName] string propertyName = "")
         {
             if (!EqualityComparer<T>.Default.Equals(oldValue, newValue))
             {
@@ -54,6 +54,7 @@ namespace HotPotPlayer
                 try
                 {
                     PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+                    action?.Invoke(oldValue);
                 }
                 catch (Exception)
                 {

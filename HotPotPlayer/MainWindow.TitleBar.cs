@@ -19,6 +19,7 @@ using WinUIEx;
 using WinRT;
 using Windows.UI;
 using Windows.Graphics;
+using HotPotPlayer.Extensions;
 
 namespace HotPotPlayer
 {
@@ -58,16 +59,15 @@ namespace HotPotPlayer
             if (e.PropertyName == "IsPlayListBarVisible")
             {
                 var musicPlayer = (MusicPlayer)sender;
+                m_AppWindow.SetTitleBarForegroundColor(musicPlayer.IsPlayListBarVisible);
                 if (musicPlayer.IsPlayListBarVisible)
                 {
-                    m_AppWindow.TitleBar.ButtonForegroundColor = Colors.White;
                     var visual = ElementCompositionPreview.GetElementVisual(ContentRoot);
                     visual.Scale = new Vector3(0.8f, 0.8f, 1);
                     visual.Offset = new Vector3(-280, 0, 0);
                 }
                 else
                 {
-                    m_AppWindow.TitleBar.ButtonForegroundColor = Colors.Black;
                     var visual = ElementCompositionPreview.GetElementVisual(ContentRoot);
                     visual.Scale = new Vector3(1, 1, 1);
                     visual.Offset = new Vector3(0, 0, 0);

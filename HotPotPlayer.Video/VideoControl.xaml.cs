@@ -1,6 +1,7 @@
 ﻿using Bilibili.App.Card.V1;
 using CommunityToolkit.Mvvm.ComponentModel;
 using DirectN;
+using HotPotPlayer.Extensions;
 using HotPotPlayer.Services;
 using HotPotPlayer.Video.GlesInterop;
 using Microsoft.UI;
@@ -265,14 +266,7 @@ namespace HotPotPlayer.Video
                 if(isPlayListBarVisible != value)
                 {
                     Set(ref  isPlayListBarVisible, value);
-                    if (isPlayListBarVisible)
-                    {
-                        AppWindow.TitleBar.ButtonForegroundColor = Colors.White;
-                    }
-                    else
-                    {
-                        AppWindow.TitleBar.ButtonForegroundColor = Colors.Black;
-                    }
+                    AppWindow.SetTitleBarForegroundColor(isPlayListBarVisible);
                 }
             }
         }
@@ -367,16 +361,16 @@ namespace HotPotPlayer.Video
             get => playBarVisible;
             set 
             {
-                if (playBarVisible != value)
+                Set(ref playBarVisible, value, newV =>
                 {
-                    playBarVisible = value;
-                    OnPropertyChanged();
-                    if (playBarVisible == true)
+                    ShowCursor(newV ? 1 : 0);
+                    AppWindow.SetTitleBarForegroundColor(newV);
+                    if (newV == true)
                     {
                         _inActiveTimer ??= InitInActiveTimer();
                         _inActiveTimer.Start();
                     }
-                }
+                });
             }
         }
 
@@ -410,7 +404,6 @@ namespace HotPotPlayer.Video
         {
             _inActiveTimer.Stop();
             PlayBarVisible = false;
-            ShowCursor(0);
         }
 
         string GetPlayButtonIcon(bool isPlaying, bool hasError)
@@ -553,7 +546,6 @@ namespace HotPotPlayer.Video
         {
             if (!mediaInited) return;
             PlayBarVisible = true;
-            ShowCursor(1);
         }
 
         private void PlayBar_PointerEntered(object sender, PointerRoutedEventArgs e)
@@ -570,7 +562,6 @@ namespace HotPotPlayer.Video
         {
             if (!mediaInited) return;
             PlayBarVisible = true;
-            ShowCursor(1);
         }
 
         private void NavigateBackClick(object sender, RoutedEventArgs e)
@@ -581,7 +572,6 @@ namespace HotPotPlayer.Video
         private void Host_PointerReleased(object sender, PointerRoutedEventArgs e)
         {
             PlayBarVisible = !PlayBarVisible;
-            ShowCursor(PlayBarVisible ? 1 : 0);
         }
 
 
