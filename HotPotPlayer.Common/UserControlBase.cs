@@ -27,6 +27,7 @@ namespace HotPotPlayer
 
         public MusicPlayer MusicPlayer => ((IComponentServiceLocator)Application.Current).MusicPlayer;
         public VideoPlayerService VideoPlayerService => ((IComponentServiceLocator)Application.Current).VideoPlayerService;
+        public BiliBiliService BiliBiliService => ((IComponentServiceLocator)Application.Current).BiliBiliService;
 
         public AppWindow AppWindow => ((IComponentServiceLocator)Application.Current).AppWindow;
         public Window MainWindow => ((IComponentServiceLocator)Application.Current).MainWindow;

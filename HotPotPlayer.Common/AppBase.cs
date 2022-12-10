@@ -41,6 +41,9 @@ namespace HotPotPlayer
         VideoPlayerService videoPlayerService;
         public VideoPlayerService VideoPlayerService => videoPlayerService ??= new VideoPlayerService(Config, UIQueue, this);
 
+        BiliBiliService bilibiliService;
+        public BiliBiliService BiliBiliService => bilibiliService ??= new BiliBiliService(Config, UIQueue, this);
+
         public void ShutDown()
         {
             localMusicService?.Dispose();

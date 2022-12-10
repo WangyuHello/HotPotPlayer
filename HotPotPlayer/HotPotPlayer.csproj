@@ -49,6 +49,7 @@
     <None Remove="Pages\Album.xaml" />
     <None Remove="Pages\Artist.xaml" />
     <None Remove="Pages\Bilibili.xaml" />
+    <None Remove="Pages\BiliBiliSub\Login.xaml" />
     <None Remove="Pages\CloudMusic.xaml" />
     <None Remove="Pages\CloudMusicSub\Album.xaml" />
     <None Remove="Pages\CloudMusicSub\Artist.xaml" />
@@ -314,6 +315,11 @@
   -->
   <ItemGroup Condition="'$(DisableMsixProjectCapabilityAddedByProject)'!='true' and '$(EnableMsixTooling)'=='true'">
     <ProjectCapability Include="Msix" />
+  </ItemGroup>
+  <ItemGroup>
+    <Page Update="Pages\BiliBiliSub\Login.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
   </ItemGroup>
 
   <!-- 

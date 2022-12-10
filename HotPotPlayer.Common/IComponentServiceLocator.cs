@@ -22,6 +22,9 @@ namespace HotPotPlayer
         public LocalVideoService LocalVideoService { get; }
         public MusicPlayer MusicPlayer { get; }
         public VideoPlayerService VideoPlayerService { get; }
+        public BiliBiliService BiliBiliService { get; }
+
+
         public void ShowToast(ToastInfo toast);
         public void NavigateTo(string name, object parameter = null, NavigationTransitionInfo trans = null);
         public void NavigateBack();
