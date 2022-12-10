@@ -58,6 +58,7 @@ namespace HotPotPlayer
         {
             Config.SetConfig("width", Convert.ToInt32(MainWindow.Bounds.Width));
             Config.SetConfig("height", Convert.ToInt32(MainWindow.Bounds.Height));
+            Config.SetConfig("initpage", MainWindow.GetSavePageName());
             Config.SaveSettings();
             ShutDown();
         }
@@ -81,7 +82,7 @@ namespace HotPotPlayer
             }
             else
             {
-                MainWindow.InitPageName = "Music";
+                MainWindow.InitPageName = Config.GetConfig("initpage", "Music");
             }
 
             Config.MainWindowHandle = MainWindowHandle;

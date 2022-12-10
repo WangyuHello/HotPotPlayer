@@ -22,9 +22,9 @@ namespace HotPotPlayer.Pages
     /// <summary>
     /// An empty page that can be used on its own or navigated to within a Frame.
     /// </summary>
-    public sealed partial class VideoPlayPage : PageBase
+    public sealed partial class VideoPlay : PageBase
     {
-        public VideoPlayPage()
+        public VideoPlay()
         {
             this.InitializeComponent();
         }
@@ -36,7 +36,7 @@ namespace HotPotPlayer.Pages
         }
 
         public static readonly DependencyProperty SourceProperty =
-            DependencyProperty.Register("Source", typeof(VideoPlayInfo), typeof(VideoPlayPage), new PropertyMetadata(default(VideoPlayInfo)));
+            DependencyProperty.Register("Source", typeof(VideoPlayInfo), typeof(VideoPlay), new PropertyMetadata(default(VideoPlayInfo)));
 
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {

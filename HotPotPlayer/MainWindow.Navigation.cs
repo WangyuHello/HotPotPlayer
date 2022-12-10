@@ -84,20 +84,31 @@ namespace HotPotPlayer
         public void NavigateToVideo(FileInfo source)
         {
             var trans = new DrillInNavigationTransitionInfo();
-            MainFrame.Navigate(Type.GetType("HotPotPlayer.Pages.VideoPlayPage"), source, trans);
-            SelectedPageName = "VideoPlayPage";
+            MainFrame.Navigate(Type.GetType("HotPotPlayer.Pages.VideoPlay"), source, trans);
+            SelectedPageName = "VideoPlay";
         }
 
         public void NavigateToVideo(VideoPlayInfo info)
         {
             var trans = new DrillInNavigationTransitionInfo();
-            MainFrame.Navigate(Type.GetType("HotPotPlayer.Pages.VideoPlayPage"), info, trans);
-            SelectedPageName = "VideoPlayPage";
+            MainFrame.Navigate(Type.GetType("HotPotPlayer.Pages.VideoPlay"), info, trans);
+            SelectedPageName = "VideoPlay";
         }
 
         public GridLength GetMainSideBarWidth(bool isVideoPlaying)
         {
             return new GridLength(isVideoPlaying ? 0 : 60);
+        }
+
+        public string GetSavePageName()
+        {
+            var segs = SelectedPageName.Split(".");
+            var mainName = segs[0].Replace("Sub", "");
+            if (mainName == "VideoPlay")
+            {
+                mainName = null; // Do not save
+            }
+            return mainName;
         }
     }
 }

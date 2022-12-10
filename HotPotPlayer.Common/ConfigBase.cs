@@ -1,4 +1,5 @@
-﻿using HotPotPlayer.Models;
+﻿using DirectN;
+using HotPotPlayer.Models;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
@@ -97,9 +98,19 @@ namespace HotPotPlayer
             return null;
         }
 
-        public void SetConfig<T>(string key, T value)
+        public void SetConfig<T>(string key, T value, bool saveOnNull = false)
         {
-            Settings[key] = JToken.FromObject(value);
+            if (saveOnNull)
+            {
+                Settings[key] = JToken.FromObject(value);
+            }
+            else
+            {
+                if(!EqualityComparer<T>.Default.Equals(value, default))
+                {
+                    Settings[key] = JToken.FromObject(value);
+                }
+            }
         }
 
         public void SetConfigArray<T>(string key, T[] value)

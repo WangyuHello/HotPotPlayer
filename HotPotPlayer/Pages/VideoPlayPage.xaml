@@ -1,5 +1,5 @@
 ﻿<base:PageBase
-    x:Class="HotPotPlayer.Pages.VideoPlayPage"
+    x:Class="HotPotPlayer.Pages.VideoPlay"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:video="using:HotPotPlayer.Video"
