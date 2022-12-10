@@ -5,23 +5,23 @@ VisualStudioVersion = 17.1.31911.260
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HotPotPlayer", "HotPotPlayer\HotPotPlayer.csproj", "{47B57F72-67B3-4686-8C36-CF2ED896C7D3}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Mpv.NET", "Mpv.NET-lib-\src\Mpv.NET\Mpv.NET.csproj", "{61CE5DA4-E530-4D49-ACB9-70B184BF9E98}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Mpv.NET", "ThirdParty\Mpv.NET-lib-\src\Mpv.NET\Mpv.NET.csproj", "{61CE5DA4-E530-4D49-ACB9-70B184BF9E98}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HotPotPlayer.Video", "HotPotPlayer.Video\HotPotPlayer.Video.csproj", "{45D2333D-7BF5-406B-A5C4-9CEDC42C4CA8}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NeteaseCloudMusicApi", "NeteaseCloudMusicApi\NeteaseCloudMusicApi\NeteaseCloudMusicApi.csproj", "{C20D7EA5-6DB8-42B3-855D-75470CBE667F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NeteaseCloudMusicApi", "ThirdParty\NeteaseCloudMusicApi\NeteaseCloudMusicApi\NeteaseCloudMusicApi.csproj", "{C20D7EA5-6DB8-42B3-855D-75470CBE667F}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HotPotPlayer.Common", "HotPotPlayer.Common\HotPotPlayer.Common.csproj", "{F7202322-6D21-41B1-9190-E5C2D3879641}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HotPotPlayer.Test", "HotPotPlayer.Test\HotPotPlayer.Test.csproj", "{8FBB9609-E71F-4CB3-9DF8-009513F42741}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ExpressionBuilder", "WindowsCompositionSamples\ExpressionBuilder\ExpressionBuilder\ExpressionBuilder.csproj", "{135241DC-E364-48FA-8AAC-BC1BE0D29657}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ExpressionBuilder", "ThirdParty\WindowsCompositionSamples\ExpressionBuilder\ExpressionBuilder\ExpressionBuilder.csproj", "{135241DC-E364-48FA-8AAC-BC1BE0D29657}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HotPotPlayer.Native", "HotPotPlayer.Native\HotPotPlayer.Native.csproj", "{A6E18E69-095A-438B-B002-48FE9F3B3FF1}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Models.BiliBili", "Bili.Uwp\src\Models\Models.BiliBili\Models.BiliBili.csproj", "{9A9C4FDB-A1A4-43CF-9334-DAFE566C54F0}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Models.BiliBili", "ThirdParty\Bili.Uwp\src\Models\Models.BiliBili\Models.BiliBili.csproj", "{9A9C4FDB-A1A4-43CF-9334-DAFE566C54F0}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Models.gRPC", "Bili.Uwp\src\Models\Models.gRPC\Models.gRPC.csproj", "{3D347E5A-FCC3-452E-8BBC-A43BF1825AB0}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Models.gRPC", "ThirdParty\Bili.Uwp\src\Models\Models.gRPC\Models.gRPC.csproj", "{3D347E5A-FCC3-452E-8BBC-A43BF1825AB0}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

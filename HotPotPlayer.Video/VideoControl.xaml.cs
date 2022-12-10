@@ -376,18 +376,12 @@ namespace HotPotPlayer.Video
 
         void StopInactiveTimer()
         {
-            if (_inActiveTimer != null)
-            {
-                _inActiveTimer.Stop();
-            }
+            _inActiveTimer?.Stop();
         }
 
         void StartInactiveTimer()
         {
-            if (_inActiveTimer != null)
-            {
-                _inActiveTimer.Start();
-            }
+            _inActiveTimer?.Start();
         }
 
         DispatcherTimer InitInActiveTimer()

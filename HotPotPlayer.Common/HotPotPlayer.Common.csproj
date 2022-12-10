@@ -41,11 +41,11 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Bili.Uwp\src\Models\Models.BiliBili\Models.BiliBili.csproj" />
-    <ProjectReference Include="..\Bili.Uwp\src\Models\Models.gRPC\Models.gRPC.csproj" />
+    <ProjectReference Include="..\ThirdParty\Bili.Uwp\src\Models\Models.BiliBili\Models.BiliBili.csproj" />
+    <ProjectReference Include="..\ThirdParty\Bili.Uwp\src\Models\Models.gRPC\Models.gRPC.csproj" />
     <ProjectReference Include="..\HotPotPlayer.Native\HotPotPlayer.Native.csproj" />
-    <ProjectReference Include="..\Mpv.NET-lib-\src\Mpv.NET\Mpv.NET.csproj" />
-    <ProjectReference Include="..\NeteaseCloudMusicApi\NeteaseCloudMusicApi\NeteaseCloudMusicApi.csproj" />
+    <ProjectReference Include="..\ThirdParty\Mpv.NET-lib-\src\Mpv.NET\Mpv.NET.csproj" />
+    <ProjectReference Include="..\ThirdParty\NeteaseCloudMusicApi\NeteaseCloudMusicApi\NeteaseCloudMusicApi.csproj" />
   </ItemGroup>
 
   <ItemGroup>
