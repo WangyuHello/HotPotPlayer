@@ -1,4 +1,5 @@
-﻿using HotPotPlayer.Models;
+﻿using CommunityToolkit.Mvvm.ComponentModel;
+using HotPotPlayer.Models;
 using HotPotPlayer.Models.CloudMusic;
 using HotPotPlayer.Services;
 using Microsoft.UI.Xaml;
@@ -37,13 +38,11 @@ namespace HotPotPlayer.Pages
 
         bool IsFirstNavigate = true;
 
-        private PlayListItem _selectedPlayListItem;
+        [ObservableProperty]
+        private PlayListItem selectedPlayList;
 
-        public PlayListItem SelectedPlayList
-        {
-            get => _selectedPlayListItem;
-            set => Set(ref _selectedPlayListItem, value);
-        }
+        [ObservableProperty]
+        private bool isLoadingVisible = true;
 
         protected override async void OnNavigatedTo(NavigationEventArgs e)
         {
@@ -68,6 +67,7 @@ namespace HotPotPlayer.Pages
 
             await NetEaseMusicService.InitAsync();
 
+            IsLoadingVisible = false;
             IsFirstNavigate = false;
         }
 
