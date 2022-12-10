@@ -1,12 +1,12 @@
 [submodule "Mpv.NET-lib-"]
-	path = Mpv.NET-lib-
+	path = ThirdParty/Mpv.NET-lib-
 	url = git@github.com:WangyuHello/Mpv.NET-lib-.git
 [submodule "NeteaseCloudMusicApi"]
-	path = NeteaseCloudMusicApi
+	path = ThirdParty/NeteaseCloudMusicApi
 	url = git@github.com:WangyuHello/NeteaseCloudMusicApi.git
 [submodule "WindowsCompositionSamples"]
-	path = WindowsCompositionSamples
+	path = ThirdParty/WindowsCompositionSamples
 	url = git@github.com:WangyuHello/WindowsCompositionSamples.git
 [submodule "Bili.Uwp"]
-	path = Bili.Uwp
+	path = ThirdParty/Bili.Uwp
 	url = git@github.com:WangyuHello/Bili.Uwp.git
