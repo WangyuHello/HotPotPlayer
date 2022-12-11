@@ -23,6 +23,7 @@
       <PackageReference Include="CommunityToolkit.WinUI" Version="7.1.2" />
       <PackageReference Include="CommunityToolkit.WinUI.UI" Version="7.1.2" />
       <PackageReference Include="CommunityToolkit.WinUI.UI.Controls.Core" Version="7.1.2" />
+      <PackageReference Include="HttpClientFactoryLite" Version="0.4.0" />
       <PackageReference Include="Microsoft.Windows.CsWin32" Version="0.1.647-beta">
         <PrivateAssets>all</PrivateAssets>
         <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
@@ -38,11 +39,11 @@
       <PackageReference Include="FFmpeg.AutoGen" Version="5.0.0" />
       <PackageReference Include="TagLibSharp" Version="2.2.0" />
 	  <PackageReference Include="DirectNCore" Version="1.13.0" />
+	  <PackageReference Include="PCLCrypto" Version="2.1.40-alpha" />
+
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\ThirdParty\Bili.Uwp\src\Models\Models.BiliBili\Models.BiliBili.csproj" />
-    <ProjectReference Include="..\ThirdParty\Bili.Uwp\src\Models\Models.gRPC\Models.gRPC.csproj" />
     <ProjectReference Include="..\HotPotPlayer.Native\HotPotPlayer.Native.csproj" />
     <ProjectReference Include="..\ThirdParty\Mpv.NET-lib-\src\Mpv.NET\Mpv.NET.csproj" />
     <ProjectReference Include="..\ThirdParty\NeteaseCloudMusicApi\NeteaseCloudMusicApi\NeteaseCloudMusicApi.csproj" />

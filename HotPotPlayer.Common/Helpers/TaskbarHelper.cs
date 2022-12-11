@@ -22,7 +22,7 @@ namespace HotPotPlayer.Helpers
 
         ITaskbarList4 Init()
         {
-            PInvoke.CoCreateInstance<ITaskbarList4>(new Guid("56FDF344-FD6D-11d0-958A-006097C9A090"), null, Windows.Win32.System.Com.CLSCTX.CLSCTX_INPROC_SERVER, out var taskbarList);
+            Windows.Win32.PInvoke.CoCreateInstance<ITaskbarList4>(new Guid("56FDF344-FD6D-11d0-958A-006097C9A090"), null, Windows.Win32.System.Com.CLSCTX.CLSCTX_INPROC_SERVER, out var taskbarList);
             return taskbarList;
         }
 

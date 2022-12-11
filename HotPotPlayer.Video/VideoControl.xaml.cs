@@ -1,5 +1,4 @@
-﻿using Bilibili.App.Card.V1;
-using CommunityToolkit.Mvvm.ComponentModel;
+﻿using CommunityToolkit.Mvvm.ComponentModel;
 using DirectN;
 using HotPotPlayer.Extensions;
 using HotPotPlayer.Services;

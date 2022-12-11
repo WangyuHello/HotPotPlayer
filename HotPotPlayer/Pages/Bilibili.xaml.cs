@@ -27,5 +27,14 @@ namespace HotPotPlayer.Pages
         {
             this.InitializeComponent();
         }
+
+        protected override void OnNavigatedTo(NavigationEventArgs e)
+        {
+            base.OnNavigatedTo(e);
+            if (!BiliBiliService.IsLogin)
+            {
+                NavigateTo("BiliBiliSub.Login");
+            }
+        }
     }
 }
