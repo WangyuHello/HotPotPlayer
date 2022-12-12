@@ -75,7 +75,7 @@ namespace HotPotPlayer.Services.BiliBili
                         url += (IsAcess == true ? "?access_key=" + token.SECCDATA : "") + "&appkey=" + ApiProvider.AndroidTVKey.Appkey + BuildString + "&ts=" + ApiProvider.TimeSpanSeconds;
                     url += (IsAcess == true ? "&sign=" + ApiProvider.GetSign(url, ApiProvider.AndroidTVKey) : "");
                     var appClient = _httpClientFactory.CreateClient("app");
-                    appClient.DefaultRequestHeaders.Add("Cookies", string.Join("; ", Cookies.Cast<System.Net.Cookie>().Select(t => t.Name + "=" + t.Value)));
+                    appClient.DefaultRequestHeaders.Add("Cookie", string.Join("; ", Cookies.Cast<System.Net.Cookie>().Select(t => t.Name + "=" + t.Value)));
                     HttpResponseMessage apphr = await appClient.GetAsync(url).ConfigureAwait(false);
                     apphr.Headers.Add("Accept_Encoding", "gzip,deflate");
                     apphr.EnsureSuccessStatusCode();
@@ -85,7 +85,7 @@ namespace HotPotPlayer.Services.BiliBili
                 case ResponseEnum.Web:
                     var webClient = _httpClientFactory.CreateClient("web");
                     var cookieStr = string.Join("; ", Cookies.Cast<System.Net.Cookie>().Select(t => t.Name + "=" + t.Value));
-                    webClient.DefaultRequestHeaders.Add("Cookies", cookieStr);
+                    webClient.DefaultRequestHeaders.Add("Cookie", cookieStr);
                     webClient.DefaultRequestHeaders.Add("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/107.0.0.0 Safari/537.36 Edg/107.0.1418.62");
                     //if (keyValues != null)
                     //{
@@ -98,10 +98,10 @@ namespace HotPotPlayer.Services.BiliBili
                     HttpResponseMessage webhr = await webClient.GetAsync(url2).ConfigureAwait(false);
                     webhr.EnsureSuccessStatusCode();
 
-                    if (webhr.Headers.TryGetValues("Set-Cookies", out var rawSetCookie))
-                    {
-                        Cookies.Add(ParseCookies(rawSetCookie));
-                    }
+                    //if (webhr.Headers.TryGetValues("Set-Cookie", out var rawSetCookie))
+                    //{
+                    //    Cookies.Add(ParseCookies(rawSetCookie));
+                    //}
 
                     var webencodeResults = await webhr.Content.ReadAsByteArrayAsync().ConfigureAwait(false);
                     string webstr = Encoding.UTF8.GetString(webencodeResults, 0, webencodeResults.Length);
@@ -137,13 +137,14 @@ namespace HotPotPlayer.Services.BiliBili
                 new Dictionary<string, string> { ["qrcode_key"] = key});
             var j = JObject.Parse(r);
 
+            if (j["data"]["code"].Value<int>() == 0)
+            {
+                var url = j["data"]["url"].Value<string>();
+                ParseUrlCookies(Cookies, url);
+            }
+
             return j;
         }
-
-
-
-
-
 
 
         public static CookieCollection ParseCookies(IEnumerable<string> cookieHeaders)
@@ -212,6 +213,22 @@ namespace HotPotPlayer.Services.BiliBili
             catch (Exception)
             {
 
+            }
+        }
+
+        private static void ParseUrlCookies(CookieCollection cookies, string url)
+        {
+            var segs = url.Split(new[] { '\u0026', '?', '=' });
+            for (int i = 1; i < segs.Length - 2; i+=2)
+            {
+                var cookie = new System.Net.Cookie();
+                if (segs[i].Contains("Expire"))
+                {
+                    continue;
+                }
+                cookie.Name = segs[i];
+                cookie.Value = segs[i+1];
+                cookies.Add(cookie);
             }
         }
     }
