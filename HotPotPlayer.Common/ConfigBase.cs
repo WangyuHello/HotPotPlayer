@@ -208,7 +208,7 @@ namespace HotPotPlayer
         {
             get
             {
-                var path = Path.Combine(LocalFolder, "Cookie");
+                var path = Path.Combine(LocalFolder, "Cookies");
                 if (!Directory.Exists(path))
                 {
                     Directory.CreateDirectory(path);

@@ -9,7 +9,7 @@ using System.Web;
 
 namespace BiliBiliAPI.Models.Account
 {
-    public class AccountLoginData
+    public record AccountLoginData
     {
         /// <summary>
         /// 二维码Url
@@ -25,7 +25,7 @@ namespace BiliBiliAPI.Models.Account
         public string QRKey { get; set; }
     }
 
-    public class LoginTrueString
+    public record LoginTrueString
     {
         /// <summary>
         /// 携带的json字符串
@@ -78,7 +78,7 @@ namespace BiliBiliAPI.Models.Account
     /// <summary>
     /// 登录cookie
     /// </summary>
-    public class AccountToken
+    public record AccountToken
     {
         /// <summary>
         /// 你滴账号
@@ -131,7 +131,7 @@ namespace BiliBiliAPI.Models.Account
         public string[] SSO { get; set; }
     }
 
-    public class AccountTokenCookies
+    public record AccountTokenCookies
     {
         /// <summary>
         /// Cookie列表
@@ -149,7 +149,7 @@ namespace BiliBiliAPI.Models.Account
 
     }
 
-    public class Cookie
+    public record Cookie
     {
         /// <summary>
         /// Cookie名称

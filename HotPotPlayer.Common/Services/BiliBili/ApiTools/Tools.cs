@@ -13,9 +13,9 @@ using System.Threading.Tasks;
 
 namespace BiliBiliAPI.ApiTools
 {
-    public sealed class ApiProvider
+    public static class ApiProvider
     {
-        public const string version = "3.0.0";
+        public const string Version = "3.0.0";
         public static ApiKeyInfo AndroidTVKey { get; } = new ApiKeyInfo("4409e2ce8ffd12b8", "59b43e04ad6965f34319062b478f83dd");
 
         public static ApiKeyInfo AndroidKey { get; } = new ApiKeyInfo("1d8b6e7d45233436", "560c52ccd288fed045859ed18bffd973");

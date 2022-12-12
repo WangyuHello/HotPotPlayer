@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace BiliBiliAPI.Models.Account
 {
-    public class ApiKeyInfo
+    public record ApiKeyInfo
     {
         public ApiKeyInfo(string key, string secret)
         {

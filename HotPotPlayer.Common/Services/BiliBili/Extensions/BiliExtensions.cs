@@ -8,28 +8,28 @@ using System.Net;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace HotPotPlayer.Extensions
+namespace HotPotPlayer.Services.BiliBili.Extensions
 {
-    internal static class NeteaseCloudApiExtensions
+    public static class BiliExtensions
     {
-        public static void SaveCookie(this CloudMusicApi api, ConfigBase config)
+        public static void SaveCookies(this BiliAPI api, ConfigBase config)
         {
             var cookie = api.Cookies;
             var folder = config.CookieFolder;
-            var file = Path.Combine(folder, "Cookies.json");
+            var file = Path.Combine(folder, "BiliCookies.json");
             var json = JsonConvert.SerializeObject(cookie);
             File.WriteAllText(file, json);
         }
 
-        public static void ClearCookie(this CloudMusicApi api)
+        public static void ClearCookie(this BiliAPI api)
         {
             api.Cookies.Clear();
         }
 
-        public static void LoadCookie(this CloudMusicApi api, ConfigBase config)
+        public static void LoadCookie(this BiliAPI api, ConfigBase config)
         {
             var folder = config.CookieFolder;
-            var file = Path.Combine(folder, "Cookies.json");
+            var file = Path.Combine(folder, "BiliCookies.json");
             if (!File.Exists(file))
             {
                 return;

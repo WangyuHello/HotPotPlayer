@@ -42,9 +42,15 @@ namespace HotPotPlayer.Pages.BiliBiliSub
         protected override async void OnNavigatedTo(NavigationEventArgs e)
         {
             base.OnNavigatedTo(e);
-            var (url, token) = await BiliBiliService.API.ÉêÇë¶þÎ¬Âë();
+            await SetQRCodeAndWait();
+            NavigateTo("Bilibili");
+        }
+
+        async Task SetQRCodeAndWait()
+        {
+            var (token, url) = await BiliBiliService.API.RequestQrCode();
             Token = token;
-            var qrData = NetEaseMusicService.GetQrImgByte(url);
+            var qrData = BiliBiliService.GetQrImgByte(url);
             BitmapImage image = new();
             var stream = new InMemoryRandomAccessStream();
             await stream.WriteAsync(qrData.AsBuffer());
@@ -58,12 +64,12 @@ namespace HotPotPlayer.Pages.BiliBiliSub
         {
             while (true)
             {
-                var (code, message) = await NetEaseMusicService.GetQrCheckAsync(Token);
+                var (code, message) = await BiliBiliService.GetQrCheckAsync(Token);
                 _ui.TryEnqueue(() =>
                 {
                     Status.Text = message;
                 });
-                if (code == 803)
+                if (code == 0)
                 {
                     break;
                 }
