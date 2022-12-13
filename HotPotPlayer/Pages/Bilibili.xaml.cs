@@ -1,4 +1,6 @@
-﻿using BiliBiliAPI.Models.Video;
+﻿using BiliBiliAPI.Models;
+using BiliBiliAPI.Models.Video;
+using BiliBiliAPI.Models.Videos;
 using HotPotPlayer.Models.BiliBili;
 using HotPotPlayer.Video;
 using Microsoft.UI.Xaml;
@@ -45,7 +47,15 @@ namespace HotPotPlayer.Pages
             var bvid = BVID.Text;
             var info = await BiliBiliService.API.GetVideoInfo(bvid);
             var cid = info.Data.First_Cid;
-            var res = await BiliBiliService.API.GetVideoUrl(bvid, cid, DashEnum.Dash8K, FnvalEnum.Dash | FnvalEnum.HDR | FnvalEnum.Fn8K | FnvalEnum.Fn4K | FnvalEnum.AV1);
+            BiliResult<VideoInfo> res;
+            if ((bool)DASH.IsChecked)
+            {
+                res = await BiliBiliService.API.GetVideoUrl(bvid, cid, DashEnum.Dash8K, FnvalEnum.Dash | FnvalEnum.HDR | FnvalEnum.Fn8K | FnvalEnum.Fn4K | FnvalEnum.AV1);
+            }
+            else
+            {
+                res = await BiliBiliService.API.GetVideoUrl(bvid, cid, DashEnum.Dash1080P60, FnvalEnum.FLV);
+            }
             var data = res.Data;
 
             var video = new BiliBiliVideoItem

@@ -13,6 +13,7 @@
 
     <StackPanel Background="White" VerticalAlignment="Center">
         <TextBox x:Name="BVID" Text="BV1JG411K7FF"></TextBox>
-        <Button Click="TestPlay">Play</Button>
+        <CheckBox x:Name="DASH" IsChecked="False">Dash模式</CheckBox>
+        <Button Click="TestPlay">播放</Button>
     </StackPanel>
 </base:PageBase>
