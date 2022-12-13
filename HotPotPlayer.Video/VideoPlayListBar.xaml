@@ -8,13 +8,14 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:io="using:System.IO"
     xmlns:local="using:HotPotPlayer.Video"
+    xmlns:model="using:HotPotPlayer.Models"
     xmlns:control="using:HotPotPlayer.Controls"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d">
 
     <base:UserControlBase.Resources>
-        <DataTemplate x:Key="PlayListBarListTemplate" x:DataType="io:FileInfo">
+        <DataTemplate x:Key="PlayListBarListTemplate" x:DataType="model:VideoItem">
             <Grid>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="32" />
@@ -23,7 +24,7 @@
                     <ColumnDefinition Width="Auto" />
                 </Grid.ColumnDefinitions>
                 <Grid Grid.Column="1" Margin="0,0,8,0">
-                    <TextBlock Foreground="White" Text="{x:Bind Name}" VerticalAlignment="Center" FontSize="14" TextTrimming="CharacterEllipsis" FontFamily="{ThemeResource MiSansRegular}"/>
+                    <TextBlock Foreground="White" Text="{x:Bind Title}" VerticalAlignment="Center" FontSize="14" TextTrimming="CharacterEllipsis" FontFamily="{ThemeResource MiSansRegular}"/>
                 </Grid>
                 <Button Grid.Column="3" Foreground="White" Style="{StaticResource TransparentWhiteButton}" Margin="8,0,0,0" Padding="4" CornerRadius="8" Tag="{x:Bind }" >
                     <SymbolIcon Symbol="More" />
@@ -31,7 +32,7 @@
             </Grid>
         </DataTemplate>
 
-        <DataTemplate x:Key="PlayListBarListSelectedTemplate" x:DataType="io:FileInfo">
+        <DataTemplate x:Key="PlayListBarListSelectedTemplate" x:DataType="model:VideoItem">
             <Grid >
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="32" />
@@ -41,7 +42,7 @@
                 </Grid.ColumnDefinitions>
                 <FontIcon FontFamily="{ThemeResource SegoeIcons}" Glyph="&#xE013;" VerticalAlignment="Center" HorizontalAlignment="Center" Foreground="White"/>
                 <Grid Grid.Column="1" Margin="0,0,8,0">
-                    <TextBlock Foreground="White" Text="{x:Bind Name}" VerticalAlignment="Center" FontSize="14" TextTrimming="CharacterEllipsis" FontFamily="{ThemeResource MiSansRegular}"/>
+                    <TextBlock Foreground="White" Text="{x:Bind Title}" VerticalAlignment="Center" FontSize="14" TextTrimming="CharacterEllipsis" FontFamily="{ThemeResource MiSansRegular}"/>
                 </Grid>
                 <Button Grid.Column="3" Foreground="White" Style="{StaticResource TransparentWhiteButton}" Margin="8,0,0,0" Padding="4" CornerRadius="8" Tag="{x:Bind }" >
                     <SymbolIcon Symbol="More" />

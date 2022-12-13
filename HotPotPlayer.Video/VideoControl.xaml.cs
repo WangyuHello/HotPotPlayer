@@ -1,7 +1,10 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using DirectN;
 using HotPotPlayer.Extensions;
+using HotPotPlayer.Models;
+using HotPotPlayer.Models.BiliBili;
 using HotPotPlayer.Services;
+using HotPotPlayer.Services.BiliBili;
 using HotPotPlayer.Video.GlesInterop;
 using Microsoft.UI;
 using Microsoft.UI.Dispatching;
@@ -90,7 +93,7 @@ namespace HotPotPlayer.Video
         {
             var h = (VideoControl)d;
             var info = (VideoPlayInfo)e.NewValue;
-            h.currentPlayList = new ObservableCollection<FileInfo>(info.VideoFiles);
+            h.currentPlayList = new ObservableCollection<VideoItem>(info.VideoItems);
             h.currentPlayIndex = info.Index;
         }
 
@@ -145,7 +148,7 @@ namespace HotPotPlayer.Video
 
             UIQueue.TryEnqueue(() => 
             {
-                Title = _mpv.MediaTitle;
+                Title = CurrentPlayList[CurrentPlayIndex].Title;
                 IsPlaying = true;
                 CurrentPlayingDuration = _mpv.Duration;
                 OnPropertyChanged(propertyName: nameof(Volume));
@@ -198,9 +201,46 @@ namespace HotPotPlayer.Video
             Mpv.API.SetPropertyString("hwdec", "d3d11va");
             Mpv.API.SetPropertyString("d3d11-composition", "yes");
             Mpv.API.SetPropertyString("target-colorspace-hint", "yes"); //HDR passthrough
-            Mpv.LoadPlaylist(CurrentPlayList.Select(f => f.FullName));
+
+            if (CurrentPlayList[CurrentPlayIndex] is BiliBiliVideoItem bv)
+            {
+                Mpv.API.SetPropertyString("user-agent", BiliAPI.UserAgent);
+                Mpv.API.SetPropertyString("cookies", "yes");
+                Mpv.API.SetPropertyString("ytdl", "no");
+                Mpv.API.SetPropertyString("cookies-file", GetCookieFile());
+                Mpv.API.SetPropertyString("http-header-fields", "Referer: http://www.bilibili.com/");
+                
+                IEnumerable<string> videourls;
+                if (bv.DashVideos == null)
+                {
+                    videourls = CurrentPlayList.Cast<BiliBiliVideoItem>().Select(b => b.Urls[0].Url);
+                }
+                else
+                {
+                    videourls = CurrentPlayList.Cast<BiliBiliVideoItem>().Select(b => b.DashVideos[1]).Select(d => d.BaseUrl);
+                    var audiourls = CurrentPlayList.Cast<BiliBiliVideoItem>().Select(b => b.DashAudio[0]).Select(d => d.BaseUrl);
+                }
+
+                Mpv.LoadPlaylist(videourls);
+                //Mpv.API.SetPropertyString("external-file", audiourls.First());
+            }
+            else
+            {
+                Mpv.LoadPlaylist(CurrentPlayList.Select(f => f.Source.FullName));
+            }
             Mpv.PlaylistPlayIndex(CurrentPlayIndex);
+
+
             //Mpv.Resume();
+        }
+
+        private string GetCookieFile()
+        {
+            var cookieFile = Path.Combine(Config.CookieFolder, "mpvCookie.txt");
+            var cookie = BiliBiliService.API.Cookies;
+            var netcookies = cookie.Select(c => c.ToNetScape()).ToList();
+            File.WriteAllLines(cookieFile, netcookies);
+            return cookieFile;
         }
 
         private void Host_Loaded(object sender, RoutedEventArgs e)
@@ -240,7 +280,7 @@ namespace HotPotPlayer.Video
         bool _swapChainLoaded;
 
         [ObservableProperty]
-        private ObservableCollection<FileInfo> currentPlayList;
+        private ObservableCollection<VideoItem> currentPlayList;
 
         private int currentPlayIndex;
         public int CurrentPlayIndex

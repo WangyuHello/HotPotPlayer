@@ -67,7 +67,7 @@ namespace HotPotPlayer
 
         public abstract Window MainWindow { get; }
 
-        public abstract void PlayVideo(FileInfo file);
-        public abstract void PlayVideos(IEnumerable<FileInfo> videos, int index);
+        public abstract void PlayVideo(VideoItem file);
+        public abstract void PlayVideos(IEnumerable<VideoItem> videos, int index);
     }
 }

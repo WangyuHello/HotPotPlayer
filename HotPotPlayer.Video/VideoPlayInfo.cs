@@ -1,4 +1,5 @@
-﻿using System;
+﻿using HotPotPlayer.Models;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -9,7 +10,7 @@ namespace HotPotPlayer.Video
 {
     public record VideoPlayInfo
     {
-        public IEnumerable<FileInfo> VideoFiles { get; set; }
+        public IEnumerable<VideoItem> VideoItems { get; set; }
         public int Index { get; set; }
     }
 }

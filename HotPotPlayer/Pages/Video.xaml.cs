@@ -22,6 +22,7 @@ using HotPotPlayer.Controls;
 using System.Text;
 using Microsoft.UI.Xaml.Media.Animation;
 using HotPotPlayer.Services;
+using HotPotPlayer.Extensions;
 
 // To learn more about WinUI, the WinUI project structure,
 // and more about our project templates, see: http://aka.ms/winui-project-info.
@@ -47,7 +48,7 @@ namespace HotPotPlayer.Pages
 
         private void PlayVideo(VideoItem video)
         {
-            App.PlayVideo(video.Source);
+            App.PlayVideo(video);
         }
 
         //private void SeriesClick(object sender, RoutedEventArgs e)
@@ -66,7 +67,7 @@ namespace HotPotPlayer.Pages
         private void SeriesPopupListClick(object sender, RoutedEventArgs e)
         {
             var video = ((Button)sender).Tag as VideoItem;
-            App.PlayVideo(video.Source);
+            App.PlayVideo(video);
         }
 
         LocalVideoService VideoService => ((App)Application.Current).LocalVideoService;

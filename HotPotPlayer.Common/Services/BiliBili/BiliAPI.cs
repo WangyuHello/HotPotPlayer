@@ -12,6 +12,10 @@ using BiliBiliAPI.ApiTools;
 using QRCoder;
 using System.Web;
 using Microsoft.AspNetCore.WebUtilities;
+using BiliBiliAPI.Models.Video;
+using BiliBiliAPI.Models;
+using Newtonsoft.Json;
+using BiliBiliAPI.Models.Videos;
 
 namespace HotPotPlayer.Services.BiliBili
 {
@@ -56,15 +60,17 @@ namespace HotPotPlayer.Services.BiliBili
                 .ConfigureHttpClient(client =>
                 {
                     client.DefaultRequestHeaders.Referrer = new Uri("http://www.bilibili.com/");
+                    client.DefaultRequestHeaders.Add("User-Agent", UserAgent);
                     client.Timeout = TimeSpan.FromSeconds(8);
                 }));
 
         }
         public enum ResponseEnum { App, Web }
         AccountToken token;
+        public const string UserAgent = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/107.0.0.0 Safari/537.36 Edg/107.0.1418.62";
         public CookieCollection Cookies { get; set; } = new CookieCollection();
 
-        private async Task<string> GetAsync(string url, ResponseEnum responseEnum, Dictionary<string, string> keyValues = null, bool IsAcess = true, string BuildString = "&platform=android&device=android&actionKey=appkey&build=5442100&mobi_app=android_comic")
+        private async Task<string> GetAsync(string url, ResponseEnum responseEnum = ResponseEnum.Web, Dictionary<string, string> keyValues = null, bool IsAcess = true, string BuildString = "&platform=android&device=android&actionKey=appkey&build=5442100&mobi_app=android_comic")
         {
             switch (responseEnum)
             {
@@ -86,7 +92,6 @@ namespace HotPotPlayer.Services.BiliBili
                     var webClient = _httpClientFactory.CreateClient("web");
                     var cookieStr = string.Join("; ", Cookies.Cast<System.Net.Cookie>().Select(t => t.Name + "=" + t.Value));
                     webClient.DefaultRequestHeaders.Add("Cookie", cookieStr);
-                    webClient.DefaultRequestHeaders.Add("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/107.0.0.0 Safari/537.36 Edg/107.0.1418.62");
                     //if (keyValues != null)
                     //{
                     //    foreach (var item in keyValues)
@@ -98,10 +103,10 @@ namespace HotPotPlayer.Services.BiliBili
                     HttpResponseMessage webhr = await webClient.GetAsync(url2).ConfigureAwait(false);
                     webhr.EnsureSuccessStatusCode();
 
-                    //if (webhr.Headers.TryGetValues("Set-Cookie", out var rawSetCookie))
-                    //{
-                    //    Cookies.Add(ParseCookies(rawSetCookie));
-                    //}
+                    if (webhr.Headers.TryGetValues("Set-Cookie", out var rawSetCookie))
+                    {
+                        Cookies.Add(ParseCookies(rawSetCookie));
+                    }
 
                     var webencodeResults = await webhr.Content.ReadAsByteArrayAsync().ConfigureAwait(false);
                     string webstr = Encoding.UTF8.GetString(webencodeResults, 0, webencodeResults.Length);
@@ -125,28 +130,70 @@ namespace HotPotPlayer.Services.BiliBili
             return (token, url);
         }
 
+        /// <summary>
+        /// https://github.com/SocialSisterYi/bilibili-API-collect/blob/master/login/login_info.md
+        /// </summary>
+        /// <returns></returns>
         public async Task<JObject> GetLoginInfoAsync()
         {
             var r = await GetAsync("http://api.bilibili.com/x/web-interface/nav/stat", ResponseEnum.Web);
             return JObject.Parse(r);
         }
 
+        /// <summary>
+        /// https://github.com/SocialSisterYi/bilibili-API-collect/blob/master/login/login_action/QR.md
+        /// </summary>
+        /// <param name="key"></param>
+        /// <returns></returns>
         public async Task<JObject> GetQrCodePoll(string key)
         {
             var r = await GetAsync("http://passport.bilibili.com/x/passport-login/web/qrcode/poll", ResponseEnum.Web, 
                 new Dictionary<string, string> { ["qrcode_key"] = key});
             var j = JObject.Parse(r);
-
-            if (j["data"]["code"].Value<int>() == 0)
-            {
-                var url = j["data"]["url"].Value<string>();
-                ParseUrlCookies(Cookies, url);
-            }
-
             return j;
         }
 
+        /// <summary>
+        /// https://github.com/SocialSisterYi/bilibili-API-collect/blob/master/video/videostream_url.md
+        /// </summary>
+        /// <param name="bvid">稿件bvid</param>
+        /// <param name="cid">视频cid</param>
+        /// <param name="qn">视频清晰度选择</param>
+        /// <param name="fnval">视频获取方式选择</param>
+        /// <param name="fourk">是否允许4K视频</param>
+        /// <returns></returns>
+        public async Task<BiliResult<VideoInfo>> GetVideoUrl(string bvid, string cid, DashEnum qn = DashEnum.Dash480, FnvalEnum fnval = FnvalEnum.Dash, int fourk = 0)
+        {
+            var r = await GetAsync("http://api.bilibili.com/x/player/playurl", ResponseEnum.Web,
+                new Dictionary<string, string> {
+                    ["bvid"] = bvid,
+                    ["cid"] = cid,
+                    ["qn"] = ((int)qn).ToString(),
+                    ["fnval"] = ((int)fnval).ToString(),
+                    ["fnver"] = "0",
+                    ["fourk"] = fourk.ToString(),
+                });
+            var res = JsonConvert.DeserializeObject<BiliResult<VideoInfo>>(r);
+            return res;
+        }
 
+        /// <summary>
+        /// https://github.com/SocialSisterYi/bilibili-API-collect/blob/master/video/info.md
+        /// </summary>
+        /// <param name="bvid">稿件bvid</param>
+        /// <returns></returns>
+        public async Task<BiliResult<VideosContent>> GetVideoInfo(string bvid)
+        {
+            var r = await GetAsync("http://api.bilibili.com/x/web-interface/view", ResponseEnum.Web,
+                new Dictionary<string, string>
+                {
+                    ["bvid"] = bvid,
+                });
+            var res = JsonConvert.DeserializeObject<BiliResult<VideosContent>>(r);
+            return res;
+        }
+
+        #region Cookie
         public static CookieCollection ParseCookies(IEnumerable<string> cookieHeaders)
         {
             if (cookieHeaders is null)
@@ -231,5 +278,6 @@ namespace HotPotPlayer.Services.BiliBili
                 cookies.Add(cookie);
             }
         }
+        #endregion
     }
 }

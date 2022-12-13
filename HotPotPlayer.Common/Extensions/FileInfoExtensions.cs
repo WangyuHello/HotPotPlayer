@@ -62,5 +62,19 @@ namespace HotPotPlayer.Extensions
                 LastWriteTime = f.LastWriteTime
             };
         }
+
+        public static VideoItem ToVideoItemLight(this FileInfo f)
+        {
+            TimeSpan dur = TimeSpan.Zero;
+            var title = Path.GetFileNameWithoutExtension(f.Name);
+
+            return new VideoItem
+            {
+                Source = f,
+                Title = title,
+                Duration = dur,
+                LastWriteTime = f.LastWriteTime
+            };
+        }
     }
 }

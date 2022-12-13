@@ -20,14 +20,14 @@ namespace HotPotPlayer
     {
         public FileInfo InitMediaFile { get; set; }
 
-        public override void PlayVideo(FileInfo file)
+        public override void PlayVideo(VideoItem file)
         {
-            PlayVideos(new List<FileInfo>() { file },  0);
+            PlayVideos(new List<VideoItem>() { file },  0);
         }
 
-        public override void PlayVideos(IEnumerable<FileInfo> videos, int index)
+        public override void PlayVideos(IEnumerable<VideoItem> videos, int index)
         {
-            MainWindow.NavigateToVideo(new VideoPlayInfo { VideoFiles = videos, Index = index });
+            MainWindow.NavigateToVideo(new VideoPlayInfo { VideoItems = videos, Index = index });
         }
 
         public override void ShowToast(ToastInfo toast)

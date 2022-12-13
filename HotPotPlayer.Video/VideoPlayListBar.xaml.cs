@@ -1,6 +1,7 @@
 // Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT License. See LICENSE in the project root for license information.
 
+using HotPotPlayer.Models;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Controls.Primitives;
@@ -29,14 +30,14 @@ namespace HotPotPlayer.Video
             this.InitializeComponent();
         }
 
-        public ObservableCollection<FileInfo> CurrentPlayList
+        public ObservableCollection<VideoItem> CurrentPlayList
         {
-            get { return (ObservableCollection<FileInfo>)GetValue(CurrentPlayListProperty); }
+            get { return (ObservableCollection<VideoItem>)GetValue(CurrentPlayListProperty); }
             set { SetValue(CurrentPlayListProperty, value); }
         }
 
         public static readonly DependencyProperty CurrentPlayListProperty =
-            DependencyProperty.Register("CurrentPlayList", typeof(ObservableCollection<FileInfo>), typeof(VideoPlayListBar), new PropertyMetadata(default(ObservableCollection<FileInfo>)));
+            DependencyProperty.Register("CurrentPlayList", typeof(ObservableCollection<VideoItem>), typeof(VideoPlayListBar), new PropertyMetadata(default(ObservableCollection<VideoItem>)));
 
 
         public int CurrentPlayIndex
