@@ -45,7 +45,7 @@ namespace HotPotPlayer.Pages
             var bvid = BVID.Text;
             var info = await BiliBiliService.API.GetVideoInfo(bvid);
             var cid = info.Data.First_Cid;
-            var res = await BiliBiliService.API.GetVideoUrl(bvid, cid, DashEnum.Dash1080P60, FnvalEnum.FLV);
+            var res = await BiliBiliService.API.GetVideoUrl(bvid, cid, DashEnum.Dash8K, FnvalEnum.Dash | FnvalEnum.HDR | FnvalEnum.Fn8K | FnvalEnum.Fn4K | FnvalEnum.AV1);
             var data = res.Data;
 
             var video = new BiliBiliVideoItem
