@@ -12,6 +12,7 @@ namespace HotPotPlayer.Video.Util
     using System.Linq;
     using System.Text;
     using System.Collections.Generic;
+    using HotPotPlayer.Video.Extensions;
     using System;
     
     /// <summary>
@@ -33,7 +34,7 @@ namespace HotPotPlayer.Video.Util
                     "rn:mpeg:dash:profile:isoff-on-demand:2011\" \r\n     type=\"static\"\r\n     minBufferT" +
                     "ime=\"PT");
             
-            #line 11 "D:\Source\HotPotPlayer\HotPotPlayer.Video\Util\Dash.tt"
+            #line 12 "D:\Source\HotPotPlayer\HotPotPlayer.Video\Util\Dash.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(video.MinBufferTime));
             
             #line default
@@ -42,42 +43,42 @@ namespace HotPotPlayer.Video.Util
                     "ontentComponent contentType=\"audio\" id=\"1\" />\r\n            <Representation bandw" +
                     "idth=\"");
             
-            #line 15 "D:\Source\HotPotPlayer\HotPotPlayer.Video\Util\Dash.tt"
+            #line 16 "D:\Source\HotPotPlayer\HotPotPlayer.Video\Util\Dash.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(video.DashAudios[audioIndex].BandWidth));
             
             #line default
             #line hidden
             this.Write("\" codecs=\"");
             
-            #line 15 "D:\Source\HotPotPlayer\HotPotPlayer.Video\Util\Dash.tt"
+            #line 16 "D:\Source\HotPotPlayer\HotPotPlayer.Video\Util\Dash.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(video.DashAudios[audioIndex].Codecs));
             
             #line default
             #line hidden
             this.Write("\" height=\"");
             
-            #line 15 "D:\Source\HotPotPlayer\HotPotPlayer.Video\Util\Dash.tt"
+            #line 16 "D:\Source\HotPotPlayer\HotPotPlayer.Video\Util\Dash.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(video.DashAudios[audioIndex].Height));
             
             #line default
             #line hidden
             this.Write("\" mimeType=\"");
             
-            #line 15 "D:\Source\HotPotPlayer\HotPotPlayer.Video\Util\Dash.tt"
+            #line 16 "D:\Source\HotPotPlayer\HotPotPlayer.Video\Util\Dash.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(video.DashAudios[audioIndex].MimeType));
             
             #line default
             #line hidden
             this.Write("\" id=\"");
             
-            #line 15 "D:\Source\HotPotPlayer\HotPotPlayer.Video\Util\Dash.tt"
+            #line 16 "D:\Source\HotPotPlayer\HotPotPlayer.Video\Util\Dash.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(video.DashAudios[audioIndex].ID));
             
             #line default
             #line hidden
             this.Write("\" width=\"");
             
-            #line 15 "D:\Source\HotPotPlayer\HotPotPlayer.Video\Util\Dash.tt"
+            #line 16 "D:\Source\HotPotPlayer\HotPotPlayer.Video\Util\Dash.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(video.DashAudios[audioIndex].Width));
             
             #line default
@@ -85,14 +86,14 @@ namespace HotPotPlayer.Video.Util
             this.Write("\">\r\n                <BaseURL>http://localhost:18909/audio.m4s</BaseURL>\r\n        " +
                     "        <SegmentBase indexRange=\"");
             
-            #line 17 "D:\Source\HotPotPlayer\HotPotPlayer.Video\Util\Dash.tt"
+            #line 18 "D:\Source\HotPotPlayer\HotPotPlayer.Video\Util\Dash.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(video.DashAudios[audioIndex].SegmentBase.IndexRange));
             
             #line default
             #line hidden
             this.Write("\">\r\n                    <Initialization range=\"");
             
-            #line 18 "D:\Source\HotPotPlayer\HotPotPlayer.Video\Util\Dash.tt"
+            #line 19 "D:\Source\HotPotPlayer\HotPotPlayer.Video\Util\Dash.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(video.DashAudios[audioIndex].SegmentBase.Initialization));
             
             #line default
@@ -101,42 +102,42 @@ namespace HotPotPlayer.Video.Util
                     "aptationSet>\r\n        <AdaptationSet group=\"2\">\r\n            <ContentComponent c" +
                     "ontentType=\"video\" id=\"2\" />\r\n            <Representation bandwidth=\"");
             
-            #line 24 "D:\Source\HotPotPlayer\HotPotPlayer.Video\Util\Dash.tt"
+            #line 25 "D:\Source\HotPotPlayer\HotPotPlayer.Video\Util\Dash.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(video.DashVideos[videoIndex].BandWidth));
             
             #line default
             #line hidden
             this.Write("\" codecs=\"");
             
-            #line 24 "D:\Source\HotPotPlayer\HotPotPlayer.Video\Util\Dash.tt"
+            #line 25 "D:\Source\HotPotPlayer\HotPotPlayer.Video\Util\Dash.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(video.DashVideos[videoIndex].Codecs));
             
             #line default
             #line hidden
             this.Write("\" height=\"");
             
-            #line 24 "D:\Source\HotPotPlayer\HotPotPlayer.Video\Util\Dash.tt"
+            #line 25 "D:\Source\HotPotPlayer\HotPotPlayer.Video\Util\Dash.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(video.DashVideos[videoIndex].Height));
             
             #line default
             #line hidden
             this.Write("\" mimeType=\"");
             
-            #line 24 "D:\Source\HotPotPlayer\HotPotPlayer.Video\Util\Dash.tt"
+            #line 25 "D:\Source\HotPotPlayer\HotPotPlayer.Video\Util\Dash.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(video.DashVideos[videoIndex].MimeType));
             
             #line default
             #line hidden
             this.Write("\" id=\"");
             
-            #line 24 "D:\Source\HotPotPlayer\HotPotPlayer.Video\Util\Dash.tt"
+            #line 25 "D:\Source\HotPotPlayer\HotPotPlayer.Video\Util\Dash.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(video.DashVideos[videoIndex].ID));
             
             #line default
             #line hidden
             this.Write("\" width=\"");
             
-            #line 24 "D:\Source\HotPotPlayer\HotPotPlayer.Video\Util\Dash.tt"
+            #line 25 "D:\Source\HotPotPlayer\HotPotPlayer.Video\Util\Dash.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(video.DashVideos[videoIndex].Width));
             
             #line default
@@ -144,14 +145,14 @@ namespace HotPotPlayer.Video.Util
             this.Write("\">\r\n                <BaseURL>http://localhost:18909/video.m4s</BaseURL>\r\n        " +
                     "        <SegmentBase indexRange=\"");
             
-            #line 26 "D:\Source\HotPotPlayer\HotPotPlayer.Video\Util\Dash.tt"
+            #line 27 "D:\Source\HotPotPlayer\HotPotPlayer.Video\Util\Dash.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(video.DashVideos[videoIndex].SegmentBase.IndexRange));
             
             #line default
             #line hidden
             this.Write("\">\r\n                    <Initialization range=\"");
             
-            #line 27 "D:\Source\HotPotPlayer\HotPotPlayer.Video\Util\Dash.tt"
+            #line 28 "D:\Source\HotPotPlayer\HotPotPlayer.Video\Util\Dash.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(video.DashVideos[videoIndex].SegmentBase.Initialization));
             
             #line default
