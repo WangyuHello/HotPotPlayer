@@ -5,6 +5,7 @@ using HotPotPlayer.Models;
 using HotPotPlayer.Models.BiliBili;
 using HotPotPlayer.Services;
 using HotPotPlayer.Services.BiliBili;
+using HotPotPlayer.Video.Extensions;
 using HotPotPlayer.Video.GlesInterop;
 using Microsoft.UI;
 using Microsoft.UI.Dispatching;
@@ -219,10 +220,8 @@ namespace HotPotPlayer.Video
                 }
                 else
                 {
-                    videourls = CurrentPlayList.Cast<BiliBiliVideoItem>().Select(b => b.DashVideos[0]).Select(d => d.BaseUrl);
-                    var audiourls = CurrentPlayList.Cast<BiliBiliVideoItem>().Select(b => b.DashAudio[0]).Select(d => d.BaseUrl);
-                    //Mpv.Load(GetEdlPath(videourls, audiourls));
-                    Mpv.Load(videourls.First());
+                    var mpd = bv.WriteToMPD(Config);
+                    Mpv.Load(mpd);
                 }
 
                 //Mpv.API.SetPropertyString("external-file", audiourls.First());
@@ -235,18 +234,6 @@ namespace HotPotPlayer.Video
 
 
             //Mpv.Resume();
-        }
-
-        private string GetEdlPath(IEnumerable<string> videourls, IEnumerable<string> audiourls)
-        {
-            var file = Path.Combine(Config.CacheFolder, "dash.edl");
-            StringBuilder sb = new StringBuilder();
-            sb.AppendLine("# mpv EDL v0");
-            sb.AppendLine(videourls.First());
-            sb.AppendLine("!new_stream");
-            sb.AppendLine(audiourls.First());
-            File.WriteAllText(file, sb.ToString());
-            return file;
         }
 
         private string GetCookieFile()
