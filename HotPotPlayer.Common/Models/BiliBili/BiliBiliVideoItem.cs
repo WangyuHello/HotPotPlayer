@@ -12,7 +12,9 @@ namespace HotPotPlayer.Models.BiliBili
     {
         public List<DashVideo> DashVideos { get; set; }
 
-        public List<DashVideo> DashAudio { get; set; }
+        public List<DashVideo> DashAudios { get; set; }
+
+        public string MinBufferTime { get; set; }
 
         public List<Durl> Urls { get; set; }
     }

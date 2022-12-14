@@ -77,7 +77,7 @@ namespace HotPotPlayer
                     var index = names.IndexOf(initMedia.Name);
                     MusicPlayer.PlayNext(index, musics);
                 }
-                else if(((App)Application.Current).Config.VideoSupportedExt.Contains(initMedia.Extension))
+                else
                 {
                     var dir = initMedia.Directory;
                     var videoFiles = app.Config.GetVideoFilesFromDirectory(dir);

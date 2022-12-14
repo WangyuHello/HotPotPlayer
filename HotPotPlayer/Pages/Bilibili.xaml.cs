@@ -61,9 +61,10 @@ namespace HotPotPlayer.Pages
             var video = new BiliBiliVideoItem
             {
                 DashVideos = data?.Dash?.DashVideos,
-                DashAudio = data?.Dash?.DashAudio,
+                DashAudios = data?.Dash?.DashAudios,
                 Urls = data?.DUrl,
                 Title = info.Data.Title,
+                MinBufferTime = data?.Dash?.MinBufferTime,
                 Duration = TimeSpan.FromMilliseconds(long.Parse(res.Data.TimeLength)),
                 Cover = new Uri(info.Data.VideoImage)
             };

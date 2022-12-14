@@ -75,7 +75,7 @@ namespace BiliBiliAPI.Models.Videos
         public List<DashVideo> DashVideos { get; set; }
 
         [JsonProperty("audio")]
-        public List<DashVideo> DashAudio { get; set; }
+        public List<DashVideo> DashAudios { get; set; }
     }
 
     public class DashVideo
@@ -99,7 +99,7 @@ namespace BiliBiliAPI.Models.Videos
         /// 视频流格式
         /// </summary>
         [JsonProperty("mimeType")]
-        public string VideoType { get; set; }
+        public string MimeType { get; set; }
 
         /// <summary>
         /// 视频流编码器
@@ -130,7 +130,7 @@ namespace BiliBiliAPI.Models.Videos
         public string Initialization { get; set; }
 
         [JsonProperty("indexRange")]
-        public string indexRange { get; set; }
+        public string IndexRange { get; set; }
     }
     public class Support_Formats
     {

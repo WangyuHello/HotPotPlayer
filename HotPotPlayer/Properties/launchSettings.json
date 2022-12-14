@@ -7,6 +7,10 @@
       "commandName": "MsixPackage",
       "commandLineArgs": "\"Z:\\视频\\【Animenz】シルシ（印记）- 刀剑神域 II ED3 钢琴版.mp4\""
     },
+    "MpdInit": {
+      "commandName": "MsixPackage",
+      "commandLineArgs": "\"D:\\视频\\test.mpd\""
+    },
     "MusicInit": {
       "commandName": "MsixPackage",
       "commandLineArgs": "\"D:\\Music\\01_01_三原色_YOASOBI.flac\""
