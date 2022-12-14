@@ -13,7 +13,7 @@
         <AdaptationSet group="1">
             <ContentComponent contentType="audio" id="1" />
             <Representation bandwidth="<#= video.DashAudios[audioIndex].BandWidth #>" codecs="<#= video.DashAudios[audioIndex].Codecs #>" height="<#= video.DashAudios[audioIndex].Height #>" mimeType="<#= video.DashAudios[audioIndex].MimeType #>" id="<#= video.DashAudios[audioIndex].ID #>" width="<#= video.DashAudios[audioIndex].Width #>">
-                <BaseURL>gaga.m4s?asdf</BaseURL>
+                <BaseURL>http://localhost:18909/audio.m4s</BaseURL>
                 <SegmentBase indexRange="<#= video.DashAudios[audioIndex].SegmentBase.IndexRange #>">
                     <Initialization range="<#= video.DashAudios[audioIndex].SegmentBase.Initialization #>" />
                 </SegmentBase>
@@ -22,7 +22,7 @@
         <AdaptationSet group="2">
             <ContentComponent contentType="video" id="2" />
             <Representation bandwidth="<#= video.DashVideos[videoIndex].BandWidth #>" codecs="<#= video.DashVideos[videoIndex].Codecs #>" height="<#= video.DashVideos[videoIndex].Height #>" mimeType="<#= video.DashVideos[videoIndex].MimeType #>" id="<#= video.DashVideos[videoIndex].ID #>" width="<#= video.DashVideos[videoIndex].Width #>">
-                <BaseURL>haha.m4s?ad</BaseURL>
+                <BaseURL>http://localhost:18909/video.m4s</BaseURL>
                 <SegmentBase indexRange="<#= video.DashVideos[videoIndex].SegmentBase.IndexRange #>">
                     <Initialization range="<#= video.DashVideos[videoIndex].SegmentBase.Initialization #>" />
                 </SegmentBase>

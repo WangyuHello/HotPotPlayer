@@ -82,8 +82,8 @@ namespace HotPotPlayer.Video.Util
             
             #line default
             #line hidden
-            this.Write("\">\r\n                <BaseURL>gaga.m4s?asdf</BaseURL>\r\n                <SegmentBas" +
-                    "e indexRange=\"");
+            this.Write("\">\r\n                <BaseURL>http://localhost:18909/audio.m4s</BaseURL>\r\n        " +
+                    "        <SegmentBase indexRange=\"");
             
             #line 17 "D:\Source\HotPotPlayer\HotPotPlayer.Video\Util\Dash.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(video.DashAudios[audioIndex].SegmentBase.IndexRange));
@@ -141,8 +141,8 @@ namespace HotPotPlayer.Video.Util
             
             #line default
             #line hidden
-            this.Write("\">\r\n                <BaseURL>haha.m4s?ad</BaseURL>\r\n                <SegmentBase " +
-                    "indexRange=\"");
+            this.Write("\">\r\n                <BaseURL>http://localhost:18909/video.m4s</BaseURL>\r\n        " +
+                    "        <SegmentBase indexRange=\"");
             
             #line 26 "D:\Source\HotPotPlayer\HotPotPlayer.Video\Util\Dash.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(video.DashVideos[videoIndex].SegmentBase.IndexRange));

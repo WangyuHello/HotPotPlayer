@@ -211,7 +211,8 @@ namespace HotPotPlayer.Video
                 Mpv.API.SetPropertyString("ytdl", "no");
                 Mpv.API.SetPropertyString("cookies-file", GetCookieFile());
                 Mpv.API.SetPropertyString("http-header-fields", "Referer: http://www.bilibili.com/");
-                
+                //Mpv.API.SetPropertyString("demuxer-lavf-o", $"headers=\"Referer: http://www.bilibili.com/\r\nUserAgent: {BiliAPI.UserAgent}\r\n\"");
+
                 IEnumerable<string> videourls;
                 if (bv.DashVideos == null)
                 {
