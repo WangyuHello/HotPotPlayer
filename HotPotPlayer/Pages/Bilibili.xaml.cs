@@ -50,7 +50,7 @@ namespace HotPotPlayer.Pages
             BiliResult<VideoInfo> res;
             if ((bool)DASH.IsChecked)
             {
-                res = await BiliBiliService.API.GetVideoUrl(bvid, cid, DashEnum.Dash8K, FnvalEnum.Dash | FnvalEnum.HDR | FnvalEnum.Fn8K | FnvalEnum.Fn4K | FnvalEnum.AV1);
+                res = await BiliBiliService.API.GetVideoUrl(bvid, cid, DashEnum.Dash8K, FnvalEnum.Dash | FnvalEnum.HDR | FnvalEnum.Fn8K | FnvalEnum.Fn4K | FnvalEnum.AV1 | FnvalEnum.FnDBAudio | FnvalEnum.FnDBVideo);
             }
             else
             {
