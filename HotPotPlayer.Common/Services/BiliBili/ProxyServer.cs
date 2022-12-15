@@ -76,14 +76,15 @@ namespace HotPotPlayer.Services.BiliBili
             using var httpRequestMessage = new HttpRequestMessage();
             httpRequestMessage.Headers.TryAddWithoutValidation("Cookie", CookieString);
             httpRequestMessage.RequestUri = new(url);
-            var response = (await _client.SendAsync(httpRequestMessage, HttpCompletionOption.ResponseHeadersRead)).EnsureSuccessStatusCode();
+            using var response = (await _client.SendAsync(httpRequestMessage, HttpCompletionOption.ResponseHeadersRead)).EnsureSuccessStatusCode();
 
             context.Response.ProtocolVersion = response.Version;
             context.Response.StatusCode = (int)response.StatusCode;
             context.Response.StatusDescription = response.ReasonPhrase;
 
-            var stream = await response.Content.ReadAsStreamAsync();
+            using var stream = await response.Content.ReadAsStreamAsync();
 
+            context.Response.KeepAlive = true;
             context.Response.ContentLength64 = response.Content.Headers.ContentLength ?? 0;
             context.Response.ContentType = response.Content.Headers.ContentType.ToString();
             foreach (var header in response.Headers)

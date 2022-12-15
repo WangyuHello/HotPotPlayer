@@ -56,18 +56,8 @@ namespace HotPotPlayer.Pages
             {
                 res = await BiliBiliService.API.GetVideoUrl(bvid, cid, DashEnum.Dash1080P60, FnvalEnum.FLV);
             }
-            var data = res.Data;
 
-            var video = new BiliBiliVideoItem
-            {
-                DashVideos = data?.Dash?.DashVideos,
-                DashAudios = data?.Dash?.DashAudios,
-                Urls = data?.DUrl,
-                Title = info.Data.Title,
-                MinBufferTime = data?.Dash?.MinBufferTime,
-                Duration = TimeSpan.FromMilliseconds(long.Parse(res.Data.TimeLength)),
-                Cover = new Uri(info.Data.VideoImage)
-            };
+            var video = BiliBiliVideoItem.FromRaw(res.Data, info.Data);
 
             NavigateTo("VideoPlay", new VideoPlayInfo { Index = 0, VideoItems = new List<BiliBiliVideoItem> { video } });
         }

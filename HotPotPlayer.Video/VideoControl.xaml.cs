@@ -103,7 +103,6 @@ namespace HotPotPlayer.Video
         //DisplayRequest _displayReq;
         //DisplayRequest DisplayReq => _displayReq;
         MpvPlayer _mpv;
-        bool isBiliVideo;
 
         MpvPlayer Mpv
         {
@@ -135,7 +134,11 @@ namespace HotPotPlayer.Video
 
         private void PositionChanged(object sender, MpvPlayerPositionChangedEventArgs e)
         {
-            UIQueue.TryEnqueue(() => CurrentTime = e.NewPosition);
+            UIQueue.TryEnqueue(() =>
+            {
+                CurrentTime = e.NewPosition;
+                //CurrentPlayingDuration = Mpv.Duration;
+            });
         }
 
         private void MediaFinished(object sender, EventArgs e)
@@ -153,7 +156,7 @@ namespace HotPotPlayer.Video
             {
                 Title = CurrentPlayList[CurrentPlayIndex].Title;
                 IsPlaying = true;
-                CurrentPlayingDuration = isBiliVideo ? ((BiliBiliVideoItem)CurrentPlayList[CurrentPlayIndex]).Duration : _mpv.Duration;
+                CurrentPlayingDuration = _mpv.Duration;
                 OnPropertyChanged(propertyName: nameof(Volume));
 
             });
@@ -207,7 +210,6 @@ namespace HotPotPlayer.Video
 
             if (CurrentPlayList[CurrentPlayIndex] is BiliBiliVideoItem bv)
             {
-                isBiliVideo = true;
                 Mpv.API.SetPropertyString("user-agent", BiliAPI.UserAgent);
                 Mpv.API.SetPropertyString("cookies", "yes");
                 Mpv.API.SetPropertyString("ytdl", "no");
@@ -224,8 +226,8 @@ namespace HotPotPlayer.Video
                 else
                 {
                     var mpd = bv.WriteToMPD(Config);
-                    BiliBiliService.Proxy.VideoUrl = bv.DashVideos.First().BaseUrl;
-                    BiliBiliService.Proxy.AudioUrl = bv.DashAudios.First().BaseUrl;
+                    BiliBiliService.Proxy.VideoUrl = bv.GetPreferVideoUrl();
+                    BiliBiliService.Proxy.AudioUrl = bv.GetPreferAudioUrl();
                     BiliBiliService.Proxy.CookieString = BiliBiliService.API.CookieString;
                     Mpv.Load(mpd);
                 }
@@ -234,7 +236,6 @@ namespace HotPotPlayer.Video
             }
             else
             {
-                isBiliVideo = false;
                 Mpv.LoadPlaylist(CurrentPlayList.Select(f => f.Source.FullName));
             }
             Mpv.PlaylistPlayIndex(CurrentPlayIndex);
