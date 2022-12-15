@@ -73,39 +73,33 @@ namespace HotPotPlayer.Services.BiliBili
             };
 
             using var _client = _httpClientFactory.CreateClient("web");
-            _client.DefaultRequestHeaders.Add("Cookie", CookieString);
-            //using var response = await _client.GetAsync(url).ConfigureAwait(false);
-            using var os = await _client.GetStreamAsync(url).ConfigureAwait(false);
-            //response.EnsureSuccessStatusCode();
+            using var httpRequestMessage = new HttpRequestMessage();
+            httpRequestMessage.Headers.TryAddWithoutValidation("Cookie", CookieString);
+            httpRequestMessage.RequestUri = new(url);
+            var response = (await _client.SendAsync(httpRequestMessage, HttpCompletionOption.ResponseHeadersRead)).EnsureSuccessStatusCode();
 
-            //context.Response.ProtocolVersion = response.Version;
-            //context.Response.StatusCode = (int)response.StatusCode;
-            //context.Response.StatusDescription = response.ReasonPhrase;
+            context.Response.ProtocolVersion = response.Version;
+            context.Response.StatusCode = (int)response.StatusCode;
+            context.Response.StatusDescription = response.ReasonPhrase;
 
-            context.Response.ProtocolVersion = Version.Parse("1.1");
-            context.Response.StatusCode = 200;
-            context.Response.StatusDescription = "Ok";
+            var stream = await response.Content.ReadAsStreamAsync();
 
-            //foreach (var header in response.Headers)
-            //{
-            //    context.Response.Headers.Add(header.Key, string.Join(", ", header.Value));
-            //}
+            context.Response.ContentLength64 = response.Content.Headers.ContentLength ?? 0;
+            context.Response.ContentType = response.Content.Headers.ContentType.ToString();
+            foreach (var header in response.Headers)
+            {
+                context.Response.Headers.Add(header.Key, string.Join(", ", header.Value));
+            }
 
-            //foreach (var header in response.Content.Headers)
-            //{
-            //    if (header.Key == "Content-Length") // this will be set automatically at dispose time
-            //        continue;
-
-            //    context.Response.Headers.Add(header.Key, string.Join(", ", header.Value));
-            //}
-
-            var ct = context.Response.ContentType;
-            //using var stream = await response.Content.ReadAsStreamAsync().ConfigureAwait(false);
             try
             {
-                await os.CopyToAsync(context.Response.OutputStream).ConfigureAwait(false);
+                await stream.CopyToAsync(context.Response.OutputStream).ConfigureAwait(false);
             }
             catch (HttpListenerException )
+            {
+                  
+            }
+            catch (IOException)
             {
 
             }
