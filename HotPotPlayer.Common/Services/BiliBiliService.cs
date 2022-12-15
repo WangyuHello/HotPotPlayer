@@ -35,6 +35,21 @@ namespace HotPotPlayer.Services
             }
         }
 
+        private ProxyServer _proxy;
+
+        public ProxyServer Proxy
+        {
+            get 
+            {
+                if (_proxy == null)
+                {
+                    _proxy = new ProxyServer(API.HttpClientFactory, "http://localhost:18909/");
+                    _proxy.Start();
+                }
+                return _proxy;
+            }
+        }
+
         public async ValueTask<(int code, string message)> GetQrCheckAsync(string key)
         {
             var res = await API.GetQrCodePoll(key);

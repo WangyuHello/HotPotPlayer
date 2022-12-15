@@ -22,6 +22,7 @@ namespace HotPotPlayer.Services.BiliBili
     public class BiliAPI
     {
         readonly HttpClientFactory _httpClientFactory;
+        public HttpClientFactory HttpClientFactory => _httpClientFactory;
 
         public BiliAPI()
         {
@@ -42,6 +43,7 @@ namespace HotPotPlayer.Services.BiliBili
                 .ConfigureHttpClient(client =>
                 {
                     client.DefaultRequestHeaders.Referrer = new Uri("http://www.bilibili.com/");
+                    client.DefaultRequestHeaders.Add("User-Agent", UserAgent);
                     client.Timeout = TimeSpan.FromSeconds(8);
                 }));
             _httpClientFactory.Register("app",
@@ -70,6 +72,8 @@ namespace HotPotPlayer.Services.BiliBili
         public const string UserAgent = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/107.0.0.0 Safari/537.36 Edg/107.0.1418.62";
         public CookieCollection Cookies { get; set; } = new CookieCollection();
 
+        public string CookieString => string.Join("; ", Cookies.Cast<System.Net.Cookie>().Select(t => t.Name + "=" + t.Value));
+
         private async Task<string> GetAsync(string url, ResponseEnum responseEnum = ResponseEnum.Web, Dictionary<string, string> keyValues = null, bool IsAcess = true, string BuildString = "&platform=android&device=android&actionKey=appkey&build=5442100&mobi_app=android_comic")
         {
             switch (responseEnum)
@@ -81,7 +85,7 @@ namespace HotPotPlayer.Services.BiliBili
                         url += (IsAcess == true ? "?access_key=" + token.SECCDATA : "") + "&appkey=" + ApiProvider.AndroidTVKey.Appkey + BuildString + "&ts=" + ApiProvider.TimeSpanSeconds;
                     url += (IsAcess == true ? "&sign=" + ApiProvider.GetSign(url, ApiProvider.AndroidTVKey) : "");
                     var appClient = _httpClientFactory.CreateClient("app");
-                    appClient.DefaultRequestHeaders.Add("Cookie", string.Join("; ", Cookies.Cast<System.Net.Cookie>().Select(t => t.Name + "=" + t.Value)));
+                    appClient.DefaultRequestHeaders.Add("Cookie", CookieString);
                     HttpResponseMessage apphr = await appClient.GetAsync(url).ConfigureAwait(false);
                     apphr.Headers.Add("Accept_Encoding", "gzip,deflate");
                     apphr.EnsureSuccessStatusCode();
@@ -89,28 +93,29 @@ namespace HotPotPlayer.Services.BiliBili
                     string appstr = Encoding.UTF8.GetString(appencodeResults, 0, appencodeResults.Length);
                     return appstr;
                 case ResponseEnum.Web:
-                    var webClient = _httpClientFactory.CreateClient("web");
-                    var cookieStr = string.Join("; ", Cookies.Cast<System.Net.Cookie>().Select(t => t.Name + "=" + t.Value));
-                    webClient.DefaultRequestHeaders.Add("Cookie", cookieStr);
-                    //if (keyValues != null)
-                    //{
-                    //    foreach (var item in keyValues)
-                    //    {
-                    //        //webClient.DefaultRequestHeaders.Add(item.Key, item.Value);
-                    //    }
-                    //}
-                    string url2 = keyValues == null ? url : QueryHelpers.AddQueryString(url, keyValues);
-                    HttpResponseMessage webhr = await webClient.GetAsync(url2).ConfigureAwait(false);
-                    webhr.EnsureSuccessStatusCode();
-
-                    if (webhr.Headers.TryGetValues("Set-Cookie", out var rawSetCookie))
+                    using (var webClient = _httpClientFactory.CreateClient("web"))
                     {
-                        Cookies.Add(ParseCookies(rawSetCookie));
-                    }
+                        webClient.DefaultRequestHeaders.Add("Cookie", CookieString);
+                        //if (keyValues != null)
+                        //{
+                        //    foreach (var item in keyValues)
+                        //    {
+                        //        //webClient.DefaultRequestHeaders.Add(item.Key, item.Value);
+                        //    }
+                        //}
+                        string url2 = keyValues == null ? url : QueryHelpers.AddQueryString(url, keyValues);
+                        using var webhr = await webClient.GetAsync(url2).ConfigureAwait(false);
+                        webhr.EnsureSuccessStatusCode();
 
-                    var webencodeResults = await webhr.Content.ReadAsByteArrayAsync().ConfigureAwait(false);
-                    string webstr = Encoding.UTF8.GetString(webencodeResults, 0, webencodeResults.Length);
-                    return webstr;
+                        if (webhr.Headers.TryGetValues("Set-Cookie", out var rawSetCookie))
+                        {
+                            Cookies.Add(ParseCookies(rawSetCookie));
+                        }
+
+                        var webencodeResults = await webhr.Content.ReadAsByteArrayAsync().ConfigureAwait(false);
+                        string webstr = Encoding.UTF8.GetString(webencodeResults, 0, webencodeResults.Length);
+                        return webstr;
+                    }
             }
             return null;
         }

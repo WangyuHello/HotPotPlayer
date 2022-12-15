@@ -222,6 +222,9 @@ namespace HotPotPlayer.Video
                 else
                 {
                     var mpd = bv.WriteToMPD(Config);
+                    BiliBiliService.Proxy.VideoUrl = bv.DashVideos.First().BaseUrl;
+                    BiliBiliService.Proxy.AudioUrl = bv.DashAudios.First().BaseUrl;
+                    BiliBiliService.Proxy.CookieString = BiliBiliService.API.CookieString;
                     Mpv.Load(mpd);
                 }
 
