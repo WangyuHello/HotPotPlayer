@@ -234,6 +234,7 @@ namespace HotPotPlayer.Video
                     }
                     BiliBiliService.Proxy.AudioUrl = bv.GetPreferAudioUrl();
                     BiliBiliService.Proxy.CookieString = BiliBiliService.API.CookieString;
+                    if (sel.Contains("杜比") || sel.Contains("HDR")) Mpv.API.SetPropertyString("vo", "gpu");
                     Mpv.Load(mpd);
                 }
 
