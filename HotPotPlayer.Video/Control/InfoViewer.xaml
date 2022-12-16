@@ -17,6 +17,6 @@
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
 
-        <ComboBox x:Name="DefSel" ItemsSource="{x:Bind Definitions, Mode=OneWay}" SelectionChanged="ComboBox_SelectionChanged"/>
+        <ComboBox x:Name="DefSel" Width="120" HorizontalAlignment="Center" ItemsSource="{x:Bind Definitions, Mode=OneWay}" SelectedItem="{x:Bind SelectedDefinition, Mode=TwoWay}"/>
     </Grid>
 </base:UserControlBase>

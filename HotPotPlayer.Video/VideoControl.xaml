@@ -87,6 +87,11 @@
                 </Button>
                 <Button Style="{StaticResource VideoPlayOtherButton}" Click="ToggleStatusClick">
                     <FontIcon FontFamily="{ThemeResource SegoeIcons}" Glyph="&#xE946;" />
+                    <Button.Flyout>
+                        <Flyout>
+                            <vcont:InfoViewer Grid.Column="2" Definitions="{x:Bind Definitions, Mode=OneWay}" SelectedDefinition="{x:Bind SelectedDefinition, Mode=TwoWay}"/>
+                        </Flyout>
+                    </Button.Flyout>
                 </Button>
                 <Button Style="{StaticResource VideoPlayOtherButton}" Click="ToggleFullScreenClick">
                     <FontIcon FontFamily="{ThemeResource SegoeIcons}" Glyph="{x:Bind GetFullScreenIcon(IsFullScreen), Mode=OneWay}" />
@@ -116,7 +121,6 @@
                 <SymbolIcon Symbol="Back" />
             </Button>
             <TextBlock Margin="8,0" Grid.Column="1" Foreground="White" VerticalAlignment="Center" Text="{x:Bind Title, Mode=OneWay}" FontFamily="{ThemeResource MiSansRegular}" FontSize="14"/>
-            <vcont:InfoViewer Grid.Column="2" Margin="0,0,120,0" Definitions="{x:Bind Definitions, Mode=OneWay}" SelectedDefinition="{x:Bind SelectedDefinition, Mode=OneWay}" DefinitionSelectionChanged="DefinitionSelectionChanged"/>
         </Grid>
 
         <video:VideoPlayListBar Visibility="{x:Bind IsPlayListBarVisible, Mode=OneWay}" CurrentPlayList="{x:Bind CurrentPlayList, Mode=OneWay}" CurrentPlayIndex="{x:Bind CurrentPlayIndex,Mode=TwoWay}" OnDismiss="VideoPlayListBar_OnDismiss">

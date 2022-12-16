@@ -54,8 +54,8 @@ namespace HotPotPlayer
                 oldValue = newValue;
                 try
                 {
-                    PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
                     action?.Invoke(oldValue);
+                    PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
                 }
                 catch (Exception)
                 {

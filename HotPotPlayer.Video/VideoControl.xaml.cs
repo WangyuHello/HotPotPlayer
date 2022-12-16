@@ -226,10 +226,14 @@ namespace HotPotPlayer.Video
                 else
                 {
                     var mpd = bv.WriteToMPD(Config);
-                    (SelectedDefinition, BiliBiliService.Proxy.VideoUrl) = bv.GetPreferVideoUrl(selectedDefinition);
+                    (var sel, BiliBiliService.Proxy.VideoUrl) = bv.GetPreferVideoUrl(selectedDefinition);
+                    if (!mediaInited)
+                    {
+                        SelectedDefinition = sel;
+                        Definitions = bv.Videos.Keys.ToList();
+                    }
                     BiliBiliService.Proxy.AudioUrl = bv.GetPreferAudioUrl();
                     BiliBiliService.Proxy.CookieString = BiliBiliService.API.CookieString;
-                    Definitions = bv.Videos.Keys.ToList();
                     Mpv.Load(mpd);
                 }
 
@@ -661,25 +665,19 @@ namespace HotPotPlayer.Video
             IsPlayListBarVisible = !IsPlayListBarVisible;
         }
 
+        
         private string selectedDefinition;
 
         public string SelectedDefinition
         {
             get => selectedDefinition;
-            set => Set(ref selectedDefinition, value);
-        }
-
-        private void DefinitionSelectionChanged(object sender, SelectionChangedEventArgs e)
-        {
-            if (e.AddedItems.Count == 0)
+            set => Set(ref selectedDefinition, value, nv =>
             {
-                return;
-            }
-            var sel = e.AddedItems.First().ToString();
-            if (!string.IsNullOrEmpty(sel) && SelectedDefinition != sel)
-            {
-                StartPlay(sel);
-            }
+                if(mediaInited && !string.IsNullOrEmpty(nv))
+                {
+                    StartPlay(nv);
+                }
+            });
         }
     }
 
