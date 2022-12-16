@@ -64,10 +64,20 @@ namespace HotPotPlayer.Models.BiliBili
             return name;
         }
 
-        public string GetPreferVideoUrl()
+        public (string definition, string url) GetPreferVideoUrl(string definition = "")
         {
-            var best = Videos.First().Value;
-            var url = "";
+
+            var best = definition switch {
+                "" => Videos.First().Value,
+                null => Videos.First().Value,
+                _ => Videos[definition]
+            };
+            var bestDefi = definition switch {
+                "" => Videos.First().Key,
+                null => Videos.First().Key,
+                _ => definition
+            };
+            string url;
             if (best.ContainsKey("HEVC"))
             {
                 url = best["HEVC"].BaseUrl;
@@ -80,7 +90,7 @@ namespace HotPotPlayer.Models.BiliBili
             {
                 url = best["AVC"].BaseUrl;
             }
-            return url;
+            return (bestDefi, url);
         }
 
         public string GetPreferAudioUrl()

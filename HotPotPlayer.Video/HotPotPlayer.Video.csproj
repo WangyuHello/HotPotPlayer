@@ -8,6 +8,7 @@
     <Platforms>x86;x64;arm64</Platforms>
   </PropertyGroup>
   <ItemGroup>
+    <None Remove="Control\InfoViewer.xaml" />
     <None Remove="NativeMethods.txt" />
     <None Remove="VideoControl.xaml" />
     <None Remove="VideoControl3.xaml" />
@@ -68,6 +69,9 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Page Update="Control\InfoViewer.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <None Update="Util\Dash.tt">
       <Generator>TextTemplatingFilePreprocessor</Generator>
       <LastGenOutput>Dash.cs</LastGenOutput>

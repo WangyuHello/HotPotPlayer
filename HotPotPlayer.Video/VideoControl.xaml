@@ -9,6 +9,7 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:canvas="using:Microsoft.Graphics.Canvas.UI.Xaml"
     xmlns:controls="using:CommunityToolkit.WinUI.UI.Controls"
+    xmlns:vcont="using:HotPotPlayer.Video.Control"
     xmlns:convs="using:HotPotPlayer.Converters"
     xmlns:animations="using:CommunityToolkit.WinUI.UI.Animations"
     mc:Ignorable="d">
@@ -109,11 +110,13 @@
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="Auto" />
                 <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="Auto" />
             </Grid.ColumnDefinitions>
             <Button Style="{StaticResource VideoPlayOtherButton}" Click="NavigateBackClick">
                 <SymbolIcon Symbol="Back" />
             </Button>
             <TextBlock Margin="8,0" Grid.Column="1" Foreground="White" VerticalAlignment="Center" Text="{x:Bind Title, Mode=OneWay}" FontFamily="{ThemeResource MiSansRegular}" FontSize="14"/>
+            <vcont:InfoViewer Grid.Column="2" Margin="0,0,120,0" Definitions="{x:Bind Definitions, Mode=OneWay}" SelectedDefinition="{x:Bind SelectedDefinition, Mode=OneWay}" DefinitionSelectionChanged="DefinitionSelectionChanged"/>
         </Grid>
 
         <video:VideoPlayListBar Visibility="{x:Bind IsPlayListBarVisible, Mode=OneWay}" CurrentPlayList="{x:Bind CurrentPlayList, Mode=OneWay}" CurrentPlayIndex="{x:Bind CurrentPlayIndex,Mode=TwoWay}" OnDismiss="VideoPlayListBar_OnDismiss">

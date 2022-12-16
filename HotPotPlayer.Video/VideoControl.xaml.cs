@@ -199,7 +199,7 @@ namespace HotPotPlayer.Video
             });
         }
 
-        private void StartPlay()
+        private void StartPlay(string selectedDefinition = "")
         {
             //Mpv.API.SetPropertyString("vo", "gpu");
             Mpv.API.SetPropertyString("vo", "gpu-next");
@@ -226,9 +226,10 @@ namespace HotPotPlayer.Video
                 else
                 {
                     var mpd = bv.WriteToMPD(Config);
-                    BiliBiliService.Proxy.VideoUrl = bv.GetPreferVideoUrl();
+                    (SelectedDefinition, BiliBiliService.Proxy.VideoUrl) = bv.GetPreferVideoUrl(selectedDefinition);
                     BiliBiliService.Proxy.AudioUrl = bv.GetPreferAudioUrl();
                     BiliBiliService.Proxy.CookieString = BiliBiliService.API.CookieString;
+                    Definitions = bv.Videos.Keys.ToList();
                     Mpv.Load(mpd);
                 }
 
@@ -239,7 +240,6 @@ namespace HotPotPlayer.Video
                 Mpv.LoadPlaylist(CurrentPlayList.Select(f => f.Source.FullName));
             }
             Mpv.PlaylistPlayIndex(CurrentPlayIndex);
-
 
             //Mpv.Resume();
         }
@@ -290,6 +290,7 @@ namespace HotPotPlayer.Video
         bool _swapChainLoaded;
 
         [ObservableProperty]
+        [AlsoNotifyChangeFor(nameof(CurrentPlayItem))]
         private ObservableCollection<VideoItem> currentPlayList;
 
         private int currentPlayIndex;
@@ -302,9 +303,12 @@ namespace HotPotPlayer.Video
                 {
                     Set(ref currentPlayIndex, value);
                     Mpv.PlaylistPlayIndex(currentPlayIndex);
+                    OnPropertyChanged(propertyName: nameof(CurrentPlayItem));
                 }
             }
         }
+
+        public VideoItem CurrentPlayItem => CurrentPlayList[CurrentPlayIndex];
 
         private bool isPlayListBarVisible;
         public bool IsPlayListBarVisible
@@ -319,6 +323,9 @@ namespace HotPotPlayer.Video
                 }
             }
         }
+
+        [ObservableProperty]
+        private List<string> definitions;
 
         object _CriticalLock = new object();
         object _CriticalLock2 = new object();
@@ -652,6 +659,27 @@ namespace HotPotPlayer.Video
         private void TogglePlayListBarVisibilityClick(object sender, RoutedEventArgs e)
         {
             IsPlayListBarVisible = !IsPlayListBarVisible;
+        }
+
+        private string selectedDefinition;
+
+        public string SelectedDefinition
+        {
+            get => selectedDefinition;
+            set => Set(ref selectedDefinition, value);
+        }
+
+        private void DefinitionSelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (e.AddedItems.Count == 0)
+            {
+                return;
+            }
+            var sel = e.AddedItems.First().ToString();
+            if (!string.IsNullOrEmpty(sel) && SelectedDefinition != sel)
+            {
+                StartPlay(sel);
+            }
         }
     }
 

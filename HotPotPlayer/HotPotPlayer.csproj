@@ -50,6 +50,7 @@
     <None Remove="Pages\Artist.xaml" />
     <None Remove="Pages\Bilibili.xaml" />
     <None Remove="Pages\BiliBiliSub\Login.xaml" />
+    <None Remove="Pages\BiliBiliSub\VideoView.xaml" />
     <None Remove="Pages\CloudMusic.xaml" />
     <None Remove="Pages\CloudMusicSub\Album.xaml" />
     <None Remove="Pages\CloudMusicSub\Artist.xaml" />
@@ -119,6 +120,12 @@
   <ItemGroup>
     <ProjectReference Include="..\HotPotPlayer.Common\HotPotPlayer.Common.csproj" />
     <ProjectReference Include="..\HotPotPlayer.Video\HotPotPlayer.Video.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Page Update="Pages\BiliBiliSub\VideoView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
   </ItemGroup>
 
   <ItemGroup>
