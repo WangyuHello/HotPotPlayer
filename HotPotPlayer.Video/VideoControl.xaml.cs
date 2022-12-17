@@ -99,18 +99,6 @@ namespace HotPotPlayer.Video
             h.currentPlayIndex = info.Index;
         }
 
-
-        public bool NoFullScreen
-        {
-            get { return (bool)GetValue(NoFullScreenProperty); }
-            set { SetValue(NoFullScreenProperty, value); }
-        }
-
-        public static readonly DependencyProperty NoFullScreenProperty =
-            DependencyProperty.Register("NoFullScreen", typeof(bool), typeof(VideoControl), new PropertyMetadata(default));
-
-
-
         public bool NoTitleBar
         {
             get { return (bool)GetValue(NoTitleBarProperty); }
@@ -690,8 +678,23 @@ namespace HotPotPlayer.Video
         private void ToggleFullScreenClick(object sender, RoutedEventArgs e)
         {
             OnToggleFullScreen?.Invoke();
-            if (!NoFullScreen)
-                IsFullScreen = !IsFullScreen;
+            IsFullScreen = !IsFullScreen;
+        }
+
+        public event Action OnToggleFullPage;
+        private void ToggleFullPageClick(object sender, RoutedEventArgs e)
+        {
+            OnToggleFullPage?.Invoke();
+        }
+
+        private Visibility GetTogglePlayListBarVisibility(bool notitlebar)
+        {
+            return notitlebar ? Visibility.Collapsed : Visibility.Visible;
+        }
+
+        private Visibility GetToggleFullPageVisibility(bool notitlebar)
+        {
+            return notitlebar ? Visibility.Visible : Visibility.Collapsed;
         }
 
         private void VideoPlayListBar_OnDismiss()

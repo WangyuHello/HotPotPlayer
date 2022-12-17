@@ -105,6 +105,12 @@ namespace HotPotPlayer.Pages.BilibiliSub
             VideoPlayerService.IsVideoPagePresent = IsFullPage;
         }
 
+        private void OnToggleFullPage()
+        {
+            IsFullPage = !IsFullPage;
+            VideoPlayerService.IsVideoPagePresent = IsFullPage;
+        }
+
         private void RelateVideoClick(object sender, ItemClickEventArgs e)
         {
             var v = e.ClickedItem as VideoContent;

@@ -76,7 +76,7 @@
                 <TextBlock Width="36" VerticalAlignment="Center" Text="{x:Bind GetDuration(CurrentPlayingDuration), Mode=OneWay}" FontFamily="{ThemeResource MiSansRegular}" FontSize="13" Foreground="#b2b2b2"/>
             </StackPanel>
 
-            <StackPanel Margin="16,0,0,0" Grid.Column="3" Orientation="Horizontal" Spacing="8">
+            <StackPanel Margin="16,0,0,0" Grid.Column="3" Orientation="Horizontal" >
                 <Button Style="{StaticResource VolumeButton}">
                     <local:VolumeIntPresenter Volume="{x:Bind Volume, Mode=OneWay}"/>
                     <Button.Flyout>
@@ -85,7 +85,7 @@
                         </Flyout>
                     </Button.Flyout>
                 </Button>
-                <Button Style="{StaticResource VideoPlayOtherButton}" Click="ToggleStatusClick">
+                <Button Margin="8,0,0,0" Style="{StaticResource VideoPlayOtherButton}" Click="ToggleStatusClick">
                     <FontIcon FontFamily="{ThemeResource SegoeIcons}" Glyph="&#xE946;" />
                     <Button.Flyout>
                         <Flyout>
@@ -93,11 +93,14 @@
                         </Flyout>
                     </Button.Flyout>
                 </Button>
-                <Button Style="{StaticResource VideoPlayOtherButton}" Click="ToggleFullScreenClick">
+                <Button Margin="8,0,0,0" Style="{StaticResource VideoPlayOtherButton}" Click="ToggleFullScreenClick">
                     <FontIcon FontFamily="{ThemeResource SegoeIcons}" Glyph="{x:Bind GetFullScreenIcon(IsFullScreen), Mode=OneWay}" />
                 </Button>
-                <Button Style="{StaticResource VideoPlayOtherButton}" Click="TogglePlayListBarVisibilityClick">
+                <Button Margin="8,0,0,0" Style="{StaticResource VideoPlayOtherButton}" Click="TogglePlayListBarVisibilityClick" Visibility="{x:Bind GetTogglePlayListBarVisibility(NoTitleBar), Mode=OneWay}">
                     <FontIcon FontFamily="{ThemeResource SegoeIcons}" Glyph="&#xE762;" />
+                </Button>
+                <Button Margin="8,0,0,0" Style="{StaticResource VideoPlayOtherButton}" Click="ToggleFullPageClick" Visibility="{x:Bind GetToggleFullPageVisibility(NoTitleBar), Mode=OneWay}">
+                    <FontIcon FontFamily="{ThemeResource SegoeIcons}" Glyph="&#xE9A6;" />
                 </Button>
             </StackPanel>
         </Grid>
