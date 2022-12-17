@@ -46,5 +46,10 @@ namespace HotPotPlayer.Pages
             BiliMain.LoadPopularVideosAsync();
             IsFirstNavigate = false;
         }
+
+        private void RefreshClick(object sender, RoutedEventArgs args)
+        {
+            BiliMain.LoadPopularVideosAsync();
+        }
     }
 }
