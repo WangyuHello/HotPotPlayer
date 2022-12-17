@@ -54,10 +54,28 @@ namespace HotPotPlayer
             MainWindow.Activate();
         }
 
+        [DllImport("user32.dll")]
+        private static extern int GetWindowRect(IntPtr hwnd, out MyRect lpRect);
+
+        [DllImport("user32.dll")]
+        private static extern uint GetDpiForWindow([In] IntPtr hmonitor);
+        public struct MyRect
+        {
+            public int Left;
+            public int Top;
+            public int Right;
+            public int Bottom;
+        }
+
         private void MainWindow_Closed(object sender, WindowEventArgs args)
         {
-            Config.SetConfig("width", Convert.ToInt32(MainWindow.Bounds.Width));
-            Config.SetConfig("height", Convert.ToInt32(MainWindow.Bounds.Height));
+            GetWindowRect(MainWindowHandle, out MyRect windowRect);
+            var scale = GetDpiForWindow(MainWindowHandle) / 96d;
+            var width = Convert.ToInt32((windowRect.Right - windowRect.Left) / scale);
+            var height = Convert.ToInt32((windowRect.Bottom - windowRect.Top) / scale);
+
+            Config.SetConfig("width", width);
+            Config.SetConfig("height", height);
             Config.SetConfig("initpage", MainWindow.GetSavePageName());
             Config.SaveSettings();
             ShutDown();
