@@ -35,10 +35,34 @@
                     <ColumnDefinition Width="*" />
                     <ColumnDefinition Width="Auto" />
                     <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="Auto" />
                 </Grid.ColumnDefinitions>
                 <TextBlock Margin="0,12" Text="{x:Bind Video.Title, Mode=OneWay}" FontSize="28" FontFamily="{ThemeResource MiSansMedium}" MaxLines="2" TextWrapping="Wrap" IsTextSelectionEnabled="True"/>
-                <Button Grid.Column="1" Content="分享"/>
-                <Button Grid.Column="2" Content="更多"/>
+                <Button Grid.Column="1" Margin="8,0,0,0" Padding="8,0" Style="{StaticResource TransparentButton}">
+                    <StackPanel Spacing="4">
+                        <ImageIcon Source="ms-appx:///Assets/Icon/Like.svg" Width="24" Foreground="Gray"/>
+                        <TextBlock HorizontalAlignment="Center" Text="{x:Bind Video.Stat.GetLike(), Mode=OneWay}" FontFamily="{ThemeResource MiSansRegular}" Foreground="Gray"/>
+                    </StackPanel>
+                </Button>
+                <Button Grid.Column="2" Margin="8,0,0,0" Padding="8,0" Style="{StaticResource TransparentButton}">
+                    <StackPanel Spacing="4">
+                        <ImageIcon Source="ms-appx:///Assets/Icon/Coin.svg" Width="24" Foreground="Gray"/>
+                        <TextBlock HorizontalAlignment="Center" Text="{x:Bind Video.Stat.GetCoin(), Mode=OneWay}" FontFamily="{ThemeResource MiSansRegular}" Foreground="Gray"/>
+                    </StackPanel>
+                </Button>
+                <Button Grid.Column="3" Margin="8,0,0,0" Padding="8,0" Style="{StaticResource TransparentButton}">
+                    <StackPanel Spacing="4" >
+                        <ImageIcon Source="ms-appx:///Assets/Icon/Collect.svg" Width="24" Foreground="Gray"/>
+                        <TextBlock HorizontalAlignment="Center" Text="{x:Bind Video.Stat.GetFavorite(), Mode=OneWay}" FontFamily="{ThemeResource MiSansRegular}" Foreground="Gray"/>
+                    </StackPanel>
+                </Button>
+                <Button Grid.Column="4" Margin="8,0,0,0" Padding="8,0" Style="{StaticResource TransparentButton}">
+                    <StackPanel Spacing="4">
+                        <ImageIcon Source="ms-appx:///Assets/Icon/Share.svg" Width="24" Foreground="Gray"/>
+                        <TextBlock HorizontalAlignment="Center" Text="{x:Bind Video.Stat.GetShare(), Mode=OneWay}" FontFamily="{ThemeResource MiSansRegular}" Foreground="Gray"/>
+                    </StackPanel>
+                </Button>
             </Grid>
             <StackPanel Grid.Row="2" Orientation="Horizontal" Margin="0,0,0,16">
                 <cont2:ImageEx2 Source="{x:Bind Video.Up.Face, Mode=OneWay}" Style="{StaticResource LocalMusicImageStyle}" 

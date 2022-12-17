@@ -433,17 +433,59 @@ namespace HotPotPlayer.Services.BiliBili.Video
         [JsonProperty("favorite")]
         public string Favorite { get; set; }
 
+        public string GetFavorite()
+        {
+            int v = int.Parse(Favorite);
+            if (v >= 10000)
+            {
+                var v2 = (double)v / 10000;
+                return $"{v2.ToString("F1")}万";
+            }
+            else
+            {
+                return v.ToString();
+            }
+        }
+
         /// <summary>
         /// 投币
         /// </summary>
         [JsonProperty("coin")]
-        public string coin { get; set; }
+        public string Coin { get; set; }
+
+        public string GetCoin()
+        {
+            int v = int.Parse(Coin);
+            if (v >= 10000)
+            {
+                var v2 = (double)v / 10000;
+                return $"{v2.ToString("F1")}万";
+            }
+            else
+            {
+                return v.ToString();
+            }
+        }
 
         /// <summary>
         /// 分享
         /// </summary>
         [JsonProperty("share")]
         public string Share { get; set; }
+
+        public string GetShare()
+        {
+            int v = int.Parse(Share);
+            if (v >= 10000)
+            {
+                var v2 = (double)v / 10000;
+                return $"{v2.ToString("F1")}万";
+            }
+            else
+            {
+                return v.ToString();
+            }
+        }
 
         /// <summary>
         /// 当前排名
@@ -462,6 +504,20 @@ namespace HotPotPlayer.Services.BiliBili.Video
         /// </summary>
         [JsonProperty("like")]
         public string Like { get; set; }
+
+        public string GetLike()
+        {
+            int v = int.Parse(Like);
+            if (v >= 10000)
+            {
+                var v2 = (double)v / 10000;
+                return $"{v2.ToString("F1")}万";
+            }
+            else
+            {
+                return v.ToString();
+            }
+        }
 
         /// <summary>
         /// 点踩的数量

@@ -32,6 +32,10 @@
     <None Remove="Assets\Font\MiSans-Regular.ttf" />
     <None Remove="Assets\Font\MiSans-Semibold.ttf" />
     <None Remove="Assets\Font\MiSans-Thin.ttf" />
+    <None Remove="Assets\Icon\Coin.svg" />
+    <None Remove="Assets\Icon\Collect.svg" />
+    <None Remove="Assets\Icon\Like.svg" />
+    <None Remove="Assets\Icon\Share.svg" />
     <None Remove="Assets\nico.png" />
     <None Remove="Controls\AlbumPopup.xaml" />
     <None Remove="Controls\CloudAlbumPopup.xaml" />
