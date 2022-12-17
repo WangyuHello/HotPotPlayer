@@ -100,7 +100,7 @@
                     <FontIcon FontFamily="{ThemeResource SegoeIcons}" Glyph="&#xE762;" />
                 </Button>
                 <Button Margin="8,0,0,0" Style="{StaticResource VideoPlayOtherButton}" Click="ToggleFullPageClick" Visibility="{x:Bind GetToggleFullPageVisibility(NoTitleBar), Mode=OneWay}">
-                    <FontIcon FontFamily="{ThemeResource SegoeIcons}" Glyph="&#xE9A6;" />
+                    <FontIcon FontFamily="{ThemeResource SegoeIcons}" Glyph="{x:Bind GetFullPageIcon(IsFullPage), Mode=OneWay}" />
                 </Button>
             </StackPanel>
         </Grid>

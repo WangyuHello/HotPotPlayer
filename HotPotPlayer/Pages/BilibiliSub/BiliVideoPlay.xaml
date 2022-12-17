@@ -28,7 +28,7 @@
                 <RowDefinition Height="{x:Bind GetTitleHeight(IsFullPage), Mode=OneWay}" />
                 <RowDefinition Height="{x:Bind GetTitleHeight(IsFullPage), Mode=OneWay}" />
             </Grid.RowDefinitions>
-            <video:VideoControl x:Name="VideoPlayer" Source="{x:Bind Source, Mode=OneWay}" OnToggleFullScreen="OnToggleFullScreen" OnToggleFullPage="OnToggleFullPage" NoTitleBar="True" OnMediaLoaded="OnMediaLoaded"/>
+            <video:VideoControl x:Name="VideoPlayer" Source="{x:Bind Source, Mode=OneWay}" OnToggleFullScreen="OnToggleFullScreen" OnToggleFullPage="OnToggleFullPage" IsFullPage="{x:Bind IsFullPage, Mode=OneWay}"  NoTitleBar="True" OnMediaLoaded="OnMediaLoaded"/>
 
             <Grid Grid.Row="1" Margin="0,16,0,12" >
                 <Grid.ColumnDefinitions>

@@ -674,6 +674,23 @@ namespace HotPotPlayer.Video
             return isFullScreen ? "\uE1D8" : "\uE1D9";
         }
 
+
+
+        public bool IsFullPage
+        {
+            get { return (bool)GetValue(IsFullPageProperty); }
+            set { SetValue(IsFullPageProperty, value); }
+        }
+
+        public static readonly DependencyProperty IsFullPageProperty =
+            DependencyProperty.Register("IsFullPage", typeof(bool), typeof(VideoControl), new PropertyMetadata(default));
+
+
+        string GetFullPageIcon(bool isFullPage)
+        {
+            return isFullPage ? "\uE744" : "\uE9A6";
+        }
+
         public event Action OnToggleFullScreen;
         private void ToggleFullScreenClick(object sender, RoutedEventArgs e)
         {
