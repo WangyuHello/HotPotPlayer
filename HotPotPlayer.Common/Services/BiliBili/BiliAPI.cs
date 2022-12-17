@@ -16,6 +16,7 @@ using HotPotPlayer.Services.BiliBili.Video;
 using BiliBiliAPI.Models;
 using Newtonsoft.Json;
 using HotPotPlayer.Services.BiliBili.HomeVideo;
+using HotPotPlayer.Services.BiliBili.Reply;
 
 namespace HotPotPlayer.Services.BiliBili
 {
@@ -242,7 +243,12 @@ namespace HotPotPlayer.Services.BiliBili
             return res["data"]["total"].Value<string>();
         }
 
-        public async Task GetVideoReplyAsync(string avid)
+        /// <summary>
+        /// https://github.com/SocialSisterYi/bilibili-API-collect/blob/master/comment/list.md
+        /// </summary>
+        /// <param name="avid"></param>
+        /// <returns></returns>
+        public async Task<BiliResult<Replies>> GetVideoReplyAsync(string avid)
         {
             var r = await GetAsync("http://api.bilibili.com/x/v2/reply", ResponseEnum.Web,
                 new Dictionary<string, string>
@@ -254,6 +260,19 @@ namespace HotPotPlayer.Services.BiliBili
                     ["ps"] = "20",
                     ["pn"] = "1"
                 });
+            var res = JsonConvert.DeserializeObject<BiliResult<Replies>>(r);
+            return res;
+        }
+
+        public async Task<BiliResult<List<VideoContent>>> GetRelatedVideo(string bvid)
+        {
+            var r = await GetAsync("http://api.bilibili.com/x/web-interface/archive/related", ResponseEnum.Web,
+                new Dictionary<string, string>
+                {
+                    ["bvid"] = bvid,
+                });
+            var res = JsonConvert.DeserializeObject<BiliResult<List<VideoContent>>>(r);
+            return res;
         }
 
         #region Cookie

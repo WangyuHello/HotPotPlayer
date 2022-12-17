@@ -7,6 +7,7 @@
     xmlns:helper="using:HotPotPlayer.Pages.Helper"
     xmlns:conv="using:HotPotPlayer.Converters"
     xmlns:cont2="using:HotPotPlayer.UI.Controls"
+    xmlns:brep="using:HotPotPlayer.Services.BiliBili.Reply"
     xmlns:local="using:HotPotPlayer.Templates">
 
     <Thickness x:Key="ListItemPadding" >12,0</Thickness>
@@ -219,6 +220,37 @@
             </Grid>
             <TextBlock Grid.Row="1" Margin="42,8,0,0" Text="{x:Bind Content}" TextWrapping="Wrap" FontFamily="{StaticResource MiSansRegular}"/>
             <HyperlinkButton Grid.Row="2" Margin="34,4,0,0" Padding="8,2,6,4" Content="查看回复" Click="{x:Bind helper:CommentHelper.ShowCommentFloor}"/>
+        </Grid>
+    </DataTemplate>
+
+    <DataTemplate x:Key="VideoReplyTemplate" x:DataType="brep:Reply">
+        <Grid Padding="0,8,0,0" >
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="*" />
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="*" />
+                    <RowDefinition Height="*" />
+                </Grid.RowDefinitions>
+                <cont2:ImageEx2 Margin="0,0,8,0" Grid.RowSpan="2" Source="{x:Bind Member.Avatar}" Height="40" Width="40" CornerRadius="8" Style="{StaticResource LocalMusicImageStyle}"/>
+                <TextBlock Grid.Column="1" Text="{x:Bind Member.UName}" FontFamily="{StaticResource MiSansRegular}"/>
+                <TextBlock Grid.Column="1" Margin="0,2,0,0" Grid.Row="1" Text="{x:Bind TimeStr}" Foreground="Gray" FontSize="12" FontFamily="{StaticResource MiSansRegular}"/>
+                <TextBlock Grid.Column="2" Grid.RowSpan="2" Text="{x:Bind Like}" VerticalAlignment="Center" Foreground="Gray" FontSize="12" FontFamily="{StaticResource MiSansRegular}"/>
+                <Button Grid.Column="3" Grid.RowSpan="2" Margin="4,0,8,0" VerticalAlignment="Center" Style="{StaticResource FullTransparentButton}" >
+                    <FontIcon FontFamily="{ThemeResource SegoeIcons}" Glyph="&#xE19F;" Foreground="Gray" FontSize="14"/>
+                </Button>
+            </Grid>
+            <TextBlock Grid.Row="1" Margin="42,8,0,0" Text="{x:Bind Content.Message}" TextWrapping="Wrap" FontFamily="{StaticResource MiSansRegular}"/>
+            <HyperlinkButton Grid.Row="2" Margin="34,4,0,0" Padding="8,2,6,4" Content="查看回复" />
         </Grid>
     </DataTemplate>
 

@@ -111,6 +111,16 @@ namespace HotPotPlayer.Video
 
 
 
+        public bool NoTitleBar
+        {
+            get { return (bool)GetValue(NoTitleBarProperty); }
+            set { SetValue(NoTitleBarProperty, value); }
+        }
+
+        public static readonly DependencyProperty NoTitleBarProperty =
+            DependencyProperty.Register("NoTitleBar", typeof(bool), typeof(VideoControl), new PropertyMetadata(default));
+
+
         bool mediaInited;
         //DisplayRequest _displayReq;
         //DisplayRequest DisplayReq => _displayReq;
@@ -437,8 +447,16 @@ namespace HotPotPlayer.Video
             {
                 Set(ref playBarVisible, value, newV =>
                 {
+                    if(!NoTitleBar)
+                    {
+                        TitleBarVisible = value;
+                        OnPropertyChanged(propertyName: nameof(TitleBarVisible));
+                    }
                     ShowCursor(newV ? 1 : 0);
-                    AppWindow.SetTitleBarForegroundColor(newV);
+                    if (!NoTitleBar)
+                    {
+                        AppWindow.SetTitleBarForegroundColor(newV);
+                    }
                     if (newV == true)
                     {
                         _inActiveTimer ??= InitInActiveTimer();
@@ -447,6 +465,8 @@ namespace HotPotPlayer.Video
                 });
             }
         }
+
+        public bool TitleBarVisible { get; set; }
 
         void StopInactiveTimer()
         {

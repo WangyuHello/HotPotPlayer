@@ -25,8 +25,10 @@
                 <RowDefinition Height="*" />
                 <RowDefinition Height="{x:Bind GetTitleHeight(IsFullPage), Mode=OneWay}" />
                 <RowDefinition Height="{x:Bind GetTitleHeight(IsFullPage), Mode=OneWay}" />
+                <RowDefinition Height="{x:Bind GetTitleHeight(IsFullPage), Mode=OneWay}" />
+                <RowDefinition Height="{x:Bind GetTitleHeight(IsFullPage), Mode=OneWay}" />
             </Grid.RowDefinitions>
-            <video:VideoControl x:Name="VideoPlayer" Source="{x:Bind Source, Mode=OneWay}" OnToggleFullScreen="OnToggleFullScreen" NoFullScreen="True"/>
+            <video:VideoControl x:Name="VideoPlayer" Source="{x:Bind Source, Mode=OneWay}" OnToggleFullScreen="OnToggleFullScreen" NoFullScreen="True" NoTitleBar="True"/>
 
             <Grid Grid.Row="1" Margin="0,16,0,0">
                 <Grid.ColumnDefinitions>
@@ -48,6 +50,10 @@
                 <TextBlock VerticalAlignment="Center" Margin="12,0" Text="{x:Bind Video.Stat.Views, Mode=OneWay}" Foreground="Gray" FontFamily="{ThemeResource MiSansRegular}" />
                 <TextBlock VerticalAlignment="Center" Margin="12,0" Text="{x:Bind OnLineCount, Mode=OneWay}" Foreground="Gray" FontFamily="{ThemeResource MiSansRegular}" />
             </StackPanel>
+            <TextBlock Text="{x:Bind Video.VideoDEsc, Mode=OneWay}" Grid.Row="3" IsTextSelectionEnabled="True" FontFamily="{ThemeResource MiSansRegular}" MaxLines="3" TextWrapping="Wrap" TextTrimming="CharacterEllipsis"/>
+            <ListView Grid.Row="4" Height="220" ItemsSource="{x:Bind RelatedVideos, Mode=OneWay}" Style="{StaticResource HorizontalListViewStyle}" ItemContainerStyle="{StaticResource GeneralListContainerCompactPaddingStyle}" ItemTemplate="{StaticResource BiliVideoCardViewTemplate2}" ItemClick="RelateVideoClick">
+
+            </ListView>
         </Grid>
 
         <Grid Grid.Column="1" Margin="16,0,16,0">
@@ -58,8 +64,8 @@
             </Grid.RowDefinitions>
 
             <TextBlock Text="评论" FontSize="18" Margin="0,0,0,16" FontFamily="{ThemeResource MiSansMedium}" />
-            <TextBox Grid.Row="1"/>
-            <ListView Grid.Row="2">
+            <TextBox Grid.Row="1" Height="40"/>
+            <ListView Grid.Row="2" Margin="0,12,0,0" ItemsSource="{x:Bind Replies.TheReplies, Mode=OneWay}" Style="{StaticResource GeneralListViewStyle}" ItemContainerStyle="{StaticResource GeneralListContainerStyle}" ItemTemplate="{StaticResource VideoReplyTemplate}">
                 
             </ListView>
         </Grid>

@@ -20,6 +20,7 @@ using CommunityToolkit.Mvvm.ComponentModel;
 using HotPotPlayer.Video;
 using HotPotPlayer.Models.BiliBili;
 using HotPotPlayer.Services.BiliBili.HomeVideo;
+using HotPotPlayer.Services.BiliBili.Reply;
 
 // To learn more about WinUI, the WinUI project structure,
 // and more about our project templates, see: http://aka.ms/winui-project-info.
@@ -46,7 +47,13 @@ namespace HotPotPlayer.Pages.BilibiliSub
         bool isFullPage;
 
         [ObservableProperty]
-        string onLineCount; 
+        string onLineCount;
+
+        [ObservableProperty]
+        Replies replies;
+
+        [ObservableProperty]
+        List<VideoContent> relatedVideos;
 
         protected override async void OnNavigatedTo(NavigationEventArgs e)
         {
@@ -69,11 +76,20 @@ namespace HotPotPlayer.Pages.BilibiliSub
             }
 
             OnLineCount = await BiliBiliService.API.GetOnlineCount(Video.Bvid, Video.First_Cid);
+            Replies = (await BiliBiliService.API.GetVideoReplyAsync(Video.Aid)).Data;
+            RelatedVideos = (await BiliBiliService.API.GetRelatedVideo(Video.Bvid)).Data;
+        }
+
+        protected override void OnNavigatingFrom(NavigatingCancelEventArgs e)
+        {
+            base.OnNavigatingFrom(e);
+            VideoPlayerService.IsVideoPagePresent = false;
+            VideoPlayer.Close();
         }
 
         GridLength GetCommentWidth(bool isFullPage)
         {
-            return isFullPage ? new GridLength(0) : new GridLength(360);
+            return isFullPage ? new GridLength(0) : new GridLength(400);
         }
 
         GridLength GetTitleHeight(bool isFullPage)
@@ -89,6 +105,13 @@ namespace HotPotPlayer.Pages.BilibiliSub
         private void OnToggleFullScreen()
         {
             IsFullPage = !IsFullPage;
+            VideoPlayerService.IsVideoPagePresent = IsFullPage;
+        }
+
+        private void RelateVideoClick(object sender, ItemClickEventArgs e)
+        {
+            var v = e.ClickedItem as VideoContent;
+            NavigateTo("BilibiliSub.BiliVideoPlay", v);
         }
     }
 }

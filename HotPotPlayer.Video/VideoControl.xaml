@@ -103,7 +103,7 @@
         </Grid>
         
         <!--Title-->
-        <Grid VerticalAlignment="Top" Padding="8,8" Background="#e0424047" Visibility="{x:Bind PlayBarVisible, Mode=OneWay}" PointerEntered="PlayBar_PointerEntered" PointerExited="PlayBar_PointerExited">
+        <Grid VerticalAlignment="Top" Padding="8,8" Background="#e0424047" Visibility="{x:Bind TitleBarVisible, Mode=OneWay}" PointerEntered="PlayBar_PointerEntered" PointerExited="PlayBar_PointerExited">
             <animations:Implicit.ShowAnimations>
                 <animations:TranslationAnimation Duration="0:0:1" From="0,-50,0" To="0,0,0" EasingMode="EaseOut"/>
             </animations:Implicit.ShowAnimations>
