@@ -41,7 +41,7 @@ namespace HotPotPlayer.Pages
             }
             if (!(await BiliBiliService.IsLoginAsync()))
             {
-                NavigateTo("BiliBiliSub.Login");
+                NavigateTo("BilibiliSub.Login");
             }
             BiliMain.LoadPopularVideosAsync();
             IsFirstNavigate = false;

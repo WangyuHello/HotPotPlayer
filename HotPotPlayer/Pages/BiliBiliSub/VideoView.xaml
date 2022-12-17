@@ -2,7 +2,7 @@
 <!-- Licensed under the MIT License. See LICENSE in the project root for license information. -->
 
 <base:PageBase
-    x:Class="HotPotPlayer.Pages.BiliBiliSub.VideoView"
+    x:Class="HotPotPlayer.Pages.BilibiliSub.VideoView"
     xmlns:base="using:HotPotPlayer"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"

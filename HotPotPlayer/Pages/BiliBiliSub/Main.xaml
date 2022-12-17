@@ -2,7 +2,7 @@
 <!-- Licensed under the MIT License. See LICENSE in the project root for license information. -->
 
 <base:UserControlBase
-    x:Class="HotPotPlayer.Pages.BiliBiliSub.Main"
+    x:Class="HotPotPlayer.Pages.BilibiliSub.Main"
     xmlns:base="using:HotPotPlayer"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
@@ -14,7 +14,7 @@
 
     <Grid>
         <GridView 
-                ItemsSource="{x:Bind PopularVideos.List, Mode=OneWay}" 
+                ItemsSource="{x:Bind RecVideos.Items, Mode=OneWay}" 
                 Style="{StaticResource BiliVideoCardViewStyle}"
                 ItemClick="BiliVideoClick"
             >

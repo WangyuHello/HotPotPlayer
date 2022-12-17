@@ -49,9 +49,10 @@
     <None Remove="Pages\Album.xaml" />
     <None Remove="Pages\Artist.xaml" />
     <None Remove="Pages\Bilibili.xaml" />
-    <None Remove="Pages\BiliBiliSub\Login.xaml" />
-    <None Remove="Pages\BiliBiliSub\Main.xaml" />
-    <None Remove="Pages\BiliBiliSub\VideoView.xaml" />
+    <None Remove="Pages\BilibiliSub\BiliVideoPlay.xaml" />
+    <None Remove="Pages\BilibiliSub\Login.xaml" />
+    <None Remove="Pages\BilibiliSub\Main.xaml" />
+    <None Remove="Pages\BilibiliSub\VideoView.xaml" />
     <None Remove="Pages\CloudMusic.xaml" />
     <None Remove="Pages\CloudMusicSub\Album.xaml" />
     <None Remove="Pages\CloudMusicSub\Artist.xaml" />
@@ -124,13 +125,19 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Page Update="Pages\BiliBiliSub\Main.xaml">
+    <Page Update="Pages\BilibiliSub\BiliVideoPlay.xaml">
       <Generator>MSBuild:Compile</Generator>
     </Page>
   </ItemGroup>
 
   <ItemGroup>
-    <Page Update="Pages\BiliBiliSub\VideoView.xaml">
+    <Page Update="Pages\BilibiliSub\Main.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Page Update="Pages\BilibiliSub\VideoView.xaml">
       <Generator>MSBuild:Compile</Generator>
     </Page>
   </ItemGroup>
@@ -331,7 +338,7 @@
     <ProjectCapability Include="Msix" />
   </ItemGroup>
   <ItemGroup>
-    <Page Update="Pages\BiliBiliSub\Login.xaml">
+    <Page Update="Pages\BilibiliSub\Login.xaml">
       <Generator>MSBuild:Compile</Generator>
     </Page>
   </ItemGroup>

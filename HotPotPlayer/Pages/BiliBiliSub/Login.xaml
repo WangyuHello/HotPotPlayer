@@ -1,5 +1,5 @@
 <base:PageBase
-    x:Class="HotPotPlayer.Pages.BiliBiliSub.Login"
+    x:Class="HotPotPlayer.Pages.BilibiliSub.Login"
     xmlns:base="using:HotPotPlayer"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"

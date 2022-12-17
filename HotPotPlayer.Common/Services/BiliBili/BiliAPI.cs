@@ -15,6 +15,7 @@ using Microsoft.AspNetCore.WebUtilities;
 using HotPotPlayer.Services.BiliBili.Video;
 using BiliBiliAPI.Models;
 using Newtonsoft.Json;
+using HotPotPlayer.Services.BiliBili.HomeVideo;
 
 namespace HotPotPlayer.Services.BiliBili
 {
@@ -212,6 +213,47 @@ namespace HotPotPlayer.Services.BiliBili
                 });
             var res = JsonConvert.DeserializeObject<BiliResult<PopularVideos>>(r);
             return res;
+        }
+
+        public async Task<BiliResult<HomeData>> GetRecVideo()
+        {
+            var r = await GetAsync("https://api.bilibili.com/x/web-interface/index/top/feed/rcmd", ResponseEnum.Web,
+                new Dictionary<string, string>
+                {
+                    ["fresh_idx"] = "1",
+                    ["feed_version"] = "V1",
+                    ["fresh_type"] = "4",
+                    ["ps"] = "20",
+                    ["plat"] = "1"
+                });
+            var res = JsonConvert.DeserializeObject<BiliResult<HomeData>>(r);
+            return res;
+        }
+
+        public async Task<string> GetOnlineCount(string bvid, string cid)
+        {
+            var r = await GetAsync("http://api.bilibili.com/x/player/online/total", ResponseEnum.Web,
+                new Dictionary<string, string>
+                {
+                    ["bvid"] = bvid,
+                    ["cid"] = cid
+                });
+            var res = JObject.Parse(r);
+            return res["data"]["total"].Value<string>();
+        }
+
+        public async Task GetVideoReplyAsync(string avid)
+        {
+            var r = await GetAsync("http://api.bilibili.com/x/v2/reply", ResponseEnum.Web,
+                new Dictionary<string, string>
+                {
+                    ["type"] = "1",
+                    ["oid"] = avid,
+                    ["sort"] = "1",
+                    ["nohot"] = "0",
+                    ["ps"] = "20",
+                    ["pn"] = "1"
+                });
         }
 
         #region Cookie

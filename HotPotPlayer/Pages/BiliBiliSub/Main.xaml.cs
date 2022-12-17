@@ -3,6 +3,7 @@
 
 using CommunityToolkit.Mvvm.ComponentModel;
 using HotPotPlayer.Models.BiliBili;
+using HotPotPlayer.Services.BiliBili.HomeVideo;
 using HotPotPlayer.Services.BiliBili.Video;
 using HotPotPlayer.Video;
 using Microsoft.UI.Xaml;
@@ -23,7 +24,7 @@ using Windows.Foundation.Collections;
 // To learn more about WinUI, the WinUI project structure,
 // and more about our project templates, see: http://aka.ms/winui-project-info.
 
-namespace HotPotPlayer.Pages.BiliBiliSub
+namespace HotPotPlayer.Pages.BilibiliSub
 {
     public sealed partial class Main : UserControlBase
     {
@@ -35,20 +36,19 @@ namespace HotPotPlayer.Pages.BiliBiliSub
         [ObservableProperty]
         private PopularVideos popularVideos;
 
+        [ObservableProperty]
+        private HomeData recVideos;
+
         public async void LoadPopularVideosAsync()
         {
             PopularVideos = (await BiliBiliService.API.GetPopularVideo()).Data;
+            RecVideos = (await BiliBiliService.API.GetRecVideo()).Data;
         }
 
-        private async void BiliVideoClick(object sender, ItemClickEventArgs e)
+        private void BiliVideoClick(object sender, ItemClickEventArgs e)
         {
-            var v = e.ClickedItem as VideoContent;
-
-            var res = await BiliBiliService.API.GetVideoUrl(v.Bvid, v.First_Cid, DashEnum.Dash8K, FnvalEnum.Dash | FnvalEnum.HDR | FnvalEnum.Fn8K | FnvalEnum.Fn4K | FnvalEnum.AV1 | FnvalEnum.FnDBAudio | FnvalEnum.FnDBVideo);
-
-            var video = BiliBiliVideoItem.FromRaw(res.Data, v);
-
-            NavigateTo("VideoPlay", new VideoPlayInfo { Index = 0, VideoItems = new List<BiliBiliVideoItem> { video } });
+            var v = e.ClickedItem as HomeDataItem;
+            NavigateTo("BilibiliSub.BiliVideoPlay", v);
         }
     }
 }

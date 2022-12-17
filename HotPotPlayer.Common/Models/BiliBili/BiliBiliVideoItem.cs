@@ -1,4 +1,5 @@
-﻿using HotPotPlayer.Services.BiliBili.Video;
+﻿using HotPotPlayer.Services.BiliBili.HomeVideo;
+using HotPotPlayer.Services.BiliBili.Video;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -42,6 +43,32 @@ namespace HotPotPlayer.Models.BiliBili
                 MinBufferTime = videoInfo?.Dash?.MinBufferTime,
                 Duration = TimeSpan.FromMilliseconds(long.Parse(videoInfo.TimeLength)),
                 Cover = new Uri(videosContent.VideoImage)
+            };
+            return video;
+        }
+
+        public static BiliBiliVideoItem FromRaw(VideoInfo videoInfo, HomeDataItem videosContent)
+        {
+            var dict = new Dictionary<string, Dictionary<string, DashVideo>>();
+
+            foreach (var item in videoInfo.Support_Formats)
+            {
+                var desc = item.New_description;
+                var id = item.Quality;
+                var dash = videoInfo.Dash.DashVideos.Where(d => d.ID == id).ToDictionary(d => GetCodecName(d));
+                dict.Add(desc, dash);
+            }
+
+            var video = new BiliBiliVideoItem
+            {
+                DashVideos = videoInfo?.Dash?.DashVideos,
+                DashAudios = videoInfo?.Dash?.DashAudios,
+                Videos = dict,
+                Urls = videoInfo?.DUrl,
+                Title = videosContent.Title,
+                MinBufferTime = videoInfo?.Dash?.MinBufferTime,
+                Duration = TimeSpan.FromMilliseconds(long.Parse(videoInfo.TimeLength)),
+                Cover = new Uri(videosContent.Cover)
             };
             return video;
         }

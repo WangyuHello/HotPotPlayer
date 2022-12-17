@@ -4,7 +4,7 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:models="using:HotPotPlayer.Models"
     xmlns:modelsC="using:HotPotPlayer.Models.CloudMusic"
-    xmlns:bili="using:HotPotPlayer.Services.BiliBili.Video"
+    xmlns:bili="using:HotPotPlayer.Services.BiliBili.HomeVideo"
     xmlns:cont2="using:HotPotPlayer.UI.Controls"
     xmlns:ui="using:CommunityToolkit.WinUI.UI"
     xmlns:conv="using:HotPotPlayer.Converters"
@@ -212,7 +212,7 @@
         </StackPanel>
     </DataTemplate>
 
-    <DataTemplate x:Key="BiliVideoCardViewTemplate" x:DataType="bili:VideoContent">
+    <DataTemplate x:Key="BiliVideoCardViewTemplate" x:DataType="bili:HomeDataItem">
         <StackPanel 
             Width="300"
             Padding="0,0,0,12"
@@ -226,7 +226,7 @@
             >
             <cont2:ImageEx2 
                 CornerRadius="4"
-                Source="{x:Bind VideoImage}" 
+                Source="{x:Bind Cover}" 
                 Style="{StaticResource LocalVideoImageStyle}"
                 />
             <Grid Margin="0,-24,0,0" Height="24" Padding="8,0">
@@ -248,7 +248,7 @@
                 <FontIcon FontFamily="{ThemeResource SegoeIcons}" Foreground="White" FontSize="13" Margin="0,-6,4,0" Glyph="&#xE102;" />
                 <TextBlock Grid.Column="1" Text="{x:Bind Stat.GetViews()}" FontSize="13" Foreground="White" FontFamily="{ThemeResource MiSansRegular}" />
                 <FontIcon Grid.Column="2" FontFamily="{ThemeResource SegoeIcons}" Foreground="White" FontSize="13" Margin="12,-6,4,0" Glyph="&#xE134;" />
-                <TextBlock Grid.Column="3" Text="{x:Bind Stat.Reply}" FontSize="13" Foreground="White" FontFamily="{ThemeResource MiSansRegular}" />
+                <TextBlock Grid.Column="3" Text="{x:Bind Stat.Danmaku}" FontSize="13" Foreground="White" FontFamily="{ThemeResource MiSansRegular}" />
                 <TextBlock Grid.Column="5" Text="{x:Bind GetDuration()}" FontSize="13" Foreground="White" FontFamily="{ThemeResource MiSansRegular}" />
             </Grid>
             <TextBlock 
@@ -265,7 +265,7 @@
                 />
             <StackPanel Orientation="Horizontal" Padding="8,0">
                 <FontIcon Grid.Column="2" FontFamily="{ThemeResource SegoeIcons}" Foreground="Gray" FontSize="13" Margin="0,0,6,0" Glyph="&#xE125;" />
-                <TextBlock Text="{x:Bind Up.Name}" Foreground="Gray" FontFamily="{ThemeResource MiSansRegular}" />
+                <TextBlock Text="{x:Bind Owner.UpName}" Foreground="Gray" FontFamily="{ThemeResource MiSansRegular}" />
                 <TextBlock Margin="12,0" Text="{x:Bind GetUpDateTime()}" Foreground="Gray" FontFamily="{ThemeResource MiSansRegular}" />
             </StackPanel>
         </StackPanel>

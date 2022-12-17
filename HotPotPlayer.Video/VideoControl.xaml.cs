@@ -99,6 +99,18 @@ namespace HotPotPlayer.Video
             h.currentPlayIndex = info.Index;
         }
 
+
+        public bool NoFullScreen
+        {
+            get { return (bool)GetValue(NoFullScreenProperty); }
+            set { SetValue(NoFullScreenProperty, value); }
+        }
+
+        public static readonly DependencyProperty NoFullScreenProperty =
+            DependencyProperty.Register("NoFullScreen", typeof(bool), typeof(VideoControl), new PropertyMetadata(default));
+
+
+
         bool mediaInited;
         //DisplayRequest _displayReq;
         //DisplayRequest DisplayReq => _displayReq;
@@ -199,7 +211,7 @@ namespace HotPotPlayer.Video
             });
         }
 
-        private void StartPlay(string selectedDefinition = "")
+        public void StartPlay(string selectedDefinition = "")
         {
             //Mpv.API.SetPropertyString("vo", "gpu");
             Mpv.API.SetPropertyString("vo", "gpu-next");
@@ -260,7 +272,8 @@ namespace HotPotPlayer.Video
 
         private void Host_Loaded(object sender, RoutedEventArgs e)
         {
-            StartPlay();
+            if (CurrentPlayList != null)
+                StartPlay();
             //_displayReq = new DisplayRequest();
         }
 
@@ -651,9 +664,12 @@ namespace HotPotPlayer.Video
             return isFullScreen ? "\uE1D8" : "\uE1D9";
         }
 
+        public event Action OnToggleFullScreen;
         private void ToggleFullScreenClick(object sender, RoutedEventArgs e)
         {
-            IsFullScreen = !IsFullScreen;
+            OnToggleFullScreen?.Invoke();
+            if (!NoFullScreen)
+                IsFullScreen = !IsFullScreen;
         }
 
         private void VideoPlayListBar_OnDismiss()
