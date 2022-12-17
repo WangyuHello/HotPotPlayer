@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace BiliBiliAPI.Models.Video
+namespace HotPotPlayer.Services.BiliBili.Video
 {
     /// <summary>
     /// 视频清晰度

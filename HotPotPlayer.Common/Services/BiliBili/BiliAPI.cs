@@ -12,10 +12,9 @@ using BiliBiliAPI.ApiTools;
 using QRCoder;
 using System.Web;
 using Microsoft.AspNetCore.WebUtilities;
-using BiliBiliAPI.Models.Video;
+using HotPotPlayer.Services.BiliBili.Video;
 using BiliBiliAPI.Models;
 using Newtonsoft.Json;
-using BiliBiliAPI.Models.Videos;
 
 namespace HotPotPlayer.Services.BiliBili
 {
@@ -187,14 +186,31 @@ namespace HotPotPlayer.Services.BiliBili
         /// </summary>
         /// <param name="bvid">稿件bvid</param>
         /// <returns></returns>
-        public async Task<BiliResult<VideosContent>> GetVideoInfo(string bvid)
+        public async Task<BiliResult<VideoContent>> GetVideoInfo(string bvid)
         {
             var r = await GetAsync("http://api.bilibili.com/x/web-interface/view", ResponseEnum.Web,
                 new Dictionary<string, string>
                 {
                     ["bvid"] = bvid,
                 });
-            var res = JsonConvert.DeserializeObject<BiliResult<VideosContent>>(r);
+            var res = JsonConvert.DeserializeObject<BiliResult<VideoContent>>(r);
+            return res;
+        }
+
+        /// <summary>
+        /// https://github.com/SocialSisterYi/bilibili-API-collect/blob/master/ranking&dynamic/popular.md
+        /// </summary>
+        /// <param name="pn">页码</param>
+        /// <param name="ps">每页项数</param>
+        public async Task<BiliResult<PopularVideos>> GetPopularVideo(int pn = 1, int ps = 20)
+        {
+            var r = await GetAsync("https://api.bilibili.com/x/web-interface/popular", ResponseEnum.Web,
+                new Dictionary<string, string>
+                {
+                    ["pn"] = pn.ToString(),
+                    ["ps"] = ps.ToString()
+                });
+            var res = JsonConvert.DeserializeObject<BiliResult<PopularVideos>>(r);
             return res;
         }
 

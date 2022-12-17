@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace BiliBiliAPI.Models.Videos
+namespace HotPotPlayer.Services.BiliBili.Video
 {
     public class VideoInfo
     {

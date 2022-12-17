@@ -24,6 +24,10 @@
         <Setter Property="ItemTemplate" Value="{StaticResource AlbumCardViewTemplate}" />
     </Style>
 
+    <Style x:Key="BiliVideoCardViewStyle" TargetType="GridView" BasedOn="{StaticResource CardGridViewStyle}">
+        <Setter Property="ItemTemplate" Value="{StaticResource BiliVideoCardViewTemplate}" />
+    </Style>
+    
     <Style x:Key="AlbumCardViewWithFooterStyle" TargetType="GridView" BasedOn="{StaticResource AlbumCardViewStyle}">
         <Setter Property="Footer">
             <Setter.Value>

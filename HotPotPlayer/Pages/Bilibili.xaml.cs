@@ -1,6 +1,4 @@
 ﻿using BiliBiliAPI.Models;
-using BiliBiliAPI.Models.Video;
-using BiliBiliAPI.Models.Videos;
 using HotPotPlayer.Models.BiliBili;
 using HotPotPlayer.Video;
 using Microsoft.UI.Xaml;
@@ -33,33 +31,20 @@ namespace HotPotPlayer.Pages
             this.InitializeComponent();
         }
 
+        bool IsFirstNavigate = true;
         protected override async void OnNavigatedTo(NavigationEventArgs e)
         {
             base.OnNavigatedTo(e);
+            if (!IsFirstNavigate)
+            {
+                return;
+            }
             if (!(await BiliBiliService.IsLoginAsync()))
             {
                 NavigateTo("BiliBiliSub.Login");
             }
-        }
-
-        private async void TestPlay(object sender, RoutedEventArgs e)
-        {
-            var bvid = BVID.Text;
-            var info = await BiliBiliService.API.GetVideoInfo(bvid);
-            var cid = info.Data.First_Cid;
-            BiliResult<VideoInfo> res;
-            if ((bool)DASH.IsChecked)
-            {
-                res = await BiliBiliService.API.GetVideoUrl(bvid, cid, DashEnum.Dash8K, FnvalEnum.Dash | FnvalEnum.HDR | FnvalEnum.Fn8K | FnvalEnum.Fn4K | FnvalEnum.AV1 | FnvalEnum.FnDBAudio | FnvalEnum.FnDBVideo);
-            }
-            else
-            {
-                res = await BiliBiliService.API.GetVideoUrl(bvid, cid, DashEnum.Dash1080P60, FnvalEnum.FLV);
-            }
-
-            var video = BiliBiliVideoItem.FromRaw(res.Data, info.Data);
-
-            NavigateTo("VideoPlay", new VideoPlayInfo { Index = 0, VideoItems = new List<BiliBiliVideoItem> { video } });
+            BiliMain.LoadPopularVideosAsync();
+            IsFirstNavigate = false;
         }
     }
 }

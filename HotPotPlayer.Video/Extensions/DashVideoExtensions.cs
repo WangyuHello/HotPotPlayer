@@ -1,4 +1,4 @@
-﻿using BiliBiliAPI.Models.Videos;
+﻿using HotPotPlayer.Services.BiliBili.Video;
 using System;
 using System.Collections.Generic;
 using System.Linq;

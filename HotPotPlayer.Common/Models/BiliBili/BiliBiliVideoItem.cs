@@ -1,4 +1,4 @@
-﻿using BiliBiliAPI.Models.Videos;
+﻿using HotPotPlayer.Services.BiliBili.Video;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -20,7 +20,7 @@ namespace HotPotPlayer.Models.BiliBili
 
         public List<Durl> Urls { get; set; }
 
-        public static BiliBiliVideoItem FromRaw(VideoInfo videoInfo, VideosContent videosContent)
+        public static BiliBiliVideoItem FromRaw(VideoInfo videoInfo, VideoContent videosContent)
         {
             var dict = new Dictionary<string, Dictionary<string, DashVideo>>();
 

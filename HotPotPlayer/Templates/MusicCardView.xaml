@@ -4,6 +4,7 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:models="using:HotPotPlayer.Models"
     xmlns:modelsC="using:HotPotPlayer.Models.CloudMusic"
+    xmlns:bili="using:HotPotPlayer.Services.BiliBili.Video"
     xmlns:cont2="using:HotPotPlayer.UI.Controls"
     xmlns:ui="using:CommunityToolkit.WinUI.UI"
     xmlns:conv="using:HotPotPlayer.Converters"
@@ -208,6 +209,65 @@
                 Foreground="Gray" 
                 FontFamily="{ThemeResource MiSansRegular}"
                 />
+        </StackPanel>
+    </DataTemplate>
+
+    <DataTemplate x:Key="BiliVideoCardViewTemplate" x:DataType="bili:VideoContent">
+        <StackPanel 
+            Width="300"
+            Padding="0,0,0,12"
+            x:Name="BiliVideoCardConnectedElement"
+            BorderBrush="{ThemeResource ButtonBorderBrush}"
+            BorderThickness="{ThemeResource ButtonBorderThemeThickness}"
+            CornerRadius="4"
+            ui:VisualExtensions.NormalizedCenterPoint="0.5"
+            Loaded="Root_Loaded"
+            Background="White"
+            >
+            <cont2:ImageEx2 
+                CornerRadius="4"
+                Source="{x:Bind VideoImage}" 
+                Style="{StaticResource LocalVideoImageStyle}"
+                />
+            <Grid Margin="0,-24,0,0" Height="24" Padding="8,0">
+                <Grid.Background>
+                    <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
+                        <GradientStop Offset="0" Color="Transparent"/>
+                        <GradientStop Offset="0.2" Color="#10000000"/>
+                        <GradientStop Offset="0.8" Color="#80000000"/>
+                    </LinearGradientBrush>
+                </Grid.Background>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+                <FontIcon FontFamily="{ThemeResource SegoeIcons}" Foreground="White" FontSize="13" Margin="0,-6,4,0" Glyph="&#xE102;" />
+                <TextBlock Grid.Column="1" Text="{x:Bind Stat.GetViews()}" FontSize="13" Foreground="White" FontFamily="{ThemeResource MiSansRegular}" />
+                <FontIcon Grid.Column="2" FontFamily="{ThemeResource SegoeIcons}" Foreground="White" FontSize="13" Margin="12,-6,4,0" Glyph="&#xE134;" />
+                <TextBlock Grid.Column="3" Text="{x:Bind Stat.Reply}" FontSize="13" Foreground="White" FontFamily="{ThemeResource MiSansRegular}" />
+                <TextBlock Grid.Column="5" Text="{x:Bind GetDuration()}" FontSize="13" Foreground="White" FontFamily="{ThemeResource MiSansRegular}" />
+            </Grid>
+            <TextBlock 
+                Margin="8,8" 
+                Text="{x:Bind Title}" 
+                LineStackingStrategy="BaselineToBaseline" 
+                FontSize="14" 
+                MaxLines="2" 
+                TextTrimming="CharacterEllipsis" 
+                TextWrapping="Wrap" 
+                Height="40" 
+                ToolTipService.ToolTip="{x:Bind Title}" 
+                FontFamily="{ThemeResource MiSansMedium}"
+                />
+            <StackPanel Orientation="Horizontal" Padding="8,0">
+                <FontIcon Grid.Column="2" FontFamily="{ThemeResource SegoeIcons}" Foreground="Gray" FontSize="13" Margin="0,0,6,0" Glyph="&#xE125;" />
+                <TextBlock Text="{x:Bind Up.Name}" Foreground="Gray" FontFamily="{ThemeResource MiSansRegular}" />
+                <TextBlock Margin="12,0" Text="{x:Bind GetUpDateTime()}" Foreground="Gray" FontFamily="{ThemeResource MiSansRegular}" />
+            </StackPanel>
         </StackPanel>
     </DataTemplate>
 

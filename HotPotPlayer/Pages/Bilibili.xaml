@@ -4,6 +4,7 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:base="using:HotPotPlayer"
     xmlns:local="using:HotPotPlayer.Pages"
+    xmlns:bili="using:HotPotPlayer.Pages.BiliBiliSub"
     xmlns:control="using:HotPotPlayer.Controls"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
@@ -11,9 +12,17 @@
     NavigationCacheMode="Enabled"
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
 
-    <StackPanel Background="White" VerticalAlignment="Center">
-        <TextBox x:Name="BVID" Text="BV1JG411K7FF"></TextBox>
-        <CheckBox x:Name="DASH" IsChecked="True">Dash模式</CheckBox>
-        <Button Click="TestPlay">播放</Button>
-    </StackPanel>
+    <Grid Background="White" Padding="36,28,0,0">
+        <Pivot HeaderTemplate="{StaticResource GeneralPivotHeaderTemplate}">
+            <PivotItem Header="推荐" Margin="0">
+                <bili:Main x:Name="BiliMain"/>
+            </PivotItem>
+            <PivotItem Header="动态" Margin="0">
+
+            </PivotItem>
+            <PivotItem Header="番剧" Margin="0">
+
+            </PivotItem>
+        </Pivot>
+    </Grid>
 </base:PageBase>

@@ -7,12 +7,12 @@ using System.Net.NetworkInformation;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace BiliBiliAPI.Models.Videos
+namespace HotPotPlayer.Services.BiliBili.Video
 {
     /// <summary>
     /// 视频基本信息
     /// </summary>
-    public class VideosContent
+    public class VideoContent
     {
         /// <summary>
         /// BV号
@@ -67,6 +67,14 @@ namespace BiliBiliAPI.Models.Videos
         [JsonProperty("pubdate")]
         public string UpDataTime { get; set; }
 
+        public string GetUpDateTime()
+        {
+            int i = int.Parse(UpDataTime);
+            var ts = TimeSpan.FromSeconds(i);
+            var time = new DateTime(ts.Ticks);
+            return $"{time.Month}-{time.Day}";
+        }
+
         /// <summary>
         /// 用户投稿信息
         /// </summary>
@@ -93,6 +101,20 @@ namespace BiliBiliAPI.Models.Videos
 
         [JsonProperty("duration")]
         public string All_Duration { get; set; }
+
+        public string GetDuration()
+        {
+            int i = int.Parse(All_Duration);
+            var time = TimeSpan.FromSeconds(i);
+            if (time.Hours > 0)
+            {
+                return time.ToString("hh\\:mm\\:ss");
+            }
+            else
+            {
+                return time.ToString("mm\\:ss");
+            }
+        }
 
         /// <summary>
         /// 撞车了，这个是AID
@@ -379,6 +401,20 @@ namespace BiliBiliAPI.Models.Videos
         [JsonProperty("view")]
         public string Views { get; set; }
 
+        public string GetViews()
+        {
+            int v = int.Parse(Views);
+            if (v >= 10000)
+            {
+                var v2 = (double)v / 10000;
+                return $"{v2.ToString("F1")}万";
+            }
+            else
+            {
+                return v.ToString();
+            }
+        }
+
         /// <summary>
         /// 弹幕数量
         /// </summary>
@@ -386,9 +422,9 @@ namespace BiliBiliAPI.Models.Videos
         public string DanMaku { get; set; }
 
         /// <summary>
-        /// 评论
+        /// 评论数量
         /// </summary>
-        [JsonProperty("评论数量")]
+        [JsonProperty("reply")]
         public string Reply { get; set; }
 
         /// <summary>
