@@ -21,6 +21,7 @@ using HotPotPlayer.Video;
 using HotPotPlayer.Models.BiliBili;
 using HotPotPlayer.Services.BiliBili.HomeVideo;
 using HotPotPlayer.Services.BiliBili.Reply;
+using System.Threading.Tasks;
 
 // To learn more about WinUI, the WinUI project structure,
 // and more about our project templates, see: http://aka.ms/winui-project-info.
@@ -71,13 +72,9 @@ namespace HotPotPlayer.Pages.BilibiliSub
                 var res = await BiliBiliService.API.GetVideoUrl(h.Bvid, h.Cid, DashEnum.Dash8K, FnvalEnum.Dash | FnvalEnum.HDR | FnvalEnum.Fn8K | FnvalEnum.Fn4K | FnvalEnum.AV1 | FnvalEnum.FnDBAudio | FnvalEnum.FnDBVideo);
                 var video = BiliBiliVideoItem.FromRaw(res.Data, h);
                 Source = new VideoPlayInfo { VideoItems = new List<BiliBiliVideoItem> { video }, Index = 0 };
-                VideoPlayer.StartPlay();
                 Video = (await BiliBiliService.API.GetVideoInfo(h.Bvid)).Data;
+                VideoPlayer.StartPlay();
             }
-
-            OnLineCount = await BiliBiliService.API.GetOnlineCount(Video.Bvid, Video.First_Cid);
-            Replies = (await BiliBiliService.API.GetVideoReplyAsync(Video.Aid)).Data;
-            RelatedVideos = (await BiliBiliService.API.GetRelatedVideo(Video.Bvid)).Data;
         }
 
         protected override void OnNavigatingFrom(NavigatingCancelEventArgs e)
@@ -99,7 +96,7 @@ namespace HotPotPlayer.Pages.BilibiliSub
 
         Thickness GetRootPadding(bool isFullPage)
         {
-            return isFullPage ? new Thickness(0) : new Thickness(36, 28, 0, 0);
+            return isFullPage ? new Thickness(0) : new Thickness(36, 28, 28, 0);
         }
 
         private void OnToggleFullScreen()
@@ -112,6 +109,13 @@ namespace HotPotPlayer.Pages.BilibiliSub
         {
             var v = e.ClickedItem as VideoContent;
             NavigateTo("BilibiliSub.BiliVideoPlay", v);
+        }
+
+        private async void OnMediaLoaded()
+        {
+            OnLineCount = await BiliBiliService.API.GetOnlineCount(Video.Bvid, Video.First_Cid);
+            Replies = (await BiliBiliService.API.GetVideoReplyAsync(Video.Aid)).Data;
+            RelatedVideos = (await BiliBiliService.API.GetRelatedVideo(Video.Bvid)).Data;
         }
     }
 }

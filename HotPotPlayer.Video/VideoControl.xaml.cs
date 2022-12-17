@@ -169,6 +169,8 @@ namespace HotPotPlayer.Video
             //DisplayReq.RequestRelease();
         }
 
+        public event Action OnMediaLoaded;
+
         private async void MediaLoaded(object sender, EventArgs e)
         {
             App?.Taskbar.AddPlayButtons();
@@ -180,6 +182,7 @@ namespace HotPotPlayer.Video
                 IsPlaying = true;
                 CurrentPlayingDuration = _mpv.Duration;
                 OnPropertyChanged(propertyName: nameof(Volume));
+                OnMediaLoaded?.Invoke();
 
             });
 
@@ -257,10 +260,9 @@ namespace HotPotPlayer.Video
                     BiliBiliService.Proxy.AudioUrl = bv.GetPreferAudioUrl();
                     BiliBiliService.Proxy.CookieString = BiliBiliService.API.CookieString;
                     if (sel.Contains("杜比") || sel.Contains("HDR")) Mpv.API.SetPropertyString("vo", "gpu");
+                    //Mpv.Load(BiliBiliService.Proxy.VideoUrl);
                     Mpv.Load(mpd);
                 }
-
-                //Mpv.API.SetPropertyString("external-file", audiourls.First());
             }
             else
             {

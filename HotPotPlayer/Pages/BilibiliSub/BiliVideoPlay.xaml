@@ -14,13 +14,13 @@
     mc:Ignorable="d"
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
 
-    <Grid Background="White" Padding="{x:Bind GetRootPadding(IsFullPage), Mode=OneWay}">
+    <Grid Background="White" >
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="*" />
             <ColumnDefinition Width="{x:Bind GetCommentWidth(IsFullPage), Mode=OneWay}" />
         </Grid.ColumnDefinitions>
 
-        <Grid >
+        <Grid Background="#f9f9fb" Padding="{x:Bind GetRootPadding(IsFullPage), Mode=OneWay}">
             <Grid.RowDefinitions>
                 <RowDefinition Height="*" />
                 <RowDefinition Height="{x:Bind GetTitleHeight(IsFullPage), Mode=OneWay}" />
@@ -28,7 +28,7 @@
                 <RowDefinition Height="{x:Bind GetTitleHeight(IsFullPage), Mode=OneWay}" />
                 <RowDefinition Height="{x:Bind GetTitleHeight(IsFullPage), Mode=OneWay}" />
             </Grid.RowDefinitions>
-            <video:VideoControl x:Name="VideoPlayer" Source="{x:Bind Source, Mode=OneWay}" OnToggleFullScreen="OnToggleFullScreen" NoFullScreen="True" NoTitleBar="True"/>
+            <video:VideoControl x:Name="VideoPlayer" Source="{x:Bind Source, Mode=OneWay}" OnToggleFullScreen="OnToggleFullScreen" NoFullScreen="True" NoTitleBar="True" OnMediaLoaded="OnMediaLoaded"/>
 
             <Grid Grid.Row="1" Margin="0,16,0,0">
                 <Grid.ColumnDefinitions>
@@ -51,12 +51,12 @@
                 <TextBlock VerticalAlignment="Center" Margin="12,0" Text="{x:Bind OnLineCount, Mode=OneWay}" Foreground="Gray" FontFamily="{ThemeResource MiSansRegular}" />
             </StackPanel>
             <TextBlock Text="{x:Bind Video.VideoDEsc, Mode=OneWay}" Grid.Row="3" IsTextSelectionEnabled="True" FontFamily="{ThemeResource MiSansRegular}" MaxLines="3" TextWrapping="Wrap" TextTrimming="CharacterEllipsis"/>
-            <ListView Grid.Row="4" Height="220" ItemsSource="{x:Bind RelatedVideos, Mode=OneWay}" Style="{StaticResource HorizontalListViewStyle}" ItemContainerStyle="{StaticResource GeneralListContainerCompactPaddingStyle}" ItemTemplate="{StaticResource BiliVideoCardViewTemplate2}" ItemClick="RelateVideoClick">
+            <ListView Grid.Row="4" Margin="-36,0,-28,0" Padding="36,0,28,0" Height="220" ItemsSource="{x:Bind RelatedVideos, Mode=OneWay}" Style="{StaticResource HorizontalListViewStyle}" ItemContainerStyle="{StaticResource GeneralListContainerCompactPaddingStyle}" ItemTemplate="{StaticResource BiliVideoCardViewTemplate2}" ItemClick="RelateVideoClick">
 
             </ListView>
         </Grid>
 
-        <Grid Grid.Column="1" Margin="16,0,16,0">
+        <Grid Grid.Column="1" Margin="16,28,16,0">
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto" />
                 <RowDefinition Height="Auto" />
