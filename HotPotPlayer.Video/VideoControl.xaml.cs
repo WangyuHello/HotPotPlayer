@@ -230,7 +230,7 @@ namespace HotPotPlayer.Video
                 Mpv.API.SetPropertyString("cookies-file", GetCookieFile());
                 Mpv.API.SetPropertyString("http-header-fields", "Referer: http://www.bilibili.com/");
                 //Mpv.API.SetPropertyString("demuxer-lavf-o", $"headers=\"Referer: http://www.bilibili.com/\r\nUserAgent: {BiliAPI.UserAgent}\r\n\"");
-                Mpv.API.SetPropertyString("demuxer-lavf-probescore", "1");
+                //Mpv.API.SetPropertyString("demuxer-lavf-probescore", "1");
 
                 IEnumerable<string> videourls;
                 if (bv.DashVideos == null)
@@ -240,19 +240,23 @@ namespace HotPotPlayer.Video
                 }
                 else
                 {
-                    var mpd = bv.WriteToMPD(Config);
-                    (var sel, BiliBiliService.Proxy.VideoUrl) = bv.GetPreferVideoUrl(selectedDefinition);
+                    //var mpd = bv.WriteToMPD(Config);
+                    (var sel, var vurl) = bv.GetPreferVideoUrl(selectedDefinition);
                     if (!mediaInited)
                     {
                         SelectedDefinition = sel;
                         Definitions = bv.Videos.Keys.ToList();
                     }
-                    BiliBiliService.Proxy.AudioUrl = bv.GetPreferAudioUrl();
-                    BiliBiliService.Proxy.CookieString = BiliBiliService.API.CookieString;
+                    var aurl = bv.GetPreferAudioUrl();
+                    //BiliBiliService.Proxy.AudioUrl = bv.GetPreferAudioUrl();
+                    //BiliBiliService.Proxy.CookieString = BiliBiliService.API.CookieString;
                     if (sel.Contains("杜比") || sel.Contains("HDR")) Mpv.API.SetPropertyString("vo", "gpu");
                     //Mpv.Load(BiliBiliService.Proxy.VideoUrl);
-                    Mpv.Load(mpd);
+                    //Mpv.Load(mpd);
                     //Mpv.Load("http://localhost:18909/video.m4s");
+                    var edl = bv.GetEdlProtocal(vurl, aurl);
+                    Mpv.PlaylistClear();
+                    Mpv.Load(edl);
                 }
             }
             else
