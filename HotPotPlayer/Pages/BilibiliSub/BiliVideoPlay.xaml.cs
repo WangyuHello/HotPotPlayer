@@ -117,11 +117,12 @@ namespace HotPotPlayer.Pages.BilibiliSub
             VideoPlayerService.IsVideoPagePresent = IsFullPage;
         }
 
-        private async void RelateVideoClick(object sender, ItemClickEventArgs e)
+        private void RelateVideoClick(object sender, ItemClickEventArgs e)
         {
             var v = e.ClickedItem as VideoContent;
             //VideoPlayer.Close();
-            await StartPlay(v);
+            //await StartPlay(v);
+            NavigateTo("BilibiliSub.BiliVideoPlay", v);
         }
 
         private async void OnMediaLoaded()
