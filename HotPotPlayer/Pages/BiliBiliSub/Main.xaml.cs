@@ -45,10 +45,11 @@ namespace HotPotPlayer.Pages.BilibiliSub
             RecVideos = (await BiliBiliService.API.GetRecVideo()).Data;
         }
 
-        private void BiliVideoClick(object sender, ItemClickEventArgs e)
+        private async void BiliVideoClick(object sender, ItemClickEventArgs e)
         {
             var v = e.ClickedItem as HomeDataItem;
-            NavigateTo("BilibiliSub.BiliVideoPlay", v);
+            var v2 = (await BiliBiliService.API.GetVideoInfo(v.Bvid)).Data;
+            NavigateTo("BilibiliSub.BiliVideoPlay", v2);
         }
     }
 }

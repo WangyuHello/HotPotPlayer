@@ -63,10 +63,6 @@ namespace HotPotPlayer.Pages.BilibiliSub
             await StartPlay(para);
         }
 
-        string tempOnLineCount;
-        Replies tempReplies;
-        List<VideoContent> tempRelatedVideos;
-
         private async Task StartPlay(object para)
         {
             if (para is VideoContent videoContent)
