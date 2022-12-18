@@ -187,29 +187,29 @@ namespace HotPotPlayer.Services.BiliBili
         }
     }
 
-    public class ProxyServer2
-    {
-        TcpListener _tcp;
-        private readonly HttpClientFactory _httpClientFactory;
+    //public class ProxyServer2
+    //{
+    //    TcpListener _tcp;
+    //    private readonly HttpClientFactory _httpClientFactory;
 
-        public string VideoUrl { get; set; }
-        public string AudioUrl { get; set; }
-        public string CookieString { get; set; }
+    //    public string VideoUrl { get; set; }
+    //    public string AudioUrl { get; set; }
+    //    public string CookieString { get; set; }
 
-        public async void Start(int port)
-        {
-            _tcp ??= new TcpListener(IPAddress.Loopback, 18909);
-            while (true)
-            {
-                var client = await _tcp.AcceptTcpClientAsync();
-                await Task.Run(() => Serve(client));
-            }
+    //    public async void Start(int port)
+    //    {
+    //        _tcp ??= new TcpListener(IPAddress.Loopback, 18909);
+    //        while (true)
+    //        {
+    //            var client = await _tcp.AcceptTcpClientAsync();
+    //            await Task.Run(() => Serve(client));
+    //        }
             
-        }
+    //    }
 
-        private void Serve(TcpClient tcp)
-        {
+    //    private void Serve(TcpClient tcp)
+    //    {
             
-        }
-    }
+    //    }
+    //}
 }

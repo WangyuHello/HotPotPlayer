@@ -59,7 +59,13 @@ namespace HotPotPlayer.Pages.BilibiliSub
         protected override async void OnNavigatedTo(NavigationEventArgs e)
         {
             base.OnNavigatedTo(e);
-            if(e.Parameter is VideoContent videoContent)
+            var para = e.Parameter;
+            await StartPlay(para);
+        }
+
+        private async Task StartPlay(object para)
+        {
+            if (para is VideoContent videoContent)
             {
                 Video = videoContent;
                 var res = await BiliBiliService.API.GetVideoUrl(Video.Bvid, Video.First_Cid, DashEnum.Dash8K, FnvalEnum.Dash | FnvalEnum.HDR | FnvalEnum.Fn8K | FnvalEnum.Fn4K | FnvalEnum.AV1 | FnvalEnum.FnDBAudio | FnvalEnum.FnDBVideo);
@@ -67,7 +73,7 @@ namespace HotPotPlayer.Pages.BilibiliSub
                 Source = new VideoPlayInfo { VideoItems = new List<BiliBiliVideoItem> { video }, Index = 0 };
                 VideoPlayer.StartPlay();
             }
-            else if (e.Parameter is HomeDataItem h)
+            else if (para is HomeDataItem h)
             {
                 var res = await BiliBiliService.API.GetVideoUrl(h.Bvid, h.Cid, DashEnum.Dash8K, FnvalEnum.Dash | FnvalEnum.HDR | FnvalEnum.Fn8K | FnvalEnum.Fn4K | FnvalEnum.AV1 | FnvalEnum.FnDBAudio | FnvalEnum.FnDBVideo);
                 var video = BiliBiliVideoItem.FromRaw(res.Data, h);
@@ -111,10 +117,11 @@ namespace HotPotPlayer.Pages.BilibiliSub
             VideoPlayerService.IsVideoPagePresent = IsFullPage;
         }
 
-        private void RelateVideoClick(object sender, ItemClickEventArgs e)
+        private async void RelateVideoClick(object sender, ItemClickEventArgs e)
         {
             var v = e.ClickedItem as VideoContent;
-            NavigateTo("BilibiliSub.BiliVideoPlay", v);
+            //VideoPlayer.Close();
+            await StartPlay(v);
         }
 
         private async void OnMediaLoaded()

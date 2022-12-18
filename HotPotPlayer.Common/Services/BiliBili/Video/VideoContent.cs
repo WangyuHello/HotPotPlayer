@@ -75,6 +75,14 @@ namespace HotPotPlayer.Services.BiliBili.Video
             return $"{time.Month}-{time.Day}";
         }
 
+        public string GetUpDateTime2()
+        {
+            int i = int.Parse(UpDataTime);
+            var ts = TimeSpan.FromSeconds(i);
+            var time = new DateTime(ts.Ticks);
+            return $"{time.Year+1969}-{time.Month}-{time.Day} {ts:hh\\:mm\\:ss}";
+        }
+
         /// <summary>
         /// 用户投稿信息
         /// </summary>
@@ -421,11 +429,39 @@ namespace HotPotPlayer.Services.BiliBili.Video
         [JsonProperty("danmaku")]
         public string DanMaku { get; set; }
 
+        public string GetDanMaku()
+        {
+            int v = int.Parse(DanMaku);
+            if (v >= 10000)
+            {
+                var v2 = (double)v / 10000;
+                return $"{v2.ToString("F1")}万";
+            }
+            else
+            {
+                return v.ToString();
+            }
+        }
+
         /// <summary>
         /// 评论数量
         /// </summary>
         [JsonProperty("reply")]
         public string Reply { get; set; }
+
+        public string GetReply()
+        {
+            int v = int.Parse(Reply);
+            if (v >= 10000)
+            {
+                var v2 = (double)v / 10000;
+                return $"{v2.ToString("F1")}万";
+            }
+            else
+            {
+                return v.ToString();
+            }
+        }
 
         /// <summary>
         ///收藏

@@ -129,7 +129,7 @@ namespace HotPotPlayer.Video
                         Volume = 100,
                         LogLevel = MpvLogLevel.Debug,
                         Loop = false,
-                        LoopPlaylist = true,
+                        LoopPlaylist = !NoTitleBar,
                     };
                     _mpv.SetD3DInitCallback(D3DInitCallback);
                     _mpv.MediaResumed += MediaResumed;
