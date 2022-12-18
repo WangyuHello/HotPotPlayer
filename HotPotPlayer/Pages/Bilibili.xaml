@@ -24,10 +24,14 @@
 
             </PivotItem>
         </Pivot>
-        <Button Width="40" Height="40" VerticalAlignment="Top" HorizontalAlignment="Right" 
-                Margin="0,8,8,0"
+        <StackPanel Margin="0,8,8,0" Orientation="Horizontal" VerticalAlignment="Top" HorizontalAlignment="Right" >
+            <TextBox x:Name="BVID" PlaceholderText="输入BV号" Width="160" Height="28"/>
+            <Button Margin="8,0,0,0" Click="BVPlay">播放</Button>
+            <Button Width="40" Height="40" Margin="12,0,0,0"
                 Style="{StaticResource TransparentButton}" Click="RefreshClick">
-            <FontIcon FontFamily="{ThemeResource SegoeIcons}" Glyph="&#xE149;" />
-        </Button>
+                <FontIcon FontFamily="{ThemeResource SegoeIcons}" Glyph="&#xE149;" />
+            </Button>
+        </StackPanel>
+
     </Grid>
 </base:PageBase>

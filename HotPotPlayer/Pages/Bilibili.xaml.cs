@@ -51,5 +51,12 @@ namespace HotPotPlayer.Pages
         {
             BiliMain.LoadPopularVideosAsync();
         }
+
+        private async void BVPlay(object sender, RoutedEventArgs args)
+        {
+            var bv = BVID.Text;
+            var video = (await BiliBiliService.API.GetVideoInfo(bv)).Data;
+            NavigateTo("BilibiliSub.BiliVideoPlay", video);
+        }
     }
 }

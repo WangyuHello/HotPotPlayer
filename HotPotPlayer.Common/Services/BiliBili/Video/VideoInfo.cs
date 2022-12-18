@@ -76,6 +76,54 @@ namespace HotPotPlayer.Services.BiliBili.Video
 
         [JsonProperty("audio")]
         public List<DashVideo> DashAudios { get; set; }
+
+        [JsonProperty("dolby")]
+        public Dolby Dolby { get; set; }
+
+        [JsonProperty("flac")]
+        public Flac Flac { get; set; }
+    }
+
+    public class Flac
+    {
+        [JsonProperty("display")]
+        public bool Display { get; set; }
+
+        [JsonProperty("audio")]
+        public List<DashVideo> DashAudios { get; set; }
+    }
+
+    public class Dolby
+    {
+        [JsonProperty("type")]
+        public int Type { get; set; }
+
+        [JsonProperty("audio")]
+        public List<DolbyAudio> Audio { get; set; }
+    }
+
+    public class DolbyAudio
+    {
+        [JsonProperty("id")]
+        public string ID { get; set; }
+
+        [JsonProperty("base_url")]
+        public string Base_Url { get; set; }
+
+        [JsonProperty("backup_url")]
+        public List<string> Backup_Url { get; set; }
+
+        [JsonProperty("mime_type")]
+        public string MimeType { get; set; }
+
+        [JsonProperty("codecs")]
+        public string Codecs { get; set; }
+
+        [JsonProperty("segment_base")]
+        public SegmentBase SegmentBase { get; set; }
+
+        [JsonProperty("bandwidth")]
+        public string BandWidth { get; set; }
     }
 
     public class DashVideo

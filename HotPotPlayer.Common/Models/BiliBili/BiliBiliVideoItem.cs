@@ -15,6 +15,10 @@ namespace HotPotPlayer.Models.BiliBili
 
         public List<DashVideo> DashAudios { get; set; }
 
+        public Dolby Dolby { get; set; }
+
+        public Flac Flac { get; set; }
+
         public Dictionary<string, Dictionary<string, DashVideo>> Videos { get; set; }
 
         public string MinBufferTime { get; set; }
@@ -38,6 +42,8 @@ namespace HotPotPlayer.Models.BiliBili
                 DashVideos = videoInfo?.Dash?.DashVideos,
                 DashAudios = videoInfo?.Dash?.DashAudios,
                 Videos = dict,
+                Dolby = videoInfo?.Dash?.Dolby,
+                Flac = videoInfo?.Dash?.Flac,
                 Urls = videoInfo?.DUrl,
                 Title = videosContent.Title,
                 MinBufferTime = videoInfo?.Dash?.MinBufferTime,
@@ -64,6 +70,8 @@ namespace HotPotPlayer.Models.BiliBili
                 DashVideos = videoInfo?.Dash?.DashVideos,
                 DashAudios = videoInfo?.Dash?.DashAudios,
                 Videos = dict,
+                Dolby = videoInfo?.Dash?.Dolby,
+                Flac = videoInfo?.Dash?.Flac,
                 Urls = videoInfo?.DUrl,
                 Title = videosContent.Title,
                 MinBufferTime = videoInfo?.Dash?.MinBufferTime,
@@ -122,8 +130,21 @@ namespace HotPotPlayer.Models.BiliBili
 
         public string GetPreferAudioUrl()
         {
-            var best = DashAudios.First();
-            return best.BaseUrl;
+            string best = null;
+            if (Dolby != null && Dolby.Audio != null)
+            {
+                best = Dolby.Audio.FirstOrDefault().Base_Url;
+            }
+            else if (Flac != null)
+            {
+                best = Flac.DashAudios.FirstOrDefault().Base_Url;
+            }
+            
+            if(string.IsNullOrEmpty(best)) 
+            {
+                best = DashAudios.First().BaseUrl;
+            }
+            return best;
         }
     }
 }
