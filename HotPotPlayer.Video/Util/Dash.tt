@@ -6,12 +6,13 @@
 <#@ import namespace="HotPotPlayer.Video.Extensions" #>
 <?xml version="1.0" encoding="utf-8"?>
 <MPD xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-     xmlns="urn:mpeg:DASH:schema:MPD:2011" 
-     profiles="urn:mpeg:dash:profile:isoff-on-demand:2011" 
+     xmlns="urn:mpeg:dash:schema:mpd:2011"
+     xsi:schemaLocation="urn:mpeg:dash:schema:mpd:2011"
+     profiles="urn:mpeg:dash:profile:isoff-live:2011,urn:hbbtv:dash:profile:isoff-live:2012" 
      type="static"
      minBufferTime="PT<#= video.MinBufferTime #>S">
     <Period start="PT0S">
-        <AdaptationSet group="1">
+        <AdaptationSet group="1" startWithSAP="1">
             <ContentComponent contentType="audio" id="1" />
             <Representation bandwidth="<#= video.DashAudios[audioIndex].BandWidth #>" codecs="<#= video.DashAudios[audioIndex].Codecs #>" height="<#= video.DashAudios[audioIndex].Height #>" mimeType="<#= video.DashAudios[audioIndex].MimeType #>" id="<#= video.DashAudios[audioIndex].ID #>" width="<#= video.DashAudios[audioIndex].Width #>">
                 <BaseURL>http://localhost:18909/audio.m4s</BaseURL>
@@ -20,7 +21,7 @@
                 </SegmentBase>
             </Representation>
         </AdaptationSet>
-        <AdaptationSet group="2">
+        <AdaptationSet group="2" startWithSAP="1">
             <ContentComponent contentType="video" id="2" />
             <Representation bandwidth="<#= video.DashVideos[videoIndex].BandWidth #>" codecs="<#= video.DashVideos[videoIndex].Codecs #>" height="<#= video.DashVideos[videoIndex].Height #>" mimeType="<#= video.DashVideos[videoIndex].MimeType #>" id="<#= video.DashVideos[videoIndex].ID #>" width="<#= video.DashVideos[videoIndex].Width #>">
                 <BaseURL>http://localhost:18909/video.m4s</BaseURL>

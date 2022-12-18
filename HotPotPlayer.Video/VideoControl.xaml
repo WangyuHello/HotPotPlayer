@@ -18,6 +18,8 @@
         <convs:SliderThumbConverter x:Key="SliderThumbConverter" TotalTime="{x:Bind CurrentPlayingDuration, Mode=OneWay}"/>
         <convs:SliderVolumeIntConverter x:Key="SliderVolumeConverter" />
         <convs:ColorConverter x:Key="ColorConverter" />
+        <convs:ClipConverter x:Key="ClipConverter" />
+
         <AcrylicBrush x:Key="PlayBarBackground" TintOpacity="0.8" TintLuminosityOpacity="0.3" TintColor="Transparent" FallbackColor="Transparent" />
 
         <Style x:Key="VolumePopupStyle" TargetType="FlyoutPresenter">

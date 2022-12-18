@@ -31,6 +31,7 @@ using System.Runtime.InteropServices.WindowsRuntime;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using Windows.Devices.Sensors;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
 using Windows.System.Display;
@@ -229,6 +230,7 @@ namespace HotPotPlayer.Video
                 Mpv.API.SetPropertyString("cookies-file", GetCookieFile());
                 Mpv.API.SetPropertyString("http-header-fields", "Referer: http://www.bilibili.com/");
                 //Mpv.API.SetPropertyString("demuxer-lavf-o", $"headers=\"Referer: http://www.bilibili.com/\r\nUserAgent: {BiliAPI.UserAgent}\r\n\"");
+                Mpv.API.SetPropertyString("demuxer-lavf-probescore", "1");
 
                 IEnumerable<string> videourls;
                 if (bv.DashVideos == null)
@@ -250,6 +252,7 @@ namespace HotPotPlayer.Video
                     if (sel.Contains("杜比") || sel.Contains("HDR")) Mpv.API.SetPropertyString("vo", "gpu");
                     //Mpv.Load(BiliBiliService.Proxy.VideoUrl);
                     Mpv.Load(mpd);
+                    //Mpv.Load("http://localhost:18909/video.m4s");
                 }
             }
             else
@@ -275,6 +278,14 @@ namespace HotPotPlayer.Video
             if (CurrentPlayList != null)
                 StartPlay();
             //_displayReq = new DisplayRequest();
+            SetClip();
+        }
+
+        private void SetClip()
+        {
+            RectangleGeometry rectangle = new RectangleGeometry();
+            rectangle.Rect = new Rect(0, 0, this.ActualWidth, this.ActualHeight);
+            this.Clip = rectangle;
         }
 
         private void Host_CompositionScaleChanged(SwapChainPanel sender, object args)
@@ -292,6 +303,7 @@ namespace HotPotPlayer.Video
             CurrentWidth = (int)Math.Ceiling(Host.CompositionScaleX*Host.ActualWidth);
             CurrentHeight = (int)Math.Ceiling(Host.CompositionScaleY*Host.ActualHeight);
             UpdateSize();
+            SetClip();
         }
 
         private void Host_Unloaded(object sender, RoutedEventArgs e)

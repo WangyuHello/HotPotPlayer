@@ -1,5 +1,6 @@
 ﻿using DirectN;
 using FFmpeg.AutoGen;
+using FFmpegInteropX;
 using SixLabors.ImageSharp;
 using System;
 using System.Collections.Generic;
@@ -200,4 +201,14 @@ namespace HotPotPlayer.Services.FFmpeg
             return result;
         }
     }
+
+    //public sealed class VideoStreamDecoder2
+    //{
+    //    VideoFrame _pFrame;
+
+    //    public void TryDecodeMiddleFrame()
+    //    {
+    //        //_pFrame = new VideoFrame()
+    //    }
+    //}
 }

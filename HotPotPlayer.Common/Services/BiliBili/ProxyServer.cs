@@ -8,6 +8,8 @@ using System.Text;
 using System.Threading.Tasks;
 using HttpClientFactoryLite;
 using Microsoft.Net.Http.Headers;
+using System.Net.Sockets;
+using System.Diagnostics;
 
 namespace HotPotPlayer.Services.BiliBili
 {
@@ -71,6 +73,9 @@ namespace HotPotPlayer.Services.BiliBili
                 "/audio.m4s" => AudioUrl,
                 _ => null,
             };
+            var range = context.Request.Headers["Range"];
+            Debug.WriteLine("Range: " + range);
+
 
             using var _client = _httpClientFactory.CreateClient("web");
             using var httpRequestMessage = new HttpRequestMessage();
@@ -84,11 +89,14 @@ namespace HotPotPlayer.Services.BiliBili
 
             using var stream = await response.Content.ReadAsStreamAsync();
 
+            var length = response.Content.Headers.ContentLength ?? 0;
             context.Response.KeepAlive = true;
-            context.Response.ContentLength64 = response.Content.Headers.ContentLength ?? 0;
+            context.Response.ContentLength64 = length;
             context.Response.ContentType = response.Content.Headers.ContentType.ToString();
+
             foreach (var header in response.Headers)
             {
+                Debug.WriteLine($"{header.Key}: {string.Join(", ", header.Value)}");
                 context.Response.Headers.Add(header.Key, string.Join(", ", header.Value));
             }
 
@@ -176,6 +184,32 @@ namespace HotPotPlayer.Services.BiliBili
 
             result = input;
             return false;
+        }
+    }
+
+    public class ProxyServer2
+    {
+        TcpListener _tcp;
+        private readonly HttpClientFactory _httpClientFactory;
+
+        public string VideoUrl { get; set; }
+        public string AudioUrl { get; set; }
+        public string CookieString { get; set; }
+
+        public async void Start(int port)
+        {
+            _tcp ??= new TcpListener(IPAddress.Loopback, 18909);
+            while (true)
+            {
+                var client = await _tcp.AcceptTcpClientAsync();
+                await Task.Run(() => Serve(client));
+            }
+            
+        }
+
+        private void Serve(TcpClient tcp)
+        {
+            
         }
     }
 }
