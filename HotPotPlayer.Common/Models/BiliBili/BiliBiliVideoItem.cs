@@ -137,7 +137,7 @@ namespace HotPotPlayer.Models.BiliBili
             }
             else if (Flac != null)
             {
-                best = Flac.DashAudios.FirstOrDefault().Base_Url;
+                best = Flac.DashAudios.Base_Url;
             }
             
             if(string.IsNullOrEmpty(best)) 

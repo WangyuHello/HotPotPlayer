@@ -90,7 +90,7 @@ namespace HotPotPlayer.Services.BiliBili.Video
         public bool Display { get; set; }
 
         [JsonProperty("audio")]
-        public List<DashVideo> DashAudios { get; set; }
+        public DashVideo DashAudios { get; set; }
     }
 
     public class Dolby
