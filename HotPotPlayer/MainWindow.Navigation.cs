@@ -104,7 +104,7 @@ namespace HotPotPlayer
         {
             var segs = SelectedPageName.Split(".");
             var mainName = segs[0].Replace("Sub", "");
-            if (mainName == "VideoPlay")
+            if (mainName == "VideoPlay" || mainName == "BiliVideoPlay")
             {
                 mainName = null; // Do not save
             }

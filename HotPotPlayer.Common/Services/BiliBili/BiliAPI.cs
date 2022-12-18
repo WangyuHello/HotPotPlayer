@@ -275,6 +275,11 @@ namespace HotPotPlayer.Services.BiliBili
             return res;
         }
 
+        public async void GetDynamic()
+        {
+            var r = await GetAsync("https://api.bilibili.com/x/polymer/web-dynamic/v1/feed/all", ResponseEnum.Web);
+        }
+
         #region Cookie
         public static CookieCollection ParseCookies(IEnumerable<string> cookieHeaders)
         {

@@ -213,7 +213,7 @@ namespace HotPotPlayer.Video
             });
         }
 
-        public void StartPlay(string selectedDefinition = "")
+        public void PreparePlay()
         {
             //Mpv.API.SetPropertyString("vo", "gpu");
             Mpv.API.SetPropertyString("vo", "gpu-next");
@@ -221,7 +221,6 @@ namespace HotPotPlayer.Video
             Mpv.API.SetPropertyString("hwdec", "d3d11va");
             Mpv.API.SetPropertyString("d3d11-composition", "yes");
             Mpv.API.SetPropertyString("target-colorspace-hint", "yes"); //HDR passthrough
-
             if (CurrentPlayList[CurrentPlayIndex] is BiliBiliVideoItem bv)
             {
                 Mpv.API.SetPropertyString("user-agent", BiliAPI.UserAgent);
@@ -231,7 +230,13 @@ namespace HotPotPlayer.Video
                 Mpv.API.SetPropertyString("http-header-fields", "Referer: http://www.bilibili.com/");
                 //Mpv.API.SetPropertyString("demuxer-lavf-o", $"headers=\"Referer: http://www.bilibili.com/\r\nUserAgent: {BiliAPI.UserAgent}\r\n\"");
                 //Mpv.API.SetPropertyString("demuxer-lavf-probescore", "1");
+            }
+        }
 
+        public void StartPlay(string selectedDefinition = "")
+        {
+            if (CurrentPlayList[CurrentPlayIndex] is BiliBiliVideoItem bv)
+            {
                 IEnumerable<string> videourls;
                 if (bv.DashVideos == null)
                 {
@@ -280,7 +285,10 @@ namespace HotPotPlayer.Video
         private void Host_Loaded(object sender, RoutedEventArgs e)
         {
             if (CurrentPlayList != null)
+            {
+                PreparePlay();
                 StartPlay();
+            }
             //_displayReq = new DisplayRequest();
             SetClip();
         }

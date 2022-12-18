@@ -89,6 +89,7 @@ namespace HotPotPlayer
             MainWindow.CenterOnScreen(width, height);
             MainWindow.TrySetAcrylicBackdrop();
             MainWindow.Closed += MainWindow_Closed;
+            MainWindow.SizeChanged += MainWindow_SizeChanged;
 
             var firstArg = args.Arguments; //尚不支持，永远为null
             var args2 = Environment.GetCommandLineArgs();
@@ -106,6 +107,11 @@ namespace HotPotPlayer
             Config.MainWindowHandle = MainWindowHandle;
         }
 
+        private void MainWindow_SizeChanged(object sender, WindowSizeChangedEventArgs args)
+        {
+            bounds = mainWindow.Bounds;
+        }
+
         public override void NavigateTo(string name, object parameter = null, NavigationTransitionInfo trans = null)
         {
             MainWindow.NavigateTo(name, parameter, trans);
@@ -117,9 +123,10 @@ namespace HotPotPlayer
         }
 
         private MainWindow mainWindow;
+        private Rect bounds;
         public override MainWindow MainWindow => mainWindow;
         public override IntPtr MainWindowHandle => MainWindow.GetWindowHandle();
-        public override Rect Bounds => MainWindow.Bounds;
+        public override Rect Bounds => bounds;
         public override XamlRoot XamlRoot => MainWindow.Content.XamlRoot;
 
         public override AppWindow AppWindow => MainWindow.GetAppWindow();

@@ -178,6 +178,4 @@ namespace BiliBiliAPI.Models.Account
         [JsonProperty("expires")]
         public string Expires { get; set; }
     }
-
-
 }

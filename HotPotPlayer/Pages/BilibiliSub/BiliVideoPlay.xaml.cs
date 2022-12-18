@@ -63,29 +63,37 @@ namespace HotPotPlayer.Pages.BilibiliSub
             await StartPlay(para);
         }
 
+        string tempOnLineCount;
+        Replies tempReplies;
+        List<VideoContent> tempRelatedVideos;
+
         private async Task StartPlay(object para)
         {
             if (para is VideoContent videoContent)
             {
-                Video = videoContent;
-                var res = await BiliBiliService.API.GetVideoUrl(Video.Bvid, Video.First_Cid, DashEnum.Dash8K, FnvalEnum.Dash | FnvalEnum.HDR | FnvalEnum.Fn8K | FnvalEnum.Fn4K | FnvalEnum.AV1 | FnvalEnum.FnDBAudio | FnvalEnum.FnDBVideo);
-                var video = BiliBiliVideoItem.FromRaw(res.Data, Video);
+                this.video = videoContent;
+                var res = await BiliBiliService.API.GetVideoUrl(this.video.Bvid, this.video.First_Cid, DashEnum.Dash8K, FnvalEnum.Dash | FnvalEnum.HDR | FnvalEnum.Fn8K | FnvalEnum.Fn4K | FnvalEnum.AV1 | FnvalEnum.FnDBAudio | FnvalEnum.FnDBVideo);
+                var video = BiliBiliVideoItem.FromRaw(res.Data, this.video);
                 Source = new VideoPlayInfo { VideoItems = new List<BiliBiliVideoItem> { video }, Index = 0 };
-                VideoPlayer.StartPlay();
             }
             else if (para is HomeDataItem h)
             {
                 var res = await BiliBiliService.API.GetVideoUrl(h.Bvid, h.Cid, DashEnum.Dash8K, FnvalEnum.Dash | FnvalEnum.HDR | FnvalEnum.Fn8K | FnvalEnum.Fn4K | FnvalEnum.AV1 | FnvalEnum.FnDBAudio | FnvalEnum.FnDBVideo);
                 var video = BiliBiliVideoItem.FromRaw(res.Data, h);
                 Source = new VideoPlayInfo { VideoItems = new List<BiliBiliVideoItem> { video }, Index = 0 };
-                Video = (await BiliBiliService.API.GetVideoInfo(h.Bvid)).Data;
-                VideoPlayer.StartPlay();
+                this.video = (await BiliBiliService.API.GetVideoInfo(h.Bvid)).Data;
             }
+            this.onLineCount = await BiliBiliService.API.GetOnlineCount(Video.Bvid, Video.First_Cid);
+            this.replies = (await BiliBiliService.API.GetVideoReplyAsync(Video.Aid)).Data;
+            this.relatedVideos = (await BiliBiliService.API.GetRelatedVideo(Video.Bvid)).Data;
+
+            VideoPlayer.PreparePlay();
+            VideoPlayer.StartPlay();
         }
 
-        protected override void OnNavigatingFrom(NavigatingCancelEventArgs e)
+        protected override void OnNavigatedFrom(NavigationEventArgs e)
         {
-            base.OnNavigatingFrom(e);
+            base.OnNavigatedFrom(e);
             VideoPlayerService.IsVideoPagePresent = false;
             VideoPlayer.Close();
         }
@@ -125,11 +133,12 @@ namespace HotPotPlayer.Pages.BilibiliSub
             NavigateTo("BilibiliSub.BiliVideoPlay", v);
         }
 
-        private async void OnMediaLoaded()
+        private void OnMediaLoaded()
         {
-            OnLineCount = await BiliBiliService.API.GetOnlineCount(Video.Bvid, Video.First_Cid);
-            Replies = (await BiliBiliService.API.GetVideoReplyAsync(Video.Aid)).Data;
-            RelatedVideos = (await BiliBiliService.API.GetRelatedVideo(Video.Bvid)).Data;
+            OnPropertyChanged(propertyName: nameof(Video));
+            OnPropertyChanged(propertyName: nameof(OnLineCount));
+            OnPropertyChanged(propertyName: nameof(Replies));
+            OnPropertyChanged(propertyName: nameof(RelatedVideos));
         }
     }
 }

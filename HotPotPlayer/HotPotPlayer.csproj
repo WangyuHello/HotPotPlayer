@@ -57,6 +57,7 @@
     <None Remove="Pages\Artist.xaml" />
     <None Remove="Pages\Bilibili.xaml" />
     <None Remove="Pages\BilibiliSub\BiliVideoPlay.xaml" />
+    <None Remove="Pages\BilibiliSub\Dynamic.xaml" />
     <None Remove="Pages\BilibiliSub\Login.xaml" />
     <None Remove="Pages\BilibiliSub\Main.xaml" />
     <None Remove="Pages\BilibiliSub\VideoView.xaml" />
@@ -129,6 +130,12 @@
   <ItemGroup>
     <ProjectReference Include="..\HotPotPlayer.Common\HotPotPlayer.Common.csproj" />
     <ProjectReference Include="..\HotPotPlayer.Video\HotPotPlayer.Video.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Page Update="Pages\BilibiliSub\Dynamic.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
   </ItemGroup>
 
   <ItemGroup>
