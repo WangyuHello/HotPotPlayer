@@ -12,11 +12,13 @@
     mc:Ignorable="d">
 
     <Grid Background="#f0f0f2">
-        <ListView Width="600" ItemsSource="{x:Bind DynamicData.DynamicItems, Mode=OneWay}" 
+        <ListView Width="600" ItemsSource="{x:Bind DynamicItems, Mode=OneWay}" 
                   Style="{StaticResource GeneralListViewStyle}" 
                   ItemContainerStyle="{StaticResource GeneralListContainerWithPadding2RoundStyle}" 
                   ItemTemplate="{StaticResource DynamicTemplate}"
                   ItemClick="DynamicItemClick"
+                  IncrementalLoadingTrigger="Edge"
+                  IncrementalLoadingThreshold="2"
                   >
             
         </ListView>

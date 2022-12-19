@@ -276,7 +276,7 @@ namespace HotPotPlayer.Services.BiliBili
             return res;
         }
 
-        public async Task<BiliResult<DynamicData>> GetDynamic(DynamicType type, int offset = 0, int page = 1)
+        public async Task<BiliResult<DynamicData>> GetDynamic(DynamicType type, string offset = "", int page = 1)
         {
             var typeStr = type switch
             {
@@ -286,13 +286,17 @@ namespace HotPotPlayer.Services.BiliBili
                 DynamicType.Read => "article",
                 _ => throw new NotImplementedException(),
             };
-            var r = await GetAsync("https://api.bilibili.com/x/polymer/web-dynamic/v1/feed/all", ResponseEnum.Web,
-                new Dictionary<string, string>
-                {
-                    ["timezone_offset"] = "-480",
-                    ["type"] = typeStr,
-                    ["page"] = page.ToString(),
-                });
+            var para = new Dictionary<string, string>
+            {
+                ["timezone_offset"] = "-480",
+                ["type"] = typeStr,
+                ["page"] = page.ToString(),
+            };
+            if (!string.IsNullOrEmpty(offset))
+            {
+                para["offset"] = offset;
+            }
+            var r = await GetAsync("https://api.bilibili.com/x/polymer/web-dynamic/v1/feed/all", ResponseEnum.Web, para);
 
             var res = JsonConvert.DeserializeObject<BiliResult<DynamicData>>(r);
             return res;

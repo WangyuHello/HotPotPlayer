@@ -16,7 +16,7 @@ namespace HotPotPlayer.Services.BiliBili.Dynamic
 
     public class DynamicData
     {
-        [JsonProperty("has_more")]public bool IsMore { get; set; }
+        [JsonProperty("has_more")]public bool HasMore { get; set; }
         [JsonProperty("offset")]public string OffSet { get; set; }
 
         [JsonProperty("update_num")]public int UpDateNum { get; set; }

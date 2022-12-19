@@ -2,6 +2,7 @@
 // Licensed under the MIT License. See LICENSE in the project root for license information.
 
 using CommunityToolkit.Mvvm.ComponentModel;
+using HotPotPlayer.Services;
 using HotPotPlayer.Services.BiliBili.Dynamic;
 using HotPotPlayer.Services.BiliBili.Video;
 using Microsoft.UI.Xaml;
@@ -13,6 +14,7 @@ using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Navigation;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
@@ -32,7 +34,7 @@ namespace HotPotPlayer.Pages.BilibiliSub
         }
 
         [ObservableProperty]
-        private DynamicData dynamicData;
+        private DynamicItemCollection dynamicItems;
 
         bool isFirstLoad = true;
 
@@ -42,7 +44,8 @@ namespace HotPotPlayer.Pages.BilibiliSub
             {
                 return;
             }
-            DynamicData = (await BiliBiliService.API.GetDynamic(DynamicType.All)).Data;
+            var dynamicData = (await BiliBiliService.API.GetDynamic(DynamicType.All)).Data;
+            DynamicItems = new DynamicItemCollection(dynamicData, BiliBiliService);
             isFirstLoad = false;
         }
 
@@ -64,6 +67,39 @@ namespace HotPotPlayer.Pages.BilibiliSub
                 NavigateTo("BilibiliSub.BiliVideoPlay", v2);
             }
 
+        }
+    }
+
+    public class DynamicItemCollection : ObservableCollection<DynamicItem>, ISupportIncrementalLoading
+    {
+        int _pageNum;
+        string _prevOffset;
+        BiliBiliService _service;
+        public DynamicItemCollection(DynamicData data, BiliBiliService service) : base(data.DynamicItems) 
+        {
+            _pageNum = 1;
+            _prevOffset = data.OffSet;
+            _service = service;
+            _hasMore = data.HasMore;
+        }
+
+        private bool _hasMore;
+        public bool HasMoreItems => _hasMore;
+
+        public IAsyncOperation<LoadMoreItemsResult> LoadMoreItemsAsync(uint count)
+        {
+            return AsyncInfo.Run(async (token) =>
+            {
+                _pageNum++;
+                var dyn = await _service.API.GetDynamic(DynamicType.All, _prevOffset, _pageNum);
+                foreach (var item in dyn.Data.DynamicItems)
+                {
+                    Add(item);
+                }
+                _prevOffset = dyn.Data.OffSet;
+                _hasMore = dyn.Data.HasMore;
+                return new LoadMoreItemsResult() { Count = (uint)dyn.Data.DynamicItems.Count };
+            });
         }
     }
 }
