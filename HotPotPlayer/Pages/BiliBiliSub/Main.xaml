@@ -14,9 +14,11 @@
 
     <Grid>
         <GridView 
-                ItemsSource="{x:Bind RecVideos.Items, Mode=OneWay}" 
+                ItemsSource="{x:Bind RecVideos, Mode=OneWay}" 
                 Style="{StaticResource BiliVideoCardViewStyle}"
                 ItemClick="BiliVideoClick"
+                IncrementalLoadingTrigger="Edge"
+                IncrementalLoadingThreshold="1"
             >
             <GridView.Footer>
                 <Grid Height="100"/>

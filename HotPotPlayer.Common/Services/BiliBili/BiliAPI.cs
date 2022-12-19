@@ -217,7 +217,11 @@ namespace HotPotPlayer.Services.BiliBili
             return res;
         }
 
-        public async Task<BiliResult<HomeData>> GetRecVideo()
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        public async Task<BiliResult<HomeData>> GetRecVideo(int pn = 1, int ps = 20)
         {
             var r = await GetAsync("https://api.bilibili.com/x/web-interface/index/top/feed/rcmd", ResponseEnum.Web,
                 new Dictionary<string, string>
@@ -225,7 +229,8 @@ namespace HotPotPlayer.Services.BiliBili
                     ["fresh_idx"] = "1",
                     ["feed_version"] = "V1",
                     ["fresh_type"] = "4",
-                    ["ps"] = "20",
+                    ["pn"] = pn.ToString(),
+                    ["ps"] = ps.ToString(),
                     ["plat"] = "1"
                 });
             var res = JsonConvert.DeserializeObject<BiliResult<HomeData>>(r);

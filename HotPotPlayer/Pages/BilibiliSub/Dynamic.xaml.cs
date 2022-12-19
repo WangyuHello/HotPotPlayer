@@ -74,7 +74,7 @@ namespace HotPotPlayer.Pages.BilibiliSub
     {
         int _pageNum;
         string _prevOffset;
-        BiliBiliService _service;
+        readonly BiliBiliService _service;
         public DynamicItemCollection(DynamicData data, BiliBiliService service) : base(data.DynamicItems) 
         {
             _pageNum = 1;
