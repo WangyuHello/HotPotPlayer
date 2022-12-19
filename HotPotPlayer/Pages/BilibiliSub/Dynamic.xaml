@@ -11,7 +11,14 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d">
 
-    <Grid>
-
+    <Grid Background="#f0f0f2">
+        <ListView Width="600" ItemsSource="{x:Bind DynamicData.DynamicItems, Mode=OneWay}" 
+                  Style="{StaticResource GeneralListViewStyle}" 
+                  ItemContainerStyle="{StaticResource GeneralListContainerWithPadding2RoundStyle}" 
+                  ItemTemplate="{StaticResource DynamicTemplate}"
+                  ItemClick="DynamicItemClick"
+                  >
+            
+        </ListView>
     </Grid>
 </base:UserControlBase>

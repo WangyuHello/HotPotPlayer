@@ -8,6 +8,7 @@
     xmlns:conv="using:HotPotPlayer.Converters"
     xmlns:cont2="using:HotPotPlayer.UI.Controls"
     xmlns:brep="using:HotPotPlayer.Services.BiliBili.Reply"
+    xmlns:dyn="using:HotPotPlayer.Services.BiliBili.Dynamic"
     xmlns:local="using:HotPotPlayer.Templates">
 
     <Thickness x:Key="ListItemPadding" >12,0</Thickness>
@@ -353,5 +354,76 @@
             <cont2:ImageEx2 Source="{x:Bind Avatar}" Style="{StaticResource LocalMusicImageStyle}" Width="24" Height="24" />
             <TextBlock Grid.Column="1" VerticalAlignment="Center" Margin="8,0" Text="{x:Bind Name}" FontFamily="{StaticResource MiSansRegular}"/>
         </Grid>
+    </DataTemplate>
+
+
+    <DataTemplate x:Key="DynamicTemplate" x:DataType="dyn:DynamicItem">
+        <StackPanel Padding ="16" Background="White">
+            <!--Header-->
+            <Grid >
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="1*" />
+                    <RowDefinition Height="1*" />
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+                <cont2:ImageEx2 Grid.RowSpan="2" Margin="0,0,8,0" Width="40" Height="40" Source="{x:Bind Modules.ModuleAuthor.Face}" CornerRadius="20" Style="{StaticResource LocalMusicImageStyle}"/>
+                <TextBlock Grid.Column="1" VerticalAlignment="Bottom" FontFamily="{ThemeResource MiSansMedium}" Text="{x:Bind Modules.ModuleAuthor.Name}" Foreground="#fb799d"/>
+                <TextBlock Grid.Column="1" VerticalAlignment="Top" Margin="0,2,0,0" Grid.Row="1" FontFamily="{ThemeResource MiSansRegular}" FontSize="12" Foreground="Gray" Text="{x:Bind Modules.ModuleAuthor.PubTime}"/>
+                <Button Grid.Column="2" Grid.RowSpan="2" Style="{StaticResource TransparentButton}" CornerRadius="4" Padding="4" Tag="{x:Bind }">
+                    <SymbolIcon Symbol="More" />
+                </Button>
+            </Grid>
+            <!--Content-->
+            <TextBlock Margin="0,8,0,0" Visibility="{x:Bind Modules.ModuleDynamic.HasDesc}" FontFamily="{ThemeResource MiSansRegular}" TextWrapping="Wrap" Text="{x:Bind Modules.ModuleDynamic.Desc.Text}"/>
+
+            <cont2:ImageEx2 Margin="0,8,0,0" Source="{x:Bind Modules.ModuleDynamic.Major.Draw.Items[0].Source}" Visibility="{x:Bind Modules.ModuleDynamic.Major.IsSingleDraw}" MaxWidth="350" CornerRadius="4" Style="{StaticResource DynamicImageStyle}"/>
+
+            <StackPanel Margin="36,8,8,0" Padding="16,8" Visibility="{x:Bind HasOrigin}" Background="#f4f5f7" CornerRadius="4">
+                <StackPanel Orientation="Horizontal" Spacing="4">
+                    <cont2:ImageEx2 Grid.RowSpan="2" Width="28" Height="28" Source="{x:Bind Origin.Modules.ModuleAuthor.Face}" CornerRadius="20" Style="{StaticResource LocalMusicImageStyle}"/>
+                    <TextBlock VerticalAlignment="Center" Text="{x:Bind Origin.Modules.ModuleAuthor.Name}" FontFamily="{ThemeResource MiSansRegular}" Foreground="#00a1d6"/>
+                </StackPanel>
+                <TextBlock Margin="0,8,0,0" Visibility="{x:Bind Origin.Modules.ModuleDynamic.HasDesc}" FontFamily="{ThemeResource MiSansRegular}" TextWrapping="Wrap" Text="{x:Bind Origin.Modules.ModuleDynamic.Desc.Text}"/>
+                <cont2:ImageEx2 Margin="0,8,0,0" Visibility="{x:Bind Origin.Modules.ModuleDynamic.HasArchive}" Source="{x:Bind Origin.Modules.ModuleDynamic.Major.Archive.Cover}" CornerRadius="4" Style="{StaticResource DynamicImageStyle}"/>
+                <TextBlock Margin="0,8,0,0" Visibility="{x:Bind Origin.Modules.ModuleDynamic.HasArchive}" FontSize="13" Text="{x:Bind Origin.Modules.ModuleDynamic.Major.Archive.Title}" FontFamily="{ThemeResource MiSansRegular}" TextWrapping="Wrap"/>
+            </StackPanel>
+            
+            <StackPanel Margin="0,8,0,0" Spacing="4" Visibility="{x:Bind Modules.ModuleDynamic.HasArchive}">
+                <cont2:ImageEx2 Source="{x:Bind Modules.ModuleDynamic.Major.Archive.Cover}" CornerRadius="4" Style="{StaticResource DynamicImageStyle}"/>
+                <TextBlock FontSize="13" Text="{x:Bind Modules.ModuleDynamic.Major.Archive.Title}" FontFamily="{ThemeResource MiSansRegular}" TextWrapping="Wrap"/>
+            </StackPanel>
+            
+            <!--ThreeButton-->
+            <Grid Margin="0,16,0,0">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+
+                <Button HorizontalAlignment="Center" Style="{StaticResource TransparentButton}">
+                    <StackPanel Orientation="Horizontal" Spacing="4">
+                        <ImageIcon Source="ms-appx:///Assets/Icon/Forward.svg" Margin="0,0,0,0" Width="18" Foreground="Gray"/>
+                        <TextBlock Text="{x:Bind Modules.ModuleState.Forward.Count}" FontFamily="{ThemeResource MiSansRegular}" Foreground="Gray"/>
+                    </StackPanel>
+                </Button>
+                <Button Grid.Column="1" HorizontalAlignment="Center" Style="{StaticResource TransparentButton}">
+                    <StackPanel Orientation="Horizontal" Spacing="4">
+                        <ImageIcon Source="ms-appx:///Assets/Icon/Comment2.svg" Margin="0,0,0,0" Width="18" Foreground="Gray"/>
+                        <TextBlock Text="{x:Bind Modules.ModuleState.Comment.Count}" FontFamily="{ThemeResource MiSansRegular}" Foreground="Gray"/>
+                    </StackPanel>
+                </Button>
+                <Button Grid.Column="2" HorizontalAlignment="Center" Style="{StaticResource TransparentButton}">
+                    <StackPanel Orientation="Horizontal" Spacing="4">
+                        <ImageIcon Source="ms-appx:///Assets/Icon/Like2.svg" Margin="0,0,0,0" Width="18" Foreground="Gray"/>
+                        <TextBlock Text="{x:Bind Modules.ModuleState.Like.Count}" FontFamily="{ThemeResource MiSansRegular}" Foreground="Gray"/>
+                    </StackPanel>
+                </Button>
+            </Grid>
+        </StackPanel>
     </DataTemplate>
 </ResourceDictionary>

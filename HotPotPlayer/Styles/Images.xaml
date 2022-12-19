@@ -170,4 +170,12 @@
         <Setter Property="CornerRadius" Value="8" />
     </Style>
 
+    <Style x:Key="DynamicImageStyle" TargetType="cont:ImageEx2" BasedOn="{StaticResource ImageEx2BaseStyle}">
+        <Setter Property="IsCacheEnabled" Value="True" />
+        <Setter Property="EnableLazyLoading" Value="True" />
+        <Setter Property="PlaceholderStretch" Value="UniformToFill" />
+        <Setter Property="HorizontalAlignment" Value="Center" />
+        <Setter Property="VerticalAlignment" Value="Center" />
+    </Style>
+
 </ResourceDictionary>

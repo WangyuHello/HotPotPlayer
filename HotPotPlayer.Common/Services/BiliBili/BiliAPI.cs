@@ -17,6 +17,7 @@ using BiliBiliAPI.Models;
 using Newtonsoft.Json;
 using HotPotPlayer.Services.BiliBili.HomeVideo;
 using HotPotPlayer.Services.BiliBili.Reply;
+using HotPotPlayer.Services.BiliBili.Dynamic;
 
 namespace HotPotPlayer.Services.BiliBili
 {
@@ -275,9 +276,26 @@ namespace HotPotPlayer.Services.BiliBili
             return res;
         }
 
-        public async void GetDynamic()
+        public async Task<BiliResult<DynamicData>> GetDynamic(DynamicType type, int offset = 0, int page = 1)
         {
-            var r = await GetAsync("https://api.bilibili.com/x/polymer/web-dynamic/v1/feed/all", ResponseEnum.Web);
+            var typeStr = type switch
+            {
+                DynamicType.Video => "video",
+                DynamicType.All => "all",
+                DynamicType.AnimationPGC => "pgc",
+                DynamicType.Read => "article",
+                _ => throw new NotImplementedException(),
+            };
+            var r = await GetAsync("https://api.bilibili.com/x/polymer/web-dynamic/v1/feed/all", ResponseEnum.Web,
+                new Dictionary<string, string>
+                {
+                    ["timezone_offset"] = "-480",
+                    ["type"] = typeStr,
+                    ["page"] = page.ToString(),
+                });
+
+            var res = JsonConvert.DeserializeObject<BiliResult<DynamicData>>(r);
+            return res;
         }
 
         #region Cookie

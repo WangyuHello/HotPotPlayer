@@ -13,12 +13,12 @@
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
 
     <Grid Background="White" Padding="36,28,0,0">
-        <Pivot HeaderTemplate="{StaticResource GeneralPivotHeaderTemplate}">
+        <Pivot HeaderTemplate="{StaticResource GeneralPivotHeaderTemplate}" SelectedIndex="{x:Bind SelectedSubPage, Mode=TwoWay}">
             <PivotItem Header="推荐" Margin="0">
                 <bili:Main x:Name="BiliMain"/>
             </PivotItem>
             <PivotItem Header="动态" Margin="0">
-
+                <bili:Dynamic x:Name="BiliDynamic" Margin="-36,0,0,0"/>
             </PivotItem>
             <PivotItem Header="番剧" Margin="0">
 

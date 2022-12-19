@@ -533,6 +533,11 @@
         <Setter Property="Margin" Value="0,4" />
     </Style>
 
+    <Style TargetType="ListViewItem" x:Key="GeneralListContainerWithPadding2RoundStyle" BasedOn="{StaticResource GeneralListContainerStyle}">
+        <Setter Property="Margin" Value="0,4" />
+        <Setter Property="CornerRadius" Value="4" />
+    </Style>
+
     <Style x:Key="HorizontalListViewStyle" TargetType="ListView">
         <Setter Property="SelectionMode" Value="None" />
         <Setter Property="IsItemClickEnabled" Value="True" />

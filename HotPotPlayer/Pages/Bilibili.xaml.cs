@@ -1,4 +1,5 @@
 ﻿using BiliBiliAPI.Models;
+using CommunityToolkit.Mvvm.ComponentModel;
 using HotPotPlayer.Models.BiliBili;
 using HotPotPlayer.Video;
 using Microsoft.UI.Xaml;
@@ -31,6 +32,19 @@ namespace HotPotPlayer.Pages
             this.InitializeComponent();
         }
 
+        int selectedSubPage;
+        public int SelectedSubPage
+        {
+            get => selectedSubPage;
+            set => Set(ref selectedSubPage, value, nv =>
+            {
+                if (nv == 1)
+                {
+                    BiliDynamic.LoadDynamicAsync();
+                }
+            });
+        }
+
         bool IsFirstNavigate = true;
         protected override async void OnNavigatedTo(NavigationEventArgs e)
         {
@@ -49,7 +63,14 @@ namespace HotPotPlayer.Pages
 
         private void RefreshClick(object sender, RoutedEventArgs args)
         {
-            BiliMain.LoadPopularVideosAsync();
+            if (SelectedSubPage == 0)
+            {
+                BiliMain.LoadPopularVideosAsync();
+            }
+            else
+            {
+                BiliDynamic.LoadDynamicAsync(true);
+            }
         }
 
         private async void BVPlay(object sender, RoutedEventArgs args)

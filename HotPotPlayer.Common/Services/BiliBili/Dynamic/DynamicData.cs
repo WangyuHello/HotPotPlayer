@@ -21,58 +21,66 @@ namespace HotPotPlayer.Services.BiliBili.Dynamic
 
         [JsonProperty("update_num")]public int UpDateNum { get; set; }
 
-        [JsonProperty("items")]public List<DynamicDataList> DynamicList { get; set; }
+        [JsonProperty("items")]public List<DynamicItem> DynamicItems { get; set; }
     }
 
-    public class DynamicDataList
+    public class DynamicItem
     {
-        [JsonProperty("modules")] public DynamicList_Modules Modules { get; set; }
-        [JsonProperty("basic")] public DynamicList_Basic Basic { get; set; }
+        [JsonProperty("modules")] public DynamicItemModule Modules { get; set; }
+        [JsonProperty("basic")] public DynamicItemBasic Basic { get; set; }
         [JsonProperty("id_str")] public string ID { get; set; }
-        [JsonProperty("type")] public string DynamicType { get; set; }
-        [JsonProperty("visible")] public bool IsVisible { get; set; }
+        [JsonProperty("type")] public string Type { get; set; }
+        [JsonProperty("visible")] public bool Visible { get; set; }
+        [JsonProperty("orig")] public DynamicItem Origin { get; set; }
 
-        //忽略循环引用
-        [JsonProperty("orig")]
-        public DynamicDataList Orig { get; set; }
+        public bool HasOrigin => Origin != null;
     }
 
-    public class DynamicList_Modules
+    public class DynamicItemModule
     {
-        [JsonProperty("module_stat")]public Module_Stat State { get; set; }
+        [JsonProperty("module_stat")]public ModuleStat ModuleState { get; set; }
 
-        [JsonProperty("module_author")]public Module_Author Module_Author { get; set; }
+        [JsonProperty("module_author")]public ModuleAuthor ModuleAuthor { get; set; }
 
-        [JsonProperty("module_dynamic")]public Module_Dynamic Module_More { get; set; }
+        [JsonProperty("module_dynamic")]public ModuleDynamic ModuleDynamic { get; set; }
     }
 
-    public class Module_Dynamic
+    public class ModuleDynamic
     {
         [JsonProperty("additional")]public Additional Additional { get; set; }
         [JsonProperty("topic")]public object Topic { get; set; }
 
-        [JsonProperty("desc")]public Module_Desc Desc { get; set; }
+        [JsonProperty("desc")]public ModuleDesc Desc { get; set; }
 
-        [JsonProperty("major")]public Module_major Module_Major { get; set; }
+        [JsonProperty("major")]public ModuleMajor Major { get; set; }
+
+        public bool HasDesc => Desc != null && !string.IsNullOrEmpty(Desc.Text);
+
+        public bool HasArchive => Major != null && Major.Archive != null;
+
     }
 
-    public class Module_major
+    public class ModuleMajor
     {
         [JsonProperty("type")]public string Type { get; set; }
 
-        [JsonProperty("draw")]public Major_Draw Draw { get; set; }
+        [JsonProperty("draw")]public MajorDraw Draw { get; set; }
 
-        [JsonProperty("archive")]public Major_Acrchive Major_Acrchive { get; set; }
+        [JsonProperty("archive")]public MajorAcrchive Archive { get; set; }
 
+        [JsonProperty("pgc")]public MajorPgc PGC { get; set; }
 
-        [JsonProperty("pgc")]public Major_Pgc PGC { get; set; }
+        [JsonProperty("ugc_season")]public UGCSeason UGC_Season { get; set; }
 
-        [JsonProperty("ugc_season")]public UGC_Season UGC_Season { get; set; }
+        public bool IsSingleDraw => Draw != null && Draw.Items.Count == 1;
+
+        public bool IsMultiDraw => Draw != null && Draw.Items.Count > 1;
+
     }
 
-    public class UGC_Season
+    public class UGCSeason
     {
-        [JsonProperty("badge")]public Pgc_Badge UGC_Badge { get; set; }
+        [JsonProperty("badge")]public PgcBadge UgcBadge { get; set; }
 
         [JsonProperty("cover")]public string Cover { get; set; }
 
@@ -86,9 +94,9 @@ namespace HotPotPlayer.Services.BiliBili.Dynamic
         [JsonProperty("stat")]public AV_Stat Stat { get; set; }
     }
 
-    public class Major_Pgc
+    public class MajorPgc
     {
-        [JsonProperty("badge")]public Pgc_Badge Pgc_Badge { get; set; }
+        [JsonProperty("badge")]public PgcBadge Pgc_Badge { get; set; }
 
         [JsonProperty("cover")]public string Cover { get; set; }
 
@@ -108,7 +116,7 @@ namespace HotPotPlayer.Services.BiliBili.Dynamic
     }
 
 
-    public class Pgc_Badge
+    public class PgcBadge
     {
         public string bg_color { get; set; }
 
@@ -167,7 +175,7 @@ namespace HotPotPlayer.Services.BiliBili.Dynamic
         [JsonProperty("icon_web")]public string Icon_Web { get; set; }
     }
 
-    public class Major_Acrchive
+    public class MajorAcrchive
     {
         [JsonProperty("aid")]public string Aid { get; set; }
 
@@ -179,7 +187,7 @@ namespace HotPotPlayer.Services.BiliBili.Dynamic
 
         [JsonProperty("disable_preview")]public int DisablePreview { get; set; }
 
-        [JsonProperty("duration_text")]public string Duration { get; set; }
+        [JsonProperty("duration_text")]public string DurationText { get; set; }
 
         [JsonProperty("jump_url")]public string JumpUrl { get; set; }
 
@@ -198,11 +206,11 @@ namespace HotPotPlayer.Services.BiliBili.Dynamic
 
     }
 
-    public class Major_Draw
+    public class MajorDraw
     {
         [JsonProperty("id")]public string ID { get; set; }
 
-        [JsonProperty("items")]public List<DrawItem> DrawItems { get; set; }
+        [JsonProperty("items")]public List<DrawItem> Items { get; set; }
     }
 
 
@@ -210,13 +218,13 @@ namespace HotPotPlayer.Services.BiliBili.Dynamic
     {
         [JsonProperty("height")]public int Height { get; set; }
         [JsonProperty("size")]public double Size { get; set; }
-        [JsonProperty("src")]public string Cover { get; set; }
+        [JsonProperty("src")]public string Source { get; set; }
         [JsonProperty("width")]public int Width { get; set; }
 
         [JsonProperty("tags")]public List<object> Tags { get; set; }
     }
 
-    public class Module_Desc
+    public class ModuleDesc
     {
         [JsonProperty("rich_text_nodes")]public List<DescNodes> Text_Nodes { get; set; } 
         [JsonProperty("text")]public string Text { get; set; }
@@ -277,9 +285,9 @@ namespace HotPotPlayer.Services.BiliBili.Dynamic
         [JsonProperty("text")]public string Text { get; set; }
     }
 
-    public class Module_Author
+    public class ModuleAuthor
     {
-        [JsonProperty("face")]public string Cover { get;set; }
+        [JsonProperty("face")]public string Face { get;set; }
         [JsonProperty("face_nft")]public bool Face_NFT { get; set; }
 
         [JsonIgnore()]
@@ -297,7 +305,7 @@ namespace HotPotPlayer.Services.BiliBili.Dynamic
         [JsonProperty("pub_action")]public string Dynamic_Message { get; set; }
 
         [JsonProperty("pub_location_text")]public string Pub_Location_Text { get; set; }
-        [JsonProperty("pub_time")]public string Dynamic_Time { get; set; }
+        [JsonProperty("pub_time")]public string PubTime { get; set; }
 
         [JsonProperty("pub_ts")]public string Dynamic_DateTime { get;set; }
 
@@ -349,7 +357,7 @@ namespace HotPotPlayer.Services.BiliBili.Dynamic
         [JsonProperty("type")]public int Type { get; set; }
     }
 
-    public class Module_Stat
+    public class ModuleStat
     {
 
         [JsonProperty("comment")]public Comment Comment { get; set; }
@@ -371,7 +379,7 @@ namespace HotPotPlayer.Services.BiliBili.Dynamic
 
     }
 
-    public class DynamicList_Basic
+    public class DynamicItemBasic
     {
         [JsonProperty("comment_id_str")] public string BasicID { get; set; }
 
