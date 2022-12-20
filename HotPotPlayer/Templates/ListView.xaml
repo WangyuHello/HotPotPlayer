@@ -387,8 +387,9 @@
                 </Button>
             </Grid>
             <!--Content-->
-            <TextBlock Margin="0,8,0,0" Visibility="{x:Bind Modules.ModuleDynamic.HasDesc}" FontFamily="{ThemeResource MiSansRegular}" TextWrapping="Wrap" Text="{x:Bind Modules.ModuleDynamic.Desc.Text}"/>
-            
+            <!--<TextBlock Margin="0,8,0,0" Visibility="{x:Bind Modules.ModuleDynamic.HasDesc}" FontFamily="{ThemeResource MiSansRegular}" TextWrapping="Wrap" Text="{x:Bind Modules.ModuleDynamic.Desc.Text}"/>-->
+            <RichTextBlock Margin="0,8,0,0" Visibility="{x:Bind Modules.ModuleDynamic.HasDesc}" DataContext="{x:Bind }" Loaded="RichTextBlock_Loaded2" FontFamily="{ThemeResource MiSansRegular}" TextWrapping="Wrap" IsTextSelectionEnabled="False"/>
+
             <!--Article-->
             <StackPanel Margin="0,8,0,0" Visibility="{x:Bind Modules.ModuleDynamic.HasArticle}"
                         Padding="16,8" 

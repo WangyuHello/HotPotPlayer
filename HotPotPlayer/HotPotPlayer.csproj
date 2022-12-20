@@ -20,6 +20,11 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Content Remove="Assets\Emoji\[吃瓜].webp" />
+    <Content Remove="Assets\Emoji\[脱单doge].webp" />
+  </ItemGroup>
+
+  <ItemGroup>
     <None Remove="Assets\Background.png" />
     <None Remove="Assets\bilibili.svg" />
     <None Remove="Assets\Font\MiSans-Bold.ttf" />

@@ -307,6 +307,21 @@ namespace HotPotPlayer.Services.BiliBili
             return res;
         }
 
+        /// <summary>
+        /// https://github.com/SocialSisterYi/bilibili-API-collect/blob/master/search/search_request.md
+        /// </summary>
+        /// <param name="keyword"></param>
+        //public async void Search(string keyword)
+        //{
+        //    var r = await GetAsync("http://api.bilibili.com/x/web-interface/search/all/v2", ResponseEnum.Web,
+        //        new Dictionary<string, string>
+        //        {
+        //            ["keyword"] = keyword,
+        //        });
+        //    var res = JsonConvert.DeserializeObject<BiliResult<List<VideoContent>>>(r);
+        //    return res;
+        //}
+
         #region Cookie
         public static CookieCollection ParseCookies(IEnumerable<string> cookieHeaders)
         {

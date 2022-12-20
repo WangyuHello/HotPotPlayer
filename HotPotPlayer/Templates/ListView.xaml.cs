@@ -24,5 +24,14 @@ namespace HotPotPlayer.Templates
             rich.Blocks.Add(data.Modules.ModuleInteraction.Items[0].Desc.GenRichText);
             rich.Tag = 1;
         }
+
+        private void RichTextBlock_Loaded2(object sender, RoutedEventArgs e)
+        {
+            var rich = sender as RichTextBlock;
+            var data = rich.DataContext as DynamicItem;
+            if (!data.Modules.ModuleDynamic.HasDesc || rich.Tag != null) { return; }
+            rich.Blocks.Add(data.Modules.ModuleDynamic.Desc.GenRichText);
+            rich.Tag = 1;
+        }
     }
 }

@@ -1,7 +1,10 @@
 ﻿
 using BiliBiliAPI.Models.Account;
+using HotPotPlayer.UI.Controls;
 using Microsoft.UI.Text;
+using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Documents;
+using Microsoft.UI.Xaml.Media.Imaging;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System;
@@ -265,16 +268,31 @@ namespace HotPotPlayer.Services.BiliBili.Dynamic
             get
             {
                 var par = new Paragraph();
-                var runs = RichTextNodes.Select(r => new Run
-                {
-                    Text = r.Text,
-                    FontWeight = r.Type switch
+                IEnumerable<Inline> inlines = RichTextNodes.Select<DescNodes, Inline>(r =>
+                    r.Type switch
                     {
-                        "RICH_TEXT_NODE_TYPE_AT" => FontWeights.Bold,
-                        _ => FontWeights.Normal,
+                        "RICH_TEXT_NODE_TYPE_EMOJI" => new InlineUIContainer
+                        {
+                            Child = new Image
+                            {
+                                Source = new BitmapImage(new Uri(r.Emoji.IconUrl)),
+                                Width = 15,
+                                Height = 15
+                            }
+                        },
+                        _ => new Run
+                        {
+                            Text = r.Text,
+                            FontWeight = r.Type switch
+                            {
+                                "RICH_TEXT_NODE_TYPE_AT" => FontWeights.Bold,
+                                _ => FontWeights.Normal,
+                            }
+                        },
                     }
-                });
-                foreach (var item in runs)
+                );
+
+                foreach (var item in inlines)
                 {
                     par.Inlines.Add(item);
                 }
@@ -295,7 +313,7 @@ namespace HotPotPlayer.Services.BiliBili.Dynamic
 
     public class Emoji
     {
-        [JsonProperty("icon_url")]public string Cover { get; set; }
+        [JsonProperty("icon_url")]public string IconUrl { get; set; }
 
         [JsonProperty("size")]public string Size { get; set; }
 

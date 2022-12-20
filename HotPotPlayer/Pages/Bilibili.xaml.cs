@@ -76,6 +76,10 @@ namespace HotPotPlayer.Pages
         private async void BVPlay(object sender, RoutedEventArgs args)
         {
             var bv = BVID.Text;
+            if (string.IsNullOrEmpty(bv))
+            {
+                return;
+            }
             var video = (await BiliBiliService.API.GetVideoInfo(bv)).Data;
             NavigateTo("BilibiliSub.BiliVideoPlay", video);
         }
