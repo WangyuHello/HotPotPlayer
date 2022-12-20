@@ -488,4 +488,19 @@
         <Setter Property="Padding" Value="24" />
         <Setter Property="VerticalAlignment" Value="Center" />
     </Style>
+
+    <Style x:Key="HorizontalGridViewStyle" TargetType="GridView" >
+        <Setter Property="SelectionMode" Value="None" />
+        <Setter Property="ScrollViewer.VerticalScrollBarVisibility" Value="Hidden" />
+        <Setter Property="ScrollViewer.HorizontalScrollBarVisibility" Value="Hidden" />
+        <Setter Property="ScrollViewer.VerticalScrollMode" Value="Disabled" />
+        <Setter Property="ScrollViewer.HorizontalScrollMode" Value="Enabled" />
+        <Setter Property="IsItemClickEnabled" Value="True" />
+        <Setter Property="ShowsScrollingPlaceholders" Value="True" />
+        <Setter Property="Padding" Value="0" />
+    </Style>
+
+    <Style x:Key="CardGridContainerStyleCompact" TargetType="GridViewItem" BasedOn="{StaticResource CardGridContainerStyle}">
+        <Setter Property="Margin" Value="0,0,8,8" />
+    </Style>
 </ResourceDictionary>

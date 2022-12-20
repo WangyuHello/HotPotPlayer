@@ -1,11 +1,15 @@
 ﻿
 using BiliBiliAPI.Models.Account;
+using Microsoft.UI.Text;
+using Microsoft.UI.Xaml.Documents;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Windows.UI.Text;
 
 namespace HotPotPlayer.Services.BiliBili.Dynamic
 {
@@ -38,11 +42,26 @@ namespace HotPotPlayer.Services.BiliBili.Dynamic
 
     public class DynamicItemModule
     {
-        [JsonProperty("module_stat")]public ModuleStat ModuleState { get; set; }
+        [JsonProperty("module_stat")] public ModuleStat ModuleState { get; set; }
 
-        [JsonProperty("module_author")]public ModuleAuthor ModuleAuthor { get; set; }
+        [JsonProperty("module_author")] public ModuleAuthor ModuleAuthor { get; set; }
 
-        [JsonProperty("module_dynamic")]public ModuleDynamic ModuleDynamic { get; set; }
+        [JsonProperty("module_dynamic")] public ModuleDynamic ModuleDynamic { get; set; }
+
+        [JsonProperty("module_interaction")] public ModuleInteraction ModuleInteraction { get; set; }
+
+        public bool HasInteraction => ModuleInteraction != null && ModuleInteraction.Items != null && ModuleInteraction.Items.Count > 0;
+    }
+
+    public class ModuleInteraction
+    {
+        [JsonProperty("items")] public List<InteractionItem> Items { get; set; }
+    }
+
+    public class InteractionItem
+    {
+        [JsonProperty("type")] public string Type { get; set; }
+        [JsonProperty("desc")] public ModuleDesc Desc { get; set; }
     }
 
     public class ModuleDynamic
@@ -57,7 +76,10 @@ namespace HotPotPlayer.Services.BiliBili.Dynamic
         public bool HasDesc => Desc != null && !string.IsNullOrEmpty(Desc.Text);
 
         public bool HasArchive => Major != null && Major.Archive != null;
-
+        public bool HasArticle => Major != null && Major.Article != null;
+        public bool HasArticleCover => HasArticle && Major.Article.Covers != null && Major.Article.Covers.Any();
+        public bool IsSingleDraw => Major != null && Major.Draw != null && Major.Draw.Items.Count == 1;
+        public bool IsMultiDraw => Major != null && Major.Draw != null && Major.Draw.Items.Count > 1;
     }
 
     public class ModuleMajor
@@ -66,16 +88,23 @@ namespace HotPotPlayer.Services.BiliBili.Dynamic
 
         [JsonProperty("draw")]public MajorDraw Draw { get; set; }
 
-        [JsonProperty("archive")]public MajorAcrchive Archive { get; set; }
+        [JsonProperty("archive")]public MajorArchive Archive { get; set; }
 
         [JsonProperty("pgc")]public MajorPgc PGC { get; set; }
 
         [JsonProperty("ugc_season")]public UGCSeason UGC_Season { get; set; }
 
-        public bool IsSingleDraw => Draw != null && Draw.Items.Count == 1;
+        [JsonProperty("article")] public MajorArticle Article { get; set; }
+    }
 
-        public bool IsMultiDraw => Draw != null && Draw.Items.Count > 1;
-
+    public class MajorArticle
+    {
+        [JsonProperty("covers")] public string[] Covers { get; set; }
+        [JsonProperty("desc")] public string Desc { get; set; }
+        [JsonProperty("id")] public string Id { get; set; }
+        [JsonProperty("jump_url")] public string JumpUrl { get; set; }
+        [JsonProperty("label")] public string Label { get; set; }
+        [JsonProperty("title")] public string Title { get; set; }
     }
 
     public class UGCSeason
@@ -175,7 +204,7 @@ namespace HotPotPlayer.Services.BiliBili.Dynamic
         [JsonProperty("icon_web")]public string Icon_Web { get; set; }
     }
 
-    public class MajorAcrchive
+    public class MajorArchive
     {
         [JsonProperty("aid")]public string Aid { get; set; }
 
@@ -226,8 +255,32 @@ namespace HotPotPlayer.Services.BiliBili.Dynamic
 
     public class ModuleDesc
     {
-        [JsonProperty("rich_text_nodes")]public List<DescNodes> Text_Nodes { get; set; } 
-        [JsonProperty("text")]public string Text { get; set; }
+        [JsonProperty("rich_text_nodes")] public List<DescNodes> RichTextNodes { get; set; } 
+        [JsonProperty("text")] public string Text { get; set; }
+
+        public string SimpleText => string.Join("", RichTextNodes.Select(r => r.Text));
+
+        public Paragraph GenRichText
+        {
+            get
+            {
+                var par = new Paragraph();
+                var runs = RichTextNodes.Select(r => new Run
+                {
+                    Text = r.Text,
+                    FontWeight = r.Type switch
+                    {
+                        "RICH_TEXT_NODE_TYPE_AT" => FontWeights.Bold,
+                        _ => FontWeights.Normal,
+                    }
+                });
+                foreach (var item in runs)
+                {
+                    par.Inlines.Add(item);
+                }
+                return par;
+            }
+        }
     }
 
     public class DescNodes

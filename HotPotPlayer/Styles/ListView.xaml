@@ -533,6 +533,10 @@
         <Setter Property="Margin" Value="0,4" />
     </Style>
 
+    <Style TargetType="ListViewItem" x:Key="GeneralListContainerWithPadding3Style" BasedOn="{StaticResource GeneralListContainerStyle}">
+        <Setter Property="Margin" Value="0,0,8,0" />
+    </Style>
+
     <Style TargetType="ListViewItem" x:Key="GeneralListContainerWithPadding2RoundStyle" BasedOn="{StaticResource GeneralListContainerStyle}">
         <Setter Property="Margin" Value="0,4" />
         <Setter Property="CornerRadius" Value="4" />
@@ -546,6 +550,8 @@
         <Setter Property="ScrollViewer.HorizontalScrollBarVisibility" Value="Hidden" />
         <Setter Property="ScrollViewer.VerticalScrollMode" Value="Disabled" />
         <Setter Property="ScrollViewer.HorizontalScrollMode" Value="Enabled" />
+        <Setter Property="ScrollViewer.IsHorizontalScrollChainingEnabled" Value="True" />
+        <Setter Property="ScrollViewer.IsVerticalScrollChainingEnabled" Value="True" />
         <Setter Property="ItemContainerStyle" Value="{StaticResource GeneralListContainerWithPaddingStyle}" />
         <Setter Property="ItemsPanel">
             <Setter.Value>

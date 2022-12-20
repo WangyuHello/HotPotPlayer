@@ -20,6 +20,7 @@ using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
+using Windows.System;
 
 // To learn more about WinUI, the WinUI project structure,
 // and more about our project templates, see: http://aka.ms/winui-project-info.
@@ -65,6 +66,11 @@ namespace HotPotPlayer.Pages.BilibiliSub
                 var bvid = v.Origin.Modules.ModuleDynamic.Major.Archive.Bvid;
                 var v2 = (await BiliBiliService.API.GetVideoInfo(bvid)).Data;
                 NavigateTo("BilibiliSub.BiliVideoPlay", v2);
+            }
+            else if(v.Modules.ModuleDynamic?.Major?.Article != null)
+            {
+                var url = v.Modules.ModuleDynamic.Major.Article.JumpUrl;
+                await Launcher.LaunchUriAsync(new Uri("https:" + url));
             }
 
         }
