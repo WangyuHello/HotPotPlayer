@@ -275,9 +275,13 @@ namespace HotPotPlayer.Services.BiliBili.Dynamic
                         {
                             Child = new Image
                             {
-                                Source = new BitmapImage(new Uri(r.Emoji.IconUrl)),
+                                Source = new BitmapImage(new Uri(r.Emoji.IconUrl))
+                                {
+                                    DecodePixelHeight = 15,
+                                    DecodePixelWidth = 15
+                                },
                                 Width = 15,
-                                Height = 15
+                                Height = 15,
                             }
                         },
                         _ => new Run
