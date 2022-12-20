@@ -72,6 +72,11 @@ namespace HotPotPlayer.Pages.BilibiliSub
                 var url = v.Modules.ModuleDynamic.Major.Article.JumpUrl;
                 await Launcher.LaunchUriAsync(new Uri("https:" + url));
             }
+            else if(v.Modules.ModuleDynamic?.Major?.LiveRcmd != null)
+            {
+                var url = v.Modules.ModuleDynamic.Major.LiveRcmd.Link;
+                await Launcher.LaunchUriAsync(new Uri(url));
+            }
 
         }
     }

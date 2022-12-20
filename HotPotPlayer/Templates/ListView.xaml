@@ -381,7 +381,7 @@
                 </Grid.ColumnDefinitions>
                 <cont2:ImageEx2 Grid.RowSpan="2" Margin="0,0,8,0" Width="40" Height="40" Source="{x:Bind Modules.ModuleAuthor.Face}" CornerRadius="20" Style="{StaticResource LocalMusicImageStyle}"/>
                 <TextBlock Grid.Column="1" VerticalAlignment="Bottom" FontFamily="{ThemeResource MiSansMedium}" Text="{x:Bind Modules.ModuleAuthor.Name}" Foreground="#fb799d"/>
-                <TextBlock Grid.Column="1" VerticalAlignment="Top" Margin="0,2,0,0" Grid.Row="1" FontFamily="{ThemeResource MiSansRegular}" FontSize="12" Foreground="Gray" Text="{x:Bind Modules.ModuleAuthor.PubTime}"/>
+                <TextBlock Grid.Column="1" VerticalAlignment="Top" Margin="0,2,0,0" Grid.Row="1" FontFamily="{ThemeResource MiSansRegular}" FontSize="12" Foreground="Gray" Text="{x:Bind Modules.ModuleAuthor.GetPubTime}"/>
                 <Button Grid.Column="2" Grid.RowSpan="2" Style="{StaticResource TransparentButton}" CornerRadius="4" Padding="4" Tag="{x:Bind }">
                     <SymbolIcon Symbol="More" />
                 </Button>
@@ -441,6 +441,12 @@
             <StackPanel Margin="0,8,0,0" Spacing="4" Visibility="{x:Bind Modules.ModuleDynamic.HasArchive}">
                 <cont2:ImageEx2 Source="{x:Bind Modules.ModuleDynamic.Major.Archive.Cover}" CornerRadius="4" Style="{StaticResource DynamicImageStyle}"/>
                 <TextBlock FontSize="14" Text="{x:Bind Modules.ModuleDynamic.Major.Archive.Title}" FontFamily="{ThemeResource MiSansRegular}" TextWrapping="Wrap"/>
+            </StackPanel>
+            
+            <!--Live-->
+            <StackPanel Margin="0,8,0,0" Spacing="4" Visibility="{x:Bind Modules.ModuleDynamic.HasLive}">
+                <cont2:ImageEx2 Source="{x:Bind Modules.ModuleDynamic.Major.LiveRcmd.Cover}" CornerRadius="4" Style="{StaticResource DynamicImageStyle}"/>
+                <TextBlock FontSize="14" Text="{x:Bind Modules.ModuleDynamic.Major.LiveRcmd.Title}" FontFamily="{ThemeResource MiSansRegular}" TextWrapping="Wrap"/>
             </StackPanel>
             
             <!--Interaction-->

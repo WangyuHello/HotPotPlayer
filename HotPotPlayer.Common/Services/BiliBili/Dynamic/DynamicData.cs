@@ -80,6 +80,7 @@ namespace HotPotPlayer.Services.BiliBili.Dynamic
 
         public bool HasArchive => Major != null && Major.Archive != null;
         public bool HasArticle => Major != null && Major.Article != null;
+        public bool HasLive => Major != null && Major.LiveRcmd != null;
         public bool HasArticleCover => HasArticle && Major.Article.Covers != null && Major.Article.Covers.Any();
         public bool IsSingleDraw => Major != null && Major.Draw != null && Major.Draw.Items.Count == 1;
         public bool IsMultiDraw => Major != null && Major.Draw != null && Major.Draw.Items.Count > 1;
@@ -98,6 +99,25 @@ namespace HotPotPlayer.Services.BiliBili.Dynamic
         [JsonProperty("ugc_season")]public UGCSeason UGC_Season { get; set; }
 
         [JsonProperty("article")] public MajorArticle Article { get; set; }
+
+        [JsonProperty("live_rcmd")] public LiveRcmd LiveRcmd { get; set; }
+    }
+
+    public class LiveRcmd
+    {
+        [JsonProperty("content")] public string Content { get; set; }
+        [JsonProperty("reserve_type")] public string ReserveType { get; set; }
+
+        [JsonIgnore]
+        private JObject contentJson;
+
+        [JsonIgnore]
+        public JObject ContentJson => contentJson ??= JObject.Parse(Content);
+
+        public string Cover => ContentJson["live_play_info"]["cover"].Value<string>();
+
+        public string Title => ContentJson["live_play_info"]["title"].Value<string>();
+        public string Link => ContentJson["live_play_info"]["link"].Value<string>();
     }
 
     public class MajorArticle
@@ -377,14 +397,17 @@ namespace HotPotPlayer.Services.BiliBili.Dynamic
 
         [JsonProperty("name")]public string Name { get; set; }
 
-        [JsonProperty("pub_action")]public string Dynamic_Message { get; set; }
+        [JsonProperty("pub_action")]public string PubAction { get; set; }
 
         [JsonProperty("pub_location_text")]public string Pub_Location_Text { get; set; }
+
         [JsonProperty("pub_time")]public string PubTime { get; set; }
 
         [JsonProperty("pub_ts")]public string Dynamic_DateTime { get;set; }
 
         [JsonProperty("type")]public string UpType { get; set; }
+
+        public string GetPubTime => string.IsNullOrEmpty(PubTime) ? PubAction : PubTime;
 
 
         [JsonProperty("official_verify")]public Official_verify Official_Verify { get; set; }
