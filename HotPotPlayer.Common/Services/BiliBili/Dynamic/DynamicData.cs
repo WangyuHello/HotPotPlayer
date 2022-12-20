@@ -118,6 +118,8 @@ namespace HotPotPlayer.Services.BiliBili.Dynamic
 
         public string Title => ContentJson["live_play_info"]["title"].Value<string>();
         public string Link => ContentJson["live_play_info"]["link"].Value<string>();
+        public string TextLarge => ContentJson["live_play_info"]["watched_show"]["text_large"].Value<string>();
+        public string AreaName => ContentJson["live_play_info"]["area_name"].Value<string>();
     }
 
     public class MajorArticle
