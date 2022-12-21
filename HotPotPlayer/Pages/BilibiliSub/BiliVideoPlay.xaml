@@ -11,6 +11,7 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:video="using:HotPotPlayer.Video"
     xmlns:cont2="using:HotPotPlayer.UI.Controls"
+    xmlns:cont3="using:HotPotPlayer.Controls.BilibiliSub"
     mc:Ignorable="d"
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
 
@@ -65,10 +66,16 @@
                 </Button>
             </StackPanel>
             <StackPanel Grid.Row="2" Orientation="Horizontal" Margin="0,0,0,16">
-                <cont2:ImageEx2 Source="{x:Bind Video.Up.Face, Mode=OneWay}" Style="{StaticResource LocalMusicImageStyle}" 
-                    Width="24" Height="24"
-                    CornerRadius="16"
-                />
+                <cont2:ImageEx2 x:Name="UserAvatar" Source="{x:Bind Video.Up.Face, Mode=OneWay}" Style="{StaticResource LocalMusicImageStyle}" 
+                    Width="24" Height="24" Tapped="UserAvatar_Tapped"
+                    CornerRadius="16" >
+                    <cont2:ImageEx2.ContextFlyout>
+                        <Flyout>
+                            <cont3:UserCard x:Name="UserAvatarFlyout" Margin="-16" Mid="{x:Bind Video.Up.Mid}" />
+                        </Flyout>
+                    </cont2:ImageEx2.ContextFlyout>
+                </cont2:ImageEx2>
+
                 <TextBlock VerticalAlignment="Center" Margin="8,0" Text="{x:Bind Video.Up.Name, Mode=OneWay}" FontFamily="{ThemeResource MiSansRegular}" FontSize="15" IsTextSelectionEnabled="True"/>
                 <ImageIcon Source="ms-appx:///Assets/Icon/View.svg" Margin="12,0,0,0" Width="20" Foreground="Gray"/>
                 <TextBlock VerticalAlignment="Center" Margin="4,0" Text="{x:Bind Video.Stat.GetViews(), Mode=OneWay}" Foreground="Gray" FontFamily="{ThemeResource MiSansRegular}" />

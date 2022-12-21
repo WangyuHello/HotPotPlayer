@@ -136,5 +136,11 @@ namespace HotPotPlayer.Pages.BilibiliSub
             OnPropertyChanged(propertyName: nameof(Replies));
             OnPropertyChanged(propertyName: nameof(RelatedVideos));
         }
+
+        private void UserAvatar_Tapped(object sender, TappedRoutedEventArgs e)
+        {
+            UserAvatarFlyout.LoadUserCardBundle();
+            UserAvatar.ContextFlyout.ShowAt(UserAvatar);
+        }
     }
 }

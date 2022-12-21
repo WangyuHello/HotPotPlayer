@@ -1,4 +1,5 @@
-﻿using HotPotPlayer.Services.BiliBili.Dynamic;
+﻿using HotPotPlayer.Controls.BilibiliSub;
+using HotPotPlayer.Services.BiliBili.Dynamic;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using System;
@@ -32,6 +33,14 @@ namespace HotPotPlayer.Templates
             if (!data.Modules.ModuleDynamic.HasDesc || rich.Tag != null) { return; }
             rich.Blocks.Add(data.Modules.ModuleDynamic.Desc.GenRichText);
             rich.Tag = 1;
+        }
+
+        private void UserAvatarClick(object sender, RoutedEventArgs e)
+        {
+            var flyout = ((UIElement)sender).ContextFlyout as Flyout;
+            var card = flyout.Content as UserCard;
+            card.LoadUserCardBundle();
+            flyout.ShowAt(sender as FrameworkElement);
         }
     }
 }

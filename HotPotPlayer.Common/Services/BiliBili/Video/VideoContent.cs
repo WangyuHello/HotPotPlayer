@@ -356,7 +356,7 @@ namespace HotPotPlayer.Services.BiliBili.Video
         /// UP主的UID
         /// </summary>
         [JsonProperty("mid")]
-        public string mid { get; set; }
+        public string Mid { get; set; }
 
         [JsonProperty("face")]
         public string Face { get; set; }

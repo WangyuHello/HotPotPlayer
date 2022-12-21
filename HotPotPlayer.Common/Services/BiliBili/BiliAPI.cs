@@ -18,6 +18,7 @@ using Newtonsoft.Json;
 using HotPotPlayer.Services.BiliBili.HomeVideo;
 using HotPotPlayer.Services.BiliBili.Reply;
 using HotPotPlayer.Services.BiliBili.Dynamic;
+using HotPotPlayer.Services.BiliBili.User;
 
 namespace HotPotPlayer.Services.BiliBili
 {
@@ -321,6 +322,19 @@ namespace HotPotPlayer.Services.BiliBili
         //    var res = JsonConvert.DeserializeObject<BiliResult<List<VideoContent>>>(r);
         //    return res;
         //}
+
+        // https://github.com/SocialSisterYi/bilibili-API-collect/blob/master/user/info.md
+        public async Task<BiliResult<UserCardBundle>> GetUserCardBundle(string mid, bool requestTopPhoto)
+        {
+            var r = await GetAsync("http://api.bilibili.com/x/web-interface/card", ResponseEnum.Web,
+                new Dictionary<string, string>
+                {
+                    ["mid"] = mid,
+                    ["photo"] = requestTopPhoto ? "true" : "false"
+                });
+            var res = JsonConvert.DeserializeObject<BiliResult<UserCardBundle>>(r);
+            return res;
+        }
 
         #region Cookie
         public static CookieCollection ParseCookies(IEnumerable<string> cookieHeaders)

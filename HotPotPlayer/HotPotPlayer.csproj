@@ -46,6 +46,7 @@
     <None Remove="Assets\Icon\View.svg" />
     <None Remove="Assets\nico.png" />
     <None Remove="Controls\AlbumPopup.xaml" />
+    <None Remove="Controls\BilibiliSub\UserCard.xaml" />
     <None Remove="Controls\CloudAlbumPopup.xaml" />
     <None Remove="Controls\CloudPlayListPopup.xaml" />
     <None Remove="Controls\CommentFloorDialog.xaml" />
@@ -358,6 +359,11 @@
   </ItemGroup>
   <ItemGroup>
     <Page Update="Pages\BilibiliSub\Login.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+  </ItemGroup>
+  <ItemGroup>
+    <Page Update="Controls\BilibiliSub\UserCard.xaml">
       <Generator>MSBuild:Compile</Generator>
     </Page>
   </ItemGroup>

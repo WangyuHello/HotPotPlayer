@@ -145,7 +145,7 @@ namespace HotPotPlayer.Services.BiliBili.Dynamic
 
         [JsonProperty("title")]public string Title { get; set; }
 
-        [JsonProperty("stat")]public AV_Stat Stat { get; set; }
+        [JsonProperty("stat")]public ArchiveStat Stat { get; set; }
     }
 
     public class MajorPgc
@@ -164,7 +164,7 @@ namespace HotPotPlayer.Services.BiliBili.Dynamic
 
         [JsonProperty("title")]public string Title { get; set; }
 
-        [JsonProperty("stat")]public AV_Stat Stat { get; set; }
+        [JsonProperty("stat")]public ArchiveStat Stat { get; set; }
 
         [JsonProperty("type")]public int Type { get; set; }
     }
@@ -249,15 +249,19 @@ namespace HotPotPlayer.Services.BiliBili.Dynamic
 
         [JsonProperty("type")]public int Type { get; set; }
 
-        [JsonProperty("stat")]public AV_Stat State { get; set; }
+        [JsonProperty("stat")]public ArchiveStat Stat { get; set; }
 
     }
 
-    public class AV_Stat
+    public class ArchiveStat
     {
-        [JsonProperty("danmaku")]public string DanmakuCount { get; set; }
-        [JsonProperty("play")]public string ViewCount { get; set; }
+        [JsonProperty("danmaku")] public string DanmakuCount { get; set; }
 
+        public string GetDanmaku => DanmakuCount + "弹幕";
+
+        [JsonProperty("play")] public string PlayCount { get; set; }
+
+        public string GetPlay => PlayCount + "观看";
     }
 
     public class MajorDraw

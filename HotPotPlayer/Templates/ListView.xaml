@@ -7,6 +7,7 @@
     xmlns:helper="using:HotPotPlayer.Pages.Helper"
     xmlns:conv="using:HotPotPlayer.Converters"
     xmlns:cont2="using:HotPotPlayer.UI.Controls"
+    xmlns:cont3="using:HotPotPlayer.Controls.BilibiliSub"
     xmlns:brep="using:HotPotPlayer.Services.BiliBili.Reply"
     xmlns:dyn="using:HotPotPlayer.Services.BiliBili.Dynamic"
     xmlns:local="using:HotPotPlayer.Templates">
@@ -379,7 +380,14 @@
                     <ColumnDefinition Width="*" />
                     <ColumnDefinition Width="Auto" />
                 </Grid.ColumnDefinitions>
-                <cont2:ImageEx2 Grid.RowSpan="2" Margin="0,0,8,0" Width="40" Height="40" Source="{x:Bind Modules.ModuleAuthor.Face}" CornerRadius="20" Style="{StaticResource LocalMusicImageStyle}"/>
+                <Button Grid.RowSpan="2" Margin="0,0,8,0" Click="UserAvatarClick" Style="{StaticResource TransparentButton}">
+                    <cont2:ImageEx2  Width="40" Height="40" Source="{x:Bind Modules.ModuleAuthor.Face}" CornerRadius="20" Style="{StaticResource LocalMusicImageStyle}" />
+                    <Button.ContextFlyout>
+                        <Flyout>
+                            <cont3:UserCard Margin="-16" Mid="{x:Bind Modules.ModuleAuthor.Mid}" />
+                        </Flyout>
+                    </Button.ContextFlyout>
+                </Button>
                 <TextBlock Grid.Column="1" VerticalAlignment="Bottom" FontFamily="{ThemeResource MiSansMedium}" Text="{x:Bind Modules.ModuleAuthor.Name}" Foreground="#fb799d"/>
                 <TextBlock Grid.Column="1" VerticalAlignment="Top" Margin="0,2,0,0" Grid.Row="1" FontFamily="{ThemeResource MiSansRegular}" FontSize="12" Foreground="Gray" Text="{x:Bind Modules.ModuleAuthor.GetPubTime}"/>
                 <Button Grid.Column="2" Grid.RowSpan="2" Style="{StaticResource TransparentButton}" CornerRadius="4" Padding="4" Tag="{x:Bind }">
@@ -426,8 +434,31 @@
                     <TextBlock VerticalAlignment="Center" Text="{x:Bind Origin.Modules.ModuleAuthor.Name}" FontFamily="{ThemeResource MiSansRegular}" Foreground="#00a1d6"/>
                 </StackPanel>
                 <TextBlock Margin="0,8,0,0" Visibility="{x:Bind Origin.Modules.ModuleDynamic.HasDesc}" FontFamily="{ThemeResource MiSansRegular}" TextWrapping="Wrap" Text="{x:Bind Origin.Modules.ModuleDynamic.Desc.Text}"/>
-                <cont2:ImageEx2 Margin="0,8,0,0" Visibility="{x:Bind Origin.Modules.ModuleDynamic.HasArchive}" Source="{x:Bind Origin.Modules.ModuleDynamic.Major.Archive.Cover}" CornerRadius="4" Style="{StaticResource DynamicImageStyle}"/>
-                <TextBlock Margin="0,8,0,0" Visibility="{x:Bind Origin.Modules.ModuleDynamic.HasArchive}" FontSize="13" Text="{x:Bind Origin.Modules.ModuleDynamic.Major.Archive.Title}" FontFamily="{ThemeResource MiSansRegular}" TextWrapping="Wrap"/>
+                <Grid Margin="0,8,0,0" Visibility="{x:Bind Origin.Modules.ModuleDynamic.HasArchive}">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                    </Grid.RowDefinitions>
+                    <cont2:ImageEx2 Source="{x:Bind Origin.Modules.ModuleDynamic.Major.Archive.Cover}" CornerRadius="4" Style="{StaticResource DynamicImageStyle}"/>
+
+                    <Grid VerticalAlignment="Bottom" Padding="12,8">
+                        <Grid.Background>
+                            <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
+                                <GradientStop Offset="0" Color="Transparent"/>
+                                <GradientStop Offset="0.2" Color="#10000000"/>
+                                <GradientStop Offset="0.9" Color="#50000000"/>
+                            </LinearGradientBrush>
+                        </Grid.Background>
+                        <StackPanel Orientation="Horizontal" Spacing="16">
+                            <Border Background="#80000000" CornerRadius="4" Padding="8,4">
+                                <TextBlock Foreground="White" FontSize="12" Text="{x:Bind Origin.Modules.ModuleDynamic.Major.Archive.DurationText}" FontFamily="{ThemeResource MiSansRegular}" />
+                            </Border>
+                            <TextBlock VerticalAlignment="Center" FontSize="12" Foreground="White" Text="{x:Bind Origin.Modules.ModuleDynamic.Major.Archive.Stat.GetPlay}" FontFamily="{ThemeResource MiSansRegular}" />
+                            <TextBlock VerticalAlignment="Center" FontSize="12" Foreground="White" Text="{x:Bind Origin.Modules.ModuleDynamic.Major.Archive.Stat.GetDanmaku}" FontFamily="{ThemeResource MiSansRegular}" />
+                        </StackPanel>
+                    </Grid>
+                    <TextBlock Grid.Row="1" Margin="0,4,0,0" FontSize="14" Text="{x:Bind Origin.Modules.ModuleDynamic.Major.Archive.Title}" FontFamily="{ThemeResource MiSansMedium}" TextWrapping="Wrap"/>
+                </Grid>
                 <ListView Margin="0,8,0,0" Visibility="{x:Bind Origin.Modules.ModuleDynamic.IsMultiDraw}" 
                       ItemsSource="{x:Bind Origin.Modules.ModuleDynamic.Major.Draw.Items}" 
                       Style="{StaticResource HorizontalListViewStyle}"
@@ -438,10 +469,31 @@
             </StackPanel>
 
             <!--Archive-->
-            <StackPanel Margin="0,8,0,0" Spacing="4" Visibility="{x:Bind Modules.ModuleDynamic.HasArchive}">
+            <Grid Margin="0,8,0,0" Visibility="{x:Bind Modules.ModuleDynamic.HasArchive}">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
                 <cont2:ImageEx2 Source="{x:Bind Modules.ModuleDynamic.Major.Archive.Cover}" CornerRadius="4" Style="{StaticResource DynamicImageStyle}"/>
-                <TextBlock FontSize="14" Text="{x:Bind Modules.ModuleDynamic.Major.Archive.Title}" FontFamily="{ThemeResource MiSansRegular}" TextWrapping="Wrap"/>
-            </StackPanel>
+
+                <Grid VerticalAlignment="Bottom" Padding="12,8">
+                    <Grid.Background>
+                        <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
+                            <GradientStop Offset="0" Color="Transparent"/>
+                            <GradientStop Offset="0.2" Color="#10000000"/>
+                            <GradientStop Offset="0.9" Color="#50000000"/>
+                        </LinearGradientBrush>
+                    </Grid.Background>
+                    <StackPanel Orientation="Horizontal" Spacing="16">
+                        <Border Background="#80000000" CornerRadius="4" Padding="8,4">
+                            <TextBlock Foreground="White" FontSize="12" Text="{x:Bind Modules.ModuleDynamic.Major.Archive.DurationText}" FontFamily="{ThemeResource MiSansRegular}" />
+                        </Border>
+                        <TextBlock VerticalAlignment="Center" FontSize="12" Foreground="White" Text="{x:Bind Modules.ModuleDynamic.Major.Archive.Stat.GetPlay}" FontFamily="{ThemeResource MiSansRegular}" />
+                        <TextBlock VerticalAlignment="Center" FontSize="12" Foreground="White" Text="{x:Bind Modules.ModuleDynamic.Major.Archive.Stat.GetDanmaku}" FontFamily="{ThemeResource MiSansRegular}" />
+                    </StackPanel>
+                </Grid>
+                <TextBlock Grid.Row="1" Margin="0,4,0,0" FontSize="14" Text="{x:Bind Modules.ModuleDynamic.Major.Archive.Title}" FontFamily="{ThemeResource MiSansMedium}" TextWrapping="Wrap"/>
+            </Grid>
             
             <!--Live-->
             <Grid Margin="0,8,0,0" Visibility="{x:Bind Modules.ModuleDynamic.HasLive}">
