@@ -395,8 +395,12 @@
                 </Button>
             </Grid>
             <!--Content-->
+            <ContentControl Margin="0,8,0,0" Visibility="{x:Bind Modules.ModuleDynamic.HasDesc}" DataContext="{x:Bind }"
+                            FontFamily="{ThemeResource MiSansRegular}"
+                            Content="{x:Bind Modules.ModuleDynamic.Desc.GenRichTextBlock}"
+                            />
             <!--<TextBlock Margin="0,8,0,0" Visibility="{x:Bind Modules.ModuleDynamic.HasDesc}" FontFamily="{ThemeResource MiSansRegular}" TextWrapping="Wrap" Text="{x:Bind Modules.ModuleDynamic.Desc.Text}"/>-->
-            <RichTextBlock Margin="0,8,0,0" Visibility="{x:Bind Modules.ModuleDynamic.HasDesc}" DataContext="{x:Bind }" Loaded="RichTextBlock_Loaded2" FontFamily="{ThemeResource MiSansRegular}" TextWrapping="Wrap" IsTextSelectionEnabled="False"/>
+            <!--<RichTextBlock  Loaded="RichTextBlock_Loaded2" FontFamily="{ThemeResource MiSansRegular}" TextWrapping="Wrap" IsTextSelectionEnabled="False"/>-->
 
             <!--Article-->
             <StackPanel Margin="0,8,0,0" Visibility="{x:Bind Modules.ModuleDynamic.HasArticle}"
@@ -533,7 +537,11 @@
                 <Rectangle Width="2" Fill="LightGray" VerticalAlignment="Stretch"/>
                 <ImageIcon Margin="8,0" Grid.Column="1" Source="ms-appx:///Assets/Icon/Comment2.svg" VerticalAlignment="Center" Width="14" Foreground="Gray"/>
                 <!--<TextBlock Grid.Column="2" VerticalAlignment="Center" Text="{x:Bind Modules.ModuleInteraction.Items[0].Desc.SimpleText}" FontFamily="{ThemeResource MiSansRegular}" />-->
-                <RichTextBlock Grid.Column="2" VerticalAlignment="Center" DataContext="{x:Bind }" Loaded="RichTextBlock_Loaded" FontFamily="{ThemeResource MiSansRegular}" />
+                <!--<RichTextBlock Grid.Column="2" VerticalAlignment="Center" DataContext="{x:Bind }" Loaded="RichTextBlock_Loaded" FontFamily="{ThemeResource MiSansRegular}" />-->
+                <ContentControl Grid.Column="2" VerticalAlignment="Center" DataContext="{x:Bind }"
+                                FontFamily="{ThemeResource MiSansRegular}"
+                                Content="{x:Bind Modules.ModuleInteraction.Items[0].Desc.GenRichTextBlock}"
+                                />
             </Grid>
             
             <!--ThreeButton-->

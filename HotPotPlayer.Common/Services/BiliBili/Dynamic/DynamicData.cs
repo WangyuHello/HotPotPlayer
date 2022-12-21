@@ -289,6 +289,20 @@ namespace HotPotPlayer.Services.BiliBili.Dynamic
 
         public string SimpleText => string.Join("", RichTextNodes.Select(r => r.Text));
 
+        public RichTextBlock GenRichTextBlock
+        {
+            get
+            {
+                var b = new RichTextBlock
+                {
+                    TextWrapping = Microsoft.UI.Xaml.TextWrapping.Wrap,
+                    IsTextSelectionEnabled = true,
+                };
+                b.Blocks.Add(GenRichText);
+                return b;
+            }
+        }
+
         public Paragraph GenRichText
         {
             get
