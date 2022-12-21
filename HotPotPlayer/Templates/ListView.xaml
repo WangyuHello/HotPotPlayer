@@ -503,7 +503,7 @@
                 </Grid.RowDefinitions>
                 <cont2:ImageEx2 Source="{x:Bind Modules.ModuleDynamic.Major.LiveRcmd.Cover}" CornerRadius="4" Style="{StaticResource DynamicImageStyle}"/>
                 <TextBlock Grid.Row="1" Margin="0,4,0,0" FontSize="14" Text="{x:Bind Modules.ModuleDynamic.Major.LiveRcmd.Title}" FontFamily="{ThemeResource MiSansMedium}" TextWrapping="Wrap"/>
-                <StackPanel Orientation="Horizontal" Margin="8,0" CornerRadius="4" HorizontalAlignment="Right" VerticalAlignment="Top">
+                <StackPanel Orientation="Horizontal" Margin="8,8" CornerRadius="4" HorizontalAlignment="Right" VerticalAlignment="Top">
                     <Border Background="#808080" Padding="8,4">
                         <TextBlock FontSize="14" Foreground="White" Text="{x:Bind Modules.ModuleDynamic.Major.LiveRcmd.TextLarge}" FontFamily="{ThemeResource MiSansRegular}" />
                     </Border>

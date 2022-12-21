@@ -40,10 +40,6 @@ namespace HotPotPlayer.Controls.BilibiliSub
 
         public async void LoadUserCardBundle()
         {
-            if (UserCardBundle != null)
-            {
-                return;
-            }
             UserCardBundle = (await BiliBiliService.API.GetUserCardBundle(Mid, true)).Data;
         }
 

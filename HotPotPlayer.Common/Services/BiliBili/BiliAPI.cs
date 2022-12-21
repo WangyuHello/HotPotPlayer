@@ -326,6 +326,10 @@ namespace HotPotPlayer.Services.BiliBili
         // https://github.com/SocialSisterYi/bilibili-API-collect/blob/master/user/info.md
         public async Task<BiliResult<UserCardBundle>> GetUserCardBundle(string mid, bool requestTopPhoto)
         {
+            if (UserCardCache.ContainsKey(mid))
+            {
+                return UserCardCache[mid];
+            }
             var r = await GetAsync("http://api.bilibili.com/x/web-interface/card", ResponseEnum.Web,
                 new Dictionary<string, string>
                 {
@@ -333,8 +337,12 @@ namespace HotPotPlayer.Services.BiliBili
                     ["photo"] = requestTopPhoto ? "true" : "false"
                 });
             var res = JsonConvert.DeserializeObject<BiliResult<UserCardBundle>>(r);
+            UserCardCache[mid] = res;
             return res;
         }
+
+        private Dictionary<string, BiliResult<UserCardBundle>> userCardCache;
+        private Dictionary<string, BiliResult<UserCardBundle>> UserCardCache => userCardCache ??= new Dictionary<string, BiliResult<UserCardBundle>>();
 
         #region Cookie
         public static CookieCollection ParseCookies(IEnumerable<string> cookieHeaders)
