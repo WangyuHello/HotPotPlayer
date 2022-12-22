@@ -29,6 +29,10 @@ namespace HotPotPlayer.Converters
             var percent100 = (int)(double)value;
             var v = percent100 * ((TimeSpan)TotalTime).Ticks / 100;
             var t = TimeSpan.FromTicks(v);
+            if (t.Hours > 0)
+            {
+                return t.ToString("hh\\:mm\\:ss");
+            }
             return t.ToString("mm\\:ss");
         }
 

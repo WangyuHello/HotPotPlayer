@@ -111,6 +111,7 @@ namespace HotPotPlayer.Video
 
 
         bool mediaInited;
+        bool mediaEnded;
         //DisplayRequest _displayReq;
         //DisplayRequest DisplayReq => _displayReq;
         MpvPlayer _mpv;
@@ -156,12 +157,14 @@ namespace HotPotPlayer.Video
         {
             UIQueue.TryEnqueue(() => IsPlaying = false);
             //DisplayReq.RequestRelease();
+            mediaEnded = true;
         }
 
         public event Action OnMediaLoaded;
 
         private async void MediaLoaded(object sender, EventArgs e)
         {
+            mediaEnded = false;
             App?.Taskbar.AddPlayButtons();
             //DisplayReq.RequestActive();
 
@@ -378,7 +381,7 @@ namespace HotPotPlayer.Video
 
         void UpdateSize()
         {
-            if (Host is null || !_swapChainLoaded)
+            if (Host is null || !_swapChainLoaded || mediaEnded)
                 return;
 
             lock (_CriticalLock)
@@ -389,7 +392,7 @@ namespace HotPotPlayer.Video
 
         void UpdateScale()
         {
-            if (Host is null || !_swapChainLoaded)
+            if (Host is null || !_swapChainLoaded || mediaEnded)
                 return;
 
             lock (_CriticalLock2)
@@ -532,7 +535,12 @@ namespace HotPotPlayer.Video
             {
                 return "--:--";
             }
-            return ((TimeSpan)duration).ToString("mm\\:ss");
+            var dur = (TimeSpan)duration;
+            if (dur.Hours > 0)
+            {
+                return dur.ToString("hh\\:mm\\:ss");
+            }
+            return dur.ToString("mm\\:ss");
         }
 
         private void PlayButtonClick(object sender, RoutedEventArgs e)
