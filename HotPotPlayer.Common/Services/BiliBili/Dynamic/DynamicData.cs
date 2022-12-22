@@ -35,7 +35,7 @@ namespace HotPotPlayer.Services.BiliBili.Dynamic
     {
         [JsonProperty("modules")] public DynamicItemModule Modules { get; set; }
         [JsonProperty("basic")] public DynamicItemBasic Basic { get; set; }
-        [JsonProperty("id_str")] public string ID { get; set; }
+        [JsonProperty("id_str")] public string Id { get; set; }
         [JsonProperty("type")] public string Type { get; set; }
         [JsonProperty("visible")] public bool Visible { get; set; }
         [JsonProperty("orig")] public DynamicItem Origin { get; set; }
@@ -82,6 +82,7 @@ namespace HotPotPlayer.Services.BiliBili.Dynamic
         public bool HasArticle => Major != null && Major.Article != null;
         public bool HasLive => Major != null && Major.LiveRcmd != null;
         public bool HasArticleCover => HasArticle && Major.Article.Covers != null && Major.Article.Covers.Any();
+        public bool HasDraw => Major != null && Major.Draw != null && Major.Draw.Items.Any();
         public bool IsSingleDraw => Major != null && Major.Draw != null && Major.Draw.Items.Count == 1;
         public bool IsMultiDraw => Major != null && Major.Draw != null && Major.Draw.Items.Count > 1;
     }

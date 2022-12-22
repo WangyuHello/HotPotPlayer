@@ -1,8 +1,10 @@
 ﻿using HotPotPlayer.Controls.BilibiliSub;
+using HotPotPlayer.Pages.BilibiliSub;
 using HotPotPlayer.Services.BiliBili.Dynamic;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Markup;
+using Microsoft.UI.Xaml.Media;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -42,6 +44,25 @@ namespace HotPotPlayer.Templates
             var card = flyout.Content as UserCard;
             card.LoadUserCardBundle();
             flyout.ShowAt(sender as FrameworkElement);
+        }
+
+        private void DynamicCommentClick(object sender, RoutedEventArgs e)
+        {
+            var ui = sender as FrameworkElement;
+            var dynamic = GetDynamicParent(ui);
+
+            static Dynamic GetDynamicParent(DependencyObject v)
+            {
+                while (v != null)
+                {
+                    v = VisualTreeHelper.GetParent(v);
+                    if (v is Dynamic)
+                        break;
+                }
+                return v as Dynamic;
+            }
+
+            dynamic.ToggleComment(ui.DataContext as DynamicItem);
         }
     }
 }

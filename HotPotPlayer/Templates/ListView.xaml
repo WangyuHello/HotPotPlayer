@@ -556,7 +556,7 @@
                         <TextBlock Text="{x:Bind Modules.ModuleState.Forward.Count}" FontFamily="{ThemeResource MiSansRegular}" Foreground="Gray"/>
                     </StackPanel>
                 </Button>
-                <Button Grid.Column="1" HorizontalAlignment="Center" Style="{StaticResource TransparentButton}">
+                <Button Grid.Column="1" HorizontalAlignment="Center" Style="{StaticResource TransparentButton}" Click="DynamicCommentClick">
                     <StackPanel Orientation="Horizontal" Spacing="4">
                         <ImageIcon Source="ms-appx:///Assets/Icon/Comment2.svg" Margin="0,0,0,0" Width="18" Foreground="Gray"/>
                         <TextBlock Text="{x:Bind Modules.ModuleState.Comment.Count}" FontFamily="{ThemeResource MiSansRegular}" Foreground="Gray"/>

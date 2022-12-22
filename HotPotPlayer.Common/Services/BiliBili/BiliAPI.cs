@@ -271,6 +271,54 @@ namespace HotPotPlayer.Services.BiliBili
             return res;
         }
 
+        public async Task<BiliResult<Replies>> GetTextDynamicReplyAsync(string did)
+        {
+            var r = await GetAsync("http://api.bilibili.com/x/v2/reply", ResponseEnum.Web,
+                new Dictionary<string, string>
+                {
+                    ["type"] = "17",
+                    ["oid"] = did,
+                    ["sort"] = "1",
+                    ["nohot"] = "0",
+                    ["ps"] = "20",
+                    ["pn"] = "1"
+                });
+            var res = JsonConvert.DeserializeObject<BiliResult<Replies>>(r);
+            return res;
+        }
+
+        public async Task<BiliResult<Replies>> GetArtileDynamicReplyAsync(string cvid)
+        {
+            var r = await GetAsync("http://api.bilibili.com/x/v2/reply", ResponseEnum.Web,
+                new Dictionary<string, string>
+                {
+                    ["type"] = "12",
+                    ["oid"] = cvid,
+                    ["sort"] = "1",
+                    ["nohot"] = "0",
+                    ["ps"] = "20",
+                    ["pn"] = "1"
+                });
+            var res = JsonConvert.DeserializeObject<BiliResult<Replies>>(r);
+            return res;
+        }
+
+        public async Task<BiliResult<Replies>> GetPictureDynamicReplyAsync(string id)
+        {
+            var r = await GetAsync("http://api.bilibili.com/x/v2/reply", ResponseEnum.Web,
+                new Dictionary<string, string>
+                {
+                    ["type"] = "11",
+                    ["oid"] = id,
+                    ["sort"] = "1",
+                    ["nohot"] = "0",
+                    ["ps"] = "20",
+                    ["pn"] = "1"
+                });
+            var res = JsonConvert.DeserializeObject<BiliResult<Replies>>(r);
+            return res;
+        }
+
         public async Task<BiliResult<List<VideoContent>>> GetRelatedVideo(string bvid)
         {
             var r = await GetAsync("http://api.bilibili.com/x/web-interface/archive/related", ResponseEnum.Web,

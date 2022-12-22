@@ -4,6 +4,7 @@
 using CommunityToolkit.Mvvm.ComponentModel;
 using HotPotPlayer.Services;
 using HotPotPlayer.Services.BiliBili.Dynamic;
+using HotPotPlayer.Services.BiliBili.Reply;
 using HotPotPlayer.Services.BiliBili.Video;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
@@ -37,6 +38,14 @@ namespace HotPotPlayer.Pages.BilibiliSub
         [ObservableProperty]
         private DynamicItemCollection dynamicItems;
 
+        [ObservableProperty]
+        private Replies replies;
+
+        private DynamicItem currentOpen;
+
+        [ObservableProperty]
+        private bool isCommentsOpen;
+
         bool isFirstLoad = true;
 
         public async void LoadDynamicAsync(bool force = false)
@@ -48,6 +57,47 @@ namespace HotPotPlayer.Pages.BilibiliSub
             var dynamicData = (await BiliBiliService.API.GetDynamic(DynamicType.All)).Data;
             DynamicItems = new DynamicItemCollection(dynamicData, BiliBiliService);
             isFirstLoad = false;
+        }
+
+        public void ToggleComment(DynamicItem dyn)
+        {
+            if (IsCommentsOpen)
+            {
+                if (dyn != currentOpen)
+                {
+                    LoadReplies(dyn);
+                }
+                else
+                {
+                    IsCommentsOpen = !IsCommentsOpen;
+                }
+            }
+            else
+            {
+                LoadReplies(dyn);
+                IsCommentsOpen = !IsCommentsOpen;
+            }
+        }
+
+        public async void LoadReplies(DynamicItem dyn)
+        {
+            if (dyn.Modules.ModuleDynamic.HasArchive)
+            {
+                Replies = (await BiliBiliService.API.GetVideoReplyAsync(dyn.Modules.ModuleDynamic.Major.Archive.Aid)).Data;
+            }
+            else if (dyn.Modules.ModuleDynamic.HasArticle)
+            {
+                Replies = (await BiliBiliService.API.GetArtileDynamicReplyAsync(dyn.Modules.ModuleDynamic.Major.Article.Id)).Data;
+            }
+            else if (dyn.Modules.ModuleDynamic.HasDraw)
+            {
+                Replies = (await BiliBiliService.API.GetPictureDynamicReplyAsync(dyn.Modules.ModuleDynamic.Major.Draw.ID)).Data;
+            }
+            else
+            {
+                Replies = (await BiliBiliService.API.GetTextDynamicReplyAsync(dyn.Id)).Data;
+            }
+            currentOpen = dyn;
         }
 
         private async void DynamicItemClick(object sender, ItemClickEventArgs e)
