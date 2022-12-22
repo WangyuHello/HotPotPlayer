@@ -115,7 +115,7 @@
                     发布
                 </Button>
             </Grid>
-            <ListView Grid.Row="2" Margin="0,12,0,0" ItemsSource="{x:Bind Replies.TheReplies, Mode=OneWay}" Style="{StaticResource GeneralListViewStyle}" ItemContainerStyle="{StaticResource GeneralListContainerStyle}" ItemTemplate="{StaticResource VideoReplyTemplate}">
+            <ListView Grid.Row="2" Margin="-8,12,-8,0" Padding="8,0" ItemsSource="{x:Bind Replies.TheReplies, Mode=OneWay}" Style="{StaticResource GeneralListViewStyle}" ItemContainerStyle="{StaticResource GeneralListContainerStyle}" ItemTemplate="{StaticResource VideoReplyTemplate}">
                 
             </ListView>
         </Grid>
