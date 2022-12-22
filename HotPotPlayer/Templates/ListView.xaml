@@ -9,6 +9,7 @@
     xmlns:cont2="using:HotPotPlayer.UI.Controls"
     xmlns:cont3="using:HotPotPlayer.Controls.BilibiliSub"
     xmlns:brep="using:HotPotPlayer.Services.BiliBili.Reply"
+    xmlns:ccont="using:CommunityToolkit.WinUI.UI.Controls"
     xmlns:dyn="using:HotPotPlayer.Services.BiliBili.Dynamic"
     xmlns:local="using:HotPotPlayer.Templates">
 
@@ -360,7 +361,7 @@
     <UniformGridLayout x:Key="DynamicUniformGridLayout" Orientation="Horizontal" MinRowSpacing="4" MinColumnSpacing="4" MinItemHeight="200" MinItemWidth="200"/>
 
     <DataTemplate x:Key="DynamicMultiDrawTemplate" x:DataType="dyn:DrawItem">
-        <cont2:ImageEx2 Source="{x:Bind Source}" MaxHeight="160" CornerRadius="4" Style="{StaticResource DynamicImageStyle}"/>
+        <cont2:ImageEx2 Source="{x:Bind Source}" MaxHeight="180" CornerRadius="4" Style="{StaticResource DynamicImageStyle}"/>
     </DataTemplate>
 
     <DataTemplate x:Key="ArticleCoverTemplate" x:DataType="x:String">
@@ -407,13 +408,12 @@
                         Padding="16,8" 
                         Background="#f4f5f7" CornerRadius="4">
                 <TextBlock FontFamily="{ThemeResource MiSansMedium}" Text="{x:Bind Modules.ModuleDynamic.Major.Article.Title}" TextWrapping="Wrap" />
-                <ListView Margin="0,8,0,0" Visibility="{x:Bind Modules.ModuleDynamic.HasArticleCover}" 
-                      ItemsSource="{x:Bind Modules.ModuleDynamic.Major.Article.Covers}" 
-                      Style="{StaticResource HorizontalListViewStyle}"
-                      ItemTemplate="{StaticResource ArticleCoverTemplate}"
-                      ItemContainerStyle="{StaticResource GeneralListContainerWithPadding3Style}"
-                      >
-                </ListView>
+                <ccont:AdaptiveGridView Margin="0,8,0,0" Visibility="{x:Bind Modules.ModuleDynamic.HasArticleCover}" 
+                                    DesiredWidth="200"
+                                    ItemTemplate="{StaticResource ArticleCoverTemplate}"
+                                    ItemsSource="{x:Bind Modules.ModuleDynamic.Major.Article.Covers}" >
+
+                </ccont:AdaptiveGridView>
                 <TextBlock Margin="0,4" FontFamily="{ThemeResource MiSansRegular}" Text="{x:Bind Modules.ModuleDynamic.Major.Article.Desc}" Foreground="Gray" TextWrapping="Wrap" MaxLines="4" TextTrimming="CharacterEllipsis"/>
                 <TextBlock FontFamily="{ThemeResource MiSansRegular}" Text="{x:Bind Modules.ModuleDynamic.Major.Article.Label}" Foreground="LightGray" FontSize="13" TextWrapping="Wrap" />
             </StackPanel>
@@ -422,13 +422,12 @@
             <cont2:ImageEx2 Margin="0,8,0,0" Source="{x:Bind Modules.ModuleDynamic.Major.Draw.Items[0].Source}" Visibility="{x:Bind Modules.ModuleDynamic.IsSingleDraw}" CornerRadius="4" Style="{StaticResource DynamicImageStyle}"/>
 
             <!--MultiImage-->
-            <ListView Margin="0,8,0,0" Visibility="{x:Bind Modules.ModuleDynamic.IsMultiDraw}" 
-                      ItemsSource="{x:Bind Modules.ModuleDynamic.Major.Draw.Items}" 
-                      Style="{StaticResource HorizontalListViewStyle}"
-                      ItemTemplate="{StaticResource DynamicMultiDrawTemplate}"
-                      ItemContainerStyle="{StaticResource GeneralListContainerWithPadding3Style}"
-                      >
-            </ListView>
+            <ccont:AdaptiveGridView Margin="0,8,0,0" Visibility="{x:Bind Modules.ModuleDynamic.IsMultiDraw}" 
+                                    DesiredWidth="200"
+                                    ItemTemplate="{StaticResource DynamicMultiDrawTemplate}"
+                                    ItemsSource="{x:Bind Modules.ModuleDynamic.Major.Draw.Items}">
+                
+            </ccont:AdaptiveGridView>
 
             
             <!--Origin-->
@@ -463,13 +462,12 @@
                     </Grid>
                     <TextBlock Grid.Row="1" Margin="0,4,0,0" FontSize="14" Text="{x:Bind Origin.Modules.ModuleDynamic.Major.Archive.Title}" FontFamily="{ThemeResource MiSansMedium}" TextWrapping="Wrap"/>
                 </Grid>
-                <ListView Margin="0,8,0,0" Visibility="{x:Bind Origin.Modules.ModuleDynamic.IsMultiDraw}" 
-                      ItemsSource="{x:Bind Origin.Modules.ModuleDynamic.Major.Draw.Items}" 
-                      Style="{StaticResource HorizontalListViewStyle}"
-                      ItemTemplate="{StaticResource DynamicMultiDrawTemplate}"
-                      ItemContainerStyle="{StaticResource GeneralListContainerWithPadding3Style}"
-                      >
-                </ListView>
+                <ccont:AdaptiveGridView Margin="0,8,0,0" Visibility="{x:Bind Origin.Modules.ModuleDynamic.IsMultiDraw}" 
+                                    DesiredWidth="200"
+                                    ItemTemplate="{StaticResource DynamicMultiDrawTemplate}"
+                                    ItemsSource="{x:Bind Origin.Modules.ModuleDynamic.Major.Draw.Items}">
+
+                </ccont:AdaptiveGridView>
             </StackPanel>
 
             <!--Archive-->

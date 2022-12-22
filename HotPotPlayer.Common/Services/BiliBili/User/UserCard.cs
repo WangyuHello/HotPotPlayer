@@ -16,7 +16,7 @@ namespace HotPotPlayer.Services.BiliBili.User
         [JsonProperty("follower")] public string Follower { get; set; }
         [JsonProperty("like_num")] public string LikeNum { get; set; }
 
-        public string GetFollower => Follower + " 关注";
+        public string GetFriend => Card.Friend + " 关注";
         public string GetFans => Card.Fans + " 粉丝";
         public string GetLikeNum => LikeNum + " 获赞";
 

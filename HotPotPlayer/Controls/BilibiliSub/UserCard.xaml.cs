@@ -44,6 +44,11 @@ namespace HotPotPlayer.Controls.BilibiliSub
         }
 
         [ObservableProperty]
-        private HotPotPlayer.Services.BiliBili.User.UserCardBundle userCardBundle;
+        private Services.BiliBili.User.UserCardBundle userCardBundle;
+
+        public string GetFollowStr(bool isFollow)
+        {
+            return isFollow ? "ÒÑ¹Ø×¢" : "¹Ø×¢";
+        }
     }
 }

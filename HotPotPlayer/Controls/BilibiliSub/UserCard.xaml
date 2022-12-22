@@ -30,7 +30,7 @@
         <StackPanel Margin="0,8,16,0" Grid.Row="1" Grid.Column="1" Spacing="8">
             <TextBlock Text="{x:Bind UserCardBundle.Card.Name}" FontSize="16" FontFamily="{ThemeResource MiSansMedium}" />
             <StackPanel Orientation="Horizontal" Spacing="12">
-                <TextBlock Text="{x:Bind UserCardBundle.GetFollower}" FontSize="13" Foreground="Gray" FontFamily="{ThemeResource MiSansRegular}" />
+                <TextBlock Text="{x:Bind UserCardBundle.GetFriend}" FontSize="13" Foreground="Gray" FontFamily="{ThemeResource MiSansRegular}" />
                 <TextBlock Text="{x:Bind UserCardBundle.GetFans}" FontSize="13" Foreground="Gray" FontFamily="{ThemeResource MiSansRegular}" />
                 <TextBlock Text="{x:Bind UserCardBundle.GetLikeNum}" FontSize="13" Foreground="Gray" FontFamily="{ThemeResource MiSansRegular}" />
             </StackPanel>
@@ -38,8 +38,8 @@
         </StackPanel>
         
         <StackPanel Grid.Row="2" Grid.ColumnSpan="2" HorizontalAlignment="Center" Margin="0,12,0,12" Orientation="Horizontal" Spacing="16">
-            <Button Width="108" Style="{StaticResource AccentButtonStyle}" >关注</Button>
-            <Button Width="108" >主页</Button>
+            <Button Width="108" FontFamily="{ThemeResource MiSansRegular}" Style="{StaticResource AccentButtonStyle}" Content="{x:Bind GetFollowStr(UserCardBundle.Following)}"/>
+            <Button Width="108" FontFamily="{ThemeResource MiSansRegular}" >主页</Button>
         </StackPanel>
     </Grid>
 </base:UserControlBase>
