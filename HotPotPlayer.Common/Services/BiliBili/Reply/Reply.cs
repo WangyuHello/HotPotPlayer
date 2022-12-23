@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json;
+﻿using HotPotPlayer.Services.BiliBili.User;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -49,6 +50,11 @@ namespace HotPotPlayer.Services.BiliBili.Reply
         [JsonProperty("like")] public int Like { get; set; }
         [JsonProperty("member")] public Member Member { get; set; }
         [JsonProperty("content")] public Content Content { get; set; }
+        [JsonProperty("replies")] public List<Reply> TheReplies { get; set; }
+
+        public bool HasNestedReply => TheReplies != null && TheReplies.Any();
+
+        public string GetNestedReplyStr => $"共{TheReplies?.Count}条回复";
 
         public string TimeStr
         {
@@ -68,6 +74,7 @@ namespace HotPotPlayer.Services.BiliBili.Reply
         [JsonProperty("mid")] public string Mid { get; set; }
         [JsonProperty("uname")] public string UName { get; set; }
         [JsonProperty("avatar")] public string Avatar { get; set; }
+        [JsonProperty("level_info")] public LevelInfo LevelInfo { get; set; }
     }
 
     public class Content

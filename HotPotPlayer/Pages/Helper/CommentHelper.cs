@@ -2,6 +2,7 @@
 using HotPotPlayer.Helpers;
 using HotPotPlayer.Models.CloudMusic;
 using HotPotPlayer.Services;
+using HotPotPlayer.Services.BiliBili.Reply;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using System;
@@ -39,6 +40,13 @@ namespace HotPotPlayer.Pages.Helper
 
         public static void ShowCommentInput(object sender, RoutedEventArgs e)
         {
+
+        }
+
+        public static void ShowNestedReply(object sender, RoutedEventArgs e)
+        {
+            var element = sender as FrameworkElement;
+            var reply = element.DataContext as Reply;
 
         }
     }
