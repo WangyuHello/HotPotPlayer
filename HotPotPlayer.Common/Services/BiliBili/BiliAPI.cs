@@ -123,7 +123,30 @@ namespace HotPotPlayer.Services.BiliBili
             return null;
         }
 
+        private async Task<string> PostAsync(string url, Dictionary<string, string> keyValues = null)
+        {
+            using (var webClient = _httpClientFactory.CreateClient("web"))
+            {
+                webClient.DefaultRequestHeaders.Add("Cookie", CookieString);
+                var form = new FormUrlEncodedContent(keyValues);
+                using var webhr = await webClient.PostAsync(url, form).ConfigureAwait(false);
+                webhr.EnsureSuccessStatusCode();
 
+                if (webhr.Headers.TryGetValues("Set-Cookie", out var rawSetCookie))
+                {
+                    Cookies.Add(ParseCookies(rawSetCookie));
+                }
+
+                var webencodeResults = await webhr.Content.ReadAsByteArrayAsync().ConfigureAwait(false);
+                string webstr = Encoding.UTF8.GetString(webencodeResults, 0, webencodeResults.Length);
+                return webstr;
+            }
+        }
+
+        private string GetCsrf()
+        {
+            return Cookies.First(c => c.Name == "bili_jct").Value;
+        }
 
         /// <summary>
         /// https://github.com/SocialSisterYi/bilibili-API-collect/blob/master/login/login_action/QR.md
@@ -364,6 +387,18 @@ namespace HotPotPlayer.Services.BiliBili
             var res = JsonConvert.DeserializeObject<BiliResult<UserCardBundle>>(r);
             UserCardCache[mid] = res;
             return res;
+        }
+
+        public async void Report(string aid, string cid, int progress)
+        {
+            var r = await PostAsync("http://api.bilibili.com/x/v2/history/report", new Dictionary<string, string>
+            {
+                ["aid"] = aid,
+                ["cid"] = cid,
+                ["progress"] = progress.ToString(),
+                ["platform"] = "android",
+                ["csrf"] = GetCsrf()
+            });
         }
 
         private Dictionary<string, BiliResult<UserCardBundle>> userCardCache;

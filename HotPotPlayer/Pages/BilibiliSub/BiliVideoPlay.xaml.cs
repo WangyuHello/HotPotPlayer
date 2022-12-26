@@ -63,17 +63,24 @@ namespace HotPotPlayer.Pages.BilibiliSub
             await StartPlay(para);
         }
 
+        string aid;
+        string cid;
+
         private async Task StartPlay(object para)
         {
             if (para is VideoContent videoContent)
             {
                 this.video = videoContent;
+                aid = videoContent.Aid;
+                cid = videoContent.First_Cid;
                 var res = await BiliBiliService.API.GetVideoUrl(this.video.Bvid, this.video.First_Cid, DashEnum.Dash8K, FnvalEnum.Dash | FnvalEnum.HDR | FnvalEnum.Fn8K | FnvalEnum.Fn4K | FnvalEnum.AV1 | FnvalEnum.FnDBAudio | FnvalEnum.FnDBVideo);
                 var video = BiliBiliVideoItem.FromRaw(res.Data, this.video);
                 Source = new VideoPlayInfo { VideoItems = new List<BiliBiliVideoItem> { video }, Index = 0 };
             }
             else if (para is HomeDataItem h)
             {
+                aid = h.Aid;
+                cid = h.Cid;
                 var res = await BiliBiliService.API.GetVideoUrl(h.Bvid, h.Cid, DashEnum.Dash8K, FnvalEnum.Dash | FnvalEnum.HDR | FnvalEnum.Fn8K | FnvalEnum.Fn4K | FnvalEnum.AV1 | FnvalEnum.FnDBAudio | FnvalEnum.FnDBVideo);
                 var video = BiliBiliVideoItem.FromRaw(res.Data, h);
                 Source = new VideoPlayInfo { VideoItems = new List<BiliBiliVideoItem> { video }, Index = 0 };
@@ -91,6 +98,15 @@ namespace HotPotPlayer.Pages.BilibiliSub
         protected override void OnNavigatedFrom(NavigationEventArgs e)
         {
             base.OnNavigatedFrom(e);
+            if (VideoPlayer.CurrentTime == TimeSpan.Zero)
+            {
+                BiliBiliService.API.Report(aid, cid, (int)VideoPlayer.CurrentPlayingDuration.Value.TotalSeconds);
+            }
+            else
+            {
+                BiliBiliService.API.Report(aid, cid, (int)VideoPlayer.CurrentTime.TotalSeconds);
+            }
+
             VideoPlayerService.IsVideoPagePresent = false;
             VideoPlayer.Close();
         }
