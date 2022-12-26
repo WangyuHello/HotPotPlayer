@@ -22,7 +22,17 @@ namespace BiliBiliAPI.Models
         public T Data { get; set; }
     }
 
+    public class BiliResult
+    {
+        [JsonProperty("code")]
+        public string Code { get; set; }
 
+        [JsonProperty("message")]
+        public string Message { get; set; }
+
+        [JsonProperty("ttl")]
+        public string TTl { get; set; }
+    }
 
 
     public enum VideoIDType

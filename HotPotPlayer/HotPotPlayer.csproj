@@ -41,6 +41,7 @@
     <None Remove="Assets\Icon\Collect.svg" />
     <None Remove="Assets\Icon\Dan.svg" />
     <None Remove="Assets\Icon\Like.svg" />
+    <None Remove="Assets\Icon\LikeBlue.svg" />
     <None Remove="Assets\Icon\Share.svg" />
     <None Remove="Assets\Icon\Time.svg" />
     <None Remove="Assets\Icon\View.svg" />

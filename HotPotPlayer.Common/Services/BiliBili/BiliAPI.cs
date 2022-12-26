@@ -19,6 +19,7 @@ using HotPotPlayer.Services.BiliBili.HomeVideo;
 using HotPotPlayer.Services.BiliBili.Reply;
 using HotPotPlayer.Services.BiliBili.Dynamic;
 using HotPotPlayer.Services.BiliBili.User;
+using System.Diagnostics;
 
 namespace HotPotPlayer.Services.BiliBili
 {
@@ -389,7 +390,13 @@ namespace HotPotPlayer.Services.BiliBili
             return res;
         }
 
-        public async void Report(string aid, string cid, int progress)
+        /// <summary>
+        /// https://github.com/SocialSisterYi/bilibili-API-collect/blob/master/video/report.md
+        /// </summary>
+        /// <param name="aid"></param>
+        /// <param name="cid"></param>
+        /// <param name="progress"></param>
+        public async Task<BiliResult> Report(string aid, string cid, int progress)
         {
             var r = await PostAsync("http://api.bilibili.com/x/v2/history/report", new Dictionary<string, string>
             {
@@ -399,6 +406,37 @@ namespace HotPotPlayer.Services.BiliBili
                 ["platform"] = "android",
                 ["csrf"] = GetCsrf()
             });
+            var res = JsonConvert.DeserializeObject<BiliResult>(r);
+            return res;
+        }
+
+        /// <summary>
+        /// https://github.com/SocialSisterYi/bilibili-API-collect/blob/master/video/like_coin_fav.md#%E7%82%B9%E8%B5%9E%E8%A7%86%E9%A2%91web%E7%AB%AF
+        /// </summary>
+        /// <param name="aid"></param>
+        /// <param name="like"></param>
+        /// <returns></returns>
+        public async Task<BiliResult> Like(string aid, bool like)
+        {
+            var r = await PostAsync("http://api.bilibili.com/x/web-interface/archive/like", new Dictionary<string, string>
+            {
+                ["aid"] = aid,
+                ["like"] = like ? "1" : "2",
+                ["csrf"] = GetCsrf()
+            });
+            var res = JsonConvert.DeserializeObject<BiliResult>(r);
+            return res;
+        }
+
+        public async Task<bool> IsLike(string aid)
+        {
+            var r = await GetAsync("http://api.bilibili.com/x/web-interface/archive/has/like", ResponseEnum.Web,
+                new Dictionary<string, string>
+            {
+                ["aid"] = aid,
+            });
+            var res = JsonConvert.DeserializeObject<BiliResult<int>>(r);
+            return res.Data == 1;
         }
 
         private Dictionary<string, BiliResult<UserCardBundle>> userCardCache;

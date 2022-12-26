@@ -22,6 +22,8 @@ using HotPotPlayer.Models.BiliBili;
 using HotPotPlayer.Services.BiliBili.HomeVideo;
 using HotPotPlayer.Services.BiliBili.Reply;
 using System.Threading.Tasks;
+using Windows.UI;
+using Microsoft.UI;
 
 // To learn more about WinUI, the WinUI project structure,
 // and more about our project templates, see: http://aka.ms/winui-project-info.
@@ -55,6 +57,9 @@ namespace HotPotPlayer.Pages.BilibiliSub
 
         [ObservableProperty]
         List<VideoContent> relatedVideos;
+
+        [ObservableProperty]
+        bool isLike;
 
         protected override async void OnNavigatedTo(NavigationEventArgs e)
         {
@@ -90,21 +95,22 @@ namespace HotPotPlayer.Pages.BilibiliSub
             var replies = (await BiliBiliService.API.GetVideoReplyAsync(Video.Aid)).Data;
             this.replies = new ReplyItemCollection(replies, "1", Video.Aid, BiliBiliService);
             this.relatedVideos = (await BiliBiliService.API.GetRelatedVideo(Video.Bvid)).Data;
+            this.isLike = await BiliBiliService.API.IsLike(Video.Aid);
 
             VideoPlayer.PreparePlay();
             VideoPlayer.StartPlay();
         }
 
-        protected override void OnNavigatedFrom(NavigationEventArgs e)
+        protected override async void OnNavigatedFrom(NavigationEventArgs e)
         {
             base.OnNavigatedFrom(e);
             if (VideoPlayer.CurrentTime == TimeSpan.Zero)
             {
-                BiliBiliService.API.Report(aid, cid, (int)VideoPlayer.CurrentPlayingDuration.Value.TotalSeconds);
+                await BiliBiliService.API.Report(aid, cid, (int)VideoPlayer.CurrentPlayingDuration.Value.TotalSeconds);
             }
             else
             {
-                BiliBiliService.API.Report(aid, cid, (int)VideoPlayer.CurrentTime.TotalSeconds);
+                await BiliBiliService.API.Report(aid, cid, (int)VideoPlayer.CurrentTime.TotalSeconds);
             }
 
             VideoPlayerService.IsVideoPagePresent = false;
@@ -152,12 +158,36 @@ namespace HotPotPlayer.Pages.BilibiliSub
             OnPropertyChanged(propertyName: nameof(OnLineCount));
             OnPropertyChanged(propertyName: nameof(Replies));
             OnPropertyChanged(propertyName: nameof(RelatedVideos));
+            OnPropertyChanged(propertyName: nameof(IsLike));
         }
 
         private void UserAvatar_Tapped(object sender, TappedRoutedEventArgs e)
         {
             UserAvatarFlyout.LoadUserCardBundle();
             UserAvatar.ContextFlyout.ShowAt(UserAvatar);
+        }
+
+        private SolidColorBrush GetLikeColor(bool isLike)
+        {
+            return new SolidColorBrush(isLike ? Color.FromArgb(255, 0, 174, 236) : Colors.Gray);
+        }
+
+        private async void LikeClick(object sender, RoutedEventArgs e)
+        {
+            var r = await BiliBiliService.API.Like(aid, !IsLike);
+            if (r.Code == "0")
+            {
+                IsLike = !IsLike;
+                if (IsLike)
+                {
+                    video.Stat.Like++;
+                }
+                else
+                {
+                    video.Stat.Like--;
+                }
+                OnPropertyChanged(propertyName: nameof(Video));
+            }
         }
     }
 }

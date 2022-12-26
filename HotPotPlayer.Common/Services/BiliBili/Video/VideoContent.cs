@@ -539,11 +539,11 @@ namespace HotPotPlayer.Services.BiliBili.Video
         /// 点赞
         /// </summary>
         [JsonProperty("like")]
-        public string Like { get; set; }
+        public int Like { get; set; }
 
         public string GetLike()
         {
-            int v = int.Parse(Like);
+            int v = Like;
             if (v >= 10000)
             {
                 var v2 = (double)v / 10000;
