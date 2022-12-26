@@ -51,7 +51,7 @@ namespace HotPotPlayer.Pages.BilibiliSub
         string onLineCount;
 
         [ObservableProperty]
-        Replies replies;
+        ReplyItemCollection replies;
 
         [ObservableProperty]
         List<VideoContent> relatedVideos;
@@ -80,7 +80,8 @@ namespace HotPotPlayer.Pages.BilibiliSub
                 this.video = (await BiliBiliService.API.GetVideoInfo(h.Bvid)).Data;
             }
             this.onLineCount = await BiliBiliService.API.GetOnlineCount(Video.Bvid, Video.First_Cid);
-            this.replies = (await BiliBiliService.API.GetVideoReplyAsync(Video.Aid)).Data;
+            var replies = (await BiliBiliService.API.GetVideoReplyAsync(Video.Aid)).Data;
+            this.replies = new ReplyItemCollection(replies, "1", Video.Aid, BiliBiliService);
             this.relatedVideos = (await BiliBiliService.API.GetRelatedVideo(Video.Bvid)).Data;
 
             VideoPlayer.PreparePlay();

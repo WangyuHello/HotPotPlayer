@@ -26,9 +26,12 @@ namespace HotPotPlayer.Controls.BilibiliSub
     /// </summary>
     public sealed partial class NestedReplyDialog : Page
     {
-        public NestedReplyDialog()
+        public NestedReplyDialog(Services.BiliBili.Reply.Reply reply)
         {
+            Reply = reply;
             this.InitializeComponent();
         }
+
+        readonly Services.BiliBili.Reply.Reply Reply;
     }
 }

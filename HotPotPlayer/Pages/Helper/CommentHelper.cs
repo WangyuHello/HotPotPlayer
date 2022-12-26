@@ -1,4 +1,5 @@
 ﻿using HotPotPlayer.Controls;
+using HotPotPlayer.Controls.BilibiliSub;
 using HotPotPlayer.Helpers;
 using HotPotPlayer.Models.CloudMusic;
 using HotPotPlayer.Services;
@@ -43,11 +44,22 @@ namespace HotPotPlayer.Pages.Helper
 
         }
 
-        public static void ShowNestedReply(object sender, RoutedEventArgs e)
+        public async static void ShowNestedReply(object sender, RoutedEventArgs e)
         {
             var element = sender as FrameworkElement;
             var reply = element.DataContext as Reply;
 
+            ContentDialog dialog = new()
+            {
+                Title = $"回复({reply.TheReplies.Count})",
+                CloseButtonText = "关闭",
+                DefaultButton = ContentDialogButton.Close,
+                Content = new NestedReplyDialog(reply),
+                XamlRoot = XamlRoot,
+                Style = App.Resources["DefaultContentDialogStyle"] as Style
+            };
+
+            var result = await dialog.ShowAsync();
         }
     }
 }

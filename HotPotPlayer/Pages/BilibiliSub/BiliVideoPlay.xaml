@@ -29,7 +29,7 @@
                 <RowDefinition Height="{x:Bind GetTitleHeight(IsFullPage), Mode=OneWay}" />
                 <RowDefinition Height="{x:Bind GetTitleHeight(IsFullPage), Mode=OneWay}" />
             </Grid.RowDefinitions>
-            <video:VideoControl x:Name="VideoPlayer" Source="{x:Bind Source, Mode=OneWay}" OnToggleFullScreen="OnToggleFullScreen" OnToggleFullPage="OnToggleFullPage" IsFullPage="{x:Bind IsFullPage, Mode=OneWay}"  NoTitleBar="True" OnMediaLoaded="OnMediaLoaded"/>
+            <video:VideoControl x:Name="VideoPlayer" Source="{x:Bind Source, Mode=OneWay}" OnToggleFullScreen="OnToggleFullScreen" OnToggleFullPage="OnToggleFullPage" IsFullPage="{x:Bind IsFullPage, Mode=OneWay}" IsFullPageHost="False" OnMediaLoaded="OnMediaLoaded"/>
 
             <Grid Grid.Row="1" Margin="0,20,0,20">
                 <Grid.ColumnDefinitions>
@@ -115,7 +115,17 @@
                     发布
                 </Button>
             </Grid>
-            <ListView Grid.Row="2" Margin="-8,12,-8,0" Padding="8,0" ItemsSource="{x:Bind Replies.TheReplies, Mode=OneWay}" Style="{StaticResource GeneralListViewStyle}" ItemContainerStyle="{StaticResource GeneralListContainerStyle}" ItemTemplate="{StaticResource VideoReplyTemplate}">
+            <ListView 
+                Grid.Row="2" 
+                Margin="-8,12,-8,0" 
+                Padding="8,0" 
+                ItemsSource="{x:Bind Replies, Mode=OneWay}" 
+                Style="{StaticResource GeneralListViewStyle}" 
+                ItemContainerStyle="{StaticResource GeneralListContainerStyle}" 
+                ItemTemplate="{StaticResource VideoReplyTemplate}"
+                IncrementalLoadingTrigger="Edge"
+                IncrementalLoadingThreshold="2"
+                >
                 
             </ListView>
         </Grid>

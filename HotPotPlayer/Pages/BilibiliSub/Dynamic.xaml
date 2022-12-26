@@ -17,7 +17,16 @@
         <SplitView IsPaneOpen="{x:Bind IsCommentsOpen}" OpenPaneLength="636" DisplayMode="Inline" PanePlacement="Right">
             <SplitView.Pane>
                 <Grid Background="White" Margin="0,0,36,0" >
-                    <ListView Margin="-8,0" Padding="24,0" ItemsSource="{x:Bind Replies.TheReplies, Mode=OneWay}" Style="{StaticResource GeneralListViewStyle}" ItemContainerStyle="{StaticResource GeneralListContainerStyle}" ItemTemplate="{StaticResource VideoReplyTemplate}">
+                    <ListView 
+                        Margin="-8,0" 
+                        Padding="24,0" 
+                        ItemsSource="{x:Bind Replies, Mode=OneWay}" 
+                        Style="{StaticResource GeneralListViewStyle}" 
+                        ItemContainerStyle="{StaticResource GeneralListContainerStyle}" 
+                        ItemTemplate="{StaticResource VideoReplyTemplate}"
+                        IncrementalLoadingTrigger="Edge"
+                        IncrementalLoadingThreshold="2"
+                        >
 
                     </ListView>
                 </Grid>

@@ -2,6 +2,7 @@
 // Licensed under the MIT License. See LICENSE in the project root for license information.
 
 using CommunityToolkit.Mvvm.ComponentModel;
+using HotPotPlayer.Models.BiliBili;
 using HotPotPlayer.Services;
 using HotPotPlayer.Services.BiliBili.Dynamic;
 using HotPotPlayer.Services.BiliBili.Reply;
@@ -39,7 +40,7 @@ namespace HotPotPlayer.Pages.BilibiliSub
         private DynamicItemCollection dynamicItems;
 
         [ObservableProperty]
-        private Replies replies;
+        private ReplyItemCollection replies;
 
         private DynamicItem currentOpen;
 
@@ -81,21 +82,26 @@ namespace HotPotPlayer.Pages.BilibiliSub
 
         public async void LoadReplies(DynamicItem dyn)
         {
+            Replies re;
             if (dyn.Modules.ModuleDynamic.HasArchive)
             {
-                Replies = (await BiliBiliService.API.GetVideoReplyAsync(dyn.Modules.ModuleDynamic.Major.Archive.Aid)).Data;
+                re = (await BiliBiliService.API.GetVideoReplyAsync(dyn.Modules.ModuleDynamic.Major.Archive.Aid)).Data;
+                Replies = new ReplyItemCollection(re, "1", dyn.Modules.ModuleDynamic.Major.Archive.Aid, BiliBiliService);
             }
             else if (dyn.Modules.ModuleDynamic.HasArticle)
             {
-                Replies = (await BiliBiliService.API.GetArtileDynamicReplyAsync(dyn.Modules.ModuleDynamic.Major.Article.Id)).Data;
+                re = (await BiliBiliService.API.GetArtileDynamicReplyAsync(dyn.Modules.ModuleDynamic.Major.Article.Id)).Data;
+                Replies = new ReplyItemCollection(re, "12", dyn.Modules.ModuleDynamic.Major.Article.Id, BiliBiliService);
             }
             else if (dyn.Modules.ModuleDynamic.HasDraw)
             {
-                Replies = (await BiliBiliService.API.GetPictureDynamicReplyAsync(dyn.Modules.ModuleDynamic.Major.Draw.ID)).Data;
+                re = (await BiliBiliService.API.GetPictureDynamicReplyAsync(dyn.Modules.ModuleDynamic.Major.Draw.ID)).Data;
+                Replies = new ReplyItemCollection(re, "11", dyn.Modules.ModuleDynamic.Major.Draw.ID, BiliBiliService);
             }
             else
             {
-                Replies = (await BiliBiliService.API.GetTextDynamicReplyAsync(dyn.Id)).Data;
+                re = (await BiliBiliService.API.GetTextDynamicReplyAsync(dyn.Id)).Data;
+                Replies = new ReplyItemCollection(re, "17", dyn.Id, BiliBiliService);
             }
             currentOpen = dyn;
         }

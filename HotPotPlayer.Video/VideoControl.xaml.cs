@@ -100,15 +100,14 @@ namespace HotPotPlayer.Video
             h.currentPlayIndex = info.Index;
         }
 
-        public bool NoTitleBar
+        public bool IsFullPageHost
         {
-            get { return (bool)GetValue(NoTitleBarProperty); }
-            set { SetValue(NoTitleBarProperty, value); }
+            get { return (bool)GetValue(IsFullPageHostProperty); }
+            set { SetValue(IsFullPageHostProperty, value); }
         }
 
-        public static readonly DependencyProperty NoTitleBarProperty =
-            DependencyProperty.Register("NoTitleBar", typeof(bool), typeof(VideoControl), new PropertyMetadata(default));
-
+        public static readonly DependencyProperty IsFullPageHostProperty =
+            DependencyProperty.Register("IsFullPageHost", typeof(bool), typeof(VideoControl), new PropertyMetadata(default));
 
         bool mediaInited;
         bool mediaEnded;
@@ -130,7 +129,7 @@ namespace HotPotPlayer.Video
                         Volume = 100,
                         LogLevel = MpvLogLevel.Debug,
                         Loop = false,
-                        LoopPlaylist = !NoTitleBar,
+                        LoopPlaylist = IsFullPageHost,
                     };
                     _mpv.SetD3DInitCallback(D3DInitCallback);
                     _mpv.MediaResumed += MediaResumed;
@@ -232,7 +231,7 @@ namespace HotPotPlayer.Video
                 Mpv.API.SetPropertyString("cookies-file", GetCookieFile());
                 Mpv.API.SetPropertyString("http-header-fields", "Referer: http://www.bilibili.com/");
                 //Mpv.API.SetPropertyString("demuxer-lavf-o", $"headers=\"Referer: http://www.bilibili.com/\r\nUserAgent: {BiliAPI.UserAgent}\r\n\"");
-                //Mpv.API.SetPropertyString("demuxer-lavf-probescore", "1");
+                Mpv.API.SetPropertyString("demuxer-lavf-probescore", "1");
             }
         }
 
@@ -464,16 +463,7 @@ namespace HotPotPlayer.Video
             {
                 Set(ref playBarVisible, value, newV =>
                 {
-                    if(!NoTitleBar)
-                    {
-                        TitleBarVisible = value;
-                        OnPropertyChanged(propertyName: nameof(TitleBarVisible));
-                    }
                     ShowCursor(newV ? 1 : 0);
-                    if (!NoTitleBar)
-                    {
-                        AppWindow.SetTitleBarForegroundColor(newV);
-                    }
                     if (newV == true)
                     {
                         _inActiveTimer ??= InitInActiveTimer();
@@ -483,7 +473,10 @@ namespace HotPotPlayer.Video
             }
         }
 
-        public bool TitleBarVisible { get; set; }
+        public Visibility GetTitleBarVisible(bool playBarVisible, bool isFullPage)
+        {
+            return (playBarVisible && isFullPage) ? Visibility.Visible : Visibility.Collapsed;
+        }
 
         void StopInactiveTimer()
         {
@@ -706,8 +699,6 @@ namespace HotPotPlayer.Video
             return isFullScreen ? "\uE1D8" : "\uE1D9";
         }
 
-
-
         public bool IsFullPage
         {
             get { return (bool)GetValue(IsFullPageProperty); }
@@ -736,14 +727,14 @@ namespace HotPotPlayer.Video
             OnToggleFullPage?.Invoke();
         }
 
-        private Visibility GetTogglePlayListBarVisibility(bool notitlebar)
+        private Visibility GetTogglePlayListBarVisibility(bool isFullPageHost)
         {
-            return notitlebar ? Visibility.Collapsed : Visibility.Visible;
+            return isFullPageHost ? Visibility.Visible : Visibility.Collapsed;
         }
 
-        private Visibility GetToggleFullPageVisibility(bool notitlebar)
+        private Visibility GetToggleFullPageVisibility(bool isFullPageHost)
         {
-            return notitlebar ? Visibility.Visible : Visibility.Collapsed;
+            return isFullPageHost ? Visibility.Collapsed : Visibility.Visible;
         }
 
         private void VideoPlayListBar_OnDismiss()

@@ -8,21 +8,31 @@ using System.Threading.Tasks;
 
 namespace HotPotPlayer.Services.BiliBili.Reply
 {
+    public enum ReplyType
+    {
+        Video = 1,
+        Dynamic = 17
+    }
+
     public class Replies
     {
-        [JsonProperty("page")] public Page Page { get; set; }
+        [JsonProperty("cursor")] public Cursor Cursor { get; set; }
+        [JsonProperty("hots")] public List<Reply> Hots { get; set; }
         [JsonProperty("config")] public Config Config { get; set; }
         [JsonProperty("replies")] public List<Reply> TheReplies { get; set; }
-        [JsonProperty("hots")] public List<Reply> Hots { get; set; }
         [JsonProperty("upper")] public Reply Upper { get; set; }
     }
 
-    public class Page
+    public class Cursor
     {
-        [JsonProperty("num")] public int Num { get; set; }
-        [JsonProperty("size")] public int Size { get; set; }
-        [JsonProperty("count")] public int Count { get; set; }
-        [JsonProperty("acount")] public int Acount { get; set; }
+        [JsonProperty("all_count")] public int AllCount { get; set; }
+        [JsonProperty("is_begin")] public bool IsBegin { get; set; }
+        [JsonProperty("prev")] public int Prev { get; set; }
+        [JsonProperty("next")] public int Next { get; set; }
+        [JsonProperty("is_end")] public bool IsEnd { get; set; }
+        [JsonProperty("mode")] public int Mode { get; set; }
+        [JsonProperty("show_type")] public int ShowType { get; set; }
+        [JsonProperty("name")] public string Name { get; set; }
     }
 
     public class Config

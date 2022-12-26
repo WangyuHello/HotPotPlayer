@@ -251,72 +251,49 @@ namespace HotPotPlayer.Services.BiliBili
         }
 
         /// <summary>
+        /// https://github.com/SocialSisterYi/bilibili-API-collect/blob/master/comment/list.md#%E8%8E%B7%E5%8F%96%E8%AF%84%E8%AE%BA%E5%8C%BA%E6%98%8E%E7%BB%86_%E6%87%92%E5%8A%A0%E8%BD%BD
+        /// </summary>
+        /// <param name="type"></param>
+        /// <param name="oid"></param>
+        /// <returns></returns>
+        public async Task<BiliResult<Replies>> GetReplyAsync(string type, string oid, int next)
+        {
+            var r = await GetAsync("http://api.bilibili.com/x/v2/reply/main", ResponseEnum.Web,
+                new Dictionary<string, string>
+                {
+                    ["type"] = type,
+                    ["oid"] = oid,
+                    ["mode"] = "3",
+                    ["next"] = next.ToString(),
+                    ["ps"] = "20",
+                });
+            var res = JsonConvert.DeserializeObject<BiliResult<Replies>>(r);
+            return res;
+        }
+
+        /// <summary>
         /// https://github.com/SocialSisterYi/bilibili-API-collect/blob/master/comment/list.md
         /// </summary>
         /// <param name="avid"></param>
         /// <returns></returns>
-        public async Task<BiliResult<Replies>> GetVideoReplyAsync(string avid)
+        public async Task<BiliResult<Replies>> GetVideoReplyAsync(string avid, int next=0)
         {
-            var r = await GetAsync("http://api.bilibili.com/x/v2/reply", ResponseEnum.Web,
-                new Dictionary<string, string>
-                {
-                    ["type"] = "1",
-                    ["oid"] = avid,
-                    ["sort"] = "1",
-                    ["nohot"] = "0",
-                    ["ps"] = "20",
-                    ["pn"] = "1"
-                });
-            var res = JsonConvert.DeserializeObject<BiliResult<Replies>>(r);
-            return res;
+            return await GetReplyAsync("1", avid, next);
         }
 
-        public async Task<BiliResult<Replies>> GetTextDynamicReplyAsync(string did)
+        public async Task<BiliResult<Replies>> GetTextDynamicReplyAsync(string did, int next = 0)
         {
-            var r = await GetAsync("http://api.bilibili.com/x/v2/reply", ResponseEnum.Web,
-                new Dictionary<string, string>
-                {
-                    ["type"] = "17",
-                    ["oid"] = did,
-                    ["sort"] = "1",
-                    ["nohot"] = "0",
-                    ["ps"] = "20",
-                    ["pn"] = "1"
-                });
-            var res = JsonConvert.DeserializeObject<BiliResult<Replies>>(r);
-            return res;
+            return await GetReplyAsync("17", did, next);
         }
 
-        public async Task<BiliResult<Replies>> GetArtileDynamicReplyAsync(string cvid)
+        public async Task<BiliResult<Replies>> GetArtileDynamicReplyAsync(string cvid, int next = 0)
         {
-            var r = await GetAsync("http://api.bilibili.com/x/v2/reply", ResponseEnum.Web,
-                new Dictionary<string, string>
-                {
-                    ["type"] = "12",
-                    ["oid"] = cvid,
-                    ["sort"] = "1",
-                    ["nohot"] = "0",
-                    ["ps"] = "20",
-                    ["pn"] = "1"
-                });
-            var res = JsonConvert.DeserializeObject<BiliResult<Replies>>(r);
-            return res;
+            return await GetReplyAsync("12", cvid, next);
         }
 
-        public async Task<BiliResult<Replies>> GetPictureDynamicReplyAsync(string id)
+        public async Task<BiliResult<Replies>> GetPictureDynamicReplyAsync(string id, int next = 0)
         {
-            var r = await GetAsync("http://api.bilibili.com/x/v2/reply", ResponseEnum.Web,
-                new Dictionary<string, string>
-                {
-                    ["type"] = "11",
-                    ["oid"] = id,
-                    ["sort"] = "1",
-                    ["nohot"] = "0",
-                    ["ps"] = "20",
-                    ["pn"] = "1"
-                });
-            var res = JsonConvert.DeserializeObject<BiliResult<Replies>>(r);
-            return res;
+            return await GetReplyAsync("11", id, next);
         }
 
         public async Task<BiliResult<List<VideoContent>>> GetRelatedVideo(string bvid)

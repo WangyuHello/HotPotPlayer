@@ -98,17 +98,17 @@
                 <Button Margin="8,0,0,0" Style="{StaticResource VideoPlayOtherButton}" Click="ToggleFullScreenClick">
                     <FontIcon FontFamily="{ThemeResource SegoeIcons}" Glyph="{x:Bind GetFullScreenIcon(IsFullScreen), Mode=OneWay}" />
                 </Button>
-                <Button Margin="8,0,0,0" Style="{StaticResource VideoPlayOtherButton}" Click="TogglePlayListBarVisibilityClick" Visibility="{x:Bind GetTogglePlayListBarVisibility(NoTitleBar), Mode=OneWay}">
+                <Button Margin="8,0,0,0" Style="{StaticResource VideoPlayOtherButton}" Click="TogglePlayListBarVisibilityClick" Visibility="{x:Bind GetTogglePlayListBarVisibility(IsFullPageHost), Mode=OneWay}">
                     <FontIcon FontFamily="{ThemeResource SegoeIcons}" Glyph="&#xE762;" />
                 </Button>
-                <Button Margin="8,0,0,0" Style="{StaticResource VideoPlayOtherButton}" Click="ToggleFullPageClick" Visibility="{x:Bind GetToggleFullPageVisibility(NoTitleBar), Mode=OneWay}">
+                <Button Margin="8,0,0,0" Style="{StaticResource VideoPlayOtherButton}" Click="ToggleFullPageClick" Visibility="{x:Bind GetToggleFullPageVisibility(IsFullPageHost), Mode=OneWay}">
                     <FontIcon FontFamily="{ThemeResource SegoeIcons}" Glyph="{x:Bind GetFullPageIcon(IsFullPage), Mode=OneWay}" />
                 </Button>
             </StackPanel>
         </Grid>
         
         <!--Title-->
-        <Grid VerticalAlignment="Top" Padding="8,8" Background="#e0424047" Visibility="{x:Bind TitleBarVisible, Mode=OneWay}" PointerEntered="PlayBar_PointerEntered" PointerExited="PlayBar_PointerExited">
+        <Grid VerticalAlignment="Top" Padding="8,8" Background="#e0424047" Visibility="{x:Bind GetTitleBarVisible(PlayBarVisible, IsFullPage), Mode=OneWay}" PointerEntered="PlayBar_PointerEntered" PointerExited="PlayBar_PointerExited">
             <animations:Implicit.ShowAnimations>
                 <animations:TranslationAnimation Duration="0:0:1" From="0,-50,0" To="0,0,0" EasingMode="EaseOut"/>
             </animations:Implicit.ShowAnimations>
