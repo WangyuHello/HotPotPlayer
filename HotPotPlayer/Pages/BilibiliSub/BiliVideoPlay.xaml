@@ -12,6 +12,7 @@
     xmlns:video="using:HotPotPlayer.Video"
     xmlns:cont2="using:HotPotPlayer.UI.Controls"
     xmlns:cont3="using:HotPotPlayer.Controls.BilibiliSub"
+    xmlns:ui="using:CommunityToolkit.WinUI.UI"
     mc:Ignorable="d"
     x:DefaultBindMode="OneWay"
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
@@ -43,7 +44,8 @@
             <StackPanel x:Name="ThreeButton" Grid.Row="1" Grid.RowSpan="2" HorizontalAlignment="Right" Margin="0,16,0,0" Orientation="Horizontal" Spacing="8">
                 <Button Padding="8,0" Style="{StaticResource TransparentButton}" VerticalAlignment="Top" Click="LikeClick" Foreground="{x:Bind GetLikeColor(IsLike)}">
                     <StackPanel Spacing="4" Padding="0,4">
-                        <ImageIcon Source="ms-appx:///Assets/Icon/Like.svg" Width="24" Foreground="Wheat"/>
+                        <ImageIcon Source="ms-appx:///Assets/Icon/Like.svg" Width="24" />
+                        <!--<PathIcon Data="{StaticResource LikePath}" />-->
                         <TextBlock HorizontalAlignment="Center" Text="{x:Bind Video.Stat.GetLike(), Mode=OneWay}" FontFamily="{ThemeResource MiSansRegular}" />
                     </StackPanel>
                 </Button>

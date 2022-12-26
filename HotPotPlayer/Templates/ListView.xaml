@@ -472,7 +472,7 @@
                     <TextBlock Grid.Row="1" Margin="0,4,0,0" FontSize="14" Text="{x:Bind Origin.Modules.ModuleDynamic.Major.Archive.Title}" FontFamily="{ThemeResource MiSansMedium}" TextWrapping="Wrap"/>
                 </Grid>
                 <ccont:AdaptiveGridView Margin="0,8,0,0" Visibility="{x:Bind Origin.Modules.ModuleDynamic.IsMultiDraw}" 
-                                    DesiredWidth="200"
+                                    DesiredWidth="160"
                                     ItemTemplate="{StaticResource DynamicMultiDrawTemplate}"
                                     ItemsSource="{x:Bind Origin.Modules.ModuleDynamic.Major.Draw.Items}">
 

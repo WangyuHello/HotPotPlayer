@@ -22,6 +22,7 @@
   <ItemGroup>
     <Content Remove="Assets\Emoji\[吃瓜].webp" />
     <Content Remove="Assets\Emoji\[脱单doge].webp" />
+    <Content Remove="Assets\Icon\Icons.xaml" />
   </ItemGroup>
 
   <ItemGroup>
@@ -40,6 +41,7 @@
     <None Remove="Assets\Icon\Coin.svg" />
     <None Remove="Assets\Icon\Collect.svg" />
     <None Remove="Assets\Icon\Dan.svg" />
+    <None Remove="Assets\Icon\Icons.xaml" />
     <None Remove="Assets\Icon\Like.svg" />
     <None Remove="Assets\Icon\LikeBlue.svg" />
     <None Remove="Assets\Icon\Share.svg" />
@@ -138,6 +140,12 @@
   <ItemGroup>
     <ProjectReference Include="..\HotPotPlayer.Common\HotPotPlayer.Common.csproj" />
     <ProjectReference Include="..\HotPotPlayer.Video\HotPotPlayer.Video.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Page Update="Assets\Icon\Icons.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
   </ItemGroup>
 
   <ItemGroup>
