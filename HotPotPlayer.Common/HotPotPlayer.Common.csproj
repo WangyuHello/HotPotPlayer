@@ -24,6 +24,7 @@
       <PackageReference Include="CommunityToolkit.WinUI.UI" Version="7.1.2" />
       <PackageReference Include="CommunityToolkit.WinUI.UI.Controls.Core" Version="7.1.2" />
       <PackageReference Include="FFmpegInteropX" Version="1.1.0-pre38" />
+      <PackageReference Include="Grpc.Net.Client" Version="2.50.0" />
       <PackageReference Include="HttpClientFactoryLite" Version="0.4.0" />
       <PackageReference Include="Microsoft.AspNetCore.WebUtilities" Version="2.2.0" />
       <PackageReference Include="Microsoft.Graphics.Win2D" Version="1.0.4" />
@@ -47,6 +48,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\HotPotPlayer.Bilibili.Grpc\HotPotPlayer.Bilibili.Grpc.csproj" />
     <ProjectReference Include="..\HotPotPlayer.Native\HotPotPlayer.Native.csproj" />
     <ProjectReference Include="..\ThirdParty\Mpv.NET-lib-\src\Mpv.NET\Mpv.NET.csproj" />
     <ProjectReference Include="..\ThirdParty\NeteaseCloudMusicApi\NeteaseCloudMusicApi\NeteaseCloudMusicApi.csproj" />

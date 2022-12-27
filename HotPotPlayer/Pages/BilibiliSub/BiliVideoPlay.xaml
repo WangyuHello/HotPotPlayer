@@ -20,25 +20,26 @@
     <Grid Background="White" >
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="*" />
-            <ColumnDefinition Width="{x:Bind GetCommentWidth(IsFullPage), Mode=OneWay}" />
+            <ColumnDefinition Width="{x:Bind GetCommentWidth(IsFullPage)}" />
         </Grid.ColumnDefinitions>
 
-        <Grid Background="#f9f9fb" Padding="{x:Bind GetRootPadding(IsFullPage), Mode=OneWay}">
+        <Grid Background="#f9f9fb" Padding="{x:Bind GetRootPadding(IsFullPage)}">
             <Grid.RowDefinitions>
                 <RowDefinition Height="*" />
-                <RowDefinition Height="{x:Bind GetTitleHeight(IsFullPage), Mode=OneWay}" />
-                <RowDefinition Height="{x:Bind GetTitleHeight(IsFullPage), Mode=OneWay}" />
-                <RowDefinition Height="{x:Bind GetTitleHeight(IsFullPage), Mode=OneWay}" />
-                <RowDefinition Height="{x:Bind GetTitleHeight(IsFullPage), Mode=OneWay}" />
+                <RowDefinition Height="{x:Bind GetTitleHeight(IsFullPage)}" />
+                <RowDefinition Height="{x:Bind GetTitleHeight(IsFullPage)}" />
+                <RowDefinition Height="{x:Bind GetTitleHeight(IsFullPage)}" />
+                <RowDefinition Height="{x:Bind GetTitleHeight(IsFullPage)}" />
             </Grid.RowDefinitions>
-            <video:VideoControl x:Name="VideoPlayer" Source="{x:Bind Source, Mode=OneWay}" OnToggleFullScreen="OnToggleFullScreen" OnToggleFullPage="OnToggleFullPage" IsFullPage="{x:Bind IsFullPage, Mode=OneWay}" IsFullPageHost="False" OnMediaLoaded="OnMediaLoaded"/>
+            <video:VideoControl x:Name="VideoPlayer" Source="{x:Bind Source}" OnToggleFullScreen="OnToggleFullScreen" OnToggleFullPage="OnToggleFullPage" IsFullPage="{x:Bind IsFullPage}" IsFullPageHost="False" OnMediaLoaded="OnMediaLoaded"/>
+            <!--<cont3:DanmakuRenderer DmData="{x:Bind DmData}"/>-->
 
             <Grid Grid.Row="1" Margin="0,20,0,20">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="*" />
                     <ColumnDefinition Width="Auto" />
                 </Grid.ColumnDefinitions>
-                <TextBlock Text="{x:Bind Video.Title, Mode=OneWay}" FontSize="28" FontFamily="{ThemeResource MiSansMedium}" MaxLines="2" TextWrapping="Wrap" IsTextSelectionEnabled="True" TextTrimming="CharacterEllipsis"/>
+                <TextBlock Text="{x:Bind Video.Title}" FontSize="28" FontFamily="{ThemeResource MiSansMedium}" MaxLines="2" TextWrapping="Wrap" IsTextSelectionEnabled="True" TextTrimming="CharacterEllipsis"/>
                 <Rectangle Grid.Column="1" Width="230"/>
             </Grid>
             <StackPanel x:Name="ThreeButton" Grid.Row="1" Grid.RowSpan="2" HorizontalAlignment="Right" Margin="0,16,0,0" Orientation="Horizontal" Spacing="8">
@@ -46,30 +47,30 @@
                     <StackPanel Spacing="4" Padding="0,4">
                         <ImageIcon Source="ms-appx:///Assets/Icon/Like.svg" Width="24" />
                         <!--<PathIcon Data="{StaticResource LikePath}" />-->
-                        <TextBlock HorizontalAlignment="Center" Text="{x:Bind Video.Stat.GetLike(), Mode=OneWay}" FontFamily="{ThemeResource MiSansRegular}" />
+                        <TextBlock HorizontalAlignment="Center" Text="{x:Bind Video.Stat.GetLike()}" FontFamily="{ThemeResource MiSansRegular}" />
                     </StackPanel>
                 </Button>
                 <Button Padding="8,0" Style="{StaticResource TransparentButton}" VerticalAlignment="Top">
                     <StackPanel Spacing="4" Padding="0,4">
                         <ImageIcon Source="ms-appx:///Assets/Icon/Coin.svg" Width="24" Foreground="Gray"/>
-                        <TextBlock HorizontalAlignment="Center" Text="{x:Bind Video.Stat.GetCoin(), Mode=OneWay}" FontFamily="{ThemeResource MiSansRegular}" Foreground="Gray"/>
+                        <TextBlock HorizontalAlignment="Center" Text="{x:Bind Video.Stat.GetCoin()}" FontFamily="{ThemeResource MiSansRegular}" Foreground="Gray"/>
                     </StackPanel>
                 </Button>
                 <Button Padding="8,0" Style="{StaticResource TransparentButton}" VerticalAlignment="Top">
                     <StackPanel Spacing="4" Padding="0,4" >
                         <ImageIcon Source="ms-appx:///Assets/Icon/Collect.svg" Width="24" Foreground="Gray"/>
-                        <TextBlock HorizontalAlignment="Center" Text="{x:Bind Video.Stat.GetFavorite(), Mode=OneWay}" FontFamily="{ThemeResource MiSansRegular}" Foreground="Gray"/>
+                        <TextBlock HorizontalAlignment="Center" Text="{x:Bind Video.Stat.GetFavorite()}" FontFamily="{ThemeResource MiSansRegular}" Foreground="Gray"/>
                     </StackPanel>
                 </Button>
                 <Button Padding="8,0" Style="{StaticResource TransparentButton}" VerticalAlignment="Top">
                     <StackPanel Spacing="4" Padding="0,4">
                         <ImageIcon Source="ms-appx:///Assets/Icon/Share.svg" Width="24" Foreground="Gray"/>
-                        <TextBlock HorizontalAlignment="Center" Text="{x:Bind Video.Stat.GetShare(), Mode=OneWay}" FontFamily="{ThemeResource MiSansRegular}" Foreground="Gray"/>
+                        <TextBlock HorizontalAlignment="Center" Text="{x:Bind Video.Stat.GetShare()}" FontFamily="{ThemeResource MiSansRegular}" Foreground="Gray"/>
                     </StackPanel>
                 </Button>
             </StackPanel>
             <StackPanel Grid.Row="2" Orientation="Horizontal" Margin="0,0,0,16">
-                <cont2:ImageEx2 x:Name="UserAvatar" Source="{x:Bind Video.Up.Face, Mode=OneWay}" Style="{StaticResource LocalMusicImageStyle}" 
+                <cont2:ImageEx2 x:Name="UserAvatar" Source="{x:Bind Video.Up.Face}" Style="{StaticResource LocalMusicImageStyle}" 
                     Width="24" Height="24" Tapped="UserAvatar_Tapped"
                     CornerRadius="16" >
                     <cont2:ImageEx2.ContextFlyout>
@@ -79,18 +80,18 @@
                     </cont2:ImageEx2.ContextFlyout>
                 </cont2:ImageEx2>
 
-                <TextBlock VerticalAlignment="Center" Margin="8,0" Text="{x:Bind Video.Up.Name, Mode=OneWay}" FontFamily="{ThemeResource MiSansRegular}" FontSize="15" IsTextSelectionEnabled="True"/>
+                <TextBlock VerticalAlignment="Center" Margin="8,0" Text="{x:Bind Video.Up.Name}" FontFamily="{ThemeResource MiSansRegular}" FontSize="15" IsTextSelectionEnabled="True"/>
                 <ImageIcon Source="ms-appx:///Assets/Icon/View.svg" Margin="12,0,0,0" Width="20" Foreground="Gray"/>
-                <TextBlock VerticalAlignment="Center" Margin="4,0" Text="{x:Bind Video.Stat.GetViews(), Mode=OneWay}" Foreground="Gray" FontFamily="{ThemeResource MiSansRegular}" />
+                <TextBlock VerticalAlignment="Center" Margin="4,0" Text="{x:Bind Video.Stat.GetViews()}" Foreground="Gray" FontFamily="{ThemeResource MiSansRegular}" />
                 <ImageIcon Source="ms-appx:///Assets/Icon/Dan.svg" Margin="12,0,0,0" Width="20" Foreground="Gray"/>
-                <TextBlock VerticalAlignment="Center" Margin="4,0" Text="{x:Bind Video.Stat.GetDanMaku(), Mode=OneWay}" Foreground="Gray" FontFamily="{ThemeResource MiSansRegular}" />
+                <TextBlock VerticalAlignment="Center" Margin="4,0" Text="{x:Bind Video.Stat.GetDanMaku()}" Foreground="Gray" FontFamily="{ThemeResource MiSansRegular}" />
                 <ImageIcon Source="ms-appx:///Assets/Icon/Time.svg" Margin="12,0,0,0" Width="20" Foreground="Gray"/>
-                <TextBlock VerticalAlignment="Center" Margin="4,0" Text="{x:Bind Video.GetUpDateTime2(), Mode=OneWay}" Foreground="Gray" FontFamily="{ThemeResource MiSansRegular}" />
+                <TextBlock VerticalAlignment="Center" Margin="4,0" Text="{x:Bind Video.GetUpDateTime2()}" Foreground="Gray" FontFamily="{ThemeResource MiSansRegular}" />
                 <FontIcon FontFamily="{ThemeResource SegoeIcons}" Margin="12,0,0,0" Glyph="&#xE18B;" Foreground="Gray" FontSize="16"/>
-                <TextBlock VerticalAlignment="Center" Margin="6,0" Text="{x:Bind OnLineCount, Mode=OneWay}" Foreground="Gray" FontFamily="{ThemeResource MiSansRegular}" />
+                <TextBlock VerticalAlignment="Center" Margin="6,0" Text="{x:Bind OnLineCount}" Foreground="Gray" FontFamily="{ThemeResource MiSansRegular}" />
             </StackPanel>
-            <TextBlock Text="{x:Bind Video.VideoDEsc, Mode=OneWay}" Grid.Row="3" IsTextSelectionEnabled="True" FontFamily="{ThemeResource MiSansRegular}" MaxLines="3" TextWrapping="Wrap" TextTrimming="CharacterEllipsis"/>
-            <ListView Grid.Row="4" Margin="-36,2,-28,0" Padding="36,0,28,0" Height="220" ItemsSource="{x:Bind RelatedVideos, Mode=OneWay}" Style="{StaticResource HorizontalListViewStyle}" ItemContainerStyle="{StaticResource GeneralListContainerCompactPaddingStyle}" ItemTemplate="{StaticResource BiliVideoCardViewTemplate2}" ItemClick="RelateVideoClick">
+            <TextBlock Text="{x:Bind Video.VideoDEsc}" Grid.Row="3" IsTextSelectionEnabled="True" FontFamily="{ThemeResource MiSansRegular}" MaxLines="3" TextWrapping="Wrap" TextTrimming="CharacterEllipsis"/>
+            <ListView Grid.Row="4" Margin="-36,2,-28,0" Padding="36,0,28,0" Height="220" ItemsSource="{x:Bind RelatedVideos}" Style="{StaticResource HorizontalListViewStyle}" ItemContainerStyle="{StaticResource GeneralListContainerCompactPaddingStyle}" ItemTemplate="{StaticResource BiliVideoCardViewTemplate2}" ItemClick="RelateVideoClick">
 
             </ListView>
         </Grid>
@@ -105,7 +106,7 @@
             <StackPanel Orientation="Horizontal" Spacing="8" Margin="0,0,0,16" >
                 <TextBlock Text="评论" FontSize="18" FontFamily="{ThemeResource MiSansMedium}" />
                 <Border CornerRadius="4" Background="#4e4f67" Padding="6,0">
-                    <TextBlock Text="{x:Bind Video.Stat.GetReply(), Mode=OneWay}" Foreground="White" FontSize="12" VerticalAlignment="Center" FontFamily="{ThemeResource MiSansMedium}" />
+                    <TextBlock Text="{x:Bind Video.Stat.GetReply()}" Foreground="White" FontSize="12" VerticalAlignment="Center" FontFamily="{ThemeResource MiSansMedium}" />
                 </Border>
             </StackPanel>
             <Grid Grid.Row="1" >
@@ -122,7 +123,7 @@
                 Grid.Row="2" 
                 Margin="-8,12,-8,0" 
                 Padding="8,0" 
-                ItemsSource="{x:Bind Replies, Mode=OneWay}" 
+                ItemsSource="{x:Bind Replies}" 
                 Style="{StaticResource GeneralListViewStyle}" 
                 ItemContainerStyle="{StaticResource GeneralListContainerStyle}" 
                 ItemTemplate="{StaticResource VideoReplyTemplate}"

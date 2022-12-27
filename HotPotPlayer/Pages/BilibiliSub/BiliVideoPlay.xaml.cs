@@ -24,6 +24,7 @@ using HotPotPlayer.Services.BiliBili.Reply;
 using System.Threading.Tasks;
 using Windows.UI;
 using Microsoft.UI;
+using HotPotPlayer.Services.BiliBili.Danmaku;
 
 // To learn more about WinUI, the WinUI project structure,
 // and more about our project templates, see: http://aka.ms/winui-project-info.
@@ -61,6 +62,9 @@ namespace HotPotPlayer.Pages.BilibiliSub
         [ObservableProperty]
         bool isLike;
 
+        [ObservableProperty]
+        DMData dmData;
+
         protected override async void OnNavigatedTo(NavigationEventArgs e)
         {
             base.OnNavigatedTo(e);
@@ -96,6 +100,7 @@ namespace HotPotPlayer.Pages.BilibiliSub
             this.replies = new ReplyItemCollection(replies, "1", Video.Aid, BiliBiliService);
             this.relatedVideos = (await BiliBiliService.API.GetRelatedVideo(Video.Bvid)).Data;
             this.isLike = await BiliBiliService.API.IsLike(Video.Aid);
+            this.dmData = await BiliBiliService.API.GetDMXml(cid);
 
             VideoPlayer.PreparePlay();
             VideoPlayer.StartPlay();
@@ -159,6 +164,7 @@ namespace HotPotPlayer.Pages.BilibiliSub
             OnPropertyChanged(propertyName: nameof(Replies));
             OnPropertyChanged(propertyName: nameof(RelatedVideos));
             OnPropertyChanged(propertyName: nameof(IsLike));
+            OnPropertyChanged(propertyName: nameof(DmData));
         }
 
         private void UserAvatar_Tapped(object sender, TappedRoutedEventArgs e)

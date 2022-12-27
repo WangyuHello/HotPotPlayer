@@ -20,6 +20,10 @@ using HotPotPlayer.Services.BiliBili.Reply;
 using HotPotPlayer.Services.BiliBili.Dynamic;
 using HotPotPlayer.Services.BiliBili.User;
 using System.Diagnostics;
+using Bilibili.Community.Service.Dm.V1;
+using Grpc.Net.Client;
+using Grpc.Core;
+using HotPotPlayer.Services.BiliBili.Danmaku;
 
 namespace HotPotPlayer.Services.BiliBili
 {
@@ -27,6 +31,9 @@ namespace HotPotPlayer.Services.BiliBili
     {
         readonly HttpClientFactory _httpClientFactory;
         public HttpClientFactory HttpClientFactory => _httpClientFactory;
+
+        readonly DM.DMClient _dmClient;
+        readonly Metadata _grpcHeaders;
 
         public BiliAPI()
         {
@@ -46,7 +53,7 @@ namespace HotPotPlayer.Services.BiliBili
                 .SetHandlerLifetime(TimeSpan.FromDays(1))
                 .ConfigureHttpClient(client =>
                 {
-                    client.DefaultRequestHeaders.Referrer = new Uri("http://www.bilibili.com/");
+                    client.DefaultRequestHeaders.Referrer = new Uri("https://www.bilibili.com/");
                     client.DefaultRequestHeaders.Add("User-Agent", UserAgent);
                     client.Timeout = TimeSpan.FromSeconds(8);
                 }));
@@ -65,11 +72,18 @@ namespace HotPotPlayer.Services.BiliBili
                 .SetHandlerLifetime(TimeSpan.FromDays(1))
                 .ConfigureHttpClient(client =>
                 {
-                    client.DefaultRequestHeaders.Referrer = new Uri("http://www.bilibili.com/");
+                    client.DefaultRequestHeaders.Referrer = new Uri("https://www.bilibili.com/");
                     client.DefaultRequestHeaders.Add("User-Agent", UserAgent);
                     client.Timeout = TimeSpan.FromSeconds(8);
                 }));
 
+            var channel = GrpcChannel.ForAddress("https://api.bilibili.com/x/v2/dm/web/seg.so");
+            _dmClient = new DM.DMClient(channel);
+            _grpcHeaders = new Metadata
+            {
+                { "Origin", "https://www.bilibili.com/" },
+                { "Referrer", "https://www.bilibili.com/" },
+            };
         }
         public enum ResponseEnum { App, Web }
         AccountToken token;
@@ -155,7 +169,7 @@ namespace HotPotPlayer.Services.BiliBili
         /// <returns></returns>
         public async Task<(string token, string url)> RequestQrCode()
         {
-            var r = await GetAsync("http://passport.bilibili.com/x/passport-login/web/qrcode/generate", ResponseEnum.Web);
+            var r = await GetAsync("https://passport.bilibili.com/x/passport-login/web/qrcode/generate", ResponseEnum.Web);
             var j = JObject.Parse(r);
             var url = j["data"]["url"].Value<string>();
             var token = j["data"]["qrcode_key"].Value<string>();
@@ -168,7 +182,7 @@ namespace HotPotPlayer.Services.BiliBili
         /// <returns></returns>
         public async Task<JObject> GetLoginInfoAsync()
         {
-            var r = await GetAsync("http://api.bilibili.com/x/web-interface/nav/stat", ResponseEnum.Web);
+            var r = await GetAsync("https://api.bilibili.com/x/web-interface/nav/stat", ResponseEnum.Web);
             return JObject.Parse(r);
         }
 
@@ -179,7 +193,7 @@ namespace HotPotPlayer.Services.BiliBili
         /// <returns></returns>
         public async Task<JObject> GetQrCodePoll(string key)
         {
-            var r = await GetAsync("http://passport.bilibili.com/x/passport-login/web/qrcode/poll", ResponseEnum.Web, 
+            var r = await GetAsync("https://passport.bilibili.com/x/passport-login/web/qrcode/poll", ResponseEnum.Web, 
                 new Dictionary<string, string> { ["qrcode_key"] = key});
             var j = JObject.Parse(r);
             return j;
@@ -196,7 +210,7 @@ namespace HotPotPlayer.Services.BiliBili
         /// <returns></returns>
         public async Task<BiliResult<VideoInfo>> GetVideoUrl(string bvid, string cid, DashEnum qn = DashEnum.Dash480, FnvalEnum fnval = FnvalEnum.Dash, int fourk = 0)
         {
-            var r = await GetAsync("http://api.bilibili.com/x/player/playurl", ResponseEnum.Web,
+            var r = await GetAsync("https://api.bilibili.com/x/player/playurl", ResponseEnum.Web,
                 new Dictionary<string, string> {
                     ["bvid"] = bvid,
                     ["cid"] = cid,
@@ -216,7 +230,7 @@ namespace HotPotPlayer.Services.BiliBili
         /// <returns></returns>
         public async Task<BiliResult<VideoContent>> GetVideoInfo(string bvid)
         {
-            var r = await GetAsync("http://api.bilibili.com/x/web-interface/view", ResponseEnum.Web,
+            var r = await GetAsync("https://api.bilibili.com/x/web-interface/view", ResponseEnum.Web,
                 new Dictionary<string, string>
                 {
                     ["bvid"] = bvid,
@@ -264,7 +278,7 @@ namespace HotPotPlayer.Services.BiliBili
 
         public async Task<string> GetOnlineCount(string bvid, string cid)
         {
-            var r = await GetAsync("http://api.bilibili.com/x/player/online/total", ResponseEnum.Web,
+            var r = await GetAsync("https://api.bilibili.com/x/player/online/total", ResponseEnum.Web,
                 new Dictionary<string, string>
                 {
                     ["bvid"] = bvid,
@@ -282,7 +296,7 @@ namespace HotPotPlayer.Services.BiliBili
         /// <returns></returns>
         public async Task<BiliResult<Replies>> GetReplyAsync(string type, string oid, int next)
         {
-            var r = await GetAsync("http://api.bilibili.com/x/v2/reply/main", ResponseEnum.Web,
+            var r = await GetAsync("https://api.bilibili.com/x/v2/reply/main", ResponseEnum.Web,
                 new Dictionary<string, string>
                 {
                     ["type"] = type,
@@ -322,7 +336,7 @@ namespace HotPotPlayer.Services.BiliBili
 
         public async Task<BiliResult<List<VideoContent>>> GetRelatedVideo(string bvid)
         {
-            var r = await GetAsync("http://api.bilibili.com/x/web-interface/archive/related", ResponseEnum.Web,
+            var r = await GetAsync("https://api.bilibili.com/x/web-interface/archive/related", ResponseEnum.Web,
                 new Dictionary<string, string>
                 {
                     ["bvid"] = bvid,
@@ -363,7 +377,7 @@ namespace HotPotPlayer.Services.BiliBili
         /// <param name="keyword"></param>
         //public async void Search(string keyword)
         //{
-        //    var r = await GetAsync("http://api.bilibili.com/x/web-interface/search/all/v2", ResponseEnum.Web,
+        //    var r = await GetAsync("https://api.bilibili.com/x/web-interface/search/all/v2", ResponseEnum.Web,
         //        new Dictionary<string, string>
         //        {
         //            ["keyword"] = keyword,
@@ -379,7 +393,7 @@ namespace HotPotPlayer.Services.BiliBili
             {
                 return UserCardCache[mid];
             }
-            var r = await GetAsync("http://api.bilibili.com/x/web-interface/card", ResponseEnum.Web,
+            var r = await GetAsync("https://api.bilibili.com/x/web-interface/card", ResponseEnum.Web,
                 new Dictionary<string, string>
                 {
                     ["mid"] = mid,
@@ -398,7 +412,7 @@ namespace HotPotPlayer.Services.BiliBili
         /// <param name="progress"></param>
         public async Task<BiliResult> Report(string aid, string cid, int progress)
         {
-            var r = await PostAsync("http://api.bilibili.com/x/v2/history/report", new Dictionary<string, string>
+            var r = await PostAsync("https://api.bilibili.com/x/v2/history/report", new Dictionary<string, string>
             {
                 ["aid"] = aid,
                 ["cid"] = cid,
@@ -418,7 +432,7 @@ namespace HotPotPlayer.Services.BiliBili
         /// <returns></returns>
         public async Task<BiliResult> Like(string aid, bool like)
         {
-            var r = await PostAsync("http://api.bilibili.com/x/web-interface/archive/like", new Dictionary<string, string>
+            var r = await PostAsync("https://api.bilibili.com/x/web-interface/archive/like", new Dictionary<string, string>
             {
                 ["aid"] = aid,
                 ["like"] = like ? "1" : "2",
@@ -430,7 +444,7 @@ namespace HotPotPlayer.Services.BiliBili
 
         public async Task<bool> IsLike(string aid)
         {
-            var r = await GetAsync("http://api.bilibili.com/x/web-interface/archive/has/like", ResponseEnum.Web,
+            var r = await GetAsync("https://api.bilibili.com/x/web-interface/archive/has/like", ResponseEnum.Web,
                 new Dictionary<string, string>
             {
                 ["aid"] = aid,
@@ -441,6 +455,28 @@ namespace HotPotPlayer.Services.BiliBili
 
         private Dictionary<string, BiliResult<UserCardBundle>> userCardCache;
         private Dictionary<string, BiliResult<UserCardBundle>> UserCardCache => userCardCache ??= new Dictionary<string, BiliResult<UserCardBundle>>();
+
+        public async Task<DmSegMobileReply> GetDM(string avid, string cid, long segmentIndex = 1)
+        {
+            var r = await _dmClient.DmSegMobileAsync(new DmSegMobileReq 
+            { 
+                Type = 1,
+                Pid = long.Parse(avid),
+                Oid = long.Parse(cid),
+                SegmentIndex = segmentIndex
+            }, _grpcHeaders);
+            return r;
+        }
+
+        public async Task<DMData> GetDMXml(string cid)
+        {
+            var r = await GetAsync("https://api.bilibili.com/x/v1/dm/list.so", ResponseEnum.Web,
+                new Dictionary<string, string>
+                {
+                    ["oid"] = cid,
+                });
+            return new DMData(r);
+        }
 
         #region Cookie
         public static CookieCollection ParseCookies(IEnumerable<string> cookieHeaders)
