@@ -21,6 +21,8 @@ using Microsoft.UI;
 using System.Numerics;
 using Windows.Graphics.Display;
 using Microsoft.Graphics.Canvas.UI.Xaml;
+using Microsoft.UI.Composition;
+using Microsoft.UI.Xaml.Hosting;
 
 // To learn more about WinUI, the WinUI project structure,
 // and more about our project templates, see: http://aka.ms/winui-project-info.
@@ -32,12 +34,38 @@ namespace HotPotPlayer.Controls.BilibiliSub
         public DanmakuRenderer()
         {
             this.InitializeComponent();
-
-            CanvasDevice device = CanvasDevice.GetSharedDevice();
-            CanvasSwapChain swapChain = new CanvasSwapChain(device, 800, 600, 96);
-            Host.SwapChain = swapChain;
+            _tickTimer = new DispatcherTimer
+            {
+                Interval = TimeSpan.FromSeconds(1)
+            };
+            _tickTimer.Tick += DmTick;
+            _compositor = App.MainWindow.Compositor;
         }
 
+        private void DmTick(object sender, object e)
+        {
+            var now = DateTime.Now;
+            var delta = now - _baseTime;
+            var secs = Convert.ToInt32(delta.TotalSeconds);
+            if (_timeLine.ContainsKey(secs))
+            {
+                var l = _timeLine[secs];
+                foreach (var item in l)
+                {
+                    TextBlock tb = new TextBlock();
+                    tb.Text = item.Content;
+                    tb.Foreground = new SolidColorBrush(Colors.White);
+                    tb.FontSize = 16;
+                    var visual = ElementCompositionPreview.GetElementVisual(tb);
+                    Vector3KeyFrameAnimation animation = _compositor.CreateVector3KeyFrameAnimation();
+                    animation.InsertKeyFrame(1f, new Vector3(Convert.ToSingle(Host.ActualWidth), 0f, 0f));
+                    animation.Duration = TimeSpan.FromSeconds(5);
+                    animation.Direction = Microsoft.UI.Composition.AnimationDirection.Reverse;
+                    Host.Children.Add(tb);
+                    visual.StartAnimation("Offset", animation);
+                }
+            }
+        }
 
         public DMData DmData
         {
@@ -50,23 +78,39 @@ namespace HotPotPlayer.Controls.BilibiliSub
 
         private static void DMChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
-            ((DanmakuRenderer)d).Draw(e.NewValue as DMData);
+            ((DanmakuRenderer)d).Start(e.NewValue as DMData);
         }
 
-        private void Draw(DMData n)
+        DateTime _baseTime;
+        DispatcherTimer _tickTimer;
+        Dictionary<int, List<DMItem>> _timeLine;
+        Compositor _compositor;
+
+        private void Start(DMData n)
         {
-            using var ds = Host.SwapChain.CreateDrawingSession(Colors.Wheat);
-            foreach (var item in n.Dms)
+            _timeLine = new Dictionary<int, List<DMItem>>();
+            for (int i = 0; i < n.Dms.Count; i++)
             {
-                ds.DrawText(item.Content, new Vector2(0), Colors.Black);
+                var d = n.Dms[i];
+                AddToTimeline(Convert.ToInt32(d.Time.TotalSeconds), d);
             }
 
-            Host.SwapChain.Present();
+            void AddToTimeline(int t, DMItem item)
+            {
+                if (_timeLine.ContainsKey(t))
+                {
+                    var l = _timeLine[t];
+                    l.Add(item);
+                }
+                else
+                {
+                    _timeLine.Add(t, new List<DMItem> { item });
+                }
+            }
+
+            _tickTimer.Start();
+            _baseTime = DateTime.Now;
         }
 
-        private void Host_SizeChanged(object sender, SizeChangedEventArgs e)
-        {
-            Host.SwapChain.ResizeBuffers(e.NewSize);
-        }
     }
 }

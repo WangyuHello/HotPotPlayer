@@ -12,7 +12,5 @@
     xmlns:canvas="using:Microsoft.Graphics.Canvas.UI.Xaml"
     mc:Ignorable="d">
 
-    <canvas:CanvasSwapChainPanel x:Name="Host" SizeChanged="Host_SizeChanged">
-
-    </canvas:CanvasSwapChainPanel>
+    <Grid x:Name="Host"></Grid>
 </base:UserControlBase>
