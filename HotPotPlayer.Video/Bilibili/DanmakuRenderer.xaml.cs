@@ -23,11 +23,12 @@ using Windows.Graphics.Display;
 using Microsoft.Graphics.Canvas.UI.Xaml;
 using Microsoft.UI.Composition;
 using Microsoft.UI.Xaml.Hosting;
+using CommunityToolkit.WinUI.UI.Animations;
 
 // To learn more about WinUI, the WinUI project structure,
 // and more about our project templates, see: http://aka.ms/winui-project-info.
 
-namespace HotPotPlayer.Controls.BilibiliSub
+namespace HotPotPlayer.Video.Bilibili
 {
     public sealed partial class DanmakuRenderer : UserControlBase
     {
@@ -55,12 +56,14 @@ namespace HotPotPlayer.Controls.BilibiliSub
                     TextBlock tb = new TextBlock();
                     tb.Text = item.Content;
                     tb.Foreground = new SolidColorBrush(Colors.White);
-                    tb.FontSize = 16;
+                    tb.FontSize = 18;
                     var visual = ElementCompositionPreview.GetElementVisual(tb);
-                    Vector3KeyFrameAnimation animation = _compositor.CreateVector3KeyFrameAnimation();
+                    var animation = _compositor.CreateVector3KeyFrameAnimation();
+                    animation.InsertKeyFrame(0f, new Vector3(0f, 0f, 0f));
                     animation.InsertKeyFrame(1f, new Vector3(Convert.ToSingle(Host.ActualWidth), 0f, 0f));
-                    animation.Duration = TimeSpan.FromSeconds(5);
+                    animation.Duration = TimeSpan.FromSeconds(4);
                     animation.Direction = Microsoft.UI.Composition.AnimationDirection.Reverse;
+                    
                     Host.Children.Add(tb);
                     visual.StartAnimation("Offset", animation);
                 }
@@ -80,6 +83,27 @@ namespace HotPotPlayer.Controls.BilibiliSub
         {
             ((DanmakuRenderer)d).Start(e.NewValue as DMData);
         }
+
+        public int Slot
+        {
+            get { return (int)GetValue(SlotProperty); }
+            set { SetValue(SlotProperty, value); }
+        }
+
+        public static readonly DependencyProperty SlotProperty =
+            DependencyProperty.Register("Slot", typeof(int), typeof(DanmakuRenderer), new PropertyMetadata(0));
+
+
+        public double Speed
+        {
+            get { return (double)GetValue(SpeedProperty); }
+            set { SetValue(SpeedProperty, value); }
+        }
+
+        public static readonly DependencyProperty SpeedProperty =
+            DependencyProperty.Register("Speed", typeof(double), typeof(DanmakuRenderer), new PropertyMetadata(0.0));
+
+
 
         DateTime _baseTime;
         DispatcherTimer _tickTimer;

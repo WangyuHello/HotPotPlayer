@@ -5,6 +5,8 @@ using HotPotPlayer.Models;
 using HotPotPlayer.Models.BiliBili;
 using HotPotPlayer.Services;
 using HotPotPlayer.Services.BiliBili;
+using HotPotPlayer.Services.BiliBili.Danmaku;
+using HotPotPlayer.Video.Bilibili;
 using HotPotPlayer.Video.Extensions;
 using HotPotPlayer.Video.GlesInterop;
 using Microsoft.UI;
@@ -108,6 +110,20 @@ namespace HotPotPlayer.Video
 
         public static readonly DependencyProperty IsFullPageHostProperty =
             DependencyProperty.Register("IsFullPageHost", typeof(bool), typeof(VideoControl), new PropertyMetadata(default));
+
+        public DMData DmData
+        {
+            get { return (DMData)GetValue(DmDataProperty); }
+            set { SetValue(DmDataProperty, value); }
+        }
+
+        public static readonly DependencyProperty DmDataProperty =
+            DependencyProperty.Register("DmData", typeof(DMData), typeof(VideoControl), new PropertyMetadata(default));
+
+        public Visibility IsDmVisible(DMData data)
+        {
+            return data != null && data.Dms != null && data.Dms.Any() ? Visibility.Visible : Visibility.Collapsed;
+        }
 
         bool mediaInited;
         bool mediaEnded;

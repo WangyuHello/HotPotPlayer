@@ -8,6 +8,7 @@
     <Platforms>x86;x64;arm64</Platforms>
   </PropertyGroup>
   <ItemGroup>
+    <None Remove="Bilibili\DanmakuRenderer.xaml" />
     <None Remove="Control\InfoViewer.xaml" />
     <None Remove="NativeMethods.txt" />
     <None Remove="VideoControl.xaml" />
@@ -39,6 +40,10 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Page Update="Bilibili\DanmakuRenderer.xaml">
+      <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Update="VideoPlayListBar.xaml">
       <Generator>MSBuild:Compile</Generator>
     </Page>
