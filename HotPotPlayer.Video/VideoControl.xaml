@@ -12,6 +12,7 @@
     xmlns:vcont="using:HotPotPlayer.Video.Control"
     xmlns:convs="using:HotPotPlayer.Converters"
     xmlns:bl="using:HotPotPlayer.Video.Bilibili"
+    xmlns:ui="using:CommunityToolkit.WinUI.UI"
     xmlns:animations="using:CommunityToolkit.WinUI.UI.Animations"
     x:DefaultBindMode="OneWay"
     mc:Ignorable="d">
@@ -39,7 +40,7 @@
 
     </base:UserControlBase.Resources>
 
-    <Grid PointerEntered="Grid_PointerEntered" PointerMoved="Grid_PointerMoved">
+    <Grid PointerEntered="Grid_PointerEntered" PointerMoved="Grid_PointerMoved" ui:UIElementExtensions.ClipToBounds="True">
         <SwapChainPanel x:Name="Host" Loaded="Host_Loaded" CompositionScaleChanged="Host_CompositionScaleChanged" SizeChanged="Host_SizeChanged" Unloaded="Host_Unloaded" PointerReleased="Host_PointerReleased"/>
 
         <!--<bl:DanmakuRenderer DmData="{x:Bind DmData}" Visibility="{x:Bind IsDmVisible(DmData)}" IsHitTestVisible="False"/>-->

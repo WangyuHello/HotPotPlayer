@@ -109,7 +109,7 @@ namespace HotPotPlayer.Pages.BilibiliSub
         protected override async void OnNavigatedFrom(NavigationEventArgs e)
         {
             base.OnNavigatedFrom(e);
-            if (VideoPlayer.CurrentTime == TimeSpan.Zero)
+            if (VideoPlayer.CurrentTime == TimeSpan.Zero && VideoPlayer.CurrentPlayingDuration.HasValue)
             {
                 await BiliBiliService.API.Report(aid, cid, (int)VideoPlayer.CurrentPlayingDuration.Value.TotalSeconds);
             }

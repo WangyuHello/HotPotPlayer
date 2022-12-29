@@ -59,8 +59,8 @@ namespace HotPotPlayer.Video.Bilibili
                     tb.FontSize = 18;
                     var visual = ElementCompositionPreview.GetElementVisual(tb);
                     var animation = _compositor.CreateVector3KeyFrameAnimation();
-                    animation.InsertKeyFrame(0f, new Vector3(0f, 0f, 0f));
-                    animation.InsertKeyFrame(1f, new Vector3(Convert.ToSingle(Host.ActualWidth), 0f, 0f));
+                    LinearEasingFunction linear = _compositor.CreateLinearEasingFunction();
+                    animation.InsertKeyFrame(1f, new Vector3(Convert.ToSingle(Host.ActualWidth), 0f, 0f), linear);
                     animation.Duration = TimeSpan.FromSeconds(4);
                     animation.Direction = Microsoft.UI.Composition.AnimationDirection.Reverse;
                     

@@ -308,14 +308,6 @@ namespace HotPotPlayer.Video
                 StartPlay();
             }
             //_displayReq = new DisplayRequest();
-            SetClip();
-        }
-
-        private void SetClip()
-        {
-            RectangleGeometry rectangle = new RectangleGeometry();
-            rectangle.Rect = new Rect(0, 0, this.ActualWidth, this.ActualHeight);
-            this.Clip = rectangle;
         }
 
         private void Host_CompositionScaleChanged(SwapChainPanel sender, object args)
@@ -333,7 +325,6 @@ namespace HotPotPlayer.Video
             CurrentWidth = (int)Math.Ceiling(Host.CompositionScaleX*Host.ActualWidth);
             CurrentHeight = (int)Math.Ceiling(Host.CompositionScaleY*Host.ActualHeight);
             UpdateSize();
-            SetClip();
         }
 
         private void Host_Unloaded(object sender, RoutedEventArgs e)
