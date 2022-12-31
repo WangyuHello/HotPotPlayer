@@ -30,6 +30,7 @@
                     <FontFamily x:Key="MiSansMedium">ms-appx:///Assets/Font/MiSans-Medium.ttf#MiSans</FontFamily>
                     <FontFamily x:Key="MiSansBold">ms-appx:///Assets/Font/MiSans-Bold.ttf#MiSans</FontFamily>
                     <FontFamily x:Key="SegoeIcons">ms-appx:///Assets/Font/SegoeIcons.ttf#Segoe Fluent Icons</FontFamily>
+                    <FontFamily x:Key="BiliIcons">ms-appx:///Assets/Icon/bili.ttf#bili</FontFamily>
                 </ResourceDictionary>
             </ResourceDictionary.ThemeDictionaries>
         </ResourceDictionary>

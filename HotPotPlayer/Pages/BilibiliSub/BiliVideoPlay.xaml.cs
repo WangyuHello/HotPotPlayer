@@ -65,6 +65,9 @@ namespace HotPotPlayer.Pages.BilibiliSub
         [ObservableProperty]
         DMData dmData;
 
+        [ObservableProperty]
+        bool isLoading = true;
+
         protected override async void OnNavigatedTo(NavigationEventArgs e)
         {
             base.OnNavigatedTo(e);
@@ -159,6 +162,7 @@ namespace HotPotPlayer.Pages.BilibiliSub
 
         private void OnMediaLoaded()
         {
+            IsLoading = false;
             OnPropertyChanged(propertyName: nameof(Video));
             OnPropertyChanged(propertyName: nameof(OnLineCount));
             OnPropertyChanged(propertyName: nameof(Replies));

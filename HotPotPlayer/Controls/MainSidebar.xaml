@@ -41,10 +41,10 @@
             <FontIcon FontFamily="{ThemeResource SegoeIcons}" Glyph="&#xE29B;" />
         </Button>
         <Button Grid.Row="4" Margin="0,4" x:Name="Bilibili" Style="{StaticResource MainNavButton}" Click="NavigateClick" Tag="Bilibili" IsEnabled="{x:Bind GetEnableState('Bilibili', SelectedPageName), Mode=OneWay}">
-            <ImageIcon Source="ms-appx:///Assets/bilibili.svg" Width="20" />
+            <FontIcon FontFamily="{ThemeResource BiliIcons}" Glyph="&#xEA01;" />
         </Button>
         <Button Grid.Row="5" Margin="0,4" x:Name="CloudMusic" Style="{StaticResource MainNavButton}" Click="NavigateClick" Tag="CloudMusic" IsEnabled="{x:Bind GetEnableState('CloudMusic', SelectedPageName), Mode=OneWay}">
-            <SymbolIcon Symbol="World" />
+            <FontIcon FontFamily="{ThemeResource BiliIcons}" Glyph="&#xEA08;" />
         </Button>
         <Button x:Name="ShowPlayBar" Grid.Row="6" Style="{StaticResource MainNavButton}" VerticalAlignment="Bottom" Visibility="{x:Bind GetShowPlayBarVisible(MusicPlayer.IsPlayBarVisible, MusicPlayer.CurrentPlaying), Mode=OneWay}" x:Load="{x:Bind GetShowPlayBarLoad(MusicPlayer.IsPlayBarVisible, MusicPlayer.CurrentPlaying), Mode=OneWay}" Click="{x:Bind MusicPlayer.ShowPlayBar}" ui:VisualExtensions.NormalizedCenterPoint="0.5" Loaded="ShowPlayBar_Loaded">
             <cont:ImageEx2 Style="{StaticResource LocalMusicImageStyle}" Width="32" Height="32" CornerRadius="16" Source="{x:Bind MusicPlayer.CurrentPlaying.Cover, Mode=OneWay}"/>
