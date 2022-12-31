@@ -223,6 +223,7 @@ namespace HotPotPlayer.Pages.BilibiliSub
 
         private async void CoinConfirmClick(object sender, RoutedEventArgs e)
         {
+            CoinToggleButton.ContextFlyout.Hide();
             var r = await BiliBiliService.API.Coin(aid, coinSelectedIndex + 1);
             if (r)
             {
