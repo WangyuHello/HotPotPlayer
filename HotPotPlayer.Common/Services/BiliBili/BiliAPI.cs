@@ -478,6 +478,20 @@ namespace HotPotPlayer.Services.BiliBili
             return new DMData(r);
         }
 
+        public async Task<BiliResult<UserVideoInfo>> GetUserVideoInfo(string mid, int pn, int ps)
+        {
+            var r = await GetAsync("http://api.bilibili.com/x/space/arc/search", ResponseEnum.Web,
+                new Dictionary<string, string>
+                {
+                    ["mid"] = mid,
+                    ["order"] = "pubdate",
+                    ["pn"] = pn.ToString(),
+                    ["ps"] = ps.ToString()
+                });
+            var res = JsonConvert.DeserializeObject<BiliResult<UserVideoInfo>>(r);
+            return res;
+        }
+
         #region Cookie
         public static CookieCollection ParseCookies(IEnumerable<string> cookieHeaders)
         {

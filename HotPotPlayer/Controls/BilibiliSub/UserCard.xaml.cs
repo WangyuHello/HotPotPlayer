@@ -50,5 +50,10 @@ namespace HotPotPlayer.Controls.BilibiliSub
         {
             return isFollow ? "ÒÑ¹Ø×¢" : "¹Ø×¢";
         }
+
+        void UserClick(object sender, RoutedEventArgs e)
+        {
+            NavigateTo("BilibiliSub.User", UserCardBundle);
+        }
     }
 }

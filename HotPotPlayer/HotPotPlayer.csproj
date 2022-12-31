@@ -70,6 +70,7 @@
     <None Remove="Pages\BilibiliSub\Dynamic.xaml" />
     <None Remove="Pages\BilibiliSub\Login.xaml" />
     <None Remove="Pages\BilibiliSub\Main.xaml" />
+    <None Remove="Pages\BilibiliSub\User.xaml" />
     <None Remove="Pages\BilibiliSub\VideoView.xaml" />
     <None Remove="Pages\CloudMusic.xaml" />
     <None Remove="Pages\CloudMusicSub\Album.xaml" />
@@ -392,4 +393,10 @@
   <PropertyGroup Condition="'$(DisableHasPackageAndPublishMenuAddedByProject)'!='true' and '$(EnableMsixTooling)'=='true'">
     <HasPackageAndPublishMenu>true</HasPackageAndPublishMenu>
   </PropertyGroup>
+  <ItemGroup>
+    <CustomAdditionalCompileInputs Remove="Pages\BilibiliSub\User.xaml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Remove="Pages\BilibiliSub\User.xaml" />
+  </ItemGroup>
 </Project>

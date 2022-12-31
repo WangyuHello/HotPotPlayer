@@ -39,7 +39,7 @@
         
         <StackPanel Grid.Row="2" Grid.ColumnSpan="2" HorizontalAlignment="Center" Margin="0,12,0,12" Orientation="Horizontal" Spacing="16">
             <Button Width="108" FontFamily="{ThemeResource MiSansRegular}" Style="{StaticResource AccentButtonStyle}" Content="{x:Bind GetFollowStr(UserCardBundle.Following)}"/>
-            <Button Width="108" FontFamily="{ThemeResource MiSansRegular}" >主页</Button>
+            <Button Width="108" FontFamily="{ThemeResource MiSansRegular}" Click="UserClick">主页</Button>
         </StackPanel>
     </Grid>
 </base:UserControlBase>
