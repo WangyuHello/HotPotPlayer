@@ -233,7 +233,7 @@ namespace HotPotPlayer.Pages.BilibiliSub
                 }
                 else
                 {
-                    video.Stat.Favorite-= Coin;
+                    video.Stat.Coin -= Coin;
                 }
                 OnPropertyChanged(propertyName: nameof(Video));
             }
