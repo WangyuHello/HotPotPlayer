@@ -60,7 +60,7 @@
                         <TextBlock HorizontalAlignment="Center" Text="{x:Bind Video.Stat.GetLike()}" FontFamily="{ThemeResource MiSansRegular}" />
                     </StackPanel>
                 </ToggleButton>
-                <ToggleButton Padding="8,0" CornerRadius="4" Style="{StaticResource BiliToggleButton}" VerticalAlignment="Top" IsChecked="{x:Bind GetCoinButtonCheck(Coin)}" Click="CoinClick">
+                <ToggleButton Padding="8,0" CornerRadius="4" Style="{StaticResource BiliToggleButton}" VerticalAlignment="Top" IsChecked="{x:Bind GetCoinButtonCheck(Coin), Mode=OneWay}" Click="CoinClick">
                     <StackPanel Spacing="4" Padding="0,4">
                         <ImageIcon Source="ms-appx:///Assets/Icon/Coin.svg" Width="24" />
                         <TextBlock HorizontalAlignment="Center" Text="{x:Bind Video.Stat.GetCoin()}" FontFamily="{ThemeResource MiSansRegular}" />

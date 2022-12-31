@@ -216,8 +216,9 @@ namespace HotPotPlayer.Pages.BilibiliSub
 
         private void CoinClick(object sender, RoutedEventArgs e)
         {
-            var b = sender as FrameworkElement;
+            var b = sender as ToggleButton;
             b.ContextFlyout.ShowAt(b);
+            b.IsChecked = Coin != 0;
         }
 
         private async void CoinConfirmClick(object sender, RoutedEventArgs e)
