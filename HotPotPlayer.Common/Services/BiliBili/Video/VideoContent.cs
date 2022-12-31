@@ -137,16 +137,10 @@ namespace HotPotPlayer.Services.BiliBili.Video
         public string Mission_id { get; set; }
 
         /// <summary>
-        /// 重新定向URL，番剧和影视存在
-        /// </summary>
-        [JsonProperty("redirect_url")]
-        public string Redirect_Url { get; set; }
-
-        /// <summary>
         /// 视频同步发布的的动态的文字内容
         /// </summary>
         [JsonProperty("dynamic")]
-        public string dynamic { get; set; }
+        public string Dynamic { get; set; }
 
         /// <summary>
         /// 第一P视频的CID

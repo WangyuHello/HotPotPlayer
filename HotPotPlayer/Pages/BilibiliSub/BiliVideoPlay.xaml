@@ -54,30 +54,38 @@
                 <Rectangle Grid.Column="1" Width="230"/>
             </Grid>
             <StackPanel x:Name="ThreeButton" Grid.Row="1" Grid.RowSpan="2" HorizontalAlignment="Right" Margin="0,16,0,0" Orientation="Horizontal" Spacing="8">
-                <Button Padding="8,0" Style="{StaticResource TransparentButton}" VerticalAlignment="Top" Click="LikeClick" Foreground="{x:Bind GetLikeColor(IsLike)}">
+                <ToggleButton Padding="8,0" CornerRadius="4" Style="{StaticResource BiliToggleButton}" VerticalAlignment="Top" Click="LikeClick" IsChecked="{x:Bind IsLike}">
                     <StackPanel Spacing="4" Padding="0,4">
-                        <ImageIcon Source="ms-appx:///Assets/Icon/Like.svg" Width="24" />
-                        <!--<PathIcon Data="{StaticResource LikePath}" />-->
+                        <FontIcon FontFamily="{ThemeResource BiliIcons}" Glyph="&#xEA09;" FontSize="22"/>
                         <TextBlock HorizontalAlignment="Center" Text="{x:Bind Video.Stat.GetLike()}" FontFamily="{ThemeResource MiSansRegular}" />
                     </StackPanel>
-                </Button>
-                <Button Padding="8,0" Style="{StaticResource TransparentButton}" VerticalAlignment="Top">
+                </ToggleButton>
+                <ToggleButton Padding="8,0" CornerRadius="4" Style="{StaticResource BiliToggleButton}" VerticalAlignment="Top">
                     <StackPanel Spacing="4" Padding="0,4">
-                        <ImageIcon Source="ms-appx:///Assets/Icon/Coin.svg" Width="24" Foreground="Gray"/>
-                        <TextBlock HorizontalAlignment="Center" Text="{x:Bind Video.Stat.GetCoin()}" FontFamily="{ThemeResource MiSansRegular}" Foreground="Gray"/>
+                        <ImageIcon Source="ms-appx:///Assets/Icon/Coin.svg" Width="24" />
+                        <TextBlock HorizontalAlignment="Center" Text="{x:Bind Video.Stat.GetCoin()}" FontFamily="{ThemeResource MiSansRegular}" />
                     </StackPanel>
-                </Button>
-                <Button Padding="8,0" Style="{StaticResource TransparentButton}" VerticalAlignment="Top">
+                </ToggleButton>
+                <ToggleButton Padding="8,0" CornerRadius="4" Style="{StaticResource BiliToggleButton}" VerticalAlignment="Top">
                     <StackPanel Spacing="4" Padding="0,4" >
-                        <ImageIcon Source="ms-appx:///Assets/Icon/Collect.svg" Width="24" Foreground="Gray"/>
-                        <TextBlock HorizontalAlignment="Center" Text="{x:Bind Video.Stat.GetFavorite()}" FontFamily="{ThemeResource MiSansRegular}" Foreground="Gray"/>
+                        <FontIcon FontFamily="{ThemeResource BiliIcons}" Glyph="&#xEA03;" FontSize="22"/>
+                        <TextBlock HorizontalAlignment="Center" Text="{x:Bind Video.Stat.GetFavorite()}" FontFamily="{ThemeResource MiSansRegular}" />
                     </StackPanel>
-                </Button>
-                <Button Padding="8,0" Style="{StaticResource TransparentButton}" VerticalAlignment="Top">
+                </ToggleButton>
+                <Button Padding="8,0" CornerRadius="4" Style="{StaticResource BiliButton}" VerticalAlignment="Top" Foreground="#61666d">
                     <StackPanel Spacing="4" Padding="0,4">
-                        <ImageIcon Source="ms-appx:///Assets/Icon/Share.svg" Width="24" Foreground="Gray"/>
-                        <TextBlock HorizontalAlignment="Center" Text="{x:Bind Video.Stat.GetShare()}" FontFamily="{ThemeResource MiSansRegular}" Foreground="Gray"/>
+                        <FontIcon FontFamily="{ThemeResource BiliIcons}" Glyph="&#xEA0D;" FontSize="22"/>
+                        <TextBlock HorizontalAlignment="Center" Text="{x:Bind Video.Stat.GetShare()}" FontFamily="{ThemeResource MiSansRegular}" />
                     </StackPanel>
+                    <Button.Flyout>
+                        <Flyout>
+                            <StackPanel>
+                                <TextBlock FontFamily="{ThemeResource MiSansRegular}" Text="{x:Bind Video.Bvid}" IsTextSelectionEnabled="True"/>
+                                <TextBlock FontFamily="{ThemeResource MiSansRegular}" Text="{x:Bind Video.Aid}" IsTextSelectionEnabled="True"/>
+                                <Button Click="OpenWebClick" FontFamily="{ThemeResource MiSansRegular}">打开网页</Button>
+                            </StackPanel>
+                        </Flyout>
+                    </Button.Flyout>
                 </Button>
             </StackPanel>
             <StackPanel Grid.Row="2" Orientation="Horizontal" Margin="0,0,0,16">

@@ -25,6 +25,7 @@ using System.Threading.Tasks;
 using Windows.UI;
 using Microsoft.UI;
 using HotPotPlayer.Services.BiliBili.Danmaku;
+using Windows.System;
 
 // To learn more about WinUI, the WinUI project structure,
 // and more about our project templates, see: http://aka.ms/winui-project-info.
@@ -177,11 +178,6 @@ namespace HotPotPlayer.Pages.BilibiliSub
             UserAvatar.ContextFlyout.ShowAt(UserAvatar);
         }
 
-        private SolidColorBrush GetLikeColor(bool isLike)
-        {
-            return new SolidColorBrush(isLike ? Color.FromArgb(255, 0, 174, 236) : Colors.Gray);
-        }
-
         private async void LikeClick(object sender, RoutedEventArgs e)
         {
             var r = await BiliBiliService.API.Like(aid, !IsLike);
@@ -198,6 +194,11 @@ namespace HotPotPlayer.Pages.BilibiliSub
                 }
                 OnPropertyChanged(propertyName: nameof(Video));
             }
+        }
+
+        private async void OpenWebClick(object sender, RoutedEventArgs e)
+        {
+            await Launcher.LaunchUriAsync(new Uri("https://www.bilibili.com/video/"+video.Bvid));
         }
     }
 }
