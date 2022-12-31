@@ -60,13 +60,24 @@
                         <TextBlock HorizontalAlignment="Center" Text="{x:Bind Video.Stat.GetLike()}" FontFamily="{ThemeResource MiSansRegular}" />
                     </StackPanel>
                 </ToggleButton>
-                <ToggleButton Padding="8,0" CornerRadius="4" Style="{StaticResource BiliToggleButton}" VerticalAlignment="Top">
+                <ToggleButton Padding="8,0" CornerRadius="4" Style="{StaticResource BiliToggleButton}" VerticalAlignment="Top" IsChecked="{x:Bind GetCoinButtonCheck(Coin)}" Click="CoinClick">
                     <StackPanel Spacing="4" Padding="0,4">
                         <ImageIcon Source="ms-appx:///Assets/Icon/Coin.svg" Width="24" />
                         <TextBlock HorizontalAlignment="Center" Text="{x:Bind Video.Stat.GetCoin()}" FontFamily="{ThemeResource MiSansRegular}" />
                     </StackPanel>
+                    <ToggleButton.ContextFlyout>
+                        <Flyout>
+                            <StackPanel>
+                                <RadioButtons Header="投币数量:" FontFamily="{ThemeResource MiSansRegular}" SelectedIndex="{x:Bind CoinSelectedIndex, Mode=TwoWay}">
+                                    <RadioButton Content="1" />
+                                    <RadioButton Content="2" />
+                                </RadioButtons>
+                                <Button Click="CoinConfirmClick" FontFamily="{ThemeResource MiSansRegular}">确定</Button>
+                            </StackPanel>
+                        </Flyout>
+                    </ToggleButton.ContextFlyout>
                 </ToggleButton>
-                <ToggleButton Padding="8,0" CornerRadius="4" Style="{StaticResource BiliToggleButton}" VerticalAlignment="Top">
+                <ToggleButton Padding="8,0" CornerRadius="4" Style="{StaticResource BiliToggleButton}" VerticalAlignment="Top" IsChecked="{x:Bind IsFavor}" Click="FavorClick">
                     <StackPanel Spacing="4" Padding="0,4" >
                         <FontIcon FontFamily="{ThemeResource BiliIcons}" Glyph="&#xEA03;" FontSize="22"/>
                         <TextBlock HorizontalAlignment="Center" Text="{x:Bind Video.Stat.GetFavorite()}" FontFamily="{ThemeResource MiSansRegular}" />

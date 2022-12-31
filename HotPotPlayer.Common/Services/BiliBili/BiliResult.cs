@@ -25,7 +25,7 @@ namespace BiliBiliAPI.Models
     public class BiliResult
     {
         [JsonProperty("code")]
-        public string Code { get; set; }
+        public int Code { get; set; }
 
         [JsonProperty("message")]
         public string Message { get; set; }

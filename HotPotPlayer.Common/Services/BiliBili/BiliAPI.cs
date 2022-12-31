@@ -193,8 +193,8 @@ namespace HotPotPlayer.Services.BiliBili
         /// <returns></returns>
         public async Task<JObject> GetQrCodePoll(string key)
         {
-            var r = await GetAsync("https://passport.bilibili.com/x/passport-login/web/qrcode/poll", ResponseEnum.Web, 
-                new Dictionary<string, string> { ["qrcode_key"] = key});
+            var r = await GetAsync("https://passport.bilibili.com/x/passport-login/web/qrcode/poll", ResponseEnum.Web,
+                new Dictionary<string, string> { ["qrcode_key"] = key });
             var j = JObject.Parse(r);
             return j;
         }
@@ -314,7 +314,7 @@ namespace HotPotPlayer.Services.BiliBili
         /// </summary>
         /// <param name="avid"></param>
         /// <returns></returns>
-        public async Task<BiliResult<Replies>> GetVideoReplyAsync(string avid, int next=0)
+        public async Task<BiliResult<Replies>> GetVideoReplyAsync(string avid, int next = 0)
         {
             return await GetReplyAsync("1", avid, next);
         }
@@ -442,15 +442,61 @@ namespace HotPotPlayer.Services.BiliBili
             return res;
         }
 
+        public async Task<bool> Coin(string aid, int multiply)
+        {
+            var r = await PostAsync("https://api.bilibili.com/x/web-interface/coin/add", new Dictionary<string, string>
+            {
+                ["aid"] = aid,
+                ["multiply"] = multiply.ToString(),
+                ["csrf"] = GetCsrf()
+            });
+            var res = JsonConvert.DeserializeObject<BiliResult>(r);
+            return res.Code == 0;
+        }
+
+        public async Task<bool> Favor(string aid)
+        {
+            var r = await PostAsync("https://api.bilibili.com/x/v3/fav/resource/deal", new Dictionary<string, string>
+            {
+                ["rid"] = aid,
+                ["type"] = "2",
+                ["csrf"] = GetCsrf()
+            });
+            var res = JsonConvert.DeserializeObject<BiliResult>(r);
+            return res.Code == 0;
+        }
+
         public async Task<bool> IsLike(string aid)
         {
             var r = await GetAsync("https://api.bilibili.com/x/web-interface/archive/has/like", ResponseEnum.Web,
                 new Dictionary<string, string>
-            {
-                ["aid"] = aid,
-            });
+                {
+                    ["aid"] = aid,
+                });
             var res = JsonConvert.DeserializeObject<BiliResult<int>>(r);
             return res.Data == 1;
+        }
+
+        public async Task<int> GetCoin(string aid)
+        {
+            var r = await GetAsync("https://api.bilibili.com/x/web-interface/archive/coins", ResponseEnum.Web,
+                new Dictionary<string, string>
+                {
+                    ["aid"] = aid,
+                });
+            var res = JObject.Parse(r);
+            return res["data"]["multiply"].Value<int>();
+        }
+
+        public async Task<bool> IsFavored(string aid)
+        {
+            var r = await GetAsync("https://api.bilibili.com/x/v2/fav/video/favoured", ResponseEnum.Web,
+                new Dictionary<string, string>
+                {
+                    ["aid"] = aid,
+                });
+            var res = JObject.Parse(r);
+            return res["data"]["favoured"].Value<bool>();
         }
 
         private Dictionary<string, BiliResult<UserCardBundle>> userCardCache;
@@ -480,7 +526,7 @@ namespace HotPotPlayer.Services.BiliBili
 
         public async Task<BiliResult<UserVideoInfo>> GetUserVideoInfo(string mid, int pn, int ps)
         {
-            var r = await GetAsync("http://api.bilibili.com/x/space/arc/search", ResponseEnum.Web,
+            var r = await GetAsync("https://api.bilibili.com/x/space/arc/search", ResponseEnum.Web,
                 new Dictionary<string, string>
                 {
                     ["mid"] = mid,

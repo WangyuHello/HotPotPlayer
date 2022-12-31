@@ -461,11 +461,11 @@ namespace HotPotPlayer.Services.BiliBili.Video
         ///收藏
         /// </summary>
         [JsonProperty("favorite")]
-        public string Favorite { get; set; }
+        public int Favorite { get; set; }
 
         public string GetFavorite()
         {
-            int v = int.Parse(Favorite);
+            int v = Favorite;
             if (v >= 10000)
             {
                 var v2 = (double)v / 10000;
@@ -481,11 +481,11 @@ namespace HotPotPlayer.Services.BiliBili.Video
         /// 投币
         /// </summary>
         [JsonProperty("coin")]
-        public string Coin { get; set; }
+        public int Coin { get; set; }
 
         public string GetCoin()
         {
-            int v = int.Parse(Coin);
+            int v = Coin;
             if (v >= 10000)
             {
                 var v2 = (double)v / 10000;

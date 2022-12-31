@@ -64,6 +64,12 @@ namespace HotPotPlayer.Pages.BilibiliSub
         bool isLike;
 
         [ObservableProperty]
+        int coin;
+
+        [ObservableProperty]
+        bool isFavor;
+
+        [ObservableProperty]
         DMData dmData;
 
         [ObservableProperty]
@@ -104,6 +110,8 @@ namespace HotPotPlayer.Pages.BilibiliSub
             this.replies = new ReplyItemCollection(replies, "1", Video.Aid, BiliBiliService);
             this.relatedVideos = (await BiliBiliService.API.GetRelatedVideo(Video.Bvid)).Data;
             this.isLike = await BiliBiliService.API.IsLike(Video.Aid);
+            this.coin = await BiliBiliService.API.GetCoin(Video.Aid);
+            this.isFavor = await BiliBiliService.API.IsFavored(Video.Aid);
             this.dmData = await BiliBiliService.API.GetDMXml(cid);
 
             VideoPlayer.PreparePlay();
@@ -169,6 +177,8 @@ namespace HotPotPlayer.Pages.BilibiliSub
             OnPropertyChanged(propertyName: nameof(Replies));
             OnPropertyChanged(propertyName: nameof(RelatedVideos));
             OnPropertyChanged(propertyName: nameof(IsLike));
+            OnPropertyChanged(propertyName: nameof(Coin));
+            OnPropertyChanged(propertyName: nameof(IsFavor));
             OnPropertyChanged(propertyName: nameof(DmData));
         }
 
@@ -181,7 +191,7 @@ namespace HotPotPlayer.Pages.BilibiliSub
         private async void LikeClick(object sender, RoutedEventArgs e)
         {
             var r = await BiliBiliService.API.Like(aid, !IsLike);
-            if (r.Code == "0")
+            if (r.Code == 0)
             {
                 IsLike = !IsLike;
                 if (IsLike)
@@ -191,6 +201,56 @@ namespace HotPotPlayer.Pages.BilibiliSub
                 else
                 {
                     video.Stat.Like--;
+                }
+                OnPropertyChanged(propertyName: nameof(Video));
+            }
+        }
+
+        bool GetCoinButtonCheck(int coin)
+        {
+            return coin != 0;
+        }
+
+        [ObservableProperty]
+        int coinSelectedIndex;
+
+        private void CoinClick(object sender, RoutedEventArgs e)
+        {
+            var b = sender as FrameworkElement;
+            b.ContextFlyout.ShowAt(b);
+        }
+
+        private async void CoinConfirmClick(object sender, RoutedEventArgs e)
+        {
+            var r = await BiliBiliService.API.Coin(aid, coinSelectedIndex + 1);
+            if (r)
+            {
+                Coin = coinSelectedIndex + 1;
+                if (Coin != 0)
+                {
+                    video.Stat.Coin += Coin;
+                }
+                else
+                {
+                    video.Stat.Favorite-= Coin;
+                }
+                OnPropertyChanged(propertyName: nameof(Video));
+            }
+        }
+
+        private async void FavorClick(object sender, RoutedEventArgs e)
+        {
+            var r = await BiliBiliService.API.Favor(aid);
+            if (r)
+            {
+                IsFavor = true;
+                if (IsLike)
+                {
+                    video.Stat.Favorite++;
+                }
+                else
+                {
+                    video.Stat.Favorite--;
                 }
                 OnPropertyChanged(propertyName: nameof(Video));
             }
