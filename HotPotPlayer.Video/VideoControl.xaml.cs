@@ -548,10 +548,12 @@ namespace HotPotPlayer.Video
             if(Mpv.IsPlaying)
             {
                 Mpv.Pause();
+                DM.Pause();
             }
             else
             {
                 Mpv.Resume();
+                DM.Resume();
             }
         }
 

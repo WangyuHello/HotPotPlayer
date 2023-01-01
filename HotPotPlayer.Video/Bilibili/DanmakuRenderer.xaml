@@ -12,5 +12,5 @@
     xmlns:canvas="using:Microsoft.Graphics.Canvas.UI.Xaml"
     mc:Ignorable="d">
 
-    <Grid x:Name="Host"></Grid>
+    <Grid x:Name="Host" SizeChanged="Host_SizeChanged"></Grid>
 </base:UserControlBase>

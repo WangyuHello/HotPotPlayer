@@ -37,35 +37,87 @@ namespace HotPotPlayer.Video.Bilibili
             this.InitializeComponent();
             _tickTimer = new DispatcherTimer
             {
-                Interval = TimeSpan.FromSeconds(1)
+                Interval = TimeSpan.FromSeconds(5)
             };
             _tickTimer.Tick += DmTick;
-            _compositor = App.MainWindow.Compositor;
         }
+
+        double SlotStep => FontSize + 8;
+        LinearEasingFunction _linear;
 
         private void DmTick(object sender, object e)
         {
-            var now = DateTime.Now;
-            var delta = now - _baseTime;
-            var secs = Convert.ToInt32(delta.TotalSeconds);
-            if (_timeLine.ContainsKey(secs))
+            var curTime = CurrentTime;
+            var curSecs = Convert.ToInt32(curTime.TotalSeconds);
+            for (int sec = curSecs; sec < curSecs + 5; sec++)
             {
-                var l = _timeLine[secs];
-                foreach (var item in l)
+                if (_timeLine.ContainsKey(sec))
                 {
-                    TextBlock tb = new TextBlock();
-                    tb.Text = item.Content;
-                    tb.Foreground = new SolidColorBrush(Colors.White);
-                    tb.FontSize = 18;
-                    var visual = ElementCompositionPreview.GetElementVisual(tb);
-                    var animation = _compositor.CreateVector3KeyFrameAnimation();
-                    LinearEasingFunction linear = _compositor.CreateLinearEasingFunction();
-                    animation.InsertKeyFrame(1f, new Vector3(Convert.ToSingle(Host.ActualWidth), 0f, 0f), linear);
-                    animation.Duration = TimeSpan.FromSeconds(4);
-                    animation.Direction = Microsoft.UI.Composition.AnimationDirection.Reverse;
-                    
-                    Host.Children.Add(tb);
-                    visual.StartAnimation("Offset", animation);
+                    for (int i = 0; i < Slot; i++)
+                    {
+                        if (_masks[sec][i].occupied) continue;
+                        if (i > _timeLine[sec].Count - 1)
+                        {
+                            break;
+                        }
+                        var d = _timeLine[sec][i];
+
+                        if (d.Time < curTime) continue;
+
+                        TextBlock tb;
+                        var hasText = _texts.TryPeek(out var reuseText);
+                        bool isReuse = false;
+                        if(hasText && curTime > reuseText.Exit)
+                        {
+                            tb = _texts.Dequeue().Text;
+                            tb.Text = d.Content;
+                            isReuse = true;
+                        }
+                        else
+                        {
+                            tb = new()
+                            {
+                                Text = d.Content,
+                                Foreground = new SolidColorBrush(Colors.White),
+                                FontSize = FontSize,
+                            };
+                        }
+
+                        var visual = ElementCompositionPreview.GetElementVisual(tb);
+                        var animation = _compositor.CreateVector3KeyFrameAnimation();
+                        var len = d.Content.Length * FontSize;
+                        var exLen = len + 200;
+                        animation.InsertKeyFrame(0f, new Vector3(Convert.ToSingle(Host.ActualWidth + 1), (float)(SlotStep * i), 0f), _linear);
+                        animation.InsertKeyFrame(1f, new Vector3((float)-exLen, (float)(SlotStep * i), 0f), _linear);
+                        animation.Duration = TimeSpan.FromSeconds((Host.ActualWidth + exLen + 1) / Speed);
+                        animation.DelayTime = d.Time - curTime;
+                        animation.DelayBehavior = AnimationDelayBehavior.SetInitialValueBeforeDelay;
+                        var m = _masks[sec][i];
+                        m.occupied = true;
+
+                        if (!isReuse)
+                        {
+                            Host.Children.Add(tb);
+                        }
+                        visual.StartAnimation("Offset", animation);
+
+                        _texts.Enqueue(new ExitTime
+                        {
+                            Text = tb,
+                            Exit = curTime + animation.Duration
+                        });
+
+
+                        var segs = Convert.ToInt32(Math.Floor((len*1.1) / Speed));
+                        for (int s = 0; s < segs; s++)
+                        {
+                            if (_masks.ContainsKey(sec + s + 1))
+                            {
+                                var m2 = _masks[sec + s + 1][i];
+                                m2.occupied = true;
+                            }
+                        }
+                    }
                 }
             }
         }
@@ -81,7 +133,7 @@ namespace HotPotPlayer.Video.Bilibili
 
         private static void DMChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
-            ((DanmakuRenderer)d).Start(e.NewValue as DMData);
+            //((DanmakuRenderer)d).Start(e.NewValue as DMData);
         }
 
         public int Slot
@@ -104,11 +156,23 @@ namespace HotPotPlayer.Video.Bilibili
             DependencyProperty.Register("Speed", typeof(double), typeof(DanmakuRenderer), new PropertyMetadata(0.0));
 
 
+        public TimeSpan CurrentTime
+        {
+            get { return (TimeSpan)GetValue(CurrentTimeProperty); }
+            set { SetValue(CurrentTimeProperty, value); }
+        }
 
-        DateTime _baseTime;
+        public static readonly DependencyProperty CurrentTimeProperty =
+            DependencyProperty.Register("CurrentTime", typeof(TimeSpan), typeof(DanmakuRenderer), new PropertyMetadata(default));
+
+
         DispatcherTimer _tickTimer;
+        Dictionary<int, Mask[]> _masks;
+        List<int> _availTime;
         Dictionary<int, List<DMItem>> _timeLine;
         Compositor _compositor;
+        Queue<ExitTime> _texts;
+        Queue<Visual> _visuals;
 
         private void Start(DMData n)
         {
@@ -118,6 +182,8 @@ namespace HotPotPlayer.Video.Bilibili
                 var d = n.Dms[i];
                 AddToTimeline(Convert.ToInt32(d.Time.TotalSeconds), d);
             }
+            _availTime = _timeLine.Keys.ToList();
+            _masks = _availTime.ToDictionary(a => a, b => Enumerable.Range(0, Slot).Select(x => new Mask()).ToArray());
 
             void AddToTimeline(int t, DMItem item)
             {
@@ -132,9 +198,51 @@ namespace HotPotPlayer.Video.Bilibili
                 }
             }
 
+            _texts = new Queue<ExitTime>();
+            _visuals = new Queue<Visual>();
+            _compositor = App.MainWindow.Compositor;
+            _linear = _compositor.CreateLinearEasingFunction();
+            DmTick(null, null);
+
             _tickTimer.Start();
-            _baseTime = DateTime.Now;
         }
 
+        private void Host_SizeChanged(object sender, SizeChangedEventArgs e)
+        {
+            Host.Children.Clear();
+            _texts?.Clear();
+            if (_tickTimer.IsEnabled) return;
+            Start(DmData);
+        }
+
+        public void Pause()
+        {
+            _tickTimer.Start();
+            _texts.Select(tb =>
+            {
+                var visual = ElementCompositionPreview.GetElementVisual(tb.Text);
+                visual.StopAnimation("Offset");
+                return true;
+            }).ToList();
+        }
+
+        public void Resume()
+        {
+            Host.Children.Clear();
+            _texts?.Clear();
+            DmTick(null, null);
+            _tickTimer.Start();
+        }
+
+        class ExitTime
+        {
+            public TextBlock Text { get; set; }
+            public TimeSpan Exit { get; set; }
+        }
+
+        class Mask
+        {
+            public bool occupied;
+        }
     }
 }

@@ -334,7 +334,7 @@
 
     <DataTemplate x:Key="BiliVideoCardViewTemplate3" x:DataType="bili3:UserVideoInfoItem">
         <StackPanel 
-            Width="240"
+            Width="300"
             x:Name="BiliVideoCardConnectedElement"
             BorderBrush="{ThemeResource ButtonBorderBrush}"
             BorderThickness="{ThemeResource ButtonBorderThemeThickness}"
@@ -347,7 +347,6 @@
                 CornerRadius="4"
                 Source="{x:Bind Pic}" 
                 Style="{StaticResource LocalVideoImageStyle}"
-                Width="240" Height="120"
                 />
             <Grid Margin="0,-24,0,0" Height="24" Padding="8,0">
                 <Grid.Background>
