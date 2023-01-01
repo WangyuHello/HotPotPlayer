@@ -24,6 +24,7 @@ using Microsoft.Graphics.Canvas.UI.Xaml;
 using Microsoft.UI.Composition;
 using Microsoft.UI.Xaml.Hosting;
 using CommunityToolkit.WinUI.UI.Animations;
+using HotPotPlayer.Video.Control;
 
 // To learn more about WinUI, the WinUI project structure,
 // and more about our project templates, see: http://aka.ms/winui-project-info.
@@ -71,6 +72,7 @@ namespace HotPotPlayer.Video.Bilibili
                         {
                             tb = _texts.Dequeue().Text;
                             tb.Text = d.Content;
+                            tb.Foreground = new SolidColorBrush(d.Color);
                             isReuse = true;
                         }
                         else
@@ -78,8 +80,9 @@ namespace HotPotPlayer.Video.Bilibili
                             tb = new()
                             {
                                 Text = d.Content,
-                                Foreground = new SolidColorBrush(Colors.White),
+                                Foreground = new SolidColorBrush(d.Color),
                                 FontSize = FontSize,
+                                FontFamily = (FontFamily)Application.Current.Resources["MiSansRegular"],
                             };
                         }
 
@@ -211,7 +214,7 @@ namespace HotPotPlayer.Video.Bilibili
         {
             Host.Children.Clear();
             _texts?.Clear();
-            if (_tickTimer.IsEnabled) return;
+            if (_tickTimer.IsEnabled || DmData == null) return;
             Start(DmData);
         }
 

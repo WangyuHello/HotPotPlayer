@@ -28,10 +28,17 @@ namespace HotPotPlayer.Services.BiliBili.Danmaku
                     var timeStr = segs[0];
                     var time = TimeSpan.FromSeconds(double.Parse(timeStr));
                     var content = item.FirstNode.ToString();
+
+                    var color = int.Parse(segs[3]);
+
+
                     Dms.Add(new DMItem
                     {
                         Time = time,
-                        Content = content
+                        Content = content,
+                        Type = int.Parse(segs[1]),
+                        FontSize = int.Parse(segs[2]),
+                        Color = Color.FromArgb(255, (byte)((color >> 16) & 255), (byte)((color >> 8) & 255), (byte)((color) & 255))
                     });
                 }
             }
