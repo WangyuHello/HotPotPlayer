@@ -25,6 +25,7 @@ using Microsoft.UI.Composition;
 using Microsoft.UI.Xaml.Hosting;
 using CommunityToolkit.WinUI.UI.Animations;
 using HotPotPlayer.Video.Control;
+using System.Collections;
 
 // To learn more about WinUI, the WinUI project structure,
 // and more about our project templates, see: http://aka.ms/winui-project-info.
@@ -41,6 +42,89 @@ namespace HotPotPlayer.Video.Bilibili
                 Interval = TimeSpan.FromSeconds(5)
             };
             _tickTimer.Tick += DmTick;
+            _topTickTimer = new DispatcherTimer
+            {
+                Interval = TimeSpan.FromSeconds(1)
+            };
+            _topTickTimer.Tick += TopDmTick;
+        }
+
+        private void TopDmTick(object sender, object e)
+        {
+            var curTime = CurrentTime;
+            var curSecs = Convert.ToInt32(curTime.TotalSeconds);
+            for (int i = 0; i < _topTexts.Count; i++)
+            {
+                if (_topTexts[i].Exit < curTime)
+                {
+                    _topRecycleTexts.Enqueue(_topTexts[i].Text);
+                    _topTexts.RemoveAt(i);
+                    TopHost.Children.RemoveAt(i);
+                }
+            }
+            if (_toptimeLine.ContainsKey(curSecs))
+            {
+                var dms = _toptimeLine[curSecs].Take(5);
+                foreach (var d in dms)
+                {
+                    var has = _topRecycleTexts.TryDequeue(out var tb);
+                    if (has)
+                    {
+                        tb.Text = d.Content;
+                        tb.Foreground = new SolidColorBrush(d.Color);
+                    }
+                    else
+                    {
+                        tb = new()
+                        {
+                            Text = d.Content,
+                            Foreground = new SolidColorBrush(d.Color),
+                            FontSize = FontSize,
+                            FontFamily = (FontFamily)Application.Current.Resources["MiSansRegular"],
+                            HorizontalAlignment = HorizontalAlignment.Center,
+                        };
+                    }
+
+                    TopHost.Children.Add(tb);
+                    _topTexts.Add(new ExitTime { Exit = curTime + TimeSpan.FromSeconds(3), Text = tb });
+                }
+            }
+
+            for (int i = _bottomTexts.Count - 1; i >= 0; i--)
+            {
+                if (_bottomTexts[i].Exit < curTime)
+                {
+                    _bottomRecycleTexts.Enqueue(_bottomTexts[i].Text);
+                    _bottomTexts.RemoveAt(i);
+                    BottomHost.Children.RemoveAt(i);
+                }
+            }
+            if (_bottomtimeLine.ContainsKey(curSecs))
+            {
+                var dms = _bottomtimeLine[curSecs].Take(5);
+                foreach (var d in dms)
+                {
+                    var has = _bottomRecycleTexts.TryDequeue(out var tb);
+                    if (has)
+                    {
+                        tb.Text = d.Content;
+                        tb.Foreground = new SolidColorBrush(d.Color);
+                    }
+                    else
+                    {
+                        tb = new()
+                        {
+                            Text = d.Content,
+                            Foreground = new SolidColorBrush(d.Color),
+                            FontSize = FontSize,
+                            FontFamily = (FontFamily)Application.Current.Resources["MiSansRegular"],
+                            HorizontalAlignment = HorizontalAlignment.Center,
+                        };
+                    }
+                    BottomHost.Children.Insert(0, tb);
+                    _bottomTexts.Insert(0, new ExitTime { Exit = curTime + TimeSpan.FromSeconds(3), Text = tb });
+                }
+            }
         }
 
         double SlotStep => FontSize + 8;
@@ -111,7 +195,7 @@ namespace HotPotPlayer.Video.Bilibili
                         });
 
 
-                        var segs = Convert.ToInt32(Math.Floor((len*1.1) / Speed));
+                        var segs = Convert.ToInt32(Math.Floor((len*1.3) / Speed));
                         for (int s = 0; s < segs; s++)
                         {
                             if (_masks.ContainsKey(sec + s + 1))
@@ -170,44 +254,75 @@ namespace HotPotPlayer.Video.Bilibili
 
 
         DispatcherTimer _tickTimer;
+        DispatcherTimer _topTickTimer;
         Dictionary<int, Mask[]> _masks;
         List<int> _availTime;
         Dictionary<int, List<DMItem>> _timeLine;
+        Dictionary<int, List<DMItem>> _toptimeLine;
+        Dictionary<int, List<DMItem>> _bottomtimeLine;
         Compositor _compositor;
         Queue<ExitTime> _texts;
+        List<ExitTime> _topTexts;
+        Queue<TextBlock> _topRecycleTexts;
+        List<ExitTime> _bottomTexts;
+        Queue<TextBlock> _bottomRecycleTexts;
         Queue<Visual> _visuals;
 
         private void Start(DMData n)
         {
             _timeLine = new Dictionary<int, List<DMItem>>();
+            _toptimeLine = new Dictionary<int, List<DMItem>>();
+            _bottomtimeLine = new Dictionary<int, List<DMItem>>();
             for (int i = 0; i < n.Dms.Count; i++)
             {
                 var d = n.Dms[i];
-                AddToTimeline(Convert.ToInt32(d.Time.TotalSeconds), d);
+                switch (d.Type)
+                {
+                    case 1:
+                    case 2:
+                    case 3:
+                        AddToTimeline(Convert.ToInt32(d.Time.TotalSeconds), d, _timeLine);
+                        break;
+                    case 4:
+                        AddToTimeline(Convert.ToInt32(d.Time.TotalSeconds), d, _toptimeLine);
+                        break;
+                    case 5:
+                        AddToTimeline(Convert.ToInt32(d.Time.TotalSeconds), d, _bottomtimeLine);
+                        break;
+                    default:
+                        AddToTimeline(Convert.ToInt32(d.Time.TotalSeconds), d, _timeLine);
+                        break;
+                }
+                
             }
             _availTime = _timeLine.Keys.ToList();
             _masks = _availTime.ToDictionary(a => a, b => Enumerable.Range(0, Slot).Select(x => new Mask()).ToArray());
 
-            void AddToTimeline(int t, DMItem item)
+            static void AddToTimeline(int t, DMItem item, Dictionary<int, List<DMItem>> container)
             {
-                if (_timeLine.ContainsKey(t))
+                if (container.ContainsKey(t))
                 {
-                    var l = _timeLine[t];
+                    var l = container[t];
                     l.Add(item);
                 }
                 else
                 {
-                    _timeLine.Add(t, new List<DMItem> { item });
+                    container.Add(t, new List<DMItem> { item });
                 }
             }
 
             _texts = new Queue<ExitTime>();
+            _topTexts = new List<ExitTime>();
+            _bottomTexts = new List<ExitTime>();
+            _topRecycleTexts = new Queue<TextBlock>();
+            _bottomRecycleTexts = new Queue<TextBlock>();
             _visuals = new Queue<Visual>();
             _compositor = App.MainWindow.Compositor;
             _linear = _compositor.CreateLinearEasingFunction();
             DmTick(null, null);
 
             _tickTimer.Start();
+            _topTickTimer.Start();
         }
 
         private void Host_SizeChanged(object sender, SizeChangedEventArgs e)
@@ -220,7 +335,8 @@ namespace HotPotPlayer.Video.Bilibili
 
         public void Pause()
         {
-            _tickTimer.Start();
+            _tickTimer.Stop();
+            _topTickTimer.Stop();
             _texts.Select(tb =>
             {
                 var visual = ElementCompositionPreview.GetElementVisual(tb.Text);
@@ -235,6 +351,7 @@ namespace HotPotPlayer.Video.Bilibili
             _texts?.Clear();
             DmTick(null, null);
             _tickTimer.Start();
+            _topTickTimer.Start();
         }
 
         class ExitTime
