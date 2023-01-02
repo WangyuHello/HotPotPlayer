@@ -255,10 +255,5 @@ namespace HotPotPlayer.Pages.BilibiliSub
                 OnPropertyChanged(propertyName: nameof(Video));
             }
         }
-
-        private async void OpenWebClick(object sender, RoutedEventArgs e)
-        {
-            await Launcher.LaunchUriAsync(new Uri("https://www.bilibili.com/video/"+video.Bvid));
-        }
     }
 }

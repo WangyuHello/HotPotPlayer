@@ -84,11 +84,13 @@
                     </StackPanel>
                     <Button.Flyout>
                         <Flyout>
-                            <StackPanel>
-                                <TextBlock FontFamily="{ThemeResource MiSansRegular}" Text="{x:Bind Video.Bvid}" IsTextSelectionEnabled="True"/>
-                                <TextBlock FontFamily="{ThemeResource MiSansRegular}" Text="{x:Bind Video.Aid}" IsTextSelectionEnabled="True"/>
-                                <Button Click="OpenWebClick" FontFamily="{ThemeResource MiSansRegular}">打开网页</Button>
-                            </StackPanel>
+                            <Flyout.FlyoutPresenterStyle>
+                                <Style TargetType="FlyoutPresenter">
+                                    <Setter Property="MinWidth" Value="600" />
+                                    <Setter Property="CornerRadius" Value="8" />
+                                </Style>
+                            </Flyout.FlyoutPresenterStyle>
+                            <cont3:ShareFlyout Video="{x:Bind Video}"/>
                         </Flyout>
                     </Button.Flyout>
                 </Button>
