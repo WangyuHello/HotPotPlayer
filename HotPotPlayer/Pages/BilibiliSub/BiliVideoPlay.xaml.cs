@@ -26,6 +26,7 @@ using Windows.UI;
 using Microsoft.UI;
 using HotPotPlayer.Services.BiliBili.Danmaku;
 using Windows.System;
+using CommunityToolkit.WinUI.UI.Controls;
 
 // To learn more about WinUI, the WinUI project structure,
 // and more about our project templates, see: http://aka.ms/winui-project-info.
@@ -211,9 +212,6 @@ namespace HotPotPlayer.Pages.BilibiliSub
             return coin != 0;
         }
 
-        [ObservableProperty]
-        int coinSelectedIndex;
-
         private void CoinClick(object sender, RoutedEventArgs e)
         {
             var b = sender as ToggleButton;
@@ -221,13 +219,13 @@ namespace HotPotPlayer.Pages.BilibiliSub
             b.IsChecked = Coin != 0;
         }
 
-        private async void CoinConfirmClick(object sender, RoutedEventArgs e)
+        private async void CoinConfirmClick(object sender, int c)
         {
             CoinToggleButton.ContextFlyout.Hide();
-            var r = await BiliBiliService.API.Coin(aid, coinSelectedIndex + 1);
+            var r = await BiliBiliService.API.Coin(aid, c);
             if (r)
             {
-                Coin = coinSelectedIndex + 1;
+                Coin = c;
                 if (Coin != 0)
                 {
                     video.Stat.Coin += Coin;
@@ -246,7 +244,7 @@ namespace HotPotPlayer.Pages.BilibiliSub
             if (r)
             {
                 IsFavor = true;
-                if (IsLike)
+                if (IsFavor)
                 {
                     video.Stat.Favorite++;
                 }

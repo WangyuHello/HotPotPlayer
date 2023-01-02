@@ -67,13 +67,7 @@
                     </StackPanel>
                     <ToggleButton.ContextFlyout>
                         <Flyout>
-                            <StackPanel>
-                                <RadioButtons Header="投币数量:" FontFamily="{ThemeResource MiSansRegular}" SelectedIndex="{x:Bind CoinSelectedIndex, Mode=TwoWay}">
-                                    <RadioButton Content="1" />
-                                    <RadioButton Content="2" />
-                                </RadioButtons>
-                                <Button Click="CoinConfirmClick" FontFamily="{ThemeResource MiSansRegular}">确定</Button>
-                            </StackPanel>
+                            <cont3:CoinFlyout CopyRight="{x:Bind Video.CopyRight}" CoinConfirmed="CoinConfirmClick"/>
                         </Flyout>
                     </ToggleButton.ContextFlyout>
                 </ToggleButton>

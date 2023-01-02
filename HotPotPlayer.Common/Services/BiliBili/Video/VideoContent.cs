@@ -47,7 +47,7 @@ namespace HotPotPlayer.Services.BiliBili.Video
         /// 1为原创，2为转载
         /// </summary>
         [JsonProperty("copyright")]
-        public string Copyright { get; set; }
+        public int CopyRight { get; set; }
 
         /// <summary>
         /// 视频封面

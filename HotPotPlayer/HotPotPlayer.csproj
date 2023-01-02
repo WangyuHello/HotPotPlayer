@@ -50,6 +50,7 @@
     <None Remove="Assets\Icon\View.svg" />
     <None Remove="Assets\nico.png" />
     <None Remove="Controls\AlbumPopup.xaml" />
+    <None Remove="Controls\BilibiliSub\CoinFlyout.xaml" />
     <None Remove="Controls\BilibiliSub\NestedReplyDialog.xaml" />
     <None Remove="Controls\BilibiliSub\UserCard.xaml" />
     <None Remove="Controls\CloudAlbumPopup.xaml" />
@@ -399,5 +400,10 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Remove="Pages\BilibiliSub\User.xaml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Page Update="Controls\BilibiliSub\CoinFlyout.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
   </ItemGroup>
 </Project>

@@ -170,7 +170,11 @@ namespace HotPotPlayer.Video
 
         private void MediaFinished(object sender, EventArgs e)
         {
-            UIQueue.TryEnqueue(() => IsPlaying = false);
+            UIQueue.TryEnqueue(() =>
+            {
+                IsPlaying = false;
+                DM.Pause();
+            });
             //DisplayReq.RequestRelease();
             mediaEnded = true;
         }
@@ -203,13 +207,21 @@ namespace HotPotPlayer.Video
 
         private void MediaPaused(object sender, EventArgs e)
         {
-            UIQueue.TryEnqueue(() => IsPlaying = false);
+            UIQueue.TryEnqueue(() =>
+            {
+                IsPlaying = false;
+                DM.Pause();
+            });
             //DisplayReq.RequestRelease();
         }
 
         private void MediaResumed(object sender, EventArgs e)
         {
-            UIQueue.TryEnqueue(() => IsPlaying = true);
+            UIQueue.TryEnqueue(() =>
+            {
+                IsPlaying = true;
+                DM.Resume();
+            });
             //DisplayReq.RequestActive();
         }
 
@@ -548,12 +560,10 @@ namespace HotPotPlayer.Video
             if(Mpv.IsPlaying)
             {
                 Mpv.Pause();
-                DM.Pause();
             }
             else
             {
                 Mpv.Resume();
-                DM.Resume();
             }
         }
 

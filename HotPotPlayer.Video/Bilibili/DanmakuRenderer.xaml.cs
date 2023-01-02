@@ -72,6 +72,7 @@ namespace HotPotPlayer.Video.Bilibili
                     {
                         tb.Text = d.Content;
                         tb.Foreground = new SolidColorBrush(d.Color);
+                        tb.FontSize = d.FontSize;
                     }
                     else
                     {
@@ -79,7 +80,7 @@ namespace HotPotPlayer.Video.Bilibili
                         {
                             Text = d.Content,
                             Foreground = new SolidColorBrush(d.Color),
-                            FontSize = FontSize,
+                            FontSize = d.FontSize,
                             FontFamily = (FontFamily)Application.Current.Resources["MiSansRegular"],
                             HorizontalAlignment = HorizontalAlignment.Center,
                         };
@@ -109,6 +110,7 @@ namespace HotPotPlayer.Video.Bilibili
                     {
                         tb.Text = d.Content;
                         tb.Foreground = new SolidColorBrush(d.Color);
+                        tb.FontSize = d.FontSize;
                     }
                     else
                     {
@@ -116,7 +118,7 @@ namespace HotPotPlayer.Video.Bilibili
                         {
                             Text = d.Content,
                             Foreground = new SolidColorBrush(d.Color),
-                            FontSize = FontSize,
+                            FontSize = d.FontSize,
                             FontFamily = (FontFamily)Application.Current.Resources["MiSansRegular"],
                             HorizontalAlignment = HorizontalAlignment.Center,
                         };
@@ -335,6 +337,10 @@ namespace HotPotPlayer.Video.Bilibili
 
         public void Pause()
         {
+            if (DmData == null)
+            {
+                return;
+            }
             _tickTimer.Stop();
             _topTickTimer.Stop();
             _texts.Select(tb =>
@@ -347,6 +353,10 @@ namespace HotPotPlayer.Video.Bilibili
 
         public void Resume()
         {
+            if (DmData == null)
+            {
+                return;
+            }
             Host.Children.Clear();
             _texts?.Clear();
             DmTick(null, null);

@@ -1,0 +1,40 @@
+<!-- Copyright (c) Microsoft Corporation and Contributors. -->
+<!-- Licensed under the MIT License. -->
+
+<UserControl
+    x:Class="HotPotPlayer.Controls.BilibiliSub.CoinFlyout"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:HotPotPlayer.Controls.BilibiliSub"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    x:DefaultBindMode="OneWay"
+    mc:Ignorable="d">
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="*" />
+        </Grid.ColumnDefinitions>
+
+        <TextBlock Grid.ColumnSpan="2" Text="投币数量:" FontFamily="{ThemeResource MiSansRegular}" />
+
+        <ToggleButton x:Name="Coin1" Margin="0,8,8,8" Click="Coin1Click" Grid.Row="1" Width="50" Height="60" >
+            <PathIcon Data="{StaticResource CoinPath}" HorizontalAlignment="Center" />
+        </ToggleButton>
+        <ToggleButton x:Name="Coin2" Margin="0,8,0,8" Click="Coin2Click" Grid.Row="1" Grid.Column="1" IsEnabled="{x:Bind IsCoin2Enable(CopyRight)}" Width="70" Height="60">
+            <StackPanel Orientation="Horizontal" Spacing="4">
+                <PathIcon Data="{StaticResource CoinPath}" HorizontalAlignment="Center" />
+                <PathIcon Data="{StaticResource CoinPath}" HorizontalAlignment="Center" />
+
+            </StackPanel>
+        </ToggleButton>
+
+        <Button Grid.Row="2" Grid.ColumnSpan="2" x:Name="Confirm" IsEnabled="False" Click="ConfirmClick" FontFamily="{ThemeResource MiSansRegular}" HorizontalAlignment="Stretch">确认</Button>
+    </Grid>
+</UserControl>
