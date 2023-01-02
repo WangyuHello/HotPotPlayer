@@ -24,13 +24,26 @@
             <ColumnDefinition Width="*" />
         </Grid.ColumnDefinitions>
 
-        <cont2:ImageEx2 Source="{x:Bind Video.VideoImage}" Margin="24,24,0,8" VerticalAlignment="Top" Grid.ColumnSpan="2" Width="320" Height="160" DecodePixelWidth="320" DecodePixelHeight="160" Style="{StaticResource DynamicImageStyle}" />
+        <Grid Margin="24,24,0,8" VerticalAlignment="Top" Grid.ColumnSpan="2" CornerRadius="4">
 
+            <cont2:ImageEx2 Source="{x:Bind Video.VideoImage}"  Width="320" Height="160" DecodePixelWidth="320" DecodePixelHeight="160" Style="{StaticResource DynamicImageStyle}" />
+            <Grid VerticalAlignment="Bottom" Width="320" Padding="8,24,8,8">
+                <Grid.Background>
+                    <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
+                        <GradientStop Offset="0" Color="Transparent"/>
+                        <GradientStop Offset="0.2" Color="#10000000"/>
+                        <GradientStop Offset="1" Color="#b0000000"/>
+                    </LinearGradientBrush>
+                </Grid.Background>
+                <TextBlock Text="{x:Bind Video.Title}" Foreground="White" TextTrimming="CharacterEllipsis" FontFamily="{ThemeResource MiSansMedium}"/>
+            </Grid>
+        </Grid>
+        
         <TextBlock Grid.Row="1" Text="{x:Bind Video.Bvid}" Foreground="Gray" Margin="24,0,0,0" VerticalAlignment="Center" FontSize="14" FontFamily="{ThemeResource MiSansRegular}" IsTextSelectionEnabled="True"/>
 
         <Button Grid.Row="1" Grid.Column="1" Margin="0,0,0,0" HorizontalAlignment="Right" VerticalAlignment="Center" FontFamily="{ThemeResource MiSansRegular}" Style="{StaticResource AccentButtonStyle}">获取视频分享链接</Button>
 
-        <cont2:ImageEx2 Grid.Column="2" Style="{StaticResource DynamicImageStyle}" Margin="0,24,0,0" VerticalAlignment="Top" HorizontalAlignment="Center" Width="160" Height="160" Background="Wheat"/>
+        <Image Grid.Column="2" x:Name="QR" Style="{StaticResource DynamicImageStyle}" Margin="0,24,0,0" VerticalAlignment="Top" HorizontalAlignment="Center" Width="160" Height="160" />
         
         <TextBlock Grid.Row="1" Grid.Column="2" Text="手机扫描观看/分享" HorizontalAlignment="Center" FontFamily="{ThemeResource MiSansRegular}" />
 
