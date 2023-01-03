@@ -46,6 +46,6 @@
             <TextBlock Grid.Row="1" Margin="48,8,0,0" Text="{x:Bind Reply.Content.Message}" TextWrapping="Wrap" FontFamily="{StaticResource MiSansRegular}" IsTextSelectionEnabled="True"/>
         </Grid>
         <Rectangle Grid.Row="1" Fill="LightGray" Height="0"/>
-        <ListView Grid.Row="2" x:Name="CommentList" Margin="0,0,-8,0" Padding="0,0,8,0" ItemsSource="{x:Bind Reply.TheReplies}" Style="{StaticResource GeneralListViewStyle}" ItemContainerStyle="{StaticResource GeneralListContainerStyle}" ItemTemplate="{StaticResource VideoReplyTemplate}"/>
+        <ListView Grid.Row="2" x:Name="CommentList" Margin="0,0,-8,0" Padding="0,0,8,0" ItemsSource="{x:Bind Reply.TheReplies}" Style="{StaticResource GeneralListViewStyle}" ItemContainerStyle="{StaticResource GeneralListContainerStyle}" ItemTemplate="{StaticResource VideoReplyTemplateNoPadding}"/>
     </Grid>
 </Page>
