@@ -29,7 +29,7 @@ namespace HotPotPlayer.Services.BiliBili.Video
         /// 分P
         /// </summary>
         [JsonProperty("videos")]
-        public string PageCount { get; set; }
+        public int Videos { get; set; }
 
         /// <summary>
         /// 分区内容
@@ -146,7 +146,7 @@ namespace HotPotPlayer.Services.BiliBili.Video
         /// 第一P视频的CID
         /// </summary>
         [JsonProperty("cid")]
-        public string First_Cid { get; set; }
+        public string FirstCid { get; set; }
 
 
         [JsonProperty("rights")]
@@ -161,10 +161,8 @@ namespace HotPotPlayer.Services.BiliBili.Video
         [JsonProperty("pages")]
         public List<Page> Pages { get; set; }
 
-
-        [JsonProperty("first_frame")]
-        public string First_Image { get; set; }
-
+        [JsonProperty("staff")]
+        public List<Staff> Staff { get; set; }
         /// <summary>
         /// 用户对于该视频的推广信息（投币，点赞，收藏）
         /// </summary>
@@ -568,6 +566,15 @@ namespace HotPotPlayer.Services.BiliBili.Video
         public string ArgueMessage { get; set; }
     }
 
+    public class Staff
+    {
+        [JsonProperty("mid")] public int Mid { get; set; }
+        [JsonProperty("title")] public string Title { get; set; }
+        [JsonProperty("name")] public string Name { get; set; }
+        [JsonProperty("face")] public string Face { get; set; }
+        [JsonProperty("follower")] public int Follower { get; set; }
+    }
+
     public class Page
     {
         [JsonProperty("cid")]
@@ -577,7 +584,10 @@ namespace HotPotPlayer.Services.BiliBili.Video
         /// 当前分页
         /// </summary>
         [JsonProperty("page")]
-        public string page { get; set; }
+        public string ThePage { get; set; }
+
+        [JsonIgnore]
+        public string GetPage => "P" + ThePage;
 
         /// <summary>
         /// 来源，默认为B站，qq为腾讯，hunan为芒果
@@ -589,13 +599,27 @@ namespace HotPotPlayer.Services.BiliBili.Video
         /// 分P标题
         /// </summary>
         [JsonProperty("part")]
-        public string Title { get; set; }
+        public string Part { get; set; }
 
         /// <summary>
         /// 分P时常，以秒为单位
         /// </summary>
         [JsonProperty("duration")]
-        public string Duration { get; set; }
+        public int Duration { get; set; }
+
+        public string GetDuration()
+        {
+            int i = Duration;
+            var time = TimeSpan.FromSeconds(i);
+            if (time.Hours > 0)
+            {
+                return time.ToString("hh\\:mm\\:ss");
+            }
+            else
+            {
+                return time.ToString("mm\\:ss");
+            }
+        }
 
         /// <summary>
         /// 站外视频vid

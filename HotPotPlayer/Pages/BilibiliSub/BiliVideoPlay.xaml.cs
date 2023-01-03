@@ -77,6 +77,9 @@ namespace HotPotPlayer.Pages.BilibiliSub
         [ObservableProperty]
         bool isLoading = true;
 
+        [ObservableProperty]
+        int selectedPage;
+
         protected override async void OnNavigatedTo(NavigationEventArgs e)
         {
             base.OnNavigatedTo(e);
@@ -86,6 +89,7 @@ namespace HotPotPlayer.Pages.BilibiliSub
 
         string aid;
         string cid;
+        string bvid;
 
         private async Task StartPlay(object para)
         {
@@ -93,8 +97,9 @@ namespace HotPotPlayer.Pages.BilibiliSub
             {
                 this.video = videoContent;
                 aid = videoContent.Aid;
-                cid = videoContent.First_Cid;
-                var res = await BiliBiliService.API.GetVideoUrl(this.video.Bvid, this.video.First_Cid, DashEnum.Dash8K, FnvalEnum.Dash | FnvalEnum.HDR | FnvalEnum.Fn8K | FnvalEnum.Fn4K | FnvalEnum.AV1 | FnvalEnum.FnDBAudio | FnvalEnum.FnDBVideo);
+                cid = videoContent.FirstCid;
+                bvid = videoContent.Bvid;
+                var res = await BiliBiliService.API.GetVideoUrl(this.video.Bvid, this.video.FirstCid, DashEnum.Dash8K, FnvalEnum.Dash | FnvalEnum.HDR | FnvalEnum.Fn8K | FnvalEnum.Fn4K | FnvalEnum.AV1 | FnvalEnum.FnDBAudio | FnvalEnum.FnDBVideo);
                 var video = BiliBiliVideoItem.FromRaw(res.Data, this.video);
                 Source = new VideoPlayInfo { VideoItems = new List<BiliBiliVideoItem> { video }, Index = 0 };
             }
@@ -102,12 +107,13 @@ namespace HotPotPlayer.Pages.BilibiliSub
             {
                 aid = h.Aid;
                 cid = h.Cid;
+                bvid = h.Bvid;
                 var res = await BiliBiliService.API.GetVideoUrl(h.Bvid, h.Cid, DashEnum.Dash8K, FnvalEnum.Dash | FnvalEnum.HDR | FnvalEnum.Fn8K | FnvalEnum.Fn4K | FnvalEnum.AV1 | FnvalEnum.FnDBAudio | FnvalEnum.FnDBVideo);
                 var video = BiliBiliVideoItem.FromRaw(res.Data, h);
                 Source = new VideoPlayInfo { VideoItems = new List<BiliBiliVideoItem> { video }, Index = 0 };
-                this.video = (await BiliBiliService.API.GetVideoInfo(h.Bvid)).Data;
             }
-            this.onLineCount = await BiliBiliService.API.GetOnlineCount(Video.Bvid, Video.First_Cid);
+            this.video = (await BiliBiliService.API.GetVideoInfo(bvid)).Data;
+            this.onLineCount = await BiliBiliService.API.GetOnlineCount(Video.Bvid, Video.FirstCid);
             var replies = (await BiliBiliService.API.GetVideoReplyAsync(Video.Aid)).Data;
             this.replies = new ReplyItemCollection(replies, "1", Video.Aid, BiliBiliService);
             this.relatedVideos = (await BiliBiliService.API.GetRelatedVideo(Video.Bvid)).Data;
@@ -211,6 +217,16 @@ namespace HotPotPlayer.Pages.BilibiliSub
         bool GetCoinButtonCheck(int coin)
         {
             return coin != 0;
+        }
+
+        Visibility GetMultiPageVisible(VideoContent video)
+        {
+            return video.Videos > 1 ? Visibility.Visible : Visibility.Collapsed;
+        }
+
+        string GetSelectedPageAndAll(int selectedPage, VideoContent video)
+        {
+            return $"({selectedPage+1}/{video.Videos})";
         }
 
         private void CoinClick(object sender, RoutedEventArgs e)

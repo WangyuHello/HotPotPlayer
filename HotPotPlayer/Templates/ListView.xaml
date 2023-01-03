@@ -11,6 +11,7 @@
     xmlns:brep="using:HotPotPlayer.Services.BiliBili.Reply"
     xmlns:ccont="using:CommunityToolkit.WinUI.UI.Controls"
     xmlns:dyn="using:HotPotPlayer.Services.BiliBili.Dynamic"
+    xmlns:bv="using:HotPotPlayer.Services.BiliBili.Video"
     xmlns:local="using:HotPotPlayer.Templates">
 
     <Thickness x:Key="ListItemPadding" >12,0</Thickness>
@@ -227,7 +228,7 @@
     </DataTemplate>
 
     <DataTemplate x:Key="VideoReplyTemplate" x:DataType="brep:Reply">
-        <Grid Padding="0,8,0,8" >
+        <Grid Padding="16,8,16,8" >
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto" />
                 <RowDefinition Height="*" />
@@ -579,5 +580,18 @@
                 </Button>
             </Grid>
         </StackPanel>
+    </DataTemplate>
+
+    <DataTemplate x:Key="VideoPageTemplate" x:DataType="bv:Page">
+        <Grid VerticalAlignment="Center" Padding="16,0">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
+            <TextBlock Text="{x:Bind GetPage}" FontFamily="{ThemeResource MiSansRegular}"/>
+            <TextBlock Grid.Column="1" Margin="8,0,0,0" Text="{x:Bind Part}" FontFamily="{ThemeResource MiSansRegular}"/>
+            <TextBlock Grid.Column="2" Text="{x:Bind GetDuration()}" Foreground="Gray" FontFamily="{ThemeResource MiSansRegular}"/>
+        </Grid>
     </DataTemplate>
 </ResourceDictionary>

@@ -126,16 +126,50 @@
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto" />
                 <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
                 <RowDefinition Height="*" />
             </Grid.RowDefinitions>
 
-            <StackPanel Orientation="Horizontal" Spacing="8" Margin="0,0,0,16" >
+            <Grid Visibility="{x:Bind GetMultiPageVisible(Video)}" MaxHeight="200" CornerRadius="8" Padding="16,8,16,8" Margin="0,0,0,8" Background="#f1f2f3" >
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="*" />
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+                <TextBlock Text="视频选集" FontSize="18" VerticalAlignment="Center" FontFamily="{ThemeResource MiSansMedium}"/>
+                <TextBlock Grid.Column="1" Margin="4,0,0,0" Text="{x:Bind GetSelectedPageAndAll(SelectedPage, Video)}" Foreground="Gray" FontSize="14" VerticalAlignment="Center" FontFamily="{ThemeResource MiSansRegular}"/>
+                <TextBlock Grid.Column="3" Foreground="Gray" Text="自动连播" FontSize="14" VerticalAlignment="Center" FontFamily="{ThemeResource MiSansRegular}"/>
+                <ToggleSwitch Grid.Column="4" Margin="8,0,-114,0" VerticalAlignment="Center" OffContent="" OnContent=""/>
+                <ListView 
+                    Grid.Row="1"
+                    Grid.ColumnSpan="5"
+                    Margin="-16,4,-16,0" 
+                    Padding="0,0" 
+                    ItemsSource="{x:Bind Video.Pages}" 
+                    Style="{StaticResource GeneralListViewStyle}" 
+                    ItemContainerStyle="{StaticResource BiliPageListContainerStyle}" 
+                    ItemTemplate="{StaticResource VideoPageTemplate}"
+                    IsItemClickEnabled="True"
+                    SelectionMode="Single"
+                    SelectedIndex="{x:Bind SelectedPage, Mode=TwoWay}"
+                    >
+
+                </ListView>
+            </Grid>
+            
+            <StackPanel Orientation="Horizontal" Grid.Row="1" Spacing="8" Margin="0,0,0,16" >
                 <TextBlock Text="评论" FontSize="18" FontFamily="{ThemeResource MiSansMedium}" />
                 <Border CornerRadius="4" Background="#4e4f67" Padding="6,0">
                     <TextBlock Text="{x:Bind Video.Stat.GetReply()}" Foreground="White" FontSize="12" VerticalAlignment="Center" FontFamily="{ThemeResource MiSansMedium}" />
                 </Border>
             </StackPanel>
-            <Grid Grid.Row="1" >
+            <Grid Grid.Row="2" >
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="*" />
                     <ColumnDefinition Width="Auto" />
@@ -146,9 +180,9 @@
                 </Button>
             </Grid>
             <ListView 
-                Grid.Row="2" 
-                Margin="-8,12,-8,0" 
-                Padding="8,0" 
+                Grid.Row="3" 
+                Margin="-16,12,-16,0" 
+                Padding="0,0" 
                 ItemsSource="{x:Bind Replies}" 
                 Style="{StaticResource GeneralListViewStyle}" 
                 ItemContainerStyle="{StaticResource GeneralListContainerStyle}" 
