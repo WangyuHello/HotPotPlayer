@@ -329,10 +329,7 @@ namespace HotPotPlayer.Video.Bilibili
 
         private void Host_SizeChanged(object sender, SizeChangedEventArgs e)
         {
-            Host.Children.Clear();
-            _texts?.Clear();
-            if (_tickTimer.IsEnabled || DmData == null) return;
-            Start(DmData);
+            Refresh();
         }
 
         public void Pause()
@@ -359,9 +356,35 @@ namespace HotPotPlayer.Video.Bilibili
             }
             Host.Children.Clear();
             _texts?.Clear();
+            foreach (var (i, m) in _masks)
+            {
+                foreach (var item in m)
+                {
+                    item.occupied = false;
+                }
+            }
             DmTick(null, null);
             _tickTimer.Start();
             _topTickTimer.Start();
+        }
+
+        public void Refresh()
+        {
+            if (DmData == null)
+            {
+                return;
+            }
+            if (!_tickTimer.IsEnabled)
+            {
+                Start(DmData);
+            }
+            else
+            {
+                _tickTimer.Stop();
+                _topTickTimer.Stop();
+
+                Resume();
+            }
         }
 
         class ExitTime
