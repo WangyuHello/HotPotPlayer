@@ -77,12 +77,12 @@
                         <TextBlock HorizontalAlignment="Center" Text="{x:Bind Video.Stat.GetFavorite()}" FontFamily="{ThemeResource MiSansRegular}" />
                     </StackPanel>
                 </ToggleButton>
-                <Button Padding="8,0" CornerRadius="4" Style="{StaticResource BiliButton}" VerticalAlignment="Top" Foreground="#61666d">
+                <Button Padding="8,0" CornerRadius="4" Style="{StaticResource BiliButton}" VerticalAlignment="Top" Click="ShareClick" >
                     <StackPanel Spacing="4" Padding="0,4">
                         <FontIcon FontFamily="{ThemeResource BiliIcons}" Glyph="&#xEA0D;" FontSize="22"/>
                         <TextBlock HorizontalAlignment="Center" Text="{x:Bind Video.Stat.GetShare()}" FontFamily="{ThemeResource MiSansRegular}" />
                     </StackPanel>
-                    <Button.Flyout>
+                    <Button.ContextFlyout>
                         <Flyout>
                             <Flyout.FlyoutPresenterStyle>
                                 <Style TargetType="FlyoutPresenter">
@@ -90,9 +90,9 @@
                                     <Setter Property="CornerRadius" Value="8" />
                                 </Style>
                             </Flyout.FlyoutPresenterStyle>
-                            <cont3:ShareFlyout Video="{x:Bind Video}"/>
+                            <cont3:ShareFlyout x:Name="ShareFl" Video="{x:Bind Video}"/>
                         </Flyout>
-                    </Button.Flyout>
+                    </Button.ContextFlyout>
                 </Button>
             </StackPanel>
             <StackPanel Grid.Row="2" Orientation="Horizontal" Margin="0,0,0,16">

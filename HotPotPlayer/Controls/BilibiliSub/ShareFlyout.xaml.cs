@@ -43,12 +43,7 @@ namespace HotPotPlayer.Controls.BilibiliSub
         }
 
         public static readonly DependencyProperty VideoProperty =
-            DependencyProperty.Register("Video", typeof(VideoContent), typeof(ShareFlyout), new PropertyMetadata(default, VideoChanged));
-
-        private static void VideoChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
-        {
-            ((ShareFlyout)d).SetShareQrImage(e.NewValue as VideoContent);
-        }
+            DependencyProperty.Register("Video", typeof(VideoContent), typeof(ShareFlyout), new PropertyMetadata(default));
 
         private async void OpenWebClick(object sender, RoutedEventArgs e)
         {
@@ -64,7 +59,7 @@ namespace HotPotPlayer.Controls.BilibiliSub
             return qrCodeAsBitmapByteArr;
         }
 
-        async void SetShareQrImage(VideoContent video)
+        private async Task SetShareQrImage(VideoContent video)
         {
             var qrData = GetQrImgByte("https://m.bilibili.com/video/"+video.Bvid);
             BitmapImage image = new();
@@ -73,6 +68,11 @@ namespace HotPotPlayer.Controls.BilibiliSub
             stream.Seek(0);
             await image.SetSourceAsync(stream);
             QR.Source = image;
+        }
+
+        public async void Init()
+        {
+            await SetShareQrImage(Video);
         }
     }
 }

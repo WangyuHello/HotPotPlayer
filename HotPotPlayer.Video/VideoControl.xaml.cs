@@ -173,7 +173,7 @@ namespace HotPotPlayer.Video
             UIQueue.TryEnqueue(() =>
             {
                 IsPlaying = false;
-                DM.Pause();
+                //DM.Pause();
             });
             //DisplayReq.RequestRelease();
             mediaEnded = true;
@@ -210,7 +210,7 @@ namespace HotPotPlayer.Video
             UIQueue.TryEnqueue(() =>
             {
                 IsPlaying = false;
-                DM.Pause();
+                //DM.Pause();
             });
             //DisplayReq.RequestRelease();
         }
@@ -220,7 +220,7 @@ namespace HotPotPlayer.Video
             UIQueue.TryEnqueue(() =>
             {
                 IsPlaying = true;
-                DM.Resume();
+                //DM.Resume();
             });
             //DisplayReq.RequestActive();
         }

@@ -27,6 +27,7 @@ using Microsoft.UI;
 using HotPotPlayer.Services.BiliBili.Danmaku;
 using Windows.System;
 using CommunityToolkit.WinUI.UI.Controls;
+using HotPotPlayer.Controls.BilibiliSub;
 
 // To learn more about WinUI, the WinUI project structure,
 // and more about our project templates, see: http://aka.ms/winui-project-info.
@@ -254,6 +255,13 @@ namespace HotPotPlayer.Pages.BilibiliSub
                 }
                 OnPropertyChanged(propertyName: nameof(Video));
             }
+        }
+
+        private void ShareClick(object sender, RoutedEventArgs e)
+        {
+            ShareFl.Init();
+            var b = sender as FrameworkElement;
+            b.ContextFlyout.ShowAt(b);
         }
     }
 }

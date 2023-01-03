@@ -43,7 +43,7 @@
 
         <Button Grid.Row="1" Grid.Column="1" Margin="0,0,0,0" HorizontalAlignment="Right" VerticalAlignment="Center" FontFamily="{ThemeResource MiSansRegular}" Style="{StaticResource AccentButtonStyle}">获取视频分享链接</Button>
 
-        <Image Grid.Column="2" x:Name="QR" Style="{StaticResource DynamicImageStyle}" Margin="0,24,0,0" VerticalAlignment="Top" HorizontalAlignment="Center" Width="160" Height="160" />
+        <Image Grid.Column="2" x:Name="QR" Margin="0,24,0,0" VerticalAlignment="Top" HorizontalAlignment="Center" Width="160" Height="160" />
         
         <TextBlock Grid.Row="1" Grid.Column="2" Text="手机扫描观看/分享" HorizontalAlignment="Center" FontFamily="{ThemeResource MiSansRegular}" />
 
