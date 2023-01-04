@@ -272,6 +272,26 @@ namespace HotPotPlayer.Video.Bilibili
 
         private void Start(DMData n)
         {
+            if (pendingReload)
+            {
+                Load(n);
+                pendingReload = false;
+            }
+            DmTick(null, null);
+
+            _tickTimer.Start();
+            _topTickTimer.Start();
+        }
+
+        bool pendingReload = false;
+
+        public void RequestReload()
+        {
+            pendingReload = true;
+        }
+
+        private void Load(DMData n)
+        {
             _timeLine = new Dictionary<int, List<DMItem>>();
             _toptimeLine = new Dictionary<int, List<DMItem>>();
             _bottomtimeLine = new Dictionary<int, List<DMItem>>();
@@ -295,7 +315,7 @@ namespace HotPotPlayer.Video.Bilibili
                         AddToTimeline(Convert.ToInt32(d.Time.TotalSeconds), d, _timeLine);
                         break;
                 }
-                
+
             }
             _availTime = _timeLine.Keys.ToList();
             _masks = _availTime.ToDictionary(a => a, b => Enumerable.Range(0, Slot).Select(x => new Mask()).ToArray());
@@ -321,10 +341,6 @@ namespace HotPotPlayer.Video.Bilibili
             _visuals = new Queue<Visual>();
             _compositor = App.MainWindow.Compositor;
             _linear = _compositor.CreateLinearEasingFunction();
-            DmTick(null, null);
-
-            _tickTimer.Start();
-            _topTickTimer.Start();
         }
 
         private void Host_SizeChanged(object sender, SizeChangedEventArgs e)

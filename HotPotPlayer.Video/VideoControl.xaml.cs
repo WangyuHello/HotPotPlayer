@@ -153,10 +153,16 @@ namespace HotPotPlayer.Video
                     _mpv.MediaLoaded += MediaLoaded;
                     _mpv.MediaFinished += MediaFinished;
                     _mpv.PositionChanged += PositionChanged;
+                    _mpv.MediaUnloaded += MediaUnloaded;
                 }
 
                 return _mpv;
             }
+        }
+
+        private void MediaUnloaded(object sender, EventArgs e)
+        {
+            
         }
 
         private void PositionChanged(object sender, MpvPlayerPositionChangedEventArgs e)
@@ -289,6 +295,7 @@ namespace HotPotPlayer.Video
                     //Mpv.Load(mpd);
                     //Mpv.Load("http://localhost:18909/video.m4s");
                     var edl = bv.GetEdlProtocal(vurl, aurl);
+                    DM.RequestReload();
                     Mpv.PlaylistClear();
                     Mpv.Load(edl);
                 }
@@ -776,6 +783,7 @@ namespace HotPotPlayer.Video
             {
                 if(mediaInited && !string.IsNullOrEmpty(nv))
                 {
+                    Mpv.Stop();
                     StartPlay(nv);
                 }
             });
