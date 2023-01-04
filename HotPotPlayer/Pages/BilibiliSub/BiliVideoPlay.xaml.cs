@@ -28,6 +28,7 @@ using HotPotPlayer.Services.BiliBili.Danmaku;
 using Windows.System;
 using CommunityToolkit.WinUI.UI.Controls;
 using HotPotPlayer.Controls.BilibiliSub;
+using System.ComponentModel;
 
 // To learn more about WinUI, the WinUI project structure,
 // and more about our project templates, see: http://aka.ms/winui-project-info.
@@ -39,9 +40,58 @@ namespace HotPotPlayer.Pages.BilibiliSub
     /// </summary>
     public sealed partial class BiliVideoPlay : PageBase
     {
+        BackgroundWorker bg;
+
         public BiliVideoPlay()
         {
             this.InitializeComponent();
+            bg = new BackgroundWorker();
+            bg.DoWork += BgWork;
+            bg.RunWorkerCompleted += BgCompleted;
+        }
+
+        private void BgCompleted(object sender, RunWorkerCompletedEventArgs e)
+        {
+            OnPropertyChanged(propertyName: nameof(Source));
+            VideoPlayer.PreparePlay();
+            VideoPlayer.StartPlay();
+        }
+
+        private void BgWork(object sender, DoWorkEventArgs e)
+        {
+            var para = e.Argument;
+            Task.Run(async () =>
+            {
+                if (para is VideoContent videoContent)
+                {
+                    this.video = videoContent;
+                    aid = videoContent.Aid;
+                    cid = videoContent.FirstCid;
+                    bvid = videoContent.Bvid;
+                    var res = await BiliBiliService.API.GetVideoUrl(this.video.Bvid, this.video.FirstCid, DashEnum.Dash8K, FnvalEnum.Dash | FnvalEnum.HDR | FnvalEnum.Fn8K | FnvalEnum.Fn4K | FnvalEnum.AV1 | FnvalEnum.FnDBAudio | FnvalEnum.FnDBVideo);
+                    var video = BiliBiliVideoItem.FromRaw(res.Data, this.video);
+                    this.source = new VideoPlayInfo { VideoItems = new List<BiliBiliVideoItem> { video }, Index = 0 };
+                }
+                else if (para is HomeDataItem h)
+                {
+                    aid = h.Aid;
+                    cid = h.Cid;
+                    bvid = h.Bvid;
+                    var res = await BiliBiliService.API.GetVideoUrl(h.Bvid, h.Cid, DashEnum.Dash8K, FnvalEnum.Dash | FnvalEnum.HDR | FnvalEnum.Fn8K | FnvalEnum.Fn4K | FnvalEnum.AV1 | FnvalEnum.FnDBAudio | FnvalEnum.FnDBVideo);
+                    var video = BiliBiliVideoItem.FromRaw(res.Data, h);
+                    this.source = new VideoPlayInfo { VideoItems = new List<BiliBiliVideoItem> { video }, Index = 0 };
+                }
+
+                this.video = (await BiliBiliService.API.GetVideoInfo(bvid)).Data;
+                this.onLineCount = await BiliBiliService.API.GetOnlineCount(Video.Bvid, Video.FirstCid);
+                var replies = (await BiliBiliService.API.GetVideoReplyAsync(Video.Aid)).Data;
+                this.replies = new ReplyItemCollection(replies, "1", Video.Aid, BiliBiliService);
+                this.relatedVideos = (await BiliBiliService.API.GetRelatedVideo(Video.Bvid)).Data;
+                this.isLike = await BiliBiliService.API.IsLike(Video.Aid);
+                this.coin = await BiliBiliService.API.GetCoin(Video.Aid);
+                this.isFavor = await BiliBiliService.API.IsFavored(Video.Aid);
+                this.dmData = await BiliBiliService.API.GetDMXml(cid);
+            }).Wait();
         }
 
         [ObservableProperty]
@@ -80,50 +130,20 @@ namespace HotPotPlayer.Pages.BilibiliSub
         [ObservableProperty]
         int selectedPage;
 
-        protected override async void OnNavigatedTo(NavigationEventArgs e)
+        protected override void OnNavigatedTo(NavigationEventArgs e)
         {
             base.OnNavigatedTo(e);
             var para = e.Parameter;
-            await StartPlay(para);
+            StartPlay(para);
         }
 
         string aid;
         string cid;
         string bvid;
 
-        private async Task StartPlay(object para)
+        private void StartPlay(object para)
         {
-            if (para is VideoContent videoContent)
-            {
-                this.video = videoContent;
-                aid = videoContent.Aid;
-                cid = videoContent.FirstCid;
-                bvid = videoContent.Bvid;
-                var res = await BiliBiliService.API.GetVideoUrl(this.video.Bvid, this.video.FirstCid, DashEnum.Dash8K, FnvalEnum.Dash | FnvalEnum.HDR | FnvalEnum.Fn8K | FnvalEnum.Fn4K | FnvalEnum.AV1 | FnvalEnum.FnDBAudio | FnvalEnum.FnDBVideo);
-                var video = BiliBiliVideoItem.FromRaw(res.Data, this.video);
-                Source = new VideoPlayInfo { VideoItems = new List<BiliBiliVideoItem> { video }, Index = 0 };
-            }
-            else if (para is HomeDataItem h)
-            {
-                aid = h.Aid;
-                cid = h.Cid;
-                bvid = h.Bvid;
-                var res = await BiliBiliService.API.GetVideoUrl(h.Bvid, h.Cid, DashEnum.Dash8K, FnvalEnum.Dash | FnvalEnum.HDR | FnvalEnum.Fn8K | FnvalEnum.Fn4K | FnvalEnum.AV1 | FnvalEnum.FnDBAudio | FnvalEnum.FnDBVideo);
-                var video = BiliBiliVideoItem.FromRaw(res.Data, h);
-                Source = new VideoPlayInfo { VideoItems = new List<BiliBiliVideoItem> { video }, Index = 0 };
-            }
-            this.video = (await BiliBiliService.API.GetVideoInfo(bvid)).Data;
-            this.onLineCount = await BiliBiliService.API.GetOnlineCount(Video.Bvid, Video.FirstCid);
-            var replies = (await BiliBiliService.API.GetVideoReplyAsync(Video.Aid)).Data;
-            this.replies = new ReplyItemCollection(replies, "1", Video.Aid, BiliBiliService);
-            this.relatedVideos = (await BiliBiliService.API.GetRelatedVideo(Video.Bvid)).Data;
-            this.isLike = await BiliBiliService.API.IsLike(Video.Aid);
-            this.coin = await BiliBiliService.API.GetCoin(Video.Aid);
-            this.isFavor = await BiliBiliService.API.IsFavored(Video.Aid);
-            this.dmData = await BiliBiliService.API.GetDMXml(cid);
-
-            VideoPlayer.PreparePlay();
-            VideoPlayer.StartPlay();
+            bg.RunWorkerAsync(para);
         }
 
         protected override async void OnNavigatedFrom(NavigationEventArgs e)
@@ -172,9 +192,9 @@ namespace HotPotPlayer.Pages.BilibiliSub
         private void RelateVideoClick(object sender, ItemClickEventArgs e)
         {
             var v = e.ClickedItem as VideoContent;
-            //VideoPlayer.Close();
-            //await StartPlay(v);
-            NavigateTo("BilibiliSub.BiliVideoPlay", v);
+            //VideoPlayer.Stop();
+            StartPlay(v);
+            //NavigateTo("BilibiliSub.BiliVideoPlay", v);
         }
 
         private void OnMediaLoaded()

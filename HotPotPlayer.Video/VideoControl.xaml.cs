@@ -200,6 +200,7 @@ namespace HotPotPlayer.Video
                 CurrentPlayingDuration = _mpv.Duration;
                 OnPropertyChanged(propertyName: nameof(Volume));
                 OnMediaLoaded?.Invoke();
+                DM.Refresh();
             });
 
             await Task.Run(async () =>
@@ -295,8 +296,8 @@ namespace HotPotPlayer.Video
                     //Mpv.Load(mpd);
                     //Mpv.Load("http://localhost:18909/video.m4s");
                     var edl = bv.GetEdlProtocal(vurl, aurl);
-                    DM.RequestReload();
                     Mpv.PlaylistClear();
+                    Mpv.Stop();
                     Mpv.Load(edl);
                 }
             }
@@ -429,6 +430,11 @@ namespace HotPotPlayer.Video
         {
             Mpv.Stop();
             IsFullScreen = false;
+        }
+
+        public void Stop()
+        {
+            Mpv.Stop();
         }
 
         [ObservableProperty]
@@ -783,7 +789,6 @@ namespace HotPotPlayer.Video
             {
                 if(mediaInited && !string.IsNullOrEmpty(nv))
                 {
-                    Mpv.Stop();
                     StartPlay(nv);
                 }
             });

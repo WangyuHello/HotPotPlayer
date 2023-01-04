@@ -222,7 +222,7 @@ namespace HotPotPlayer.Video.Bilibili
 
         private static void DMChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
-            //((DanmakuRenderer)d).Start(e.NewValue as DMData);
+            ((DanmakuRenderer)d).Load(e.NewValue as DMData);
         }
 
         public int Slot
@@ -269,26 +269,6 @@ namespace HotPotPlayer.Video.Bilibili
         List<ExitTime> _bottomTexts;
         Queue<TextBlock> _bottomRecycleTexts;
         Queue<Visual> _visuals;
-
-        private void Start(DMData n)
-        {
-            if (pendingReload)
-            {
-                Load(n);
-                pendingReload = false;
-            }
-            DmTick(null, null);
-
-            _tickTimer.Start();
-            _topTickTimer.Start();
-        }
-
-        bool pendingReload = false;
-
-        public void RequestReload()
-        {
-            pendingReload = true;
-        }
 
         private void Load(DMData n)
         {
@@ -348,6 +328,12 @@ namespace HotPotPlayer.Video.Bilibili
             Refresh();
         }
 
+        bool pendingClear = false;
+        public void RequestClear()
+        {
+            pendingClear = true;
+        }
+
         public void Pause()
         {
             if (DmData == null)
@@ -371,7 +357,13 @@ namespace HotPotPlayer.Video.Bilibili
                 return;
             }
             Host.Children.Clear();
+            TopHost.Children.Clear();
+            BottomHost.Children.Clear();
             _texts?.Clear();
+            _topTexts?.Clear();
+            _bottomTexts?.Clear();
+            _topRecycleTexts?.Clear();
+            _bottomRecycleTexts?.Clear();
             foreach (var (i, m) in _masks)
             {
                 foreach (var item in m)
@@ -390,9 +382,16 @@ namespace HotPotPlayer.Video.Bilibili
             {
                 return;
             }
+            if (Host.ActualWidth == 0)
+            {
+                return;
+            }
             if (!_tickTimer.IsEnabled)
             {
-                Start(DmData);
+                DmTick(null, null);
+
+                _tickTimer.Start();
+                _topTickTimer.Start();
             }
             else
             {
