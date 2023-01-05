@@ -34,16 +34,7 @@
             </Grid.RowDefinitions>
             <video:VideoControl x:Name="VideoPlayer" Source="{x:Bind Source}" DmData="{x:Bind DmData}" OnToggleFullScreen="OnToggleFullScreen" OnToggleFullPage="OnToggleFullPage" IsFullPage="{x:Bind IsFullPage}" IsFullPageHost="False" OnMediaLoaded="OnMediaLoaded"/>
 
-            <!--<ProgressRing Visibility="{x:Bind IsLoading}" ui:VisualExtensions.NormalizedCenterPoint="0.5">
-                <animations:Implicit.ShowAnimations>
-                    <animations:ScaleAnimation From="1" To="2" Duration="0:0:0.3"/>
-                    <animations:OpacityAnimation From="0" To="1" Duration="0:0:0.3" />
-                </animations:Implicit.ShowAnimations>
-                <animations:Implicit.HideAnimations>
-                    <animations:ScaleAnimation From="2" To="0.8" Duration="0:0:0.3"/>
-                    <animations:OpacityAnimation From="1" To="0" Duration="0:0:0.3" />
-                </animations:Implicit.HideAnimations>
-            </ProgressRing>-->
+
 
             <Grid Grid.Row="1" Margin="0,20,0,20">
                 <Grid.ColumnDefinitions>
@@ -194,5 +185,20 @@
             </ListView>
         </Grid>
 
+        <Grid Grid.ColumnSpan="2" Visibility="{x:Bind IsLoading}" ui:VisualExtensions.NormalizedCenterPoint="0.5" >
+            <Grid.Background>
+                <AcrylicBrush TintOpacity="0.4" TintLuminosityOpacity="0.3" TintColor="#0F000000" FallbackColor="#FF000000" />
+            </Grid.Background>
+            <animations:Implicit.ShowAnimations>
+                <animations:OpacityAnimation From="0" To="1" Duration="0:0:0.3" />
+            </animations:Implicit.ShowAnimations>
+            <animations:Implicit.HideAnimations>
+                <animations:OpacityAnimation From="1" To="0" Duration="0:0:0.3" />
+            </animations:Implicit.HideAnimations>
+
+            <ProgressRing  Width="80" Height="80">
+
+            </ProgressRing>
+        </Grid>
     </Grid>
 </base:PageBase>

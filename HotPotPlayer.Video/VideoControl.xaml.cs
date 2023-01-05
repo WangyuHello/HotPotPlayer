@@ -195,11 +195,11 @@ namespace HotPotPlayer.Video
 
             UIQueue.TryEnqueue(() => 
             {
+                OnMediaLoaded?.Invoke();
                 Title = CurrentPlayList[CurrentPlayIndex].Title;
                 IsPlaying = true;
                 CurrentPlayingDuration = _mpv.Duration;
                 OnPropertyChanged(propertyName: nameof(Volume));
-                OnMediaLoaded?.Invoke();
                 DM.Refresh();
             });
 
