@@ -187,7 +187,7 @@
 
         <Grid Grid.ColumnSpan="2" Visibility="{x:Bind IsLoading}" ui:VisualExtensions.NormalizedCenterPoint="0.5" >
             <Grid.Background>
-                <AcrylicBrush TintOpacity="0.4" TintLuminosityOpacity="0.3" TintColor="#0F000000" FallbackColor="#FF000000" />
+                <AcrylicBrush TintOpacity="0.0" TintLuminosityOpacity="0.0" TintColor="#FFFFFF" FallbackColor="#0FFFFFFF" />
             </Grid.Background>
             <animations:Implicit.ShowAnimations>
                 <animations:OpacityAnimation From="0" To="1" Duration="0:0:0.3" />
