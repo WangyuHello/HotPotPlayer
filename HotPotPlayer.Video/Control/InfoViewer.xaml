@@ -9,14 +9,56 @@
     xmlns:local="using:HotPotPlayer.Video.Control"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    x:DefaultBindMode="OneWay"
     mc:Ignorable="d">
 
-    <Grid Width="140">
+    <Grid >
         <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
 
-        <ComboBox x:Name="DefSel" Width="140" HorizontalAlignment="Center" ItemsSource="{x:Bind Definitions, Mode=OneWay}" SelectedItem="{x:Bind SelectedDefinition, Mode=TwoWay}"/>
+        <TextBlock Margin="0,0,0,4" Text="清晰度" FontFamily="{ThemeResource MiSansMedium}"/>
+        <ComboBox Grid.Row="1" x:Name="DefSel" HorizontalAlignment="Stretch" FontFamily="{ThemeResource MiSansRegular}" ItemsSource="{x:Bind Definitions, Mode=OneWay}" SelectedItem="{x:Bind SelectedDefinition, Mode=TwoWay}"/>
+
+        <TextBlock Margin="0,8,0,4" Grid.Row="2" Text="播放方式" FontFamily="{ThemeResource MiSansMedium}"/>
+        <Grid Grid.Row="3">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+            <ToggleButton Margin="0,0,2,0" Content="自动切集" HorizontalAlignment="Stretch" FontFamily="{ThemeResource MiSansRegular}"/>
+            <ToggleButton Margin="2,0,0,0" Grid.Column="1" Content="播完暂停" HorizontalAlignment="Stretch" FontFamily="{ThemeResource MiSansRegular}"/>
+        </Grid>
+        
+        
+        <TextBlock Margin="0,8,0,4" Grid.Row="4" Text="播放策略" FontFamily="{ThemeResource MiSansMedium}"/>
+        <Grid Grid.Row="5" >
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+            <ToggleButton Margin="0,0,2,0" x:Name="Default" Tag="Default" Content="默认" FontFamily="{ThemeResource MiSansRegular}" Click="CodecSelectClick"/>
+            <ToggleButton Margin="2,0,2,0" x:Name="AV1First" Tag="AV1First" Grid.Column="1" Content="AV1" FontFamily="{ThemeResource MiSansRegular}" Click="CodecSelectClick"/>
+            <ToggleButton Margin="2,0,2,0" x:Name="HEVCFirst" Tag="HEVCFirst" Grid.Column="2" Content="HEVC" FontFamily="{ThemeResource MiSansRegular}" Click="CodecSelectClick"/>
+            <ToggleButton Margin="2,0,0,0" x:Name="AVCFirst" Tag="AVCFirst" Grid.Column="3" Content="AVC" FontFamily="{ThemeResource MiSansRegular}" Click="CodecSelectClick"/>
+        </Grid>
+
+        <Grid Grid.Row="6" Margin="0,4,0,0">
+            <TextBlock Text="高能进度条" FontFamily="{ThemeResource MiSansMedium}" VerticalAlignment="Center"/>
+            <ToggleSwitch OnContent="" OffContent="" Margin="0,0,-114,0" HorizontalAlignment="Right"/>
+        </Grid>
+        <Grid Grid.Row="7" Margin="0,-4,0,-4">
+            <TextBlock Text="视频信息" FontFamily="{ThemeResource MiSansMedium}" VerticalAlignment="Center"/>
+            <ToggleSwitch OnContent="" OffContent="" Margin="0,0,-114,0" HorizontalAlignment="Right" IsOn="{x:Bind IsVideoInfoOn, Mode=TwoWay}"/>
+        </Grid>
     </Grid>
 </base:UserControlBase>

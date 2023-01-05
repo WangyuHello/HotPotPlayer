@@ -6,6 +6,7 @@ using HotPotPlayer.Models.BiliBili;
 using HotPotPlayer.Services;
 using HotPotPlayer.Services.BiliBili;
 using HotPotPlayer.Services.BiliBili.Danmaku;
+using HotPotPlayer.Services.BiliBili.Video;
 using HotPotPlayer.Video.Bilibili;
 using HotPotPlayer.Video.Extensions;
 using HotPotPlayer.Video.GlesInterop;
@@ -265,7 +266,7 @@ namespace HotPotPlayer.Video
                 Mpv.API.SetPropertyString("cookies-file", GetCookieFile());
                 Mpv.API.SetPropertyString("http-header-fields", "Referer: http://www.bilibili.com/");
                 //Mpv.API.SetPropertyString("demuxer-lavf-o", $"headers=\"Referer: http://www.bilibili.com/\r\nUserAgent: {BiliAPI.UserAgent}\r\n\"");
-                Mpv.API.SetPropertyString("demuxer-lavf-probescore", "1");
+                //Mpv.API.SetPropertyString("demuxer-lavf-probescore", "1");
             }
         }
 
@@ -299,6 +300,7 @@ namespace HotPotPlayer.Video
                     Mpv.PlaylistClear();
                     Mpv.Stop();
                     Mpv.Load(edl);
+                    SelectedCodecStrategy = Config.GetConfig("CodecStrategy", CodecStrategy.Default);
                 }
             }
             else
@@ -579,11 +581,6 @@ namespace HotPotPlayer.Video
             }
         }
 
-        private void ToggleStatusClick(object sender, RoutedEventArgs e)
-        {
-            Mpv.API.Command("script-binding", "stats/display-stats-toggle");
-        }
-
         private void PlaySlider_OnPointerPressed(object sender, PointerRoutedEventArgs e)
         {
             SuppressCurrentTimeTrigger = true;
@@ -791,6 +788,26 @@ namespace HotPotPlayer.Video
                 {
                     StartPlay(nv);
                 }
+            });
+        }
+
+        private bool isVideoInfoOn;
+        public bool IsVideoInfoOn
+        {
+            get => isVideoInfoOn;
+            set => Set(ref isVideoInfoOn, value, nv =>
+            {
+                Mpv.API.Command("script-binding", "stats/display-stats-toggle");
+            });
+        }
+
+        private CodecStrategy selectedCodecStrategy;
+        public CodecStrategy SelectedCodecStrategy
+        {
+            get => selectedCodecStrategy;
+            set => Set(ref selectedCodecStrategy, value, nv =>
+            {
+                Config.SetConfig("CodecStrategy", nv);
             });
         }
     }

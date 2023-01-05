@@ -1,6 +1,7 @@
 // Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT License. See LICENSE in the project root for license information.
 
+using HotPotPlayer.Services.BiliBili.Video;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Controls.Primitives;
@@ -50,6 +51,67 @@ namespace HotPotPlayer.Video.Control
         private void ComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             DefinitionSelectionChanged?.Invoke(sender, e);
+        }
+
+
+        public bool IsVideoInfoOn
+        {
+            get { return (bool)GetValue(IsVideoInfoOnProperty); }
+            set { SetValue(IsVideoInfoOnProperty, value); }
+        }
+
+        public static readonly DependencyProperty IsVideoInfoOnProperty =
+            DependencyProperty.Register("IsVideoInfoOn", typeof(bool), typeof(InfoViewer), new PropertyMetadata(default));
+
+
+        public CodecStrategy SelectedCodecStrategy
+        {
+            get { return (CodecStrategy)GetValue(SelectedCodecStrategyProperty); }
+            set { SetValue(SelectedCodecStrategyProperty, value); }
+        }
+
+        public static readonly DependencyProperty SelectedCodecStrategyProperty =
+            DependencyProperty.Register("SelectedCodecStrategy", typeof(CodecStrategy), typeof(InfoViewer), new PropertyMetadata(CodecStrategy.Default, SelectedCodecStrategyChanged));
+
+        private static void SelectedCodecStrategyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+            var i = d as InfoViewer;
+            i.Default.IsChecked = false;
+            i.AV1First.IsChecked = false;
+            i.HEVCFirst.IsChecked = false;
+            i.AVCFirst.IsChecked = false;
+            var sel = (CodecStrategy)e.NewValue;
+            switch (sel)
+            {
+                case CodecStrategy.Default:
+                    i.Default.IsChecked = true;
+                    break;
+                case CodecStrategy.AV1First:
+                    i.AV1First.IsChecked = true;
+                    break;
+                case CodecStrategy.HEVCFirst:
+                    i.HEVCFirst.IsChecked = true;
+                    break;
+                case CodecStrategy.AVCFirst:
+                    i.AVCFirst.IsChecked = true;
+                    break;
+                default:
+                    break;
+            }
+        }
+
+        private void CodecSelectClick(object sender, RoutedEventArgs e)
+        {
+            var b = sender as ToggleButton;
+            var tag = b.Tag as string;
+            SelectedCodecStrategy = tag switch
+            {
+                "Default" => CodecStrategy.Default,
+                "AV1First" => CodecStrategy.AV1First,
+                "HEVCFirst" => CodecStrategy.HEVCFirst,
+                "AVCFirst" => CodecStrategy.AVCFirst,
+                _ => CodecStrategy.Default,
+            };
         }
     }
 }

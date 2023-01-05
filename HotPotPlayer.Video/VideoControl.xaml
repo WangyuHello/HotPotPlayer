@@ -92,11 +92,16 @@
                         </Flyout>
                     </Button.Flyout>
                 </Button>
-                <Button Margin="8,0,0,0" Style="{StaticResource VideoPlayOtherButton}" Click="ToggleStatusClick">
+                <Button Margin="8,0,0,0" Style="{StaticResource VideoPlayOtherButton}">
                     <FontIcon FontFamily="{ThemeResource SegoeIcons}" Glyph="&#xE946;" />
                     <Button.Flyout>
                         <Flyout>
-                            <vcont:InfoViewer Grid.Column="2" Definitions="{x:Bind Definitions}" SelectedDefinition="{x:Bind SelectedDefinition, Mode=TwoWay}"/>
+                            <vcont:InfoViewer Grid.Column="2" 
+                                              Definitions="{x:Bind Definitions}" 
+                                              SelectedDefinition="{x:Bind SelectedDefinition, Mode=TwoWay}"
+                                              IsVideoInfoOn="{x:Bind IsVideoInfoOn, Mode=TwoWay}"
+                                              SelectedCodecStrategy="{x:Bind SelectedCodecStrategy, Mode=TwoWay}"
+                                              />
                         </Flyout>
                     </Button.Flyout>
                 </Button>
