@@ -63,8 +63,13 @@ namespace HotPotPlayer.Services.BiliBili.Dynamic
 
     public class InteractionItem
     {
-        [JsonProperty("type")] public string Type { get; set; }
+        [JsonProperty("type")] public int Type { get; set; }
         [JsonProperty("desc")] public ModuleDesc Desc { get; set; }
+
+        public string GetIcon()
+        {
+            return Type == 0 ? "\uEA0A" : "\uEA04";
+        }
     }
 
     public class ModuleDynamic
