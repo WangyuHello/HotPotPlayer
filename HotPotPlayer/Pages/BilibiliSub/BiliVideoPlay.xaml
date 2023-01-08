@@ -112,6 +112,8 @@
                 <TextBlock VerticalAlignment="Center" Margin="4,0" Text="{x:Bind Video.GetUpDateTime2()}" Foreground="Gray" FontFamily="{ThemeResource MiSansRegular}" />
                 <FontIcon FontFamily="{ThemeResource SegoeIcons}" Margin="12,0,0,0" Glyph="&#xE18B;" Foreground="Gray" FontSize="16"/>
                 <TextBlock VerticalAlignment="Center" Margin="6,0" Text="{x:Bind OnLineCount}" Foreground="Gray" FontFamily="{ThemeResource MiSansRegular}" />
+
+                <ListView ItemsSource="{x:Bind Tags}" Margin="12,0,0,0" Style="{StaticResource HorizontalListViewStyle}" ItemTemplate="{StaticResource TagTemplate}" ItemContainerStyle="{StaticResource TransparentListContainerCompactHPaddingStyle}"/>
             </StackPanel>
             <TextBlock Text="{x:Bind Video.VideoDEsc}" Grid.Row="3" IsTextSelectionEnabled="True" FontFamily="{ThemeResource MiSansRegular}" MaxLines="3" TextWrapping="Wrap" TextTrimming="CharacterEllipsis"/>
             <ListView Grid.Row="4" Margin="-36,2,-28,0" Padding="36,0,28,0" Height="220" ItemsSource="{x:Bind RelatedVideos}" Style="{StaticResource HorizontalListViewStyle}" ItemContainerStyle="{StaticResource GeneralListContainerCompactPaddingStyle}" ItemTemplate="{StaticResource BiliVideoCardViewTemplate2}" ItemClick="RelateVideoClick">

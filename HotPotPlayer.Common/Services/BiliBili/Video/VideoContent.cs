@@ -253,7 +253,9 @@ namespace HotPotPlayer.Services.BiliBili.Video
         public string Name { get; set; }
 
         [JsonProperty("cover")]
-        public string Conver { get; set; }
+        public string Cover { get; set; }
+
+        public bool HasCover => !string.IsNullOrEmpty(Cover);
 
         [JsonProperty("likes")]
         public string Likes { get; set; }
@@ -568,7 +570,7 @@ namespace HotPotPlayer.Services.BiliBili.Video
 
     public class Staff
     {
-        [JsonProperty("mid")] public int Mid { get; set; }
+        [JsonProperty("mid")] public string Mid { get; set; }
         [JsonProperty("title")] public string Title { get; set; }
         [JsonProperty("name")] public string Name { get; set; }
         [JsonProperty("face")] public string Face { get; set; }

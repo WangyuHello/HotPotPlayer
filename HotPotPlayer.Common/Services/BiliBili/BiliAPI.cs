@@ -240,6 +240,22 @@ namespace HotPotPlayer.Services.BiliBili
         }
 
         /// <summary>
+        /// https://github.com/SocialSisterYi/bilibili-API-collect/blob/master/video/tags.md
+        /// </summary>
+        /// <param name="bvid"></param>
+        /// <returns></returns>
+        public async Task<BiliResult<List<Tag>>> GetVideoTags(string bvid)
+        {
+            var r = await GetAsync("https://api.bilibili.com/x/tag/archive/tags", ResponseEnum.Web,
+                new Dictionary<string, string>
+                {
+                    ["bvid"] = bvid,
+                });
+            var res = JsonConvert.DeserializeObject<BiliResult<List<Tag>>>(r);
+            return res;
+        }
+
+        /// <summary>
         /// https://github.com/SocialSisterYi/bilibili-API-collect/blob/master/ranking&dynamic/popular.md
         /// </summary>
         /// <param name="pn">页码</param>

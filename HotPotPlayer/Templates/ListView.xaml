@@ -646,4 +646,15 @@
             <TextBlock Grid.Column="2" Text="{x:Bind GetDuration()}" Foreground="Gray" FontFamily="{ThemeResource MiSansRegular}"/>
         </Grid>
     </DataTemplate>
+
+    <DataTemplate x:Key="TagTemplate" x:DataType="bv:Tag">
+        <Grid CornerRadius="14" BorderThickness="1" BorderBrush="#e4e5e6" Background="#e4e5e6" Padding="8,2">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
+            <cont2:ImageEx2 Margin="-8,-2,4,-2" Source="{x:Bind Cover}" Visibility="{x:Bind HasCover}" Style="{StaticResource DynamicImageStyle}" Width="26" Height="26" DecodePixelWidth="26" DecodePixelHeight="26"/>
+            <TextBlock Grid.Column="1" Text="{x:Bind Name}" FontFamily="{ThemeResource MiSansRegular}" Foreground="#62676e" VerticalAlignment="Center"/>
+        </Grid>
+    </DataTemplate>
 </ResourceDictionary>

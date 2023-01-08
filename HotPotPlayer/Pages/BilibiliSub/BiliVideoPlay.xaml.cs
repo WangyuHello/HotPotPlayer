@@ -79,6 +79,9 @@ namespace HotPotPlayer.Pages.BilibiliSub
         Pbp pbp;
 
         [ObservableProperty]
+        List<Tag> tags;
+
+        [ObservableProperty]
         bool isLoading = true;
 
         [ObservableProperty]
@@ -129,6 +132,7 @@ namespace HotPotPlayer.Pages.BilibiliSub
             this.isFavor = await BiliBiliService.API.IsFavored(Video.Aid);
             this.dmData = await BiliBiliService.API.GetDMXml(cid);
             this.pbp = await BiliBiliService.API.GetPbp(cid);
+            this.tags = (await BiliBiliService.API.GetVideoTags(bvid)).Data;
 
             VideoPlayer.PreparePlay();
             VideoPlayer.StartPlay();
@@ -197,6 +201,7 @@ namespace HotPotPlayer.Pages.BilibiliSub
             OnPropertyChanged(propertyName: nameof(IsFavor));
             OnPropertyChanged(propertyName: nameof(DmData));
             OnPropertyChanged(propertyName: nameof(Pbp));
+            OnPropertyChanged(propertyName: nameof(Tags));
         }
 
         private void UserAvatar_Tapped(object sender, TappedRoutedEventArgs e)
