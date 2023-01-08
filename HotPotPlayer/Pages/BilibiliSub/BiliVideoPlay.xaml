@@ -32,9 +32,15 @@
                 <RowDefinition Height="{x:Bind GetTitleHeight(IsFullPage)}" />
                 <RowDefinition Height="{x:Bind GetTitleHeight(IsFullPage)}" />
             </Grid.RowDefinitions>
-            <video:VideoControl x:Name="VideoPlayer" Source="{x:Bind Source}" DmData="{x:Bind DmData}" OnToggleFullScreen="OnToggleFullScreen" OnToggleFullPage="OnToggleFullPage" IsFullPage="{x:Bind IsFullPage}" IsFullPageHost="False" OnMediaLoaded="OnMediaLoaded"/>
-
-
+            <video:VideoControl x:Name="VideoPlayer" 
+                                Source="{x:Bind Source}" 
+                                DmData="{x:Bind DmData}" 
+                                Pbp="{x:Bind Pbp}"
+                                OnToggleFullScreen="OnToggleFullScreen" 
+                                OnToggleFullPage="OnToggleFullPage" 
+                                IsFullPage="{x:Bind IsFullPage}" 
+                                IsFullPageHost="False" 
+                                OnMediaLoaded="OnMediaLoaded"/>
 
             <Grid Grid.Row="1" Margin="0,20,0,20">
                 <Grid.ColumnDefinitions>

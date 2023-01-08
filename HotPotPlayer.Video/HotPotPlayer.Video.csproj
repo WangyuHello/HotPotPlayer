@@ -10,6 +10,7 @@
   <ItemGroup>
     <None Remove="Bilibili\DanmakuRenderer.xaml" />
     <None Remove="Control\InfoViewer.xaml" />
+    <None Remove="Control\PbpViewer.xaml" />
     <None Remove="NativeMethods.txt" />
     <None Remove="VideoControl.xaml" />
     <None Remove="VideoControl3.xaml" />
@@ -75,6 +76,9 @@
 
   <ItemGroup>
     <Page Update="Control\InfoViewer.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Update="Control\PbpViewer.xaml">
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <None Update="Util\Dash.tt">

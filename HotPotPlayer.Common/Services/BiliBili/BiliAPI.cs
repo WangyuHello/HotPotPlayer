@@ -538,6 +538,18 @@ namespace HotPotPlayer.Services.BiliBili
             return res;
         }
 
+        public async Task<Pbp> GetPbp(string cid)
+        {
+            var r = await GetAsync("https://bvc.bilivideo.com/pbp/data", ResponseEnum.Web,
+                new Dictionary<string, string>
+                {
+                    ["cid"] = cid,
+                });
+            var res = JsonConvert.DeserializeObject<Pbp>(r);
+            return res;
+        }
+
+
         #region Cookie
         public static CookieCollection ParseCookies(IEnumerable<string> cookieHeaders)
         {

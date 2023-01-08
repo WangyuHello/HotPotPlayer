@@ -76,6 +76,9 @@ namespace HotPotPlayer.Pages.BilibiliSub
         DMData dmData;
 
         [ObservableProperty]
+        Pbp pbp;
+
+        [ObservableProperty]
         bool isLoading = true;
 
         [ObservableProperty]
@@ -125,6 +128,7 @@ namespace HotPotPlayer.Pages.BilibiliSub
             this.coin = await BiliBiliService.API.GetCoin(Video.Aid);
             this.isFavor = await BiliBiliService.API.IsFavored(Video.Aid);
             this.dmData = await BiliBiliService.API.GetDMXml(cid);
+            this.pbp = await BiliBiliService.API.GetPbp(cid);
 
             VideoPlayer.PreparePlay();
             VideoPlayer.StartPlay();
@@ -192,6 +196,7 @@ namespace HotPotPlayer.Pages.BilibiliSub
             OnPropertyChanged(propertyName: nameof(Coin));
             OnPropertyChanged(propertyName: nameof(IsFavor));
             OnPropertyChanged(propertyName: nameof(DmData));
+            OnPropertyChanged(propertyName: nameof(Pbp));
         }
 
         private void UserAvatar_Tapped(object sender, TappedRoutedEventArgs e)

@@ -74,6 +74,7 @@
                 </Button>
             </StackPanel>
 
+            <vcont:PbpViewer x:Name="PbpViewer" Margin="8,0" Grid.Column="1" Pbp="{x:Bind Pbp}" />
             <Slider x:Name="PlaySlider" Margin="8,0" Grid.Column="1" Translation="0,2,0" Style="{StaticResource VideoPlaySliderStyle}" Value="{x:Bind GetSliderValue(CurrentTime, CurrentPlayingDuration)}" ThumbToolTipValueConverter="{StaticResource SliderThumbConverter}" >
             </Slider>
 

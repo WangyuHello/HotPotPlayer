@@ -126,6 +126,16 @@ namespace HotPotPlayer.Video
             return data != null && data.Dms != null && data.Dms.Any() ? Visibility.Visible : Visibility.Collapsed;
         }
 
+        public Pbp Pbp
+        {
+            get { return (Pbp)GetValue(PbpProperty); }
+            set { SetValue(PbpProperty, value); }
+        }
+
+        public static readonly DependencyProperty PbpProperty =
+            DependencyProperty.Register("Pbp", typeof(Pbp), typeof(VideoControl), new PropertyMetadata(default));
+
+
         bool mediaInited;
         bool mediaEnded;
         //DisplayRequest _displayReq;
