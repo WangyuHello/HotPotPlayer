@@ -99,7 +99,7 @@ namespace HotPotPlayer.Models.BiliBili
             return name;
         }
 
-        public (string definition, string url) GetPreferVideoUrl(string definition = "")
+        public (string definition, string url) GetPreferVideoUrl(string definition = "", CodecStrategy codecStrategy = CodecStrategy.Default)
         {
 
             var best = definition switch {
@@ -113,18 +113,73 @@ namespace HotPotPlayer.Models.BiliBili
                 _ => definition
             };
             string url;
-            if (best.ContainsKey("HEVC"))
+            switch (codecStrategy)
             {
-                url = best["HEVC"].BaseUrl;
+                case CodecStrategy.Default:
+                    if (best.ContainsKey("HEVC"))
+                    {
+                        url = best["HEVC"].BaseUrl;
+                    }
+                    else if (best.ContainsKey("AV1"))
+                    {
+                        url = best["AV1"].BaseUrl;
+                    }
+                    else
+                    {
+                        url = best["AVC"].BaseUrl;
+                    }
+                    break;
+                case CodecStrategy.AV1First:
+                    if (best.ContainsKey("AV1"))
+                    {
+                        url = best["AV1"].BaseUrl;
+                    }
+                    else if (best.ContainsKey("HEVC"))
+                    {
+                        url = best["HEVC"].BaseUrl;
+                    }
+                    else
+                    {
+                        url = best["AVC"].BaseUrl;
+                    }
+                    break;
+                case CodecStrategy.HEVCFirst:
+                    if (best.ContainsKey("HEVC"))
+                    {
+                        url = best["HEVC"].BaseUrl;
+                    }
+                    else if (best.ContainsKey("AV1"))
+                    {
+                        url = best["AV1"].BaseUrl;
+                    }
+                    else
+                    {
+                        url = best["AVC"].BaseUrl;
+                    }
+                    break;
+                case CodecStrategy.AVCFirst:
+                    if (best.ContainsKey("AVC"))
+                    {
+                        url = best["AVC"].BaseUrl;
+                    }
+                    else if (best.ContainsKey("HEVC"))
+                    {
+                        url = best["HEVC"].BaseUrl;
+                    }
+                    else if (best.ContainsKey("AV1"))
+                    {
+                        url = best["AV1"].BaseUrl;
+                    }
+                    else
+                    {
+                        url = best["AVC"].BaseUrl;
+                    }
+                    break;
+                default:
+                    url = best["AVC"].BaseUrl;
+                    break;
             }
-            else if (best.ContainsKey("AV1"))
-            {
-                url = best["AV1"].BaseUrl;
-            }
-            else
-            {
-                url = best["AVC"].BaseUrl;
-            }
+
             return (bestDefi, url);
         }
 

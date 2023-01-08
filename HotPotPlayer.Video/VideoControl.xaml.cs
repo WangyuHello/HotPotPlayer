@@ -283,7 +283,8 @@ namespace HotPotPlayer.Video
                 else
                 {
                     //var mpd = bv.WriteToMPD(Config);
-                    (var sel, var vurl) = bv.GetPreferVideoUrl(selectedDefinition);
+                    SelectedCodecStrategy = Config.GetConfig("CodecStrategy", CodecStrategy.Default);
+                    (var sel, var vurl) = bv.GetPreferVideoUrl(selectedDefinition, SelectedCodecStrategy);
                     if (!mediaInited)
                     {
                         SelectedDefinition = sel;
@@ -300,7 +301,6 @@ namespace HotPotPlayer.Video
                     Mpv.PlaylistClear();
                     Mpv.Stop();
                     Mpv.Load(edl);
-                    SelectedCodecStrategy = Config.GetConfig("CodecStrategy", CodecStrategy.Default);
                 }
             }
             else
@@ -807,7 +807,7 @@ namespace HotPotPlayer.Video
             get => selectedCodecStrategy;
             set => Set(ref selectedCodecStrategy, value, nv =>
             {
-                Config.SetConfig("CodecStrategy", nv);
+                Config.SetConfig("CodecStrategy", nv, true);
             });
         }
     }

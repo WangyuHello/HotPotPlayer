@@ -328,12 +328,6 @@ namespace HotPotPlayer.Video.Bilibili
             Refresh();
         }
 
-        bool pendingClear = false;
-        public void RequestClear()
-        {
-            pendingClear = true;
-        }
-
         public void Pause()
         {
             if (DmData == null)
