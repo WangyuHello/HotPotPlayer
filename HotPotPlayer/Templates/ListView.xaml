@@ -648,7 +648,7 @@
     </DataTemplate>
 
     <DataTemplate x:Key="TagTemplate" x:DataType="bv:Tag">
-        <Grid CornerRadius="14" BorderThickness="1" BorderBrush="#e4e5e6" Background="#e4e5e6" Padding="8,2">
+        <Grid CornerRadius="14" BorderThickness="1" BorderBrush="#e8e9ea" Background="#e8e9ea" Padding="8,2">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="Auto" />
                 <ColumnDefinition Width="Auto" />
