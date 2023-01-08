@@ -85,6 +85,9 @@ namespace HotPotPlayer.Pages.BilibiliSub
         bool isLoading = true;
 
         [ObservableProperty]
+        bool isAdditionLoading = true;
+
+        [ObservableProperty]
         int selectedPage;
 
         protected override void OnNavigatedTo(NavigationEventArgs e)
@@ -101,6 +104,7 @@ namespace HotPotPlayer.Pages.BilibiliSub
         private async void StartPlay(object para)
         {
             IsLoading = true;
+            IsAdditionLoading = true;
 
             if (para is VideoContent videoContent)
             {
@@ -121,18 +125,6 @@ namespace HotPotPlayer.Pages.BilibiliSub
                 var video = BiliBiliVideoItem.FromRaw(res.Data, h);
                 Source = new VideoPlayInfo { VideoItems = new List<BiliBiliVideoItem> { video }, Index = 0 };
             }
-
-            this.video = (await BiliBiliService.API.GetVideoInfo(bvid)).Data;
-            this.onLineCount = await BiliBiliService.API.GetOnlineCount(Video.Bvid, Video.FirstCid);
-            var replies = (await BiliBiliService.API.GetVideoReplyAsync(Video.Aid)).Data;
-            this.replies = new ReplyItemCollection(replies, "1", Video.Aid, BiliBiliService);
-            this.relatedVideos = (await BiliBiliService.API.GetRelatedVideo(Video.Bvid)).Data;
-            this.isLike = await BiliBiliService.API.IsLike(Video.Aid);
-            this.coin = await BiliBiliService.API.GetCoin(Video.Aid);
-            this.isFavor = await BiliBiliService.API.IsFavored(Video.Aid);
-            this.dmData = await BiliBiliService.API.GetDMXml(cid);
-            this.pbp = await BiliBiliService.API.GetPbp(cid);
-            this.tags = (await BiliBiliService.API.GetVideoTags(bvid)).Data;
 
             VideoPlayer.PreparePlay();
             VideoPlayer.StartPlay();
@@ -186,12 +178,27 @@ namespace HotPotPlayer.Pages.BilibiliSub
             var v = e.ClickedItem as VideoContent;
             //VideoPlayer.Stop();
             StartPlay(v);
+            OnPropertyChanged(propertyName: nameof(Video));
             //NavigateTo("BilibiliSub.BiliVideoPlay", v);
         }
 
-        private void OnMediaLoaded()
+        private async void OnMediaLoaded()
         {
             IsLoading = false;
+
+
+            this.video = (await BiliBiliService.API.GetVideoInfo(bvid)).Data;
+            this.onLineCount = await BiliBiliService.API.GetOnlineCount(Video.Bvid, Video.FirstCid);
+            var replies = (await BiliBiliService.API.GetVideoReplyAsync(Video.Aid)).Data;
+            this.replies = new ReplyItemCollection(replies, "1", Video.Aid, BiliBiliService);
+            this.relatedVideos = (await BiliBiliService.API.GetRelatedVideo(Video.Bvid)).Data;
+            this.isLike = await BiliBiliService.API.IsLike(Video.Aid);
+            this.coin = await BiliBiliService.API.GetCoin(Video.Aid);
+            this.isFavor = await BiliBiliService.API.IsFavored(Video.Aid);
+            this.dmData = await BiliBiliService.API.GetDMXml(cid);
+            this.pbp = await BiliBiliService.API.GetPbp(cid);
+            this.tags = (await BiliBiliService.API.GetVideoTags(bvid)).Data;
+
             OnPropertyChanged(propertyName: nameof(Video));
             OnPropertyChanged(propertyName: nameof(OnLineCount));
             OnPropertyChanged(propertyName: nameof(Replies));
@@ -202,6 +209,7 @@ namespace HotPotPlayer.Pages.BilibiliSub
             OnPropertyChanged(propertyName: nameof(DmData));
             OnPropertyChanged(propertyName: nameof(Pbp));
             OnPropertyChanged(propertyName: nameof(Tags));
+            IsAdditionLoading = false;
         }
 
         private void UserAvatar_Tapped(object sender, TappedRoutedEventArgs e)
