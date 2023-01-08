@@ -74,7 +74,7 @@
                 </Button>
             </StackPanel>
 
-            <vcont:PbpViewer x:Name="PbpViewer" Margin="8,0" Grid.Column="1" Pbp="{x:Bind Pbp}" />
+            <vcont:PbpViewer x:Name="PbpViewer" Margin="8,0" Grid.Column="1" Pbp="{x:Bind Pbp}" Visibility="{x:Bind IsPbpOn}"/>
             <Slider x:Name="PlaySlider" Margin="8,0" Grid.Column="1" Translation="0,2,0" Style="{StaticResource VideoPlaySliderStyle}" Value="{x:Bind GetSliderValue(CurrentTime, CurrentPlayingDuration)}" ThumbToolTipValueConverter="{StaticResource SliderThumbConverter}" >
             </Slider>
 
@@ -101,6 +101,7 @@
                                               Definitions="{x:Bind Definitions}" 
                                               SelectedDefinition="{x:Bind SelectedDefinition, Mode=TwoWay}"
                                               IsVideoInfoOn="{x:Bind IsVideoInfoOn, Mode=TwoWay}"
+                                              IsPbpOn="{x:Bind IsPbpOn, Mode=TwoWay}"
                                               SelectedCodecStrategy="{x:Bind SelectedCodecStrategy, Mode=TwoWay}"
                                               SelectedPlayMode="{x:Bind PlayMode, Mode=TwoWay}"
                                               />

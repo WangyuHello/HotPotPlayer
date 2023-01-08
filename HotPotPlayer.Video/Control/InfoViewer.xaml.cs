@@ -64,6 +64,15 @@ namespace HotPotPlayer.Video.Control
             DependencyProperty.Register("IsVideoInfoOn", typeof(bool), typeof(InfoViewer), new PropertyMetadata(default));
 
 
+        public bool IsPbpOn
+        {
+            get { return (bool)GetValue(IsPbpOnProperty); }
+            set { SetValue(IsPbpOnProperty, value); }
+        }
+
+        public static readonly DependencyProperty IsPbpOnProperty =
+            DependencyProperty.Register("IsPbpOn", typeof(bool), typeof(InfoViewer), new PropertyMetadata(default));
+
         public CodecStrategy SelectedCodecStrategy
         {
             get { return (CodecStrategy)GetValue(SelectedCodecStrategyProperty); }

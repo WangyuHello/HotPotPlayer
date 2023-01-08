@@ -41,7 +41,7 @@ namespace HotPotPlayer.Video.Control
         private static void PbpChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
             var v = d as PbpViewer;
-            //v.Draw((Pbp)e.NewValue);
+            v.Draw((Pbp)e.NewValue);
         }
 
         private void Draw(Pbp pbp)
@@ -65,18 +65,24 @@ namespace HotPotPlayer.Video.Control
             Root.Points.Clear();
             for (int i = 0; i < ys.Count; i++)
             {
-                Root.Points.Add(new Point(dx * i, height / 2 * ( 1 - ys[i] / yMax)));
+                Root.Points.Add(new Point(dx * i, height / 2 * ( 1 - 0.8 * ys[i] / yMax)));
             }
-
+            Root.Points.Add(new Point(width, height / 2));
             for (int i = ys.Count - 1; i >= 0; i--)
             {
-                Root.Points.Add(new Point(dx * i, height / 2 * (1 + ys[i] / yMax)));
+                Root.Points.Add(new Point(dx * i, height / 2 * (1 + 0.8 * ys[i] / yMax)));
             }
         }
 
+        Size prevSize;
+
         private void Root_SizeChanged(object sender, SizeChangedEventArgs e)
         {
-            //Draw(Pbp);
+            var dw = Math.Abs(prevSize.Width - e.NewSize.Width);
+            //var dh = Math.Abs(prevSize.Height - e.NewSize.Height);
+            if (dw < 20) return;
+            prevSize = e.NewSize;
+            Draw(Pbp);
         }
     }
 }

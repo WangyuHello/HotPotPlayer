@@ -11,7 +11,7 @@
     mc:Ignorable="d">
 
     <Grid SizeChanged="Root_SizeChanged">
-        <Polygon x:Name="Root" Fill="Wheat" Stroke="Black" StrokeThickness="0.2" >
+        <Polygon x:Name="Root" Fill="#979797" Stroke="Black" StrokeThickness="0.2" >
 
         </Polygon>
     </Grid>

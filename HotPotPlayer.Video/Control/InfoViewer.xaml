@@ -54,7 +54,7 @@
 
         <Grid Grid.Row="6" Margin="0,4,0,0">
             <TextBlock Text="高能进度条" FontFamily="{ThemeResource MiSansMedium}" VerticalAlignment="Center"/>
-            <ToggleSwitch OnContent="" OffContent="" Margin="0,0,-114,0" HorizontalAlignment="Right"/>
+            <ToggleSwitch OnContent="" OffContent="" Margin="0,0,-114,0" HorizontalAlignment="Right" IsOn="{x:Bind IsPbpOn, Mode=TwoWay}"/>
         </Grid>
         <Grid Grid.Row="7" Margin="0,-4,0,-4">
             <TextBlock Text="视频信息" FontFamily="{ThemeResource MiSansMedium}" VerticalAlignment="Center"/>

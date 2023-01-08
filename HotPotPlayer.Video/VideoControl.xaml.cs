@@ -57,6 +57,7 @@ namespace HotPotPlayer.Video
             PlaySlider.AddHandler(PointerPressedEvent, new PointerEventHandler(PlaySlider_OnPointerPressed), true);
 
             //Dispatcher.AcceleratorKeyActivated += Dispatcher_AcceleratorKeyActivated;
+            IsPbpOn = Config.GetConfig("IsPbpOn", false);
         }
 
         private async void Dispatcher_AcceleratorKeyActivated(CoreDispatcher sender, AcceleratorKeyEventArgs args)
@@ -818,6 +819,16 @@ namespace HotPotPlayer.Video
             set => Set(ref selectedCodecStrategy, value, nv =>
             {
                 Config.SetConfig("CodecStrategy", nv, true);
+            });
+        }
+
+        private bool isPbpOn;
+        public bool IsPbpOn
+        {
+            get => isPbpOn;
+            set => Set(ref isPbpOn, value, nv =>
+            {
+                Config.SetConfig("IsPbpOn", nv, true);
             });
         }
     }
