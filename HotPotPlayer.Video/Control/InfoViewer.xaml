@@ -33,8 +33,8 @@
                 <ColumnDefinition Width="*" />
                 <ColumnDefinition Width="*" />
             </Grid.ColumnDefinitions>
-            <ToggleButton Margin="0,0,2,0" Content="自动切集" HorizontalAlignment="Stretch" FontFamily="{ThemeResource MiSansRegular}"/>
-            <ToggleButton Margin="2,0,0,0" Grid.Column="1" Content="播完暂停" HorizontalAlignment="Stretch" FontFamily="{ThemeResource MiSansRegular}"/>
+            <ToggleButton x:Name="Loop" Tag="Loop" Margin="0,0,2,0" Content="自动切集" HorizontalAlignment="Stretch" FontFamily="{ThemeResource MiSansRegular}" Click="PlayModeSelectClick"/>
+            <ToggleButton x:Name="Single" Tag="SingleLoop" Margin="2,0,0,0" Grid.Column="1" Content="播完暂停" HorizontalAlignment="Stretch" FontFamily="{ThemeResource MiSansRegular}" Click="PlayModeSelectClick"/>
         </Grid>
         
         

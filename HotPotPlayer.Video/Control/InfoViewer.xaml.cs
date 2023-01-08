@@ -1,6 +1,7 @@
 // Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT License. See LICENSE in the project root for license information.
 
+using HotPotPlayer.Services;
 using HotPotPlayer.Services.BiliBili.Video;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
@@ -52,7 +53,6 @@ namespace HotPotPlayer.Video.Control
         {
             DefinitionSelectionChanged?.Invoke(sender, e);
         }
-
 
         public bool IsVideoInfoOn
         {
@@ -111,6 +111,49 @@ namespace HotPotPlayer.Video.Control
                 "HEVCFirst" => CodecStrategy.HEVCFirst,
                 "AVCFirst" => CodecStrategy.AVCFirst,
                 _ => CodecStrategy.Default,
+            };
+        }
+
+
+        public PlayMode SelectedPlayMode
+        {
+            get { return (PlayMode)GetValue(SelectedPlayModeProperty); }
+            set { SetValue(SelectedPlayModeProperty, value); }
+        }
+
+        public static readonly DependencyProperty SelectedPlayModeProperty =
+            DependencyProperty.Register("SelectedPlayMode", typeof(PlayMode), typeof(InfoViewer), new PropertyMetadata(default, SelectedPlayModeChanged));
+
+
+        private static void SelectedPlayModeChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+            var i = d as InfoViewer;
+            i.Loop.IsChecked = false;
+            i.Single.IsChecked = false;
+            var sel = (PlayMode)e.NewValue;
+            switch (sel)
+            {
+                case PlayMode.Loop:
+                    i.Loop.IsChecked = true;
+                    break;
+                case PlayMode.SingleLoop:
+                    i.Single.IsChecked = true;
+                    break;
+                default:
+                    i.Loop.IsChecked = true;
+                    break;
+            }
+        }
+
+        private void PlayModeSelectClick(object sender, RoutedEventArgs e)
+        {
+            var b = sender as ToggleButton;
+            var tag = b.Tag as string;
+            SelectedPlayMode = tag switch
+            {
+                "Loop" => PlayMode.Loop,
+                "SingleLoop" => PlayMode.SingleLoop,
+                _ => PlayMode.SingleLoop,
             };
         }
     }

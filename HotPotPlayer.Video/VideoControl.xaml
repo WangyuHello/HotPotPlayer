@@ -101,6 +101,7 @@
                                               SelectedDefinition="{x:Bind SelectedDefinition, Mode=TwoWay}"
                                               IsVideoInfoOn="{x:Bind IsVideoInfoOn, Mode=TwoWay}"
                                               SelectedCodecStrategy="{x:Bind SelectedCodecStrategy, Mode=TwoWay}"
+                                              SelectedPlayMode="{x:Bind PlayMode, Mode=TwoWay}"
                                               />
                         </Flyout>
                     </Button.Flyout>
