@@ -65,11 +65,11 @@ namespace HotPotPlayer.Services.BiliBili.Video
         /// 发布时间的时间戳
         /// </summary>
         [JsonProperty("pubdate")]
-        public string UpDataTime { get; set; }
+        public string PubDate { get; set; }
 
         public string GetUpDateTime()
         {
-            int i = int.Parse(UpDataTime);
+            int i = int.Parse(PubDate);
             var ts = TimeSpan.FromSeconds(i);
             var time = new DateTime(ts.Ticks);
             return $"{time.Month}-{time.Day}";
@@ -77,7 +77,7 @@ namespace HotPotPlayer.Services.BiliBili.Video
 
         public string GetUpDateTime2()
         {
-            int i = int.Parse(UpDataTime);
+            int i = int.Parse(PubDate);
             var ts = TimeSpan.FromSeconds(i);
             var time = new DateTime(ts.Ticks);
             return $"{time.Year+1969}-{time.Month}-{time.Day} {ts:hh\\:mm\\:ss}";
@@ -87,7 +87,7 @@ namespace HotPotPlayer.Services.BiliBili.Video
         /// 用户投稿信息
         /// </summary>
         [JsonProperty("ctime")]
-        public string UserUpdata { get; set; }
+        public string CTime { get; set; }
 
         /// <summary>
         /// 视频简介
@@ -163,6 +163,10 @@ namespace HotPotPlayer.Services.BiliBili.Video
 
         [JsonProperty("staff")]
         public List<Staff> Staff { get; set; }
+
+        public bool IsMultiStaff => Staff != null && Staff.Count > 1;
+        public bool IsSingleStaff => Staff == null || Staff.Count == 1;
+
         /// <summary>
         /// 用户对于该视频的推广信息（投币，点赞，收藏）
         /// </summary>

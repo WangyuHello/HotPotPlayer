@@ -3,6 +3,7 @@ using HotPotPlayer.Pages.BilibiliSub;
 using HotPotPlayer.Services.BiliBili.Dynamic;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
+using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Markup;
 using Microsoft.UI.Xaml.Media;
 using System;
@@ -63,6 +64,15 @@ namespace HotPotPlayer.Templates
             }
 
             dynamic.ToggleComment(ui.DataContext as DynamicItem);
+        }
+
+        private void StaffTapped(object sender, TappedRoutedEventArgs e)
+        {
+            var grid = sender as Grid;
+            var flyout = grid.ContextFlyout as Flyout;
+            var f = flyout.Content as UserCard;
+            f.LoadUserCardBundle();
+            flyout.ShowAt(grid);
         }
     }
 }

@@ -107,7 +107,7 @@
                     <ColumnDefinition Width="*" />
                 </Grid.ColumnDefinitions>
                 <cont2:ImageEx2 Grid.Column="0" x:Name="UserAvatar" Source="{x:Bind Video.Up.Face}" Style="{StaticResource LocalMusicImageStyle}" 
-                    Width="24" Height="24" Tapped="UserAvatar_Tapped"
+                    Width="24" Height="24" Tapped="UserAvatar_Tapped" Visibility="{x:Bind Video.IsSingleStaff}"
                     CornerRadius="16" >
                     <cont2:ImageEx2.ContextFlyout>
                         <Flyout>
@@ -115,8 +115,10 @@
                         </Flyout>
                     </cont2:ImageEx2.ContextFlyout>
                 </cont2:ImageEx2>
+                <TextBlock Grid.Column="1" VerticalAlignment="Center" Margin="8,0" Text="{x:Bind Video.Up.Name}" Visibility="{x:Bind Video.IsSingleStaff}" FontFamily="{ThemeResource MiSansRegular}" FontSize="15" IsTextSelectionEnabled="True"/>
 
-                <TextBlock Grid.Column="1" VerticalAlignment="Center" Margin="8,0" Text="{x:Bind Video.Up.Name}" FontFamily="{ThemeResource MiSansRegular}" FontSize="15" IsTextSelectionEnabled="True"/>
+                <ListView Grid.Column="0" Visibility="{x:Bind Video.IsMultiStaff}" MaxWidth="260" ItemsSource="{x:Bind Video.Staff}" Style="{StaticResource HorizontalListViewStyle}" ItemTemplate="{StaticResource StaffTemplate}" ItemContainerStyle="{StaticResource TransparentListContainerCompactHPaddingStyle}"/>
+
                 <ImageIcon Grid.Column="2" Source="ms-appx:///Assets/Icon/View.svg" Margin="12,0,0,0" Width="20" Foreground="Gray"/>
                 <TextBlock Grid.Column="3" VerticalAlignment="Center" Margin="4,0" Text="{x:Bind Video.Stat.GetViews()}" Foreground="Gray" FontFamily="{ThemeResource MiSansRegular}" />
                 <ImageIcon Grid.Column="4" Source="ms-appx:///Assets/Icon/Dan.svg" Margin="12,0,0,0" Width="20" Foreground="Gray"/>

@@ -657,4 +657,23 @@
             <TextBlock Grid.Column="1" Text="{x:Bind Name}" FontFamily="{ThemeResource MiSansRegular}" Foreground="#62676e" VerticalAlignment="Center"/>
         </Grid>
     </DataTemplate>
+
+    <DataTemplate x:Key="StaffTemplate" x:DataType="bv:Staff">
+        <Grid MinWidth="60" Tapped="StaffTapped">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
+            <cont2:ImageEx2 Source="{x:Bind Face}" Style="{StaticResource DynamicImageStyle}" CornerRadius="20" Width="40" Height="40" DecodePixelWidth="44" DecodePixelHeight="44"/>
+            <Border HorizontalAlignment="Right" VerticalAlignment="Top" Background="#9f05aeec" CornerRadius="4" Padding="4,0">
+                <TextBlock Text="{x:Bind Title}" FontSize="12" FontFamily="{ThemeResource MiSansRegular}" Foreground="White"/>
+            </Border>
+            <TextBlock Grid.Row="1" Margin="0,4,0,0" FontSize="12" Text="{x:Bind Name}" FontFamily="{ThemeResource MiSansMedium}" HorizontalAlignment="Center" MaxWidth="76" TextTrimming="CharacterEllipsis"/>
+            <Grid.ContextFlyout>
+                <Flyout>
+                    <cont3:UserCard Margin="-16" Mid="{x:Bind Mid}" />
+                </Flyout>
+            </Grid.ContextFlyout>
+        </Grid>
+    </DataTemplate>
 </ResourceDictionary>

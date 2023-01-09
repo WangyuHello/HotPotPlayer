@@ -34,7 +34,7 @@
             
             <ListView Width="600" ItemsSource="{x:Bind DynamicItems, Mode=OneWay}" 
                   Style="{StaticResource GeneralListViewStyle}" 
-                  ItemContainerStyle="{StaticResource GeneralListContainerWithPadding2RoundStyle}" 
+                  ItemContainerStyle="{StaticResource TransparentListContainerWithPadding2RoundStyle}" 
                   ItemTemplate="{StaticResource DynamicTemplate}"
                   ItemClick="DynamicItemClick"
                   IncrementalLoadingTrigger="Edge"
