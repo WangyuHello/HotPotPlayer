@@ -63,7 +63,7 @@
             </Grid.ColumnDefinitions>
 
             <StackPanel Margin="0,0,8,0" Orientation="Horizontal" Spacing="4">
-                <Border CornerRadius="4" Background="#8c44f1" Margin="0,4" Padding="8,0" Visibility="{x:Bind GetIndicatorVisible(SelectedDefinition)}">
+                <Border CornerRadius="4" Background="#8c44f1" Margin="4,4,0,4" Padding="8,0" Visibility="{x:Bind GetIndicatorVisible(SelectedDefinition)}">
                     <TextBlock VerticalAlignment="Center" Text="{x:Bind GetIndicator(SelectedDefinition)}" FontFamily="{ThemeResource MiSansRegular}" FontSize="13" Foreground="White"/>
                 </Border>
                 <Button Click="PlayButtonClick" Style="{StaticResource VideoPlayOtherButton}">
