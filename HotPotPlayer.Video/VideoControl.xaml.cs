@@ -831,6 +831,35 @@ namespace HotPotPlayer.Video
                 Config.SetConfig("IsPbpOn", nv, true);
             });
         }
+
+        private Visibility GetPlayModeButtonVisible(bool isFullPageHost)
+        {
+            return isFullPageHost ? Visibility.Visible : Visibility.Collapsed;
+        }
+
+        private Visibility GetIndicatorVisible(string selectedDef)
+        {
+            return selectedDef switch
+            {
+                "HDR 真彩" => Visibility.Visible,
+                "4K 超清" => Visibility.Visible,
+                "杜比视界" => Visibility.Visible,
+                "8K 超高清" => Visibility.Visible,
+                _ => Visibility.Collapsed
+            };
+        }
+
+        private string GetIndicator(string selectedDef)
+        {
+            return selectedDef switch
+            {
+                "HDR 真彩" => "HDR",
+                "4K 超清" => "4K",
+                "杜比视界" => "HDR",
+                "8K 超高清" => "8K",
+                _ => ""
+            };
+        }
     }
 
     [ComImport, Guid("63aad0b8-7c24-40ff-85a8-640d944cc325"), InterfaceType(ComInterfaceType.InterfaceIsIUnknown)]
