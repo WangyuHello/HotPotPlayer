@@ -642,7 +642,7 @@
                 <ColumnDefinition Width="Auto" />
             </Grid.ColumnDefinitions>
             <TextBlock Text="{x:Bind GetPage}" FontFamily="{ThemeResource MiSansRegular}"/>
-            <TextBlock Grid.Column="1" Margin="8,0,0,0" Text="{x:Bind Part}" FontFamily="{ThemeResource MiSansRegular}"/>
+            <TextBlock Grid.Column="1" Margin="8,0,8,0" Text="{x:Bind Part}" FontFamily="{ThemeResource MiSansRegular}" TextTrimming="CharacterEllipsis"/>
             <TextBlock Grid.Column="2" Text="{x:Bind GetDuration()}" Foreground="Gray" FontFamily="{ThemeResource MiSansRegular}"/>
         </Grid>
     </DataTemplate>
@@ -653,7 +653,7 @@
                 <ColumnDefinition Width="*" />
                 <ColumnDefinition Width="Auto" />
             </Grid.ColumnDefinitions>
-            <TextBlock Grid.Column="0" Margin="0,0,0,0" Text="{x:Bind Title}" FontFamily="{ThemeResource MiSansRegular}"/>
+            <TextBlock Grid.Column="0" Margin="0,0,8,0" Text="{x:Bind Title}" FontFamily="{ThemeResource MiSansRegular}" TextTrimming="CharacterEllipsis"/>
             <TextBlock Grid.Column="1" Text="{x:Bind Arc.GetDuration()}" Foreground="Gray" />
         </Grid>
     </DataTemplate>
