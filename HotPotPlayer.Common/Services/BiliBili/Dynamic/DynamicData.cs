@@ -1,5 +1,6 @@
 ﻿
 using BiliBiliAPI.Models.Account;
+using HotPotPlayer.Services.BiliBili.Video;
 using HotPotPlayer.UI.Controls;
 using Microsoft.UI.Text;
 using Microsoft.UI.Xaml.Controls;
@@ -140,18 +141,41 @@ namespace HotPotPlayer.Services.BiliBili.Dynamic
 
     public class UGCSeason
     {
-        [JsonProperty("badge")]public PgcBadge UgcBadge { get; set; }
+        [JsonProperty("id")] public string Id { get; set; }
+        [JsonProperty("mid")] public string Mid { get; set; }
+        [JsonProperty("title")] public string Title { get; set; }
+        [JsonProperty("cover")] public string Cover { get; set; }
+        [JsonProperty("badge")] public PgcBadge UgcBadge { get; set; }
 
-        [JsonProperty("cover")]public string Cover { get; set; }
+        [JsonProperty("desc")] public string Desc { get; set; }
+        [JsonProperty("intro")] public string Intro { get; set; }
+        [JsonProperty("duration_text")] public string DurationText { get; set; }
 
-        [JsonProperty("desc")]public string Desc { get; set; }
-        [JsonProperty("duration_text")]public string DurationText { get; set; }
+        [JsonProperty("jump_url")] public string Jump_Url { get; set; }
+        [JsonProperty("stat")] public Stat Stat { get; set; }
+        [JsonProperty("sections")] public List<UGCSeasonSection> Sections { get; set; }
 
-        [JsonProperty("jump_url")]public string Jump_Url { get; set; }
+        public List<UGCSeasonEpisode> GetAllEpisodes => Sections.SelectMany(x => x.Episodes).ToList();
+    }
 
-        [JsonProperty("title")]public string Title { get; set; }
+    public class UGCSeasonSection
+    {
+        [JsonProperty("season_id")] public string SeasonId { get; set; }
+        [JsonProperty("id")] public string Id { get; set; }
+        [JsonProperty("title")] public string Title { get; set; }
+        [JsonProperty("type")] public int Type { get; set; }
+        [JsonProperty("episodes")] public List<UGCSeasonEpisode> Episodes { get; set; }
+    }
 
-        [JsonProperty("stat")]public ArchiveStat Stat { get; set; }
+    public class UGCSeasonEpisode
+    {
+        [JsonProperty("season_id")] public string SeasonId { get; set; }
+        [JsonProperty("id")] public string Id { get; set; }
+        [JsonProperty("aid")] public string Aid { get; set; }
+        [JsonProperty("cid")] public string Cid { get; set; }
+        [JsonProperty("title")] public string Title { get; set; }
+        [JsonProperty("bvid")] public string Bvid { get; set; }
+        [JsonProperty("arc")] public VideoContent Arc { get; set; }
     }
 
     public class MajorPgc

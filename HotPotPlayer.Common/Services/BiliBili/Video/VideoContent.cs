@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json;
+﻿using HotPotPlayer.Services.BiliBili.Dynamic;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -181,6 +182,9 @@ namespace HotPotPlayer.Services.BiliBili.Video
 
         [JsonProperty("history")]
         public History History { get; set; }
+
+        [JsonProperty("ugc_season")]
+        public UGCSeason UgcSeason { get; set; }
     }
 
 
@@ -419,6 +423,11 @@ namespace HotPotPlayer.Services.BiliBili.Video
             {
                 return v.ToString();
             }
+        }
+
+        public string GetViews2()
+        {
+            return GetViews() + "播放";
         }
 
         /// <summary>

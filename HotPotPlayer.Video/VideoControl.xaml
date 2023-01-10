@@ -82,9 +82,9 @@
             </Slider>
 
             <StackPanel Grid.Column="2" Orientation="Horizontal" Spacing="0">
-                <TextBlock VerticalAlignment="Center" Text="{x:Bind GetDuration(CurrentTime)}" FontFamily="{ThemeResource MiSansRegular}" FontSize="13" Foreground="#b2b2b2"/>
+                <TextBlock VerticalAlignment="Center" Text="{x:Bind GetDuration(CurrentTime)}" FontSize="13" Foreground="#b2b2b2"/>
                 <TextBlock Margin="0,0,2,0" Text="/" VerticalAlignment="Center" FontFamily="{ThemeResource MiSansRegular}" FontSize="13" Foreground="#b2b2b2"/>
-                <TextBlock VerticalAlignment="Center" Text="{x:Bind GetDuration(CurrentPlayingDuration)}" FontFamily="{ThemeResource MiSansRegular}" FontSize="13" Foreground="#b2b2b2"/>
+                <TextBlock VerticalAlignment="Center" Text="{x:Bind GetDuration(CurrentPlayingDuration)}" FontSize="13" Foreground="#b2b2b2"/>
             </StackPanel>
 
             <StackPanel Margin="16,0,0,0" Grid.Column="3" Orientation="Horizontal" >

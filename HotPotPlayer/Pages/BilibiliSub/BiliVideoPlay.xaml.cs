@@ -90,6 +90,9 @@ namespace HotPotPlayer.Pages.BilibiliSub
         [ObservableProperty]
         int selectedPage;
 
+        [ObservableProperty]
+        int selectedEpisode;
+
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
             base.OnNavigatedTo(e);
@@ -210,6 +213,18 @@ namespace HotPotPlayer.Pages.BilibiliSub
             OnPropertyChanged(propertyName: nameof(Pbp));
             OnPropertyChanged(propertyName: nameof(Tags));
             IsAdditionLoading = false;
+
+            if (video.UgcSeason != null)
+            {
+                for (int i = 0; i < video.UgcSeason.GetAllEpisodes.Count; i++)
+                {
+                    if (video.UgcSeason.GetAllEpisodes[i].Aid == aid)
+                    {
+                        SelectedEpisode = i; 
+                        break;
+                    }
+                }
+            }
         }
 
         private void UserAvatar_Tapped(object sender, TappedRoutedEventArgs e)
@@ -246,9 +261,23 @@ namespace HotPotPlayer.Pages.BilibiliSub
             return video.Videos > 1 ? Visibility.Visible : Visibility.Collapsed;
         }
 
+        Visibility GetUgcSeasonVisible(VideoContent video)
+        {
+            return video.UgcSeason != null ? Visibility.Visible : Visibility.Collapsed;
+        }
+
         string GetSelectedPageAndAll(int selectedPage, VideoContent video)
         {
             return $"({selectedPage+1}/{video.Videos})";
+        }
+
+        string GetSelectedEpisodeAndAll(int selectedEpisode, VideoContent video)
+        {
+            if (video.UgcSeason == null)
+            {
+                return "-";
+            }
+            return $"({selectedEpisode + 1}/{video.UgcSeason.GetAllEpisodes.Count()})";
         }
 
         private void CoinClick(object sender, RoutedEventArgs e)
