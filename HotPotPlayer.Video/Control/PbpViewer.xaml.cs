@@ -95,10 +95,22 @@ namespace HotPotPlayer.Video.Control
                 });
             }
 
+            if (ys.Last() > 0)
+            {
+                segs1.Add(new LineSegment
+                {
+                    Point = new Point(width, height / 2)
+                });
+                segs2.Add(new LineSegment
+                {
+                    Point = new Point(width, height / 2)
+                });
+            }
+
             UpFigure.Segments = segs1;
             DownFigure.Segments = segs2;
 
-            PathFigureCollection pthFigureCollection = new PathFigureCollection
+            PathFigureCollection pthFigureCollection = new()
             {
                 UpFigure,
                 DownFigure
