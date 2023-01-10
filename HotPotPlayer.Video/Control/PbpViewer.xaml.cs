@@ -2,6 +2,7 @@
 // Licensed under the MIT License.
 
 using HotPotPlayer.Services.BiliBili.Danmaku;
+using Microsoft.UI;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Controls.Primitives;
@@ -62,16 +63,53 @@ namespace HotPotPlayer.Video.Control
             var ys = pbp.Events.Default;
             var yMax = ys.Max();
 
-            Root.Points.Clear();
-            for (int i = 0; i < ys.Count; i++)
+            PathFigure UpFigure = new PathFigure
             {
-                Root.Points.Add(new Point(dx * i, height / 2 * ( 1 - 0.8 * ys[i] / yMax)));
-            }
-            Root.Points.Add(new Point(width, height / 2));
-            for (int i = ys.Count - 1; i >= 0; i--)
+                StartPoint = new Point(0, height / 2 * (1 - 0.8 * ys[0] / yMax))
+            };
+            PathFigure DownFigure = new PathFigure
             {
-                Root.Points.Add(new Point(dx * i, height / 2 * (1 + 0.8 * ys[i] / yMax)));
+                StartPoint = new Point(0, height / 2 * (1 - 0.8 * ys[0] / yMax))
+            };
+
+            PathSegmentCollection segs1 = new();
+            PathSegmentCollection segs2 = new();
+
+            for (int i = 1; i < ys.Count; i++)
+            {
+                segs1.Add(new BezierSegment
+                {
+                    Point1 = new Point(dx * (i - 1) + 0.75 * dx, height / 2 * (1 - 0.8 * ys[i - 1] / yMax)),
+                    Point2 = new Point(dx * (i - 1) + 0.25 * dx, height / 2 * (1 - 0.8 * ys[i] / yMax)),
+                    Point3 = new Point(dx * i, height / 2 * (1 - 0.8 * ys[i] / yMax))
+                });
             }
+
+            for (int i = 1; i < ys.Count; i++)
+            {
+                segs2.Add(new BezierSegment
+                {
+                    Point1 = new Point(dx * (i - 1) + 0.75 * dx, height / 2 * (1 + 0.8 * ys[i - 1] / yMax)),
+                    Point2 = new Point(dx * (i - 1) + 0.25 * dx, height / 2 * (1 + 0.8 * ys[i] / yMax)),
+                    Point3 = new Point(dx * i, height / 2 * (1 + 0.8 * ys[i] / yMax))
+                });
+            }
+
+            UpFigure.Segments = segs1;
+            DownFigure.Segments = segs2;
+
+            PathFigureCollection pthFigureCollection = new PathFigureCollection
+            {
+                UpFigure,
+                DownFigure
+            };
+
+            PathGeometry pthGeometry = new PathGeometry
+            {
+                Figures = pthFigureCollection
+            };
+
+            Root.Data = pthGeometry;
         }
 
         Size prevSize;
