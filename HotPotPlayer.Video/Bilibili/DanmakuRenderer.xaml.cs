@@ -83,7 +83,6 @@ namespace HotPotPlayer.Video.Bilibili
                             Text = d.Content,
                             FontColor = d.Color,
                             FontSize = d.FontSize,
-                            OutlineThickness = 0.5,
                             FontFamily = (FontFamily)Application.Current.Resources["MiSansRegular"],
                             HorizontalAlignment = HorizontalAlignment.Center,
                             ExitTime = curTime + TimeSpan.FromSeconds(3)
@@ -125,7 +124,6 @@ namespace HotPotPlayer.Video.Bilibili
                             Text = d.Content,
                             FontColor = d.Color,
                             FontSize = d.FontSize,
-                            OutlineThickness = 0.5,
                             FontFamily = (FontFamily)Application.Current.Resources["MiSansRegular"],
                             HorizontalAlignment = HorizontalAlignment.Center,
                             ExitTime = curTime + TimeSpan.FromSeconds(3)
@@ -176,7 +174,6 @@ namespace HotPotPlayer.Video.Bilibili
                                 Text = d.Content,
                                 FontColor = d.Color,
                                 FontSize = FontSize,
-                                OutlineThickness = 0.5,
                                 FontFamily = (FontFamily)Application.Current.Resources["MiSansRegular"],
                             };
                         }
