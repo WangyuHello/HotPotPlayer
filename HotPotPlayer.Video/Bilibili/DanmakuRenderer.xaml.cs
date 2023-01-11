@@ -151,7 +151,7 @@ namespace HotPotPlayer.Video.Bilibili
 
                         if (d.Time < curTime) continue;
 
-                        TextBlock tb;
+                        OutlineTextControl tb;
                         var hasText = _texts.TryPeek(out var reuseText);
                         bool isReuse = false;
                         if(hasText && curTime > reuseText.Exit)
@@ -265,9 +265,9 @@ namespace HotPotPlayer.Video.Bilibili
         Compositor _compositor;
         Queue<ExitTime> _texts;
         List<ExitTime> _topTexts;
-        Queue<TextBlock> _topRecycleTexts;
+        Queue<OutlineTextControl> _topRecycleTexts;
         List<ExitTime> _bottomTexts;
-        Queue<TextBlock> _bottomRecycleTexts;
+        Queue<OutlineTextControl> _bottomRecycleTexts;
         Queue<Visual> _visuals;
 
         private void Load(DMData n)
@@ -316,8 +316,8 @@ namespace HotPotPlayer.Video.Bilibili
             _texts = new Queue<ExitTime>();
             _topTexts = new List<ExitTime>();
             _bottomTexts = new List<ExitTime>();
-            _topRecycleTexts = new Queue<TextBlock>();
-            _bottomRecycleTexts = new Queue<TextBlock>();
+            _topRecycleTexts = new Queue<OutlineTextControl>();
+            _bottomRecycleTexts = new Queue<OutlineTextControl>();
             _visuals = new Queue<Visual>();
             _compositor = App.MainWindow.Compositor;
             _linear = _compositor.CreateLinearEasingFunction();
@@ -398,7 +398,7 @@ namespace HotPotPlayer.Video.Bilibili
 
         class ExitTime
         {
-            public TextBlock Text { get; set; }
+            public OutlineTextControl Text { get; set; }
             public TimeSpan Exit { get; set; }
         }
 

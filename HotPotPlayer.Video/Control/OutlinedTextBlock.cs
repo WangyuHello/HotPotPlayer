@@ -15,6 +15,7 @@ using Windows.UI;
 using Windows.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Media;
+using Microsoft.Graphics.Canvas.UI.Composition;
 
 namespace HotPotPlayer.Video.Control
 {
@@ -181,7 +182,6 @@ namespace HotPotPlayer.Video.Control
         private void OnDraw(CanvasControl sender, CanvasDrawEventArgs args)
         {
             //Outlined text
-
             using (var textLayout = this.CreateTextLayout(args.DrawingSession, sender.Size))
             {
                 var offset = (float)(OutlineThickness / 2);
