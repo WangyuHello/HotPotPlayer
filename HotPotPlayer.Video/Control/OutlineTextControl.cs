@@ -43,6 +43,14 @@ namespace HotPotPlayer.Video.Control
             {
                 DrawText();
             }));
+            RegisterPropertyChangedCallback(TextProperty, new DependencyPropertyChangedCallback((s, e) =>
+            {
+                DrawText();
+            }));
+            RegisterPropertyChangedCallback(FontColorProperty, new DependencyPropertyChangedCallback((s, e) =>
+            {
+                DrawText();
+            }));
         }
 
 
@@ -85,8 +93,6 @@ namespace HotPotPlayer.Video.Control
         public static readonly DependencyProperty OutlineThicknessProperty =
             DependencyProperty.Register("OutlineThickness", typeof(double), typeof(OutlineTextControl), new PropertyMetadata(1.0));
 
-
-
         private void DrawText()
         {
             if (ActualHeight == 0 || ActualWidth == 0 || string.IsNullOrWhiteSpace(Text) || _drawingSurface == null)
@@ -102,10 +108,9 @@ namespace HotPotPlayer.Video.Control
             {
                 FontSize = (float)FontSize,
                 Direction = CanvasTextDirection.LeftToRightThenTopToBottom,
-                VerticalAlignment = CanvasVerticalAlignment.Center,
-                HorizontalAlignment = CanvasHorizontalAlignment.Center,
+                VerticalAlignment = CanvasVerticalAlignment.Top,
+                HorizontalAlignment = CanvasHorizontalAlignment.Left,
                 FontFamily = FontFamily.Source,
-
             };
 
             using var textLayout = new CanvasTextLayout(session, Text, textFormat, width, height);

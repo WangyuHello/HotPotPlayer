@@ -71,7 +71,7 @@ namespace HotPotPlayer.Video.Bilibili
                     if (has)
                     {
                         tb.Text = d.Content;
-                        tb.Foreground = new SolidColorBrush(d.Color);
+                        tb.FontColor = d.Color;
                         tb.FontSize = d.FontSize;
                     }
                     else
@@ -79,8 +79,9 @@ namespace HotPotPlayer.Video.Bilibili
                         tb = new()
                         {
                             Text = d.Content,
-                            Foreground = new SolidColorBrush(d.Color),
+                            FontColor = d.Color,
                             FontSize = d.FontSize,
+                            OutlineThickness = 2.0,
                             FontFamily = (FontFamily)Application.Current.Resources["MiSansRegular"],
                             HorizontalAlignment = HorizontalAlignment.Center,
                         };
@@ -109,7 +110,7 @@ namespace HotPotPlayer.Video.Bilibili
                     if (has)
                     {
                         tb.Text = d.Content;
-                        tb.Foreground = new SolidColorBrush(d.Color);
+                        tb.FontColor = d.Color;
                         tb.FontSize = d.FontSize;
                     }
                     else
@@ -117,8 +118,9 @@ namespace HotPotPlayer.Video.Bilibili
                         tb = new()
                         {
                             Text = d.Content,
-                            Foreground = new SolidColorBrush(d.Color),
+                            FontColor = d.Color,
                             FontSize = d.FontSize,
+                            OutlineThickness = 2.0,
                             FontFamily = (FontFamily)Application.Current.Resources["MiSansRegular"],
                             HorizontalAlignment = HorizontalAlignment.Center,
                         };
@@ -158,7 +160,7 @@ namespace HotPotPlayer.Video.Bilibili
                         {
                             tb = _texts.Dequeue().Text;
                             tb.Text = d.Content;
-                            tb.Foreground = new SolidColorBrush(d.Color);
+                            tb.FontColor = d.Color;
                             isReuse = true;
                         }
                         else
@@ -166,8 +168,9 @@ namespace HotPotPlayer.Video.Bilibili
                             tb = new()
                             {
                                 Text = d.Content,
-                                Foreground = new SolidColorBrush(d.Color),
+                                FontColor = d.Color,
                                 FontSize = FontSize,
+                                OutlineThickness = 2.0,
                                 FontFamily = (FontFamily)Application.Current.Resources["MiSansRegular"],
                             };
                         }
