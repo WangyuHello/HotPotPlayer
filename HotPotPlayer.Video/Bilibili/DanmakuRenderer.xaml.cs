@@ -26,6 +26,7 @@ using Microsoft.UI.Xaml.Hosting;
 using CommunityToolkit.WinUI.UI.Animations;
 using HotPotPlayer.Video.Control;
 using System.Collections;
+using System.Diagnostics;
 
 // To learn more about WinUI, the WinUI project structure,
 // and more about our project templates, see: http://aka.ms/winui-project-info.
@@ -55,9 +56,9 @@ namespace HotPotPlayer.Video.Bilibili
             var curSecs = Convert.ToInt32(curTime.TotalSeconds);
             for (int i = 0; i < _topTexts.Count; i++)
             {
-                if (_topTexts[i].Exit < curTime)
+                if (_topTexts[i].ExitTime < curTime)
                 {
-                    _topRecycleTexts.Enqueue(_topTexts[i].Text);
+                    _topRecycleTexts.Enqueue(_topTexts[i]);
                     _topTexts.RemoveAt(i);
                     TopHost.Children.RemoveAt(i);
                 }
@@ -73,6 +74,7 @@ namespace HotPotPlayer.Video.Bilibili
                         tb.Text = d.Content;
                         tb.FontColor = d.Color;
                         tb.FontSize = d.FontSize;
+                        tb.ExitTime = curTime + TimeSpan.FromSeconds(3);
                     }
                     else
                     {
@@ -84,19 +86,21 @@ namespace HotPotPlayer.Video.Bilibili
                             OutlineThickness = 0.5,
                             FontFamily = (FontFamily)Application.Current.Resources["MiSansRegular"],
                             HorizontalAlignment = HorizontalAlignment.Center,
+                            ExitTime = curTime + TimeSpan.FromSeconds(3)
                         };
                     }
+                    tb.Dm = d;
 
                     TopHost.Children.Add(tb);
-                    _topTexts.Add(new ExitTime { Exit = curTime + TimeSpan.FromSeconds(3), Text = tb });
+                    _topTexts.Add(tb);
                 }
             }
 
             for (int i = _bottomTexts.Count - 1; i >= 0; i--)
             {
-                if (_bottomTexts[i].Exit < curTime)
+                if (_bottomTexts[i].ExitTime < curTime)
                 {
-                    _bottomRecycleTexts.Enqueue(_bottomTexts[i].Text);
+                    _bottomRecycleTexts.Enqueue(_bottomTexts[i]);
                     _bottomTexts.RemoveAt(i);
                     BottomHost.Children.RemoveAt(i);
                 }
@@ -112,6 +116,7 @@ namespace HotPotPlayer.Video.Bilibili
                         tb.Text = d.Content;
                         tb.FontColor = d.Color;
                         tb.FontSize = d.FontSize;
+                        tb.ExitTime = curTime + TimeSpan.FromSeconds(3);
                     }
                     else
                     {
@@ -123,16 +128,17 @@ namespace HotPotPlayer.Video.Bilibili
                             OutlineThickness = 0.5,
                             FontFamily = (FontFamily)Application.Current.Resources["MiSansRegular"],
                             HorizontalAlignment = HorizontalAlignment.Center,
+                            ExitTime = curTime + TimeSpan.FromSeconds(3)
                         };
                     }
+                    tb.Dm = d;
                     BottomHost.Children.Insert(0, tb);
-                    _bottomTexts.Insert(0, new ExitTime { Exit = curTime + TimeSpan.FromSeconds(3), Text = tb });
+                    _bottomTexts.Insert(0, tb);
                 }
             }
         }
 
         double SlotStep => FontSize + 8;
-        LinearEasingFunction _linear;
 
         private void DmTick(object sender, object e)
         {
@@ -153,12 +159,12 @@ namespace HotPotPlayer.Video.Bilibili
 
                         if (d.Time < curTime) continue;
 
-                        OutlineTextControl tb;
+                        DanmakuTextControl tb;
                         var hasText = _texts.TryPeek(out var reuseText);
                         bool isReuse = false;
-                        if(hasText && curTime > reuseText.Exit)
+                        if(hasText && curTime > reuseText.ExitTime)
                         {
-                            tb = _texts.Dequeue().Text;
+                            tb = _texts.Dequeue();
                             tb.Text = d.Content;
                             tb.FontColor = d.Color;
                             isReuse = true;
@@ -174,16 +180,9 @@ namespace HotPotPlayer.Video.Bilibili
                                 FontFamily = (FontFamily)Application.Current.Resources["MiSansRegular"],
                             };
                         }
+                        tb.Dm = d;
 
-                        var visual = ElementCompositionPreview.GetElementVisual(tb);
-                        var animation = _compositor.CreateVector3KeyFrameAnimation();
-                        var len = d.Content.Length * FontSize;
-                        var exLen = len + 200;
-                        animation.InsertKeyFrame(0f, new Vector3(Convert.ToSingle(Host.ActualWidth + 1), (float)(SlotStep * i), 0f), _linear);
-                        animation.InsertKeyFrame(1f, new Vector3((float)-exLen, (float)(SlotStep * i), 0f), _linear);
-                        animation.Duration = TimeSpan.FromSeconds((Host.ActualWidth + exLen + 1) / Speed);
-                        animation.DelayTime = d.Time - curTime;
-                        animation.DelayBehavior = AnimationDelayBehavior.SetInitialValueBeforeDelay;
+
                         var m = _masks[sec][i];
                         m.occupied = true;
 
@@ -191,13 +190,10 @@ namespace HotPotPlayer.Video.Bilibili
                         {
                             Host.Children.Add(tb);
                         }
-                        visual.StartAnimation("Offset", animation);
+                        var len = tb.SetupOffsetAnimation(curTime, SlotStep, Speed, i, Host.ActualWidth);
+                        tb.StartOffsetAnimation();
 
-                        _texts.Enqueue(new ExitTime
-                        {
-                            Text = tb,
-                            Exit = curTime + animation.Duration
-                        });
+                        _texts.Enqueue(tb);
 
 
                         var segs = Convert.ToInt32(Math.Floor((len*1.3) / Speed));
@@ -226,6 +222,7 @@ namespace HotPotPlayer.Video.Bilibili
         private static void DMChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
             ((DanmakuRenderer)d).Load(e.NewValue as DMData);
+            ((DanmakuRenderer)d).Refresh();
         }
 
         public int Slot
@@ -266,11 +263,11 @@ namespace HotPotPlayer.Video.Bilibili
         Dictionary<int, List<DMItem>> _toptimeLine;
         Dictionary<int, List<DMItem>> _bottomtimeLine;
         Compositor _compositor;
-        Queue<ExitTime> _texts;
-        List<ExitTime> _topTexts;
-        Queue<OutlineTextControl> _topRecycleTexts;
-        List<ExitTime> _bottomTexts;
-        Queue<OutlineTextControl> _bottomRecycleTexts;
+        Queue<DanmakuTextControl> _texts;
+        List<DanmakuTextControl> _topTexts;
+        Queue<DanmakuTextControl> _topRecycleTexts;
+        List<DanmakuTextControl> _bottomTexts;
+        Queue<DanmakuTextControl> _bottomRecycleTexts;
         Queue<Visual> _visuals;
 
         private void Load(DMData n)
@@ -300,6 +297,7 @@ namespace HotPotPlayer.Video.Bilibili
                 }
 
             }
+            Debug.WriteLine($"DMs: {n.Dms.Count}, timeLines: {_timeLine.Count}");
             _availTime = _timeLine.Keys.ToList();
             _masks = _availTime.ToDictionary(a => a, b => Enumerable.Range(0, Slot).Select(x => new Mask()).ToArray());
 
@@ -316,14 +314,13 @@ namespace HotPotPlayer.Video.Bilibili
                 }
             }
 
-            _texts = new Queue<ExitTime>();
-            _topTexts = new List<ExitTime>();
-            _bottomTexts = new List<ExitTime>();
-            _topRecycleTexts = new Queue<OutlineTextControl>();
-            _bottomRecycleTexts = new Queue<OutlineTextControl>();
+            _texts = new Queue<DanmakuTextControl>();
+            _topTexts = new List<DanmakuTextControl>();
+            _bottomTexts = new List<DanmakuTextControl>();
+            _topRecycleTexts = new Queue<DanmakuTextControl>();
+            _bottomRecycleTexts = new Queue<DanmakuTextControl>();
             _visuals = new Queue<Visual>();
             _compositor = App.MainWindow.Compositor;
-            _linear = _compositor.CreateLinearEasingFunction();
         }
 
         private void Host_SizeChanged(object sender, SizeChangedEventArgs e)
@@ -341,8 +338,7 @@ namespace HotPotPlayer.Video.Bilibili
             _topTickTimer.Stop();
             _texts.Select(tb =>
             {
-                var visual = ElementCompositionPreview.GetElementVisual(tb.Text);
-                visual.StopAnimation("Offset");
+                tb.StopOffsetAnimation();
                 return true;
             }).ToList();
         }
@@ -353,24 +349,17 @@ namespace HotPotPlayer.Video.Bilibili
             {
                 return;
             }
-            Host.Children.Clear();
-            TopHost.Children.Clear();
-            BottomHost.Children.Clear();
-            _texts?.Clear();
-            _topTexts?.Clear();
-            _bottomTexts?.Clear();
-            _topRecycleTexts?.Clear();
-            _bottomRecycleTexts?.Clear();
-            foreach (var (i, m) in _masks)
+            if (_texts.Count == 0)
             {
-                foreach (var item in m)
-                {
-                    item.occupied = false;
-                }
+                return;
             }
-            DmTick(null, null);
             _tickTimer.Start();
             _topTickTimer.Start();
+            _texts.Select(tb =>
+            {
+                tb.ContinueOffsetAnimation();
+                return true;
+            }).ToList();
         }
 
         public void Refresh()
@@ -394,15 +383,25 @@ namespace HotPotPlayer.Video.Bilibili
             {
                 _tickTimer.Stop();
                 _topTickTimer.Stop();
-
-                Resume();
+                Host.Children.Clear();
+                TopHost.Children.Clear();
+                BottomHost.Children.Clear();
+                _texts?.Clear();
+                _topTexts?.Clear();
+                _bottomTexts?.Clear();
+                _topRecycleTexts?.Clear();
+                _bottomRecycleTexts?.Clear();
+                foreach (var (i, m) in _masks)
+                {
+                    foreach (var item in m)
+                    {
+                        item.occupied = false;
+                    }
+                }
+                DmTick(null, null);
+                _tickTimer.Start();
+                _topTickTimer.Start();
             }
-        }
-
-        class ExitTime
-        {
-            public OutlineTextControl Text { get; set; }
-            public TimeSpan Exit { get; set; }
         }
 
         class Mask

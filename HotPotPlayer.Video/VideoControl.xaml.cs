@@ -212,7 +212,6 @@ namespace HotPotPlayer.Video
                 IsPlaying = true;
                 CurrentPlayingDuration = _mpv.Duration;
                 OnPropertyChanged(propertyName: nameof(Volume));
-                DM.Refresh();
             });
 
             await Task.Run(async () =>
