@@ -121,9 +121,10 @@ namespace HotPotPlayer.Video.Control
             {
                 DashStyle = CanvasDashStyle.Solid,
             };
-            session.DrawGeometry(geometry, offset, offset, OutlineColor, (float)OutlineThickness, dashedStroke);
+            session.DrawTextLayout(textLayout, 0, 0, FontColor);
+            session.DrawGeometry(geometry, OutlineColor, (float)OutlineThickness, dashedStroke);
             
-            session.DrawTextLayout(textLayout, offset, offset, FontColor);
+            //session.DrawTextLayout(textLayout, offset, offset, FontColor);
         }
     }
 }
