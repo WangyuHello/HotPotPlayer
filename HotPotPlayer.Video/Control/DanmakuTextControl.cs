@@ -20,6 +20,7 @@ using Microsoft.UI.Xaml.Media;
 using HotPotPlayer.Services.BiliBili.Danmaku;
 using CommunityToolkit.WinUI.UI.Animations;
 using System.Reflection;
+using Windows.Foundation;
 
 namespace HotPotPlayer.Video.Control
 {
@@ -30,34 +31,44 @@ namespace HotPotPlayer.Video.Control
         private Visual _visual;
         private Compositor _compositor;
         private LinearEasingFunction _linear;
+        private CanvasDevice _device;
+        private CanvasTextFormat _textFormat;
+        private CanvasTextLayout _textLayout;
+        private SpriteVisual _spriteTextVisual;
 
         public DanmakuTextControl()
         {
             _compositor = ElementCompositionPreview.GetElementVisual(this).Compositor;
             _linear = _compositor.CreateLinearEasingFunction();
-            var graphicsDevice = CanvasComposition.CreateCompositionGraphicsDevice(_compositor, CanvasDevice.GetSharedDevice());
-            var spriteTextVisual = _compositor.CreateSpriteVisual();
+            _device = CanvasDevice.GetSharedDevice();
+            var graphicsDevice = CanvasComposition.CreateCompositionGraphicsDevice(_compositor, _device);
+            _spriteTextVisual = _compositor.CreateSpriteVisual();
 
-            ElementCompositionPreview.SetElementChildVisual(this, spriteTextVisual);
+            ElementCompositionPreview.SetElementChildVisual(this, _spriteTextVisual);
             _visual = ElementCompositionPreview.GetElementVisual(this);
             SizeChanged += (s, e) =>
             {
-                _drawingSurface = graphicsDevice.CreateDrawingSurface(e.NewSize, DirectXPixelFormat.B8G8R8A8UIntNormalized, DirectXAlphaMode.Premultiplied);
+                CreateTextLayout((float)e.NewSize.Width, (float)e.NewSize.Height);
+                var drawingSize = new Size(ExpandTextWidth, ExpandTextHeight);
+                _drawingSurface = graphicsDevice.CreateDrawingSurface(drawingSize, DirectXPixelFormat.B8G8R8A8UIntNormalized, DirectXAlphaMode.Premultiplied);
                 DrawText();
                 var maskSurfaceBrush = _compositor.CreateSurfaceBrush(_drawingSurface);
-                spriteTextVisual.Brush = maskSurfaceBrush;
-                spriteTextVisual.Size = e.NewSize.ToVector2();
+                _spriteTextVisual.Brush = maskSurfaceBrush;
+                _spriteTextVisual.Size = drawingSize.ToVector2();
             };
             RegisterPropertyChangedCallback(FontSizeProperty, new DependencyPropertyChangedCallback((s, e) =>
             {
+                CreateTextLayout((float)ActualWidth, (float)ActualHeight);
                 DrawText();
             }));
             RegisterPropertyChangedCallback(TextProperty, new DependencyPropertyChangedCallback((s, e) =>
             {
+                CreateTextLayout((float)ActualWidth, (float)ActualHeight);
                 DrawText();
             }));
             RegisterPropertyChangedCallback(FontColorProperty, new DependencyPropertyChangedCallback((s, e) =>
             {
+                CreateTextLayout((float)ActualWidth, (float)ActualHeight);
                 DrawText();
             }));
         }
@@ -152,13 +163,29 @@ namespace HotPotPlayer.Video.Control
             if (ActualHeight == 0 || ActualWidth == 0 || string.IsNullOrWhiteSpace(Text) || _drawingSurface == null)
                 return;
 
-            var width = (float)ActualWidth;
-            var height = (float)ActualHeight;
-            //using var session = CanvasComposition.CreateDrawingSession(_drawingSurface, new Windows.Foundation.Rect { X = 0, Y = 0, Width = width, Height = height}, (float)XamlRoot.RasterizationScale * 96);
+            var drawingSize = new Size(ExpandTextWidth, ExpandTextHeight);
+            _drawingSurface.Resize(new Windows.Graphics.SizeInt32(Convert.ToInt32(drawingSize.Width)+ 1, Convert.ToInt32(drawingSize.Height) + 1));
             using var session = CanvasComposition.CreateDrawingSession(_drawingSurface);
             session.Clear(Colors.Transparent);
 
-            using var textFormat = new CanvasTextFormat()
+            using var geometry = CanvasGeometry.CreateText(_textLayout);
+
+            using var dashedStroke = new CanvasStrokeStyle()
+            {
+                DashStyle = CanvasDashStyle.Solid,
+            };
+            session.DrawGeometry(geometry, OutlineColor, (float)OutlineThickness, dashedStroke);
+            session.DrawTextLayout(_textLayout, 0, 0, FontColor);
+
+            //session.DrawTextLayout(textLayout, offset, offset, FontColor);
+
+            _spriteTextVisual.Size = drawingSize.ToVector2();
+        }
+
+        private void CreateTextLayout(float width, float height)
+        {
+            if(width == 0 || height == 0) return;
+            _textFormat = new CanvasTextFormat()
             {
                 FontSize = (float)FontSize,
                 Direction = CanvasTextDirection.LeftToRightThenTopToBottom,
@@ -166,19 +193,14 @@ namespace HotPotPlayer.Video.Control
                 HorizontalAlignment = CanvasHorizontalAlignment.Left,
                 FontFamily = FontFamily.Source,
             };
-
-            using var textLayout = new CanvasTextLayout(session, Text, textFormat, width, height);
-            var offset = (float)(OutlineThickness / 2);
-            using var geometry = CanvasGeometry.CreateText(textLayout);
-            
-            using var dashedStroke = new CanvasStrokeStyle()
-            {
-                DashStyle = CanvasDashStyle.Solid,
-            };
-            session.DrawGeometry(geometry, OutlineColor, (float)OutlineThickness, dashedStroke);
-            session.DrawTextLayout(textLayout, 0, 0, FontColor);
-
-            //session.DrawTextLayout(textLayout, offset, offset, FontColor);
+            _textLayout = new CanvasTextLayout(_device, Text, _textFormat, width * 8, height);
         }
+
+        private double ExpandAmount => OutlineThickness * 2; // { get { return Math.Max(GlowAmount, MaxGlowAmount) * 4; } }
+
+        private double? TextWidth => _textLayout?.LayoutBounds.Width;
+        private double? TextHeight => _textLayout?.LayoutBounds.Height;
+        private double ExpandTextWidth => (double)TextWidth + ExpandAmount;
+        private double ExpandTextHeight => (double)TextHeight + ExpandAmount;
     }
 }
