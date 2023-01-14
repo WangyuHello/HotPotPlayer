@@ -208,11 +208,13 @@ namespace HotPotPlayer.Services.BiliBili
         /// <param name="fnval">视频获取方式选择</param>
         /// <param name="fourk">是否允许4K视频</param>
         /// <returns></returns>
-        public async Task<BiliResult<VideoInfo>> GetVideoUrl(string bvid, string cid, DashEnum qn = DashEnum.Dash480, FnvalEnum fnval = FnvalEnum.Dash, int fourk = 0)
+        public async Task<BiliResult<VideoInfo>> GetVideoUrl(string bvid, string aid, string cid, DashEnum qn = DashEnum.Dash480, FnvalEnum fnval = FnvalEnum.Dash, int fourk = 0)
         {
+            var idHead = bvid == null ? "aid" : "bvid";
+            var idval = bvid == null ? aid : bvid;
             var r = await GetAsync("https://api.bilibili.com/x/player/playurl", ResponseEnum.Web,
                 new Dictionary<string, string> {
-                    ["bvid"] = bvid,
+                    [idHead] = idval,
                     ["cid"] = cid,
                     ["qn"] = ((int)qn).ToString(),
                     ["fnval"] = ((int)fnval).ToString(),

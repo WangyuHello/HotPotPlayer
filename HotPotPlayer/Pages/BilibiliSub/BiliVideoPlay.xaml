@@ -211,6 +211,7 @@
                 <ToggleSwitch Grid.Column="4" Margin="8,0,-114,0" VerticalAlignment="Center" OffContent="" OnContent=""/>
                 <TextBlock Grid.Row="1" Grid.ColumnSpan="5" Text="{x:Bind Video.UgcSeason.Stat.GetViews2()}" FontSize="14" Foreground="Gray" VerticalAlignment="Center" FontFamily="{ThemeResource MiSansRegular}"/>
                 <ListView 
+                    x:Name="UgcSeasonList"
                     Grid.Row="2"
                     Grid.ColumnSpan="5"
                     Margin="-16,4,-16,0" 

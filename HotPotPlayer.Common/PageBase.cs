@@ -49,14 +49,17 @@ namespace HotPotPlayer
             ((IComponentServiceLocator)Application.Current).ShowToast(toast);
         }
 
-        public void Set<T>(ref T oldValue, T newValue, Action<T> action = null, [CallerMemberName] string propertyName = "")
+        public void Set<T>(ref T oldValue, T newValue, Action<T> action = null, bool guard = false, [CallerMemberName] string propertyName = "")
         {
             if (!EqualityComparer<T>.Default.Equals(oldValue, newValue))
             {
                 oldValue = newValue;
                 try
                 {
-                    action?.Invoke(oldValue);
+                    if (!guard)
+                    {
+                        action?.Invoke(oldValue);
+                    }
                     PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
                 }
                 catch (Exception)

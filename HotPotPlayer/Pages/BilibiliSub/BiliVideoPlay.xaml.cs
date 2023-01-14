@@ -29,6 +29,7 @@ using Windows.System;
 using CommunityToolkit.WinUI.UI.Controls;
 using HotPotPlayer.Controls.BilibiliSub;
 using System.ComponentModel;
+using CommunityToolkit.WinUI.UI;
 
 // To learn more about WinUI, the WinUI project structure,
 // and more about our project templates, see: http://aka.ms/winui-project-info.
@@ -90,8 +91,24 @@ namespace HotPotPlayer.Pages.BilibiliSub
         [ObservableProperty]
         int selectedPage;
 
-        [ObservableProperty]
+        bool selectedEpisodeGurad;
         int selectedEpisode;
+        public int SelectedEpisode
+        {
+            get => selectedEpisode;
+            set => Set(ref selectedEpisode, value, async nv =>
+            {
+                if (nv == -1)
+                {
+                    return;
+                }
+                var sel = video.UgcSeason.GetAllEpisodes[nv];
+                var v = sel.Arc;
+                var v2 = (await BiliBiliService.API.GetVideoInfo(sel.Bvid)).Data;
+                StartPlay(v2);
+                OnPropertyChanged(propertyName: nameof(Video));
+            }, selectedEpisodeGurad);
+        }
 
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
@@ -115,7 +132,7 @@ namespace HotPotPlayer.Pages.BilibiliSub
                 aid = videoContent.Aid;
                 cid = videoContent.FirstCid;
                 bvid = videoContent.Bvid;
-                var res = await BiliBiliService.API.GetVideoUrl(this.video.Bvid, this.video.FirstCid, DashEnum.Dash8K, FnvalEnum.Dash | FnvalEnum.HDR | FnvalEnum.Fn8K | FnvalEnum.Fn4K | FnvalEnum.AV1 | FnvalEnum.FnDBAudio | FnvalEnum.FnDBVideo);
+                var res = await BiliBiliService.API.GetVideoUrl(bvid, aid, cid, DashEnum.Dash8K, FnvalEnum.Dash | FnvalEnum.HDR | FnvalEnum.Fn8K | FnvalEnum.Fn4K | FnvalEnum.AV1 | FnvalEnum.FnDBAudio | FnvalEnum.FnDBVideo);
                 var video = BiliBiliVideoItem.FromRaw(res.Data, this.video);
                 Source = new VideoPlayInfo { VideoItems = new List<BiliBiliVideoItem> { video }, Index = 0 };
             }
@@ -124,7 +141,7 @@ namespace HotPotPlayer.Pages.BilibiliSub
                 aid = h.Aid;
                 cid = h.Cid;
                 bvid = h.Bvid;
-                var res = await BiliBiliService.API.GetVideoUrl(h.Bvid, h.Cid, DashEnum.Dash8K, FnvalEnum.Dash | FnvalEnum.HDR | FnvalEnum.Fn8K | FnvalEnum.Fn4K | FnvalEnum.AV1 | FnvalEnum.FnDBAudio | FnvalEnum.FnDBVideo);
+                var res = await BiliBiliService.API.GetVideoUrl(bvid, aid, cid, DashEnum.Dash8K, FnvalEnum.Dash | FnvalEnum.HDR | FnvalEnum.Fn8K | FnvalEnum.Fn4K | FnvalEnum.AV1 | FnvalEnum.FnDBAudio | FnvalEnum.FnDBVideo);
                 var video = BiliBiliVideoItem.FromRaw(res.Data, h);
                 Source = new VideoPlayInfo { VideoItems = new List<BiliBiliVideoItem> { video }, Index = 0 };
             }
@@ -216,13 +233,21 @@ namespace HotPotPlayer.Pages.BilibiliSub
 
             if (video.UgcSeason != null)
             {
-                for (int i = 0; i < video.UgcSeason.GetAllEpisodes.Count; i++)
+                DetermineSelectedEpisode();
+            }
+        }
+
+        private async void DetermineSelectedEpisode()
+        {
+            for (int i = 0; i < video.UgcSeason.GetAllEpisodes.Count; i++)
+            {
+                if (video.UgcSeason.GetAllEpisodes[i].Aid == aid)
                 {
-                    if (video.UgcSeason.GetAllEpisodes[i].Aid == aid)
-                    {
-                        SelectedEpisode = i; 
-                        break;
-                    }
+                    selectedEpisodeGurad = true;
+                    SelectedEpisode = i;
+                    selectedEpisodeGurad = false;
+                    await UgcSeasonList.SmoothScrollIntoViewWithIndexAsync(i, itemPlacement: ScrollItemPlacement.Center);
+                    break;
                 }
             }
         }
