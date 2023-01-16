@@ -54,13 +54,13 @@
                 <ToggleButton Padding="8,0" CornerRadius="4" Style="{StaticResource BiliToggleButton}" VerticalAlignment="Top" Click="LikeClick" IsChecked="{x:Bind IsLike}">
                     <StackPanel Spacing="4" Padding="0,4">
                         <FontIcon FontFamily="{ThemeResource BiliIcons}" Glyph="&#xEA09;" FontSize="22"/>
-                        <TextBlock HorizontalAlignment="Center" Text="{x:Bind Video.Stat.GetLike()}" FontFamily="{ThemeResource MiSansRegular}" />
+                        <TextBlock HorizontalAlignment="Center" Text="{x:Bind GetString(Likes)}" FontFamily="{ThemeResource MiSansRegular}" />
                     </StackPanel>
                 </ToggleButton>
                 <ToggleButton x:Name="CoinToggleButton" Padding="8,0" CornerRadius="4" Style="{StaticResource BiliToggleButton}" VerticalAlignment="Top" IsChecked="{x:Bind GetCoinButtonCheck(Coin), Mode=OneWay}" Click="CoinClick">
                     <StackPanel Spacing="4" Padding="0,4">
                         <PathIcon Data="{StaticResource CoinPath}" HorizontalAlignment="Center" Margin="0,2,0,2"/>
-                        <TextBlock HorizontalAlignment="Center" Text="{x:Bind Video.Stat.GetCoin()}" FontFamily="{ThemeResource MiSansRegular}" />
+                        <TextBlock HorizontalAlignment="Center" Text="{x:Bind GetString(Coins)}" FontFamily="{ThemeResource MiSansRegular}" />
                     </StackPanel>
                     <ToggleButton.ContextFlyout>
                         <Flyout>
@@ -71,7 +71,7 @@
                 <ToggleButton Padding="8,0" CornerRadius="4" Style="{StaticResource BiliToggleButton}" VerticalAlignment="Top" IsChecked="{x:Bind IsFavor}" Click="FavorClick">
                     <StackPanel Spacing="4" Padding="0,4" >
                         <FontIcon FontFamily="{ThemeResource BiliIcons}" Glyph="&#xEA03;" FontSize="22"/>
-                        <TextBlock HorizontalAlignment="Center" Text="{x:Bind Video.Stat.GetFavorite()}" FontFamily="{ThemeResource MiSansRegular}" />
+                        <TextBlock HorizontalAlignment="Center" Text="{x:Bind GetString(Favors)}" FontFamily="{ThemeResource MiSansRegular}" />
                     </StackPanel>
                 </ToggleButton>
                 <Button Padding="8,0" CornerRadius="4" Style="{StaticResource BiliButton}" VerticalAlignment="Top" Click="ShareClick" >

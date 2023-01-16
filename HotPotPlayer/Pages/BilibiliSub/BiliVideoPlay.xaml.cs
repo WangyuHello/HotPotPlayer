@@ -30,6 +30,7 @@ using CommunityToolkit.WinUI.UI.Controls;
 using HotPotPlayer.Controls.BilibiliSub;
 using System.ComponentModel;
 using CommunityToolkit.WinUI.UI;
+using HotPotPlayer.Extensions;
 
 // To learn more about WinUI, the WinUI project structure,
 // and more about our project templates, see: http://aka.ms/winui-project-info.
@@ -68,7 +69,16 @@ namespace HotPotPlayer.Pages.BilibiliSub
         bool isLike;
 
         [ObservableProperty]
+        int likes;
+
+        [ObservableProperty]
         int coin;
+
+        [ObservableProperty]
+        int coins;
+
+        [ObservableProperty]
+        int favors;
 
         [ObservableProperty]
         bool isFavor;
@@ -218,8 +228,14 @@ namespace HotPotPlayer.Pages.BilibiliSub
             this.dmData = await BiliBiliService.API.GetDMXml(cid);
             this.pbp = await BiliBiliService.API.GetPbp(cid);
             this.tags = (await BiliBiliService.API.GetVideoTags(bvid)).Data;
+            this.likes = video.Stat.Like;
+            this.coins = video.Stat.Coin;
+            this.favors = video.Stat.Favorite;
 
             OnPropertyChanged(propertyName: nameof(Video));
+            OnPropertyChanged(propertyName: nameof(Likes));
+            OnPropertyChanged(propertyName: nameof(Coins));
+            OnPropertyChanged(propertyName: nameof(Favors));
             OnPropertyChanged(propertyName: nameof(OnLineCount));
             OnPropertyChanged(propertyName: nameof(Replies));
             OnPropertyChanged(propertyName: nameof(RelatedVideos));
@@ -266,13 +282,12 @@ namespace HotPotPlayer.Pages.BilibiliSub
                 IsLike = !IsLike;
                 if (IsLike)
                 {
-                    video.Stat.Like++;
+                    Likes++;
                 }
                 else
                 {
-                    video.Stat.Like--;
+                    Likes--;
                 }
-                OnPropertyChanged(propertyName: nameof(Video));
             }
         }
 
@@ -321,13 +336,12 @@ namespace HotPotPlayer.Pages.BilibiliSub
                 Coin = c;
                 if (Coin != 0)
                 {
-                    video.Stat.Coin += Coin;
+                    Coins += Coin;
                 }
                 else
                 {
-                    video.Stat.Coin -= Coin;
+                    Coins -= Coin;
                 }
-                OnPropertyChanged(propertyName: nameof(Video));
             }
         }
 
@@ -339,13 +353,12 @@ namespace HotPotPlayer.Pages.BilibiliSub
                 IsFavor = true;
                 if (IsFavor)
                 {
-                    video.Stat.Favorite++;
+                    Favors++;
                 }
                 else
                 {
-                    video.Stat.Favorite--;
+                    Favors--;
                 }
-                OnPropertyChanged(propertyName: nameof(Video));
             }
         }
 
@@ -354,6 +367,11 @@ namespace HotPotPlayer.Pages.BilibiliSub
             ShareFl.Init();
             var b = sender as FrameworkElement;
             b.ContextFlyout.ShowAt(b);
+        }
+
+        string GetString(int v)
+        {
+            return v.ToHumanString();
         }
     }
 }
