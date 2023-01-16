@@ -282,6 +282,10 @@ namespace HotPotPlayer.Video
 
         public void StartPlay(string selectedDefinition = "")
         {
+            if (!Host.IsLoaded)
+            {
+                return;
+            }
             if (CurrentPlayList[CurrentPlayIndex] is BiliBiliVideoItem bv)
             {
                 IEnumerable<string> videourls;
