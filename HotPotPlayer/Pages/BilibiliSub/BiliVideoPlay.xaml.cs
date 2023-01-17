@@ -98,8 +98,21 @@ namespace HotPotPlayer.Pages.BilibiliSub
         [ObservableProperty]
         bool isAdditionLoading = true;
 
-        [ObservableProperty]
         int selectedPage;
+        bool selectedPageGuard;
+        public int SelectedPage
+        {
+            get => selectedPage;
+            set => Set(ref selectedPage, value, nv =>
+            {
+                if (nv == -1)
+                {
+                    return;
+                }
+                var sel = video.Pages[nv];
+                StartPlay(video, sel.Cid);
+            }, selectedPageGuard);
+        }
 
         bool selectedEpisodeGurad;
         int selectedEpisode;
@@ -131,7 +144,7 @@ namespace HotPotPlayer.Pages.BilibiliSub
         string cid;
         string bvid;
 
-        private async void StartPlay(object para)
+        private async void StartPlay(object para, string targetCid = null)
         {
             IsLoading = true;
             IsAdditionLoading = true;
@@ -140,7 +153,7 @@ namespace HotPotPlayer.Pages.BilibiliSub
             {
                 this.video = videoContent;
                 aid = videoContent.Aid;
-                cid = videoContent.FirstCid;
+                cid = string.IsNullOrEmpty(targetCid) ? videoContent.FirstCid : targetCid;
                 bvid = videoContent.Bvid;
                 var res = await BiliBiliService.API.GetVideoUrl(bvid, aid, cid, DashEnum.Dash8K, FnvalEnum.Dash | FnvalEnum.HDR | FnvalEnum.Fn8K | FnvalEnum.Fn4K | FnvalEnum.AV1 | FnvalEnum.FnDBAudio | FnvalEnum.FnDBVideo);
                 var video = BiliBiliVideoItem.FromRaw(res.Data, this.video);
@@ -149,13 +162,14 @@ namespace HotPotPlayer.Pages.BilibiliSub
             else if (para is HomeDataItem h)
             {
                 aid = h.Aid;
-                cid = h.Cid;
+                cid = string.IsNullOrEmpty(targetCid) ? h.Cid : targetCid;
                 bvid = h.Bvid;
                 var res = await BiliBiliService.API.GetVideoUrl(bvid, aid, cid, DashEnum.Dash8K, FnvalEnum.Dash | FnvalEnum.HDR | FnvalEnum.Fn8K | FnvalEnum.Fn4K | FnvalEnum.AV1 | FnvalEnum.FnDBAudio | FnvalEnum.FnDBVideo);
                 var video = BiliBiliVideoItem.FromRaw(res.Data, h);
                 Source = new VideoPlayInfo { VideoItems = new List<BiliBiliVideoItem> { video }, Index = 0 };
             }
 
+            await Task.Delay(TimeSpan.FromSeconds(1));
             VideoPlayer.PreparePlay();
             VideoPlayer.StartPlay();
         }
@@ -247,6 +261,11 @@ namespace HotPotPlayer.Pages.BilibiliSub
             OnPropertyChanged(propertyName: nameof(Tags));
             IsAdditionLoading = false;
 
+            if(video.Videos > 1)
+            {
+                DetermineSelectedPage();
+            }
+
             if (video.UgcSeason != null)
             {
                 DetermineSelectedEpisode();
@@ -263,6 +282,21 @@ namespace HotPotPlayer.Pages.BilibiliSub
                     SelectedEpisode = i;
                     selectedEpisodeGurad = false;
                     await UgcSeasonList.SmoothScrollIntoViewWithIndexAsync(i, itemPlacement: ScrollItemPlacement.Center);
+                    break;
+                }
+            }
+        }
+
+        private async void DetermineSelectedPage()
+        {
+            for (int i = 0; i < video.Pages.Count; i++)
+            {
+                if (video.Pages[i].Cid == cid)
+                {
+                    selectedPageGuard = true;
+                    SelectedPage = i;
+                    selectedPageGuard = false;
+                    await PageList.SmoothScrollIntoViewWithIndexAsync(i, itemPlacement: ScrollItemPlacement.Center);
                     break;
                 }
             }

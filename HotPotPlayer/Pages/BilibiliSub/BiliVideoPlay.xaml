@@ -176,6 +176,7 @@
                 <TextBlock Grid.Column="3" Foreground="Gray" Text="自动连播" FontSize="14" VerticalAlignment="Center" FontFamily="{ThemeResource MiSansRegular}"/>
                 <ToggleSwitch Grid.Column="4" Margin="8,0,-114,0" VerticalAlignment="Center" OffContent="" OnContent=""/>
                 <ListView 
+                    x:Name="PageList"
                     Grid.Row="1"
                     Grid.ColumnSpan="5"
                     Margin="-16,4,-16,0" 
