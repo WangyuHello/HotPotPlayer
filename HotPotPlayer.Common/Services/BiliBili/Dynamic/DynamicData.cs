@@ -83,7 +83,7 @@ namespace HotPotPlayer.Services.BiliBili.Dynamic
         [JsonProperty("major")]public ModuleMajor Major { get; set; }
 
         public bool HasDesc => Desc != null && !string.IsNullOrEmpty(Desc.Text);
-
+        public bool HasReserve => Additional != null && Additional.Reserve != null;
         public bool HasArchive => Major != null && Major.Archive != null;
         public bool HasArticle => Major != null && Major.Article != null;
         public bool HasLive => Major != null && Major.LiveRcmd != null;
@@ -406,7 +406,7 @@ namespace HotPotPlayer.Services.BiliBili.Dynamic
 
     public class Reserve
     {
-        [JsonProperty("jump_url")]public string Jump_Url { get; set; }
+        [JsonProperty("jump_url")]public string JumpUrl { get; set; }
 
         [JsonProperty("reserve_total")]public int Total { get; set; }
 
@@ -416,15 +416,15 @@ namespace HotPotPlayer.Services.BiliBili.Dynamic
 
         [JsonProperty("stype")]public int Stype { get; set; }
 
-        [JsonProperty("title")]public string title { get; set; }
+        [JsonProperty("title")]public string Title { get; set; }
 
-        [JsonProperty("up_mid")]public string Up_Mid { get; set; }
+        [JsonProperty("up_mid")]public string UpMid { get; set; }
 
-        [JsonProperty("desc1")]public Reserve_Desc Desc1 { get; set; }
-        [JsonProperty("desc2")]public Reserve_Desc Desc2 { get; set; }
+        [JsonProperty("desc1")]public ReserveDesc Desc1 { get; set; }
+        [JsonProperty("desc2")]public ReserveDesc Desc2 { get; set; }
     }
 
-    public class Reserve_Desc
+    public class ReserveDesc
     {
         [JsonProperty("style")]public int Style { get; set; }
         [JsonProperty("text")]public string Text { get; set; }

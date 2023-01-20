@@ -565,6 +565,26 @@
                 </Grid>
                 <TextBlock Grid.Row="1" Margin="0,4,0,0" FontSize="14" Text="{x:Bind Modules.ModuleDynamic.Major.Archive.Title}" FontFamily="{ThemeResource MiSansMedium}" TextWrapping="Wrap"/>
             </Grid>
+            
+            <!--Reserve-->
+            <Grid Margin="0,8,0,0" Padding="16,8" Visibility="{x:Bind Modules.ModuleDynamic.HasReserve}" Background="#f4f5f7" CornerRadius="4">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+                <TextBlock Margin="0,0,0,0" FontSize="14" Text="{x:Bind Modules.ModuleDynamic.Additional.Reserve.Title}" FontFamily="{ThemeResource MiSansMedium}" TextWrapping="Wrap"/>
+                <StackPanel Grid.Row="1" Margin="0,4,0,0" Orientation="Horizontal" Spacing="16">
+                    <TextBlock Margin="0,0,0,0" FontSize="12" Text="{x:Bind Modules.ModuleDynamic.Additional.Reserve.Desc1.Text}" FontFamily="{ThemeResource MiSansRegular}" Foreground="Gray"/>
+                    <TextBlock Margin="0,0,0,0" FontSize="12" Text="{x:Bind Modules.ModuleDynamic.Additional.Reserve.Desc2.Text}" FontFamily="{ThemeResource MiSansRegular}" Foreground="Gray"/>
+                </StackPanel>
+                <Button Grid.Column="1" Grid.RowSpan="2" Margin="8" FontFamily="{ThemeResource MiSansRegular}" Style="{ThemeResource AccentButtonStyle}">
+                    预约
+                </Button>
+            </Grid>
 
             <!--Live-->
             <Grid Margin="0,8,0,0" Visibility="{x:Bind Modules.ModuleDynamic.HasLive}">
