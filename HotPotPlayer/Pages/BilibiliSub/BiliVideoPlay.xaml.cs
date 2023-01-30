@@ -169,7 +169,7 @@ namespace HotPotPlayer.Pages.BilibiliSub
                 Source = new VideoPlayInfo { VideoItems = new List<BiliBiliVideoItem> { video }, Index = 0 };
             }
 
-            await Task.Delay(TimeSpan.FromSeconds(1));
+            //await Task.Delay(TimeSpan.FromSeconds(1));
             VideoPlayer.PreparePlay();
             VideoPlayer.StartPlay();
         }

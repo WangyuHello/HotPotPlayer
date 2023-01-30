@@ -242,16 +242,20 @@ namespace HotPotPlayer.Video
             //DisplayReq.RequestActive();
         }
 
+        IntPtr _devicePtr;
         ID3D11Device _device;
+        IntPtr _swapChain1Ptr;
         IDXGISwapChain1 _swapChain1;
         readonly DispatcherQueue UIQueue;
 
         private void D3DInitCallback(IntPtr d3d11Device, IntPtr swapChain)
         {
+            _swapChain1Ptr = swapChain;
+            _devicePtr = d3d11Device;
             UIQueue.TryEnqueue(() =>
             {
-                _swapChain1 = (IDXGISwapChain1)Marshal.GetObjectForIUnknown(swapChain);
-                _device = (ID3D11Device)Marshal.GetObjectForIUnknown(d3d11Device);
+                _swapChain1 = (IDXGISwapChain1)Marshal.GetObjectForIUnknown(_swapChain1Ptr);
+                _device = (ID3D11Device)Marshal.GetObjectForIUnknown(_devicePtr);
                 //_swapChain1 = ObjectReference<IDXGISwapChain1>.FromAbi(swapChain).Vftbl;
                 var nativepanel = Host.As<ISwapChainPanelNative>();
                 _swapChain1.GetDesc1(out var desp);
