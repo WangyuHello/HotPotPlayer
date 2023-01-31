@@ -71,10 +71,9 @@ namespace HotPotPlayer.Video.Control
 
         private Vector3 targetOffset;
 
-        public double SetupOffsetAnimation(TimeSpan curTime, double slotStep, double speed, int index, double hostWidth)
+        public void SetupOffsetAnimation(TimeSpan curTime, float len, double slotStep, double speed, int index, double hostWidth)
         {
             _animation = _compositor.CreateVector3KeyFrameAnimation();
-            var len = Dm.Content.Length * FontSize;
             var exLen = len + 200;
             _animation.InsertKeyFrame(0f, new Vector3(Convert.ToSingle(hostWidth + 1), (float)(slotStep * index), 0f), _linear);
             targetOffset = new Vector3((float)-exLen, (float)(slotStep * index), 0f);
@@ -84,7 +83,6 @@ namespace HotPotPlayer.Video.Control
             _animation.DelayBehavior = AnimationDelayBehavior.SetInitialValueBeforeDelay;
             ExitTime = curTime + _animation.Duration;
             Speed = speed;
-            return len;
         }
 
         public TimeSpan ExitTime { get; set; }

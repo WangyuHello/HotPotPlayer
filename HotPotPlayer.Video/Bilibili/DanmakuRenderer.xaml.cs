@@ -136,7 +136,7 @@ namespace HotPotPlayer.Video.Bilibili
             }
         }
 
-        double SlotStep => FontSize + 8;
+        double _slotStep;
 
         private void DmTick(object sender, object e)
         {
@@ -186,13 +186,13 @@ namespace HotPotPlayer.Video.Bilibili
                         {
                             Host.Children.Add(tb);
                         }
-                        var len = tb.SetupOffsetAnimation(curTime, SlotStep, Speed, i, Host.ActualWidth);
+                        var len = drawDm.Size.X;
+                        tb.SetupOffsetAnimation(curTime, len, _slotStep, Speed, i, Host.ActualWidth);
                         tb.StartOffsetAnimation();
 
                         _texts.Enqueue(tb);
 
-
-                        var segs = Convert.ToInt32(Math.Floor((len*1.3) / Speed));
+                        var segs = Convert.ToInt32(Math.Floor(len * 1.3 / Speed));
                         for (int s = 0; s < segs; s++)
                         {
                             if (_masks.ContainsKey(sec + s + 1))
@@ -240,6 +240,15 @@ namespace HotPotPlayer.Video.Bilibili
         public static readonly DependencyProperty SpeedProperty =
             DependencyProperty.Register("Speed", typeof(double), typeof(DanmakuRenderer), new PropertyMetadata(0.0));
 
+        public double FontScale
+        {
+            get { return (double)GetValue(FontScaleProperty); }
+            set { SetValue(FontScaleProperty, value); }
+        }
+
+        public static readonly DependencyProperty FontScaleProperty =
+            DependencyProperty.Register("FontScale", typeof(double), typeof(DanmakuRenderer), new PropertyMetadata(1.0));
+
 
         public TimeSpan CurrentTime
         {
@@ -282,7 +291,6 @@ namespace HotPotPlayer.Video.Bilibili
         Queue<DanmakuTextControl> _topRecycleTexts;
         List<DanmakuTextControl> _bottomTexts;
         Queue<DanmakuTextControl> _bottomRecycleTexts;
-        Queue<Visual> _visuals;
 
         private void Load(DMData n)
         {
@@ -314,6 +322,7 @@ namespace HotPotPlayer.Video.Bilibili
             Debug.WriteLine($"DMs: {n.Dms.Count}, timeLines: {_timeLine.Count}");
             _availTime = _timeLine.Keys.ToList();
             _masks = _availTime.ToDictionary(a => a, b => Enumerable.Range(0, Slot).Select(x => new Mask()).ToArray());
+            _slotStep = n.Dms.Max(d => d.FontSize) + 8;
 
             static void AddToTimeline(int t, DMItem item, Dictionary<int, List<DMItem>> container)
             {
@@ -333,7 +342,6 @@ namespace HotPotPlayer.Video.Bilibili
             _bottomTexts = new List<DanmakuTextControl>();
             _topRecycleTexts = new Queue<DanmakuTextControl>();
             _bottomRecycleTexts = new Queue<DanmakuTextControl>();
-            _visuals = new Queue<Visual>();
         }
 
         private void Host_SizeChanged(object sender, SizeChangedEventArgs e)
@@ -429,7 +437,7 @@ namespace HotPotPlayer.Video.Bilibili
 
             var textFormat = new CanvasTextFormat()
             {
-                FontSize = (float)FontSize,
+                FontSize = dm.FontSize,
                 Direction = CanvasTextDirection.LeftToRightThenTopToBottom,
                 VerticalAlignment = CanvasVerticalAlignment.Top,
                 HorizontalAlignment = CanvasHorizontalAlignment.Left,
