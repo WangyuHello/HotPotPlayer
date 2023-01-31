@@ -27,6 +27,13 @@ using CommunityToolkit.WinUI.UI.Animations;
 using HotPotPlayer.Video.Control;
 using System.Collections;
 using System.Diagnostics;
+using Microsoft.Graphics.Canvas.UI.Composition;
+using Microsoft.Graphics.Canvas.Text;
+using System.Management;
+using Microsoft.Graphics.DirectX;
+using Application = Microsoft.UI.Xaml.Application;
+using Microsoft.Graphics.Canvas.Geometry;
+using Windows.UI;
 
 // To learn more about WinUI, the WinUI project structure,
 // and more about our project templates, see: http://aka.ms/winui-project-info.
@@ -38,6 +45,7 @@ namespace HotPotPlayer.Video.Bilibili
         public DanmakuRenderer()
         {
             this.InitializeComponent();
+            _compositor = App.MainWindow.Compositor;
             _tickTimer = new DispatcherTimer
             {
                 Interval = TimeSpan.FromSeconds(5)
@@ -69,25 +77,21 @@ namespace HotPotPlayer.Video.Bilibili
                 foreach (var d in dms)
                 {
                     var has = _topRecycleTexts.TryDequeue(out var tb);
+                    var drawDm = DrawDanmaku(d);
                     if (has)
                     {
-                        tb.Text = d.Content;
-                        tb.FontColor = d.Color;
-                        tb.FontSize = d.FontSize;
                         tb.ExitTime = curTime + TimeSpan.FromSeconds(3);
+                        tb.SetVisual(drawDm);
                     }
                     else
                     {
-                        tb = new()
+                        tb = new(drawDm)
                         {
-                            Text = d.Content,
-                            FontColor = d.Color,
-                            FontSize = d.FontSize,
-                            FontFamily = (FontFamily)Application.Current.Resources["MiSansRegular"],
-                            HorizontalAlignment = HorizontalAlignment.Center,
                             ExitTime = curTime + TimeSpan.FromSeconds(3)
                         };
                     }
+                    tb.Width = drawDm.Size.X;
+                    tb.Height = drawDm.Size.Y;
                     tb.Dm = d;
 
                     TopHost.Children.Add(tb);
@@ -110,25 +114,21 @@ namespace HotPotPlayer.Video.Bilibili
                 foreach (var d in dms)
                 {
                     var has = _bottomRecycleTexts.TryDequeue(out var tb);
+                    var drawDm = DrawDanmaku(d);
                     if (has)
                     {
-                        tb.Text = d.Content;
-                        tb.FontColor = d.Color;
-                        tb.FontSize = d.FontSize;
                         tb.ExitTime = curTime + TimeSpan.FromSeconds(3);
+                        tb.SetVisual(drawDm);
                     }
                     else
                     {
-                        tb = new()
+                        tb = new(drawDm)
                         {
-                            Text = d.Content,
-                            FontColor = d.Color,
-                            FontSize = d.FontSize,
-                            FontFamily = (FontFamily)Application.Current.Resources["MiSansRegular"],
-                            HorizontalAlignment = HorizontalAlignment.Center,
                             ExitTime = curTime + TimeSpan.FromSeconds(3)
                         };
                     }
+                    tb.Width = drawDm.Size.X;
+                    tb.Height = drawDm.Size.Y;
                     tb.Dm = d;
                     BottomHost.Children.Insert(0, tb);
                     _bottomTexts.Insert(0, tb);
@@ -160,25 +160,24 @@ namespace HotPotPlayer.Video.Bilibili
                         DanmakuTextControl tb;
                         var hasText = _texts.TryPeek(out var reuseText);
                         bool isReuse = false;
+                        var drawDm = DrawDanmaku(d);
                         if(hasText && curTime > reuseText.ExitTime)
                         {
                             tb = _texts.Dequeue();
-                            tb.Text = d.Content;
-                            tb.FontColor = d.Color;
+                            tb.SetVisual(drawDm);
                             isReuse = true;
                         }
                         else
                         {
-                            tb = new()
+                            tb = new(drawDm)
                             {
-                                Text = d.Content,
-                                FontColor = d.Color,
-                                FontSize = FontSize,
-                                FontFamily = (FontFamily)Application.Current.Resources["MiSansRegular"],
+                                HorizontalAlignment = HorizontalAlignment.Left,
+                                VerticalAlignment = VerticalAlignment.Top
                             };
                         }
+                        tb.Width = drawDm.Size.X;
+                        tb.Height = drawDm.Size.Y;
                         tb.Dm = d;
-
 
                         var m = _masks[sec][i];
                         m.occupied = true;
@@ -251,6 +250,24 @@ namespace HotPotPlayer.Video.Bilibili
         public static readonly DependencyProperty CurrentTimeProperty =
             DependencyProperty.Register("CurrentTime", typeof(TimeSpan), typeof(DanmakuRenderer), new PropertyMetadata(default));
 
+        public double OutlineThickness
+        {
+            get { return (double)GetValue(OutlineThicknessProperty); }
+            set { SetValue(OutlineThicknessProperty, value); }
+        }
+
+        public static readonly DependencyProperty OutlineThicknessProperty =
+            DependencyProperty.Register("OutlineThickness", typeof(double), typeof(DanmakuRenderer), new PropertyMetadata(1.8));
+
+        public Color OutlineColor
+        {
+            get { return (Color)GetValue(OutlineColorProperty); }
+            set { SetValue(OutlineColorProperty, value); }
+        }
+
+        public static readonly DependencyProperty OutlineColorProperty =
+            DependencyProperty.Register("OutlineColor", typeof(Color), typeof(DanmakuRenderer), new PropertyMetadata(Colors.Black));
+
 
         DispatcherTimer _tickTimer;
         DispatcherTimer _topTickTimer;
@@ -317,7 +334,6 @@ namespace HotPotPlayer.Video.Bilibili
             _topRecycleTexts = new Queue<DanmakuTextControl>();
             _bottomRecycleTexts = new Queue<DanmakuTextControl>();
             _visuals = new Queue<Visual>();
-            _compositor = App.MainWindow.Compositor;
         }
 
         private void Host_SizeChanged(object sender, SizeChangedEventArgs e)
@@ -399,6 +415,54 @@ namespace HotPotPlayer.Video.Bilibili
                 _tickTimer.Start();
                 _topTickTimer.Start();
             }
+        }
+
+        CanvasDevice _device;
+        CanvasDevice Device => _device ??= CanvasDevice.GetSharedDevice();
+
+        CompositionGraphicsDevice _graphicsDevice;
+        CompositionGraphicsDevice GraphicsDevice => _graphicsDevice ??= CanvasComposition.CreateCompositionGraphicsDevice(_compositor, _device);
+
+        Visual DrawDanmaku(DMItem dm)
+        {
+            var spriteTextVisual = _compositor.CreateSpriteVisual();
+
+            var textFormat = new CanvasTextFormat()
+            {
+                FontSize = (float)FontSize,
+                Direction = CanvasTextDirection.LeftToRightThenTopToBottom,
+                VerticalAlignment = CanvasVerticalAlignment.Top,
+                HorizontalAlignment = CanvasHorizontalAlignment.Left,
+                FontFamily = FontFamily.Source,
+            };
+            var textLayout = new CanvasTextLayout(Device, dm.Content, textFormat, dm.FontSize * dm.Content.Length * 2, dm.FontSize);
+
+            var expandAmount = OutlineThickness * 2;
+            var textWidth = textLayout.LayoutBounds.Width;
+            var textHeight = textLayout.LayoutBounds.Height;
+            var expandTextWidth = textWidth + expandAmount;
+            var expandTextHeight = textHeight + expandAmount;
+
+            var drawingSize = new Size(expandTextWidth * XamlRoot.RasterizationScale, expandTextHeight * XamlRoot.RasterizationScale);
+
+            var drawingSurface = GraphicsDevice.CreateDrawingSurface(drawingSize, DirectXPixelFormat.B8G8R8A8UIntNormalized, DirectXAlphaMode.Premultiplied);
+
+            using var session = CanvasComposition.CreateDrawingSession(drawingSurface, new Rect(0, 0, drawingSize.Width, drawingSize.Height), (float)(96 * XamlRoot.RasterizationScale));
+            session.Clear(Colors.Transparent);
+
+            using var geometry = CanvasGeometry.CreateText(textLayout);
+
+            using var dashedStroke = new CanvasStrokeStyle()
+            {
+                DashStyle = CanvasDashStyle.Solid,
+            };
+            session.DrawGeometry(geometry, OutlineColor, (float)OutlineThickness, dashedStroke);
+            session.DrawTextLayout(textLayout, 0, 0, dm.Color);
+
+            var maskSurfaceBrush = _compositor.CreateSurfaceBrush(drawingSurface);
+            spriteTextVisual.Brush = maskSurfaceBrush;
+            spriteTextVisual.Size = new Vector2((float)expandTextWidth, (float)expandTextHeight);
+            return spriteTextVisual;
         }
 
         class Mask

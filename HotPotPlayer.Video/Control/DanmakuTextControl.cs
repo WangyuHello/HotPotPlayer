@@ -26,51 +26,22 @@ namespace HotPotPlayer.Video.Control
 {
     public class DanmakuTextControl : Microsoft.UI.Xaml.Controls.Control
     {
-        private CompositionDrawingSurface _drawingSurface;
         private Vector3KeyFrameAnimation _animation;
-        private Visual _visual;
-        private Compositor _compositor;
-        private LinearEasingFunction _linear;
-        private CanvasDevice _device;
-        private CanvasTextFormat _textFormat;
-        private CanvasTextLayout _textLayout;
-        private SpriteVisual _spriteTextVisual;
+        private readonly Visual _visual;
+        private readonly Compositor _compositor;
+        private readonly LinearEasingFunction _linear;
 
-        public DanmakuTextControl()
+        public DanmakuTextControl(Visual drawText)
         {
             _compositor = ElementCompositionPreview.GetElementVisual(this).Compositor;
             _linear = _compositor.CreateLinearEasingFunction();
-            _device = CanvasDevice.GetSharedDevice();
-            var graphicsDevice = CanvasComposition.CreateCompositionGraphicsDevice(_compositor, _device);
-            _spriteTextVisual = _compositor.CreateSpriteVisual();
-
-            ElementCompositionPreview.SetElementChildVisual(this, _spriteTextVisual);
+            ElementCompositionPreview.SetElementChildVisual(this, drawText);
             _visual = ElementCompositionPreview.GetElementVisual(this);
-            SizeChanged += (s, e) =>
-            {
-                CreateTextLayout((float)e.NewSize.Width, (float)e.NewSize.Height);
-                var drawingSize = new Size(ExpandTextWidth, ExpandTextHeight);
-                _drawingSurface = graphicsDevice.CreateDrawingSurface(drawingSize, DirectXPixelFormat.B8G8R8A8UIntNormalized, DirectXAlphaMode.Premultiplied);
-                DrawText();
-                var maskSurfaceBrush = _compositor.CreateSurfaceBrush(_drawingSurface);
-                _spriteTextVisual.Brush = maskSurfaceBrush;
-                _spriteTextVisual.Size = drawingSize.ToVector2();
-            };
-            RegisterPropertyChangedCallback(FontSizeProperty, new DependencyPropertyChangedCallback((s, e) =>
-            {
-                CreateTextLayout((float)ActualWidth, (float)ActualHeight);
-                DrawText();
-            }));
-            RegisterPropertyChangedCallback(TextProperty, new DependencyPropertyChangedCallback((s, e) =>
-            {
-                CreateTextLayout((float)ActualWidth, (float)ActualHeight);
-                DrawText();
-            }));
-            RegisterPropertyChangedCallback(FontColorProperty, new DependencyPropertyChangedCallback((s, e) =>
-            {
-                CreateTextLayout((float)ActualWidth, (float)ActualHeight);
-                DrawText();
-            }));
+        }
+
+        public void SetVisual(Visual visual)
+        {
+            ElementCompositionPreview.SetElementChildVisual(this, visual);
         }
 
         public void StopOffsetAnimation()
@@ -116,91 +87,11 @@ namespace HotPotPlayer.Video.Control
             return len;
         }
 
-        public string Text
-        {
-            get { return (string)GetValue(TextProperty); }
-            set { SetValue(TextProperty, value); }
-        }
-
-        public static readonly DependencyProperty TextProperty =
-            DependencyProperty.Register("Text", typeof(string), typeof(DanmakuTextControl), new PropertyMetadata(default));
-
-        public Color FontColor
-        {
-            get { return (Color)GetValue(FontColorProperty); }
-            set { SetValue(FontColorProperty, value); }
-        }
-
-        public static readonly DependencyProperty FontColorProperty =
-            DependencyProperty.Register("FontColor", typeof(Color), typeof(DanmakuTextControl), new PropertyMetadata(Colors.White));
-
-        public Color OutlineColor
-        {
-            get { return (Color)GetValue(OutlineColorProperty); }
-            set { SetValue(OutlineColorProperty, value); }
-        }
-
-        public static readonly DependencyProperty OutlineColorProperty =
-            DependencyProperty.Register("OutlineColor", typeof(Color), typeof(DanmakuTextControl), new PropertyMetadata(Colors.Black));
-
-        public double OutlineThickness
-        {
-            get { return (double)GetValue(OutlineThicknessProperty); }
-            set { SetValue(OutlineThicknessProperty, value); }
-        }
-
-        public static readonly DependencyProperty OutlineThicknessProperty =
-            DependencyProperty.Register("OutlineThickness", typeof(double), typeof(DanmakuTextControl), new PropertyMetadata(1.0));
-
         public TimeSpan ExitTime { get; set; }
 
         public DMItem Dm { get; set; }
 
         public double Speed { get; set; }
 
-        private void DrawText()
-        {
-            if (ActualHeight == 0 || ActualWidth == 0 || string.IsNullOrWhiteSpace(Text) || _drawingSurface == null)
-                return;
-
-            var drawingSize = new Size(ExpandTextWidth, ExpandTextHeight);
-            _drawingSurface.Resize(new Windows.Graphics.SizeInt32(Convert.ToInt32(drawingSize.Width)+ 1, Convert.ToInt32(drawingSize.Height) + 1));
-            using var session = CanvasComposition.CreateDrawingSession(_drawingSurface);
-            session.Clear(Colors.Transparent);
-
-            using var geometry = CanvasGeometry.CreateText(_textLayout);
-
-            using var dashedStroke = new CanvasStrokeStyle()
-            {
-                DashStyle = CanvasDashStyle.Solid,
-            };
-            session.DrawGeometry(geometry, OutlineColor, (float)OutlineThickness, dashedStroke);
-            session.DrawTextLayout(_textLayout, 0, 0, FontColor);
-
-            //session.DrawTextLayout(textLayout, offset, offset, FontColor);
-
-            _spriteTextVisual.Size = drawingSize.ToVector2();
-        }
-
-        private void CreateTextLayout(float width, float height)
-        {
-            if(width == 0 || height == 0) return;
-            _textFormat = new CanvasTextFormat()
-            {
-                FontSize = (float)FontSize,
-                Direction = CanvasTextDirection.LeftToRightThenTopToBottom,
-                VerticalAlignment = CanvasVerticalAlignment.Top,
-                HorizontalAlignment = CanvasHorizontalAlignment.Left,
-                FontFamily = FontFamily.Source,
-            };
-            _textLayout = new CanvasTextLayout(_device, Text, _textFormat, width * 8, height);
-        }
-
-        private double ExpandAmount => OutlineThickness * 2; // { get { return Math.Max(GlowAmount, MaxGlowAmount) * 4; } }
-
-        private double? TextWidth => _textLayout?.LayoutBounds.Width;
-        private double? TextHeight => _textLayout?.LayoutBounds.Height;
-        private double ExpandTextWidth => (double)TextWidth + ExpandAmount;
-        private double ExpandTextHeight => (double)TextHeight + ExpandAmount;
     }
 }

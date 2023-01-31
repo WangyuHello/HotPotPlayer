@@ -43,7 +43,7 @@
     <Grid PointerEntered="Grid_PointerEntered" PointerMoved="Grid_PointerMoved" ui:UIElementExtensions.ClipToBounds="True">
         <SwapChainPanel x:Name="Host" Loaded="Host_Loaded" CompositionScaleChanged="Host_CompositionScaleChanged" SizeChanged="Host_SizeChanged" Unloaded="Host_Unloaded" PointerReleased="Host_PointerReleased"/>
 
-        <bl:DanmakuRenderer x:Name="DM" DmData="{x:Bind DmData}" CurrentTime="{x:Bind CurrentTime}" Slot="8" FontSize="26" Speed="140" Visibility="{x:Bind IsDmVisible(DmData)}" IsHitTestVisible="False"/>
+        <bl:DanmakuRenderer x:Name="DM" DmData="{x:Bind DmData}" CurrentTime="{x:Bind CurrentTime}" Slot="8" FontSize="26" Speed="140" FontFamily="{ThemeResource MiSansRegular}" Visibility="{x:Bind IsDmVisible(DmData)}" IsHitTestVisible="False"/>
 
         <!--PlayBar-->
         <Grid Background="#e0424047" CornerRadius="8" VerticalAlignment="Bottom" HorizontalAlignment="Stretch" MaxWidth="840" Margin="16,0,16,16" Padding="8,6" Visibility="{x:Bind PlayBarVisible}" PointerEntered="PlayBar_PointerEntered" PointerExited="PlayBar_PointerExited">
