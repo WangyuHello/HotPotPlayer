@@ -15,6 +15,6 @@
     <Grid SizeChanged="Host_SizeChanged" >
         <Grid x:Name="Host" VerticalAlignment="Stretch" HorizontalAlignment="Stretch"/>
         <Grid x:Name="TopHost" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" />
-        <Grid x:Name="BottomHost" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" /> 
+        <Grid x:Name="BottomHost" VerticalAlignment="Bottom" HorizontalAlignment="Stretch" /> 
     </Grid>
 </base:UserControlBase>

@@ -4,6 +4,7 @@
 using HotPotPlayer.Services.BiliBili.Danmaku;
 using HotPotPlayer.Video.Control;
 using Microsoft.Graphics.Canvas;
+using Microsoft.Graphics.Canvas.Effects;
 using Microsoft.Graphics.Canvas.Geometry;
 using Microsoft.Graphics.Canvas.Text;
 using Microsoft.Graphics.Canvas.UI.Composition;
@@ -121,7 +122,6 @@ namespace HotPotPlayer.Video.Bilibili
                     _bottomMasks[i].occupied = true;
 
                     var has = _bottomRecycleTexts.TryDequeue(out var tb);
-                    Debug.WriteLine($"Slot: {i}, Text: {d.Content}");
 
                     var drawDm = DrawDanmaku(d);
                     if (has)
@@ -135,14 +135,14 @@ namespace HotPotPlayer.Video.Bilibili
                         {
                             ExitTime = curTime + TimeSpan.FromSeconds(3),
                             VerticalAlignment = VerticalAlignment.Bottom,
-                            HorizontalAlignment = HorizontalAlignment.Center,
+                            HorizontalAlignment = HorizontalAlignment.Center
                         };
                     }
                     tb.Width = drawDm.Size.X;
                     tb.Height = drawDm.Size.Y;
                     tb.Dm = d;
                     tb.SlotIndex = i;
-                    tb.SetValue(Grid.RowProperty, TotalSlot - i);
+                    tb.SetValue(Grid.RowProperty, TotalSlot - i - 1);
 
                     BottomHost.Children.Add(tb);
                     _bottomTexts.Add(tb);
@@ -150,7 +150,7 @@ namespace HotPotPlayer.Video.Bilibili
             }
         }
 
-        double _slotStep;
+        double _slotStep = 26 + 8;
 
         private void DmTick(object sender, object e)
         {
@@ -340,7 +340,6 @@ namespace HotPotPlayer.Video.Bilibili
             Debug.WriteLine($"DMs: {n.Dms.Count}, timeLines: {_timeLine.Count}");
             _availTime = _timeLine.Keys.ToList();
             _masks = _availTime.ToDictionary(a => a, b => Enumerable.Range(0, Slot).Select(x => new Mask()).ToArray());
-            _slotStep = n.Dms.Max(d => d.FontSize) + 8;
 
             static void AddToTimeline(int t, DMItem item, Dictionary<int, List<DMItem>> container)
             {
@@ -460,7 +459,7 @@ namespace HotPotPlayer.Video.Bilibili
             TopHost.RowDefinitions.Add(new RowDefinition() { Height = new GridLength(0, GridUnitType.Star) });
 
             BottomHost.RowDefinitions.Clear();
-            BottomHost.RowDefinitions.Add(new RowDefinition() { Height = new GridLength(0, GridUnitType.Star) });
+            BottomHost.Height = TotalSlot * _slotStep;
             for (int i = 0; i < TotalSlot; i++)
             {
                 BottomHost.RowDefinitions.Add(new RowDefinition() { Height = new GridLength(_slotStep) });
@@ -500,12 +499,23 @@ namespace HotPotPlayer.Video.Bilibili
             using var session = CanvasComposition.CreateDrawingSession(drawingSurface, new Rect(0, 0, drawingSize.Width, drawingSize.Height), (float)(96 * XamlRoot.RasterizationScale));
             session.Clear(Colors.Transparent);
 
+            //var bitmap = new CanvasRenderTarget(session, (float)drawingSize.Width, (float)drawingSize.Height);
+            //using var bitmapSession = bitmap.CreateDrawingSession();
+            //bitmapSession.DrawTextLayout(textLayout, 0, 0, Colors.Black);
+            
+            //var blur = new ShadowEffect
+            //{
+            //    BlurAmount = 3f,
+            //    Source = bitmap,
+            //};
+
             using var geometry = CanvasGeometry.CreateText(textLayout);
 
             using var dashedStroke = new CanvasStrokeStyle()
             {
                 DashStyle = CanvasDashStyle.Solid,
             };
+            //session.DrawImage(blur, 0, 0);
             session.DrawGeometry(geometry, OutlineColor, (float)OutlineThickness, dashedStroke);
             session.DrawTextLayout(textLayout, 0, 0, dm.Color);
 
