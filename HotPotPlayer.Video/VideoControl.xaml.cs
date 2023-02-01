@@ -371,6 +371,7 @@ namespace HotPotPlayer.Video
 
         private void Host_Unloaded(object sender, RoutedEventArgs e)
         {
+            DM.Pause();
             _swapChainLoaded = false;
             Mpv.MediaPaused -= MediaPaused;
             Mpv.MediaResumed -= MediaResumed;

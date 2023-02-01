@@ -21,6 +21,7 @@ using HotPotPlayer.Services.BiliBili.Danmaku;
 using CommunityToolkit.WinUI.UI.Animations;
 using System.Reflection;
 using Windows.Foundation;
+using System.Diagnostics;
 
 namespace HotPotPlayer.Video.Control
 {
@@ -84,6 +85,8 @@ namespace HotPotPlayer.Video.Control
             ExitTime = curTime + _animation.Duration;
             Speed = speed;
         }
+
+        public int SlotIndex;
 
         public TimeSpan ExitTime { get; set; }
 

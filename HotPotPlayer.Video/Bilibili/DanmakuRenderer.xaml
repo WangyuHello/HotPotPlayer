@@ -14,11 +14,7 @@
 
     <Grid SizeChanged="Host_SizeChanged" >
         <Grid x:Name="Host" VerticalAlignment="Stretch" HorizontalAlignment="Stretch"/>
-        <StackPanel x:Name="TopHost" VerticalAlignment="Top" HorizontalAlignment="Center" Spacing="0">
-            
-        </StackPanel>
-        <StackPanel x:Name="BottomHost" VerticalAlignment="Bottom" HorizontalAlignment="Center" Spacing="0" >
-            
-        </StackPanel>
+        <Grid x:Name="TopHost" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" />
+        <Grid x:Name="BottomHost" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" /> 
     </Grid>
 </base:UserControlBase>

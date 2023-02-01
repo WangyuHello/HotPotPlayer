@@ -1,38 +1,25 @@
 // Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT License. See LICENSE in the project root for license information.
 
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Runtime.InteropServices.WindowsRuntime;
-using Windows.Foundation;
-using Windows.Foundation.Collections;
+using HotPotPlayer.Services.BiliBili.Danmaku;
+using HotPotPlayer.Video.Control;
+using Microsoft.Graphics.Canvas;
+using Microsoft.Graphics.Canvas.Geometry;
+using Microsoft.Graphics.Canvas.Text;
+using Microsoft.Graphics.Canvas.UI.Composition;
+using Microsoft.Graphics.DirectX;
+using Microsoft.UI;
+using Microsoft.UI.Composition;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
-using Microsoft.UI.Xaml.Controls.Primitives;
-using Microsoft.UI.Xaml.Data;
-using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Media;
-using Microsoft.UI.Xaml.Navigation;
-using HotPotPlayer.Services.BiliBili.Danmaku;
-using Microsoft.Graphics.Canvas;
-using Microsoft.UI;
-using System.Numerics;
-using Windows.Graphics.Display;
-using Microsoft.Graphics.Canvas.UI.Xaml;
-using Microsoft.UI.Composition;
-using Microsoft.UI.Xaml.Hosting;
-using CommunityToolkit.WinUI.UI.Animations;
-using HotPotPlayer.Video.Control;
-using System.Collections;
+using System;
+using System.Collections.Generic;
 using System.Diagnostics;
-using Microsoft.Graphics.Canvas.UI.Composition;
-using Microsoft.Graphics.Canvas.Text;
-using System.Management;
-using Microsoft.Graphics.DirectX;
-using Application = Microsoft.UI.Xaml.Application;
-using Microsoft.Graphics.Canvas.Geometry;
+using System.Linq;
+using System.Numerics;
+using System.Runtime.InteropServices.WindowsRuntime;
+using Windows.Foundation;
 using Windows.UI;
 
 // To learn more about WinUI, the WinUI project structure,
@@ -67,53 +54,75 @@ namespace HotPotPlayer.Video.Bilibili
                 if (_topTexts[i].ExitTime < curTime)
                 {
                     _topRecycleTexts.Enqueue(_topTexts[i]);
+                    _topMasks[_topTexts[i].SlotIndex].occupied = false;
                     _topTexts.RemoveAt(i);
                     TopHost.Children.RemoveAt(i);
                 }
             }
             if (_toptimeLine.ContainsKey(curSecs))
             {
-                var dms = _toptimeLine[curSecs].Take(5);
-                foreach (var d in dms)
+                int takeIndex = 0;
+                for (int i = 0; i < TotalSlot; i++)
                 {
+                    if (_topMasks[i].occupied) continue;
+                    if (takeIndex > _toptimeLine[curSecs].Count - 1) continue;
+                    var d = _toptimeLine[curSecs][takeIndex];
+                    takeIndex++;
+                    _topMasks[i].occupied = true;
+
                     var has = _topRecycleTexts.TryDequeue(out var tb);
+
                     var drawDm = DrawDanmaku(d);
                     if (has)
                     {
                         tb.ExitTime = curTime + TimeSpan.FromSeconds(3);
                         tb.SetVisual(drawDm);
+                        tb.SlotIndex = i;
                     }
                     else
                     {
                         tb = new(drawDm)
                         {
-                            ExitTime = curTime + TimeSpan.FromSeconds(3)
+                            ExitTime = curTime + TimeSpan.FromSeconds(3),
+                            SlotIndex = i,
+                            VerticalAlignment = VerticalAlignment.Top,
+                            HorizontalAlignment = HorizontalAlignment.Center,
                         };
                     }
                     tb.Width = drawDm.Size.X;
                     tb.Height = drawDm.Size.Y;
                     tb.Dm = d;
+                    tb.SetValue(Grid.RowProperty, i);
 
                     TopHost.Children.Add(tb);
                     _topTexts.Add(tb);
                 }
             }
 
-            for (int i = _bottomTexts.Count - 1; i >= 0; i--)
+            for (int i = 0; i < _bottomTexts.Count; i++)
             {
                 if (_bottomTexts[i].ExitTime < curTime)
                 {
                     _bottomRecycleTexts.Enqueue(_bottomTexts[i]);
+                    _bottomMasks[_bottomTexts[i].SlotIndex].occupied = false;
                     _bottomTexts.RemoveAt(i);
                     BottomHost.Children.RemoveAt(i);
                 }
             }
             if (_bottomtimeLine.ContainsKey(curSecs))
             {
-                var dms = _bottomtimeLine[curSecs].Take(5);
-                foreach (var d in dms)
+                int takeIndex = 0;
+                for (int i = 0; i < TotalSlot; i++)
                 {
+                    if (_bottomMasks[i].occupied) continue;
+                    if (takeIndex > _bottomtimeLine[curSecs].Count - 1) continue;
+                    var d = _bottomtimeLine[curSecs][takeIndex];
+                    takeIndex++;
+                    _bottomMasks[i].occupied = true;
+
                     var has = _bottomRecycleTexts.TryDequeue(out var tb);
+                    Debug.WriteLine($"Slot: {i}, Text: {d.Content}");
+
                     var drawDm = DrawDanmaku(d);
                     if (has)
                     {
@@ -124,14 +133,19 @@ namespace HotPotPlayer.Video.Bilibili
                     {
                         tb = new(drawDm)
                         {
-                            ExitTime = curTime + TimeSpan.FromSeconds(3)
+                            ExitTime = curTime + TimeSpan.FromSeconds(3),
+                            VerticalAlignment = VerticalAlignment.Bottom,
+                            HorizontalAlignment = HorizontalAlignment.Center,
                         };
                     }
                     tb.Width = drawDm.Size.X;
                     tb.Height = drawDm.Size.Y;
                     tb.Dm = d;
-                    BottomHost.Children.Insert(0, tb);
-                    _bottomTexts.Insert(0, tb);
+                    tb.SlotIndex = i;
+                    tb.SetValue(Grid.RowProperty, TotalSlot - i);
+
+                    BottomHost.Children.Add(tb);
+                    _bottomTexts.Add(tb);
                 }
             }
         }
@@ -146,14 +160,16 @@ namespace HotPotPlayer.Video.Bilibili
             {
                 if (_timeLine.ContainsKey(sec))
                 {
+                    int takeIndex = 0;
                     for (int i = 0; i < Slot; i++)
                     {
                         if (_masks[sec][i].occupied) continue;
-                        if (i > _timeLine[sec].Count - 1)
+                        if (takeIndex > _timeLine[sec].Count - 1)
                         {
                             break;
                         }
-                        var d = _timeLine[sec][i];
+                        var d = _timeLine[sec][takeIndex];
+                        takeIndex++;
 
                         if (d.Time < curTime) continue;
 
@@ -161,7 +177,7 @@ namespace HotPotPlayer.Video.Bilibili
                         var hasText = _texts.TryPeek(out var reuseText);
                         bool isReuse = false;
                         var drawDm = DrawDanmaku(d);
-                        if(hasText && curTime > reuseText.ExitTime)
+                        if (hasText && curTime > reuseText.ExitTime)
                         {
                             tb = _texts.Dequeue();
                             tb.SetVisual(drawDm);
@@ -217,7 +233,7 @@ namespace HotPotPlayer.Video.Bilibili
 
         private static void DMChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
-            ((DanmakuRenderer)d).Load(e.NewValue as DMData);
+            ((DanmakuRenderer)d).LoadDMDate(e.NewValue as DMData);
             ((DanmakuRenderer)d).Refresh();
         }
 
@@ -230,7 +246,7 @@ namespace HotPotPlayer.Video.Bilibili
         public static readonly DependencyProperty SlotProperty =
             DependencyProperty.Register("Slot", typeof(int), typeof(DanmakuRenderer), new PropertyMetadata(0));
 
-
+        private int TotalSlot;
         public double Speed
         {
             get { return (double)GetValue(SpeedProperty); }
@@ -281,6 +297,8 @@ namespace HotPotPlayer.Video.Bilibili
         DispatcherTimer _tickTimer;
         DispatcherTimer _topTickTimer;
         Dictionary<int, Mask[]> _masks;
+        Mask[] _topMasks;
+        Mask[] _bottomMasks;
         List<int> _availTime;
         Dictionary<int, List<DMItem>> _timeLine;
         Dictionary<int, List<DMItem>> _toptimeLine;
@@ -292,7 +310,7 @@ namespace HotPotPlayer.Video.Bilibili
         List<DanmakuTextControl> _bottomTexts;
         Queue<DanmakuTextControl> _bottomRecycleTexts;
 
-        private void Load(DMData n)
+        private void LoadDMDate(DMData n)
         {
             _timeLine = new Dictionary<int, List<DMItem>>();
             _toptimeLine = new Dictionary<int, List<DMItem>>();
@@ -393,6 +411,7 @@ namespace HotPotPlayer.Video.Bilibili
             {
                 return;
             }
+            CalculateTotalSlot();
             if (!_tickTimer.IsEnabled)
             {
                 DmTick(null, null);
@@ -422,6 +441,29 @@ namespace HotPotPlayer.Video.Bilibili
                 DmTick(null, null);
                 _tickTimer.Start();
                 _topTickTimer.Start();
+            }
+        }
+
+        private void CalculateTotalSlot()
+        {
+            var height = Host.ActualHeight;
+            var step = _slotStep;
+            TotalSlot = Convert.ToInt32(Math.Floor(height / step));
+            _topMasks = Enumerable.Range(0, TotalSlot).Select(i => new Mask()).ToArray();
+            _bottomMasks = Enumerable.Range(0, TotalSlot).Select(i => new Mask()).ToArray();
+
+            TopHost.RowDefinitions.Clear();
+            for (int i = 0; i < TotalSlot; i++)
+            {
+                TopHost.RowDefinitions.Add(new RowDefinition() { Height = new GridLength(_slotStep) });
+            }
+            TopHost.RowDefinitions.Add(new RowDefinition() { Height = new GridLength(0, GridUnitType.Star) });
+
+            BottomHost.RowDefinitions.Clear();
+            BottomHost.RowDefinitions.Add(new RowDefinition() { Height = new GridLength(0, GridUnitType.Star) });
+            for (int i = 0; i < TotalSlot; i++)
+            {
+                BottomHost.RowDefinitions.Add(new RowDefinition() { Height = new GridLength(_slotStep) });
             }
         }
 
