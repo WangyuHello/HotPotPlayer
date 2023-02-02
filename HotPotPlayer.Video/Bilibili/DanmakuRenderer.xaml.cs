@@ -62,13 +62,13 @@ namespace HotPotPlayer.Video.Bilibili
                     takeIndex++;
 
                     var drawDm = DrawDanmaku(d);
-                    tb.ExitTime = curTime + TimeSpan.FromSeconds(3);
+                    tb.ExitTime = curTime + TimeSpan.FromSeconds(5);
                     tb.SetVisual(drawDm);
                     tb.Width = drawDm.Size.X;
                     tb.Height = drawDm.Size.Y;
                     tb.Dm = d;
 
-                    tb.SetupOpacityAnimation(TimeSpan.FromSeconds(3));
+                    tb.SetupOpacityAnimation(TimeSpan.FromSeconds(5));
                     tb.StartOpacityAnimation();
                 }
             }
@@ -85,13 +85,13 @@ namespace HotPotPlayer.Video.Bilibili
                     takeIndex++;
 
                     var drawDm = DrawDanmaku(d);
-                    tb.ExitTime = curTime + TimeSpan.FromSeconds(3);
+                    tb.ExitTime = curTime + TimeSpan.FromSeconds(5);
                     tb.SetVisual(drawDm);
                     tb.Width = drawDm.Size.X;
                     tb.Height = drawDm.Size.Y;
                     tb.Dm = d;
 
-                    tb.SetupOpacityAnimation(TimeSpan.FromSeconds(3));
+                    tb.SetupOpacityAnimation(TimeSpan.FromSeconds(5));
                     tb.StartOpacityAnimation();
                 }
             }
@@ -360,8 +360,6 @@ namespace HotPotPlayer.Video.Bilibili
                 _tickTimer.Stop();
                 _topTickTimer.Stop();
                 Host.Children.Clear();
-                TopHost.Children.Clear();
-                BottomHost.Children.Clear();
                 _texts?.Clear();
                 foreach (var (i, m) in _masks)
                 {
@@ -382,6 +380,7 @@ namespace HotPotPlayer.Video.Bilibili
             var step = _slotStep;
             TotalSlot = Convert.ToInt32(Math.Floor(height / step));
 
+            TopHost.Children.Clear();
             TopHost.RowDefinitions.Clear();
             for (int i = 0; i < TotalSlot; i++)
             {
@@ -400,6 +399,7 @@ namespace HotPotPlayer.Video.Bilibili
                 TopHost.Children.Add(tb);
             }
 
+            BottomHost.Children.Clear();
             BottomHost.RowDefinitions.Clear();
             BottomHost.Height = TotalSlot * _slotStep;
             for (int i = 0; i < TotalSlot; i++)
