@@ -28,6 +28,7 @@ namespace HotPotPlayer.Video.Control
     public class DanmakuTextControl : Microsoft.UI.Xaml.Controls.Control
     {
         private Vector3KeyFrameAnimation _animation;
+        private ScalarKeyFrameAnimation _opacityAnimation;
         private readonly Visual _visual;
         private readonly Compositor _compositor;
         private readonly LinearEasingFunction _linear;
@@ -37,6 +38,12 @@ namespace HotPotPlayer.Video.Control
             _compositor = ElementCompositionPreview.GetElementVisual(this).Compositor;
             _linear = _compositor.CreateLinearEasingFunction();
             ElementCompositionPreview.SetElementChildVisual(this, drawText);
+            _visual = ElementCompositionPreview.GetElementVisual(this);
+        }
+
+        public DanmakuTextControl()
+        {
+            _compositor = ElementCompositionPreview.GetElementVisual(this).Compositor;
             _visual = ElementCompositionPreview.GetElementVisual(this);
         }
 
@@ -50,9 +57,19 @@ namespace HotPotPlayer.Video.Control
             _visual.StopAnimation("Offset");
         }
 
+        public void StopOpacityAnimation()
+        {
+            _visual.StopAnimation("Opacity");
+        }
+
         public void StartOffsetAnimation()
         {
             _visual.StartAnimation("Offset", _animation);
+        }
+
+        public void StartOpacityAnimation()
+        {
+            _visual.StartAnimation("Opacity", _opacityAnimation);
         }
 
         public void ContinueOffsetAnimation()
@@ -86,7 +103,15 @@ namespace HotPotPlayer.Video.Control
             Speed = speed;
         }
 
-        public int SlotIndex;
+        public void SetupOpacityAnimation(TimeSpan duration)
+        {
+            _opacityAnimation = _compositor.CreateScalarKeyFrameAnimation();
+            _opacityAnimation.Duration = duration;
+            _opacityAnimation.InsertKeyFrame(0f, 0);
+            _opacityAnimation.InsertKeyFrame(0.1f, 1);
+            _opacityAnimation.InsertKeyFrame(0.9f, 1);
+            _opacityAnimation.InsertKeyFrame(1f, 0);
+        }
 
         public TimeSpan ExitTime { get; set; }
 

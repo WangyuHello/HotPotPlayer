@@ -50,107 +50,54 @@ namespace HotPotPlayer.Video.Bilibili
         {
             var curTime = CurrentTime;
             var curSecs = Convert.ToInt32(curTime.TotalSeconds);
-            for (int i = 0; i < _topTexts.Count; i++)
-            {
-                if (_topTexts[i].ExitTime < curTime)
-                {
-                    _topRecycleTexts.Enqueue(_topTexts[i]);
-                    _topMasks[_topTexts[i].SlotIndex].occupied = false;
-                    _topTexts.RemoveAt(i);
-                    TopHost.Children.RemoveAt(i);
-                }
-            }
             if (_toptimeLine.ContainsKey(curSecs))
             {
                 int takeIndex = 0;
                 for (int i = 0; i < TotalSlot; i++)
                 {
-                    if (_topMasks[i].occupied) continue;
-                    if (takeIndex > _toptimeLine[curSecs].Count - 1) continue;
+                    var tb = (DanmakuTextControl)TopHost.Children[i];
+                    if (tb.ExitTime > curTime) continue;
+                    if (takeIndex > _toptimeLine[curSecs].Count - 1) break;
                     var d = _toptimeLine[curSecs][takeIndex];
                     takeIndex++;
-                    _topMasks[i].occupied = true;
-
-                    var has = _topRecycleTexts.TryDequeue(out var tb);
 
                     var drawDm = DrawDanmaku(d);
-                    if (has)
-                    {
-                        tb.ExitTime = curTime + TimeSpan.FromSeconds(3);
-                        tb.SetVisual(drawDm);
-                        tb.SlotIndex = i;
-                    }
-                    else
-                    {
-                        tb = new(drawDm)
-                        {
-                            ExitTime = curTime + TimeSpan.FromSeconds(3),
-                            SlotIndex = i,
-                            VerticalAlignment = VerticalAlignment.Top,
-                            HorizontalAlignment = HorizontalAlignment.Center,
-                        };
-                    }
+                    tb.ExitTime = curTime + TimeSpan.FromSeconds(3);
+                    tb.SetVisual(drawDm);
                     tb.Width = drawDm.Size.X;
                     tb.Height = drawDm.Size.Y;
                     tb.Dm = d;
-                    tb.SetValue(Grid.RowProperty, i);
 
-                    TopHost.Children.Add(tb);
-                    _topTexts.Add(tb);
+                    tb.SetupOpacityAnimation(TimeSpan.FromSeconds(3));
+                    tb.StartOpacityAnimation();
                 }
             }
 
-            for (int i = 0; i < _bottomTexts.Count; i++)
-            {
-                if (_bottomTexts[i].ExitTime < curTime)
-                {
-                    _bottomRecycleTexts.Enqueue(_bottomTexts[i]);
-                    _bottomMasks[_bottomTexts[i].SlotIndex].occupied = false;
-                    _bottomTexts.RemoveAt(i);
-                    BottomHost.Children.RemoveAt(i);
-                }
-            }
             if (_bottomtimeLine.ContainsKey(curSecs))
             {
                 int takeIndex = 0;
                 for (int i = 0; i < TotalSlot; i++)
                 {
-                    if (_bottomMasks[i].occupied) continue;
-                    if (takeIndex > _bottomtimeLine[curSecs].Count - 1) continue;
+                    var tb = (DanmakuTextControl)BottomHost.Children[TotalSlot - i - 1];
+                    if (tb.ExitTime > curTime) continue;
+                    if (takeIndex > _bottomtimeLine[curSecs].Count - 1) break;
                     var d = _bottomtimeLine[curSecs][takeIndex];
                     takeIndex++;
-                    _bottomMasks[i].occupied = true;
-
-                    var has = _bottomRecycleTexts.TryDequeue(out var tb);
 
                     var drawDm = DrawDanmaku(d);
-                    if (has)
-                    {
-                        tb.ExitTime = curTime + TimeSpan.FromSeconds(3);
-                        tb.SetVisual(drawDm);
-                    }
-                    else
-                    {
-                        tb = new(drawDm)
-                        {
-                            ExitTime = curTime + TimeSpan.FromSeconds(3),
-                            VerticalAlignment = VerticalAlignment.Bottom,
-                            HorizontalAlignment = HorizontalAlignment.Center
-                        };
-                    }
+                    tb.ExitTime = curTime + TimeSpan.FromSeconds(3);
+                    tb.SetVisual(drawDm);
                     tb.Width = drawDm.Size.X;
                     tb.Height = drawDm.Size.Y;
                     tb.Dm = d;
-                    tb.SlotIndex = i;
-                    tb.SetValue(Grid.RowProperty, TotalSlot - i - 1);
 
-                    BottomHost.Children.Add(tb);
-                    _bottomTexts.Add(tb);
+                    tb.SetupOpacityAnimation(TimeSpan.FromSeconds(3));
+                    tb.StartOpacityAnimation();
                 }
             }
         }
 
-        double _slotStep = 26 + 8;
+        readonly double _slotStep = 26 + 8;
 
         private void DmTick(object sender, object e)
         {
@@ -297,18 +244,12 @@ namespace HotPotPlayer.Video.Bilibili
         DispatcherTimer _tickTimer;
         DispatcherTimer _topTickTimer;
         Dictionary<int, Mask[]> _masks;
-        Mask[] _topMasks;
-        Mask[] _bottomMasks;
         List<int> _availTime;
         Dictionary<int, List<DMItem>> _timeLine;
         Dictionary<int, List<DMItem>> _toptimeLine;
         Dictionary<int, List<DMItem>> _bottomtimeLine;
         Compositor _compositor;
         Queue<DanmakuTextControl> _texts;
-        List<DanmakuTextControl> _topTexts;
-        Queue<DanmakuTextControl> _topRecycleTexts;
-        List<DanmakuTextControl> _bottomTexts;
-        Queue<DanmakuTextControl> _bottomRecycleTexts;
 
         private void LoadDMDate(DMData n)
         {
@@ -355,10 +296,6 @@ namespace HotPotPlayer.Video.Bilibili
             }
 
             _texts = new Queue<DanmakuTextControl>();
-            _topTexts = new List<DanmakuTextControl>();
-            _bottomTexts = new List<DanmakuTextControl>();
-            _topRecycleTexts = new Queue<DanmakuTextControl>();
-            _bottomRecycleTexts = new Queue<DanmakuTextControl>();
         }
 
         private void Host_SizeChanged(object sender, SizeChangedEventArgs e)
@@ -426,10 +363,6 @@ namespace HotPotPlayer.Video.Bilibili
                 TopHost.Children.Clear();
                 BottomHost.Children.Clear();
                 _texts?.Clear();
-                _topTexts?.Clear();
-                _bottomTexts?.Clear();
-                _topRecycleTexts?.Clear();
-                _bottomRecycleTexts?.Clear();
                 foreach (var (i, m) in _masks)
                 {
                     foreach (var item in m)
@@ -448,8 +381,6 @@ namespace HotPotPlayer.Video.Bilibili
             var height = Host.ActualHeight;
             var step = _slotStep;
             TotalSlot = Convert.ToInt32(Math.Floor(height / step));
-            _topMasks = Enumerable.Range(0, TotalSlot).Select(i => new Mask()).ToArray();
-            _bottomMasks = Enumerable.Range(0, TotalSlot).Select(i => new Mask()).ToArray();
 
             TopHost.RowDefinitions.Clear();
             for (int i = 0; i < TotalSlot; i++)
@@ -457,12 +388,34 @@ namespace HotPotPlayer.Video.Bilibili
                 TopHost.RowDefinitions.Add(new RowDefinition() { Height = new GridLength(_slotStep) });
             }
             TopHost.RowDefinitions.Add(new RowDefinition() { Height = new GridLength(0, GridUnitType.Star) });
+            for (int i = 0; i < TotalSlot; i++)
+            {
+                var tb = new DanmakuTextControl()
+                {
+                    VerticalAlignment = VerticalAlignment.Top,
+                    HorizontalAlignment = HorizontalAlignment.Center,
+                    ExitTime = TimeSpan.Zero,
+                };
+                tb.SetValue(Grid.RowProperty, i);
+                TopHost.Children.Add(tb);
+            }
 
             BottomHost.RowDefinitions.Clear();
             BottomHost.Height = TotalSlot * _slotStep;
             for (int i = 0; i < TotalSlot; i++)
             {
                 BottomHost.RowDefinitions.Add(new RowDefinition() { Height = new GridLength(_slotStep) });
+            }
+            for (int i = 0; i < TotalSlot; i++)
+            {
+                var tb = new DanmakuTextControl() 
+                {
+                    VerticalAlignment = VerticalAlignment.Bottom,
+                    HorizontalAlignment = HorizontalAlignment.Center,
+                    ExitTime = TimeSpan.Zero,
+                };
+                tb.SetValue(Grid.RowProperty, i);
+                BottomHost.Children.Add(tb);
             }
         }
 
