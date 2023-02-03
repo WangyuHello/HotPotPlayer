@@ -81,7 +81,9 @@ namespace HotPotPlayer.Services.BiliBili.Video
             int i = int.Parse(PubDate);
             var ts = TimeSpan.FromSeconds(i);
             var time = new DateTime(ts.Ticks);
-            return $"{time.Year+1969}-{time.Month}-{time.Day} {ts:hh\\:mm\\:ss}";
+            time = time.AddYears(1969);
+            time = time.AddHours(8);
+            return $"{time.Year}-{time.Month}-{time.Day} {time:hh\\:mm\\:ss}";
         }
 
         /// <summary>

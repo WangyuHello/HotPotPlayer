@@ -74,7 +74,8 @@ namespace HotPotPlayer.Services.BiliBili.Reply
                 var ts = TimeSpan.FromSeconds(i);
                 var time = new DateTime(ts.Ticks);
                 time = time.AddYears(1969);
-                return $"{time.Year}-{time.Month}-{time.Day} {ts:hh\\:mm}";
+                time = time.AddHours(8);
+                return $"{time.Year}-{time.Month}-{time.Day} {time:hh\\:mm}";
             }
         }
     }
