@@ -35,6 +35,8 @@ using PointF = SixLabors.ImageSharp.PointF;
 using SystemFonts = SixLabors.Fonts.SystemFonts;
 using Windows.ApplicationModel.DataTransfer;
 using SixLabors.ImageSharp.Formats.Png;
+using System.IO.Pipes;
+using Windows.Graphics.Imaging;
 
 // To learn more about WinUI, the WinUI project structure,
 // and more about our project templates, see: http://aka.ms/winui-project-info.
@@ -90,27 +92,40 @@ namespace HotPotPlayer.Controls.BilibiliSub
 
         private async void ShareImageClick(object sender, RoutedEventArgs e)
         {
-            using Image<Rgba32> image = new(1320, 600, new Rgba32(255,255,255,255));
+            //using Image<Rgba32> image = new(1320, 600, new Rgba32(255,255,255,255));
 
-            var coverUrl = Video.VideoImage;
+            //var coverUrl = Video.VideoImage;
 
-            using var qr = Image.Load(qrData);
-            using var client = new HttpClient();
-            using var coverStream = await client.GetStreamAsync(coverUrl);
-            using var cover = Image.Load(coverStream);
+            //using var qr = Image.Load(qrData);
+            //using var client = new HttpClient();
+            //using var coverStream = await client.GetStreamAsync(coverUrl);
+            //using var cover = Image.Load(coverStream);
 
-            qr.Mutate(x => x.Resize(380, 380));
-            cover.Mutate(x => x.Resize(640, 400));
+            //qr.Mutate(x => x.Resize(380, 380));
+            //cover.Mutate(x => x.Resize(640, 400));
 
-            image.Mutate(x => x.DrawImage(cover, new SixLabors.ImageSharp.Point(100, 100), 1f));
-            image.Mutate(x => x.DrawImage(qr, new SixLabors.ImageSharp.Point(840, 90), 1f));
-            var font = SystemFonts.CreateFont("SimHei", 28, SixLabors.Fonts.FontStyle.Regular);
-            var font2 = SystemFonts.CreateFont("SimHei", 20, SixLabors.Fonts.FontStyle.Regular);
-            image.Mutate(x => x.DrawText(" ÷ª˙…®¬Îπ€ø¥/∑÷œÌ", font, Color.Black, new PointF(910, 460)));
-            image.Mutate(x => x.DrawText(Video.Title, font2, Color.White, new PointF(104, 476)));
+            //image.Mutate(x => x.DrawImage(cover, new SixLabors.ImageSharp.Point(100, 100), 1f));
+            //image.Mutate(x => x.DrawImage(qr, new SixLabors.ImageSharp.Point(840, 90), 1f));
+            //var font = SystemFonts.CreateFont("SimHei", 28, SixLabors.Fonts.FontStyle.Regular);
+            //var font2 = SystemFonts.CreateFont("SimHei", 20, SixLabors.Fonts.FontStyle.Regular);
+            //image.Mutate(x => x.DrawText("ÊâãÊú∫Êâ´Á†ÅËßÇÁúã/ÂàÜ‰∫´", font, Color.Black, new PointF(910, 460)));
+            //image.Mutate(x => x.DrawText(Video.Title, font2, Color.White, new PointF(104, 476)));
 
             InMemoryRandomAccessStream buf = new();
-            image.Save(buf.AsStreamForWrite(), new PngEncoder());
+            RenderTargetBitmap bitmap = new RenderTargetBitmap();
+            await bitmap.RenderAsync(this);
+            var pixelBuffer = await bitmap.GetPixelsAsync();
+            var encoder = await BitmapEncoder.CreateAsync(BitmapEncoder.PngEncoderId, buf);
+            encoder.SetPixelData(BitmapPixelFormat.Bgra8,
+                BitmapAlphaMode.Ignore,
+                (uint)bitmap.PixelWidth,
+                (uint)bitmap.PixelHeight,
+                300,
+                300,
+                pixelBuffer.ToArray());
+            await encoder.FlushAsync();
+
+            //image.Save(buf.AsStreamForWrite(), new PngEncoder());
             DataPackage dataPackage = new()
             {
                 RequestedOperation = DataPackageOperation.Copy
@@ -118,7 +133,7 @@ namespace HotPotPlayer.Controls.BilibiliSub
             dataPackage.SetBitmap(RandomAccessStreamReference.CreateFromStream(buf));
             Clipboard.SetContent(dataPackage);
 
-            ShowToast(new Models.ToastInfo { Text = "“—∏¥÷∆µΩºÙÃ˘∞Â" });
+            ShowToast(new Models.ToastInfo { Text = "Â∑≤Â§çÂà∂Âà∞Ââ™Ë¥¥Êùø" });
         }
 
         private void ShareLinkClick(object sender, RoutedEventArgs e)
@@ -130,7 +145,7 @@ namespace HotPotPlayer.Controls.BilibiliSub
             dataPackage.SetText("https://www.bilibili.com/video/" + Video.Bvid);
             Clipboard.SetContent(dataPackage);
 
-            ShowToast(new Models.ToastInfo { Text = "“—∏¥÷∆µΩºÙÃ˘∞Â" });
+            ShowToast(new Models.ToastInfo { Text = "Â∑≤Â§çÂà∂Âà∞Ââ™Ë¥¥Êùø" });
         }
     }
 }
