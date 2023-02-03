@@ -100,13 +100,14 @@
                     <FontIcon FontFamily="{ThemeResource SegoeIcons}" Glyph="&#xE946;" />
                     <Button.Flyout>
                         <Flyout Placement="Bottom">
-                            <vcont:InfoViewer Grid.Column="2" 
+                            <vcont:InfoViewer 
                                               Definitions="{x:Bind Definitions}" 
                                               SelectedDefinition="{x:Bind SelectedDefinition, Mode=TwoWay}"
                                               IsVideoInfoOn="{x:Bind IsVideoInfoOn, Mode=TwoWay}"
                                               IsPbpOn="{x:Bind IsPbpOn, Mode=TwoWay}"
                                               SelectedCodecStrategy="{x:Bind SelectedCodecStrategy, Mode=TwoWay}"
                                               SelectedPlayMode="{x:Bind PlayMode, Mode=TwoWay}"
+                                              IsFullPageHost="{x:Bind IsFullPageHost}"
                                               />
                         </Flyout>
                     </Button.Flyout>

@@ -30,6 +30,16 @@ namespace HotPotPlayer.Video.Control
             this.InitializeComponent();
         }
 
+        public bool IsFullPageHost
+        {
+            get { return (bool)GetValue(IsFullPageHostProperty); }
+            set { SetValue(IsFullPageHostProperty, value); }
+        }
+
+        public static readonly DependencyProperty IsFullPageHostProperty =
+            DependencyProperty.Register("IsFullPageHost", typeof(bool), typeof(InfoViewer), new PropertyMetadata(false));
+
+
         public List<string> Definitions
         {
             get { return (List<string>)GetValue(DefinitionsProperty); }
@@ -164,6 +174,11 @@ namespace HotPotPlayer.Video.Control
                 "SingleLoop" => PlayMode.SingleLoop,
                 _ => PlayMode.SingleLoop,
             };
+        }
+
+        private Visibility GetNonFullPageHostVisible(bool fullpagehost)
+        {
+            return fullpagehost ? Visibility.Collapsed : Visibility.Visible;
         }
     }
 }

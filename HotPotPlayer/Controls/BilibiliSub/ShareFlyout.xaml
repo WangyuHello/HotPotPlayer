@@ -1,7 +1,8 @@
 <!-- Copyright (c) Microsoft Corporation and Contributors. -->
 <!-- Licensed under the MIT License. -->
 
-<UserControl
+<base:UserControlBase
+    xmlns:base="using:HotPotPlayer"
     x:Class="HotPotPlayer.Controls.BilibiliSub.ShareFlyout"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
@@ -26,7 +27,7 @@
 
         <Grid Margin="24,24,0,8" VerticalAlignment="Top" Grid.ColumnSpan="2" CornerRadius="4">
 
-            <cont2:ImageEx2 Source="{x:Bind Video.VideoImage}"  Width="320" Height="160" DecodePixelWidth="320" DecodePixelHeight="160" Style="{StaticResource DynamicImageStyle}" />
+            <cont2:ImageEx2 x:Name="Cover" Source="{x:Bind Video.VideoImage}"  Width="320" Height="160" DecodePixelWidth="320" DecodePixelHeight="160" Style="{StaticResource DynamicImageStyle}" />
             <Grid VerticalAlignment="Bottom" Width="320" Padding="8,24,8,8">
                 <Grid.Background>
                     <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
@@ -41,7 +42,7 @@
         
         <TextBlock Grid.Row="1" Text="{x:Bind Video.Bvid}" Foreground="Gray" Margin="24,0,0,0" VerticalAlignment="Center" FontSize="14" FontFamily="{ThemeResource MiSansRegular}" IsTextSelectionEnabled="True"/>
 
-        <Button Grid.Row="1" Grid.Column="1" Margin="0,0,0,0" HorizontalAlignment="Right" VerticalAlignment="Center" FontFamily="{ThemeResource MiSansRegular}" Style="{StaticResource AccentButtonStyle}">获取视频分享链接</Button>
+        <Button Grid.Row="1" Grid.Column="1" Margin="0,0,0,0" HorizontalAlignment="Right" VerticalAlignment="Center" FontFamily="{ThemeResource MiSansRegular}" Style="{StaticResource AccentButtonStyle}" Click="ShareLinkClick">获取视频分享链接</Button>
 
         <Image Grid.Column="2" x:Name="QR" Margin="0,24,0,0" VerticalAlignment="Top" HorizontalAlignment="Center" Width="160" Height="160" />
         
@@ -54,7 +55,7 @@
                     <TextBlock Text="动态" HorizontalAlignment="Center"/>
                 </StackPanel>
             </Button>
-            <Button Style="{StaticResource TransparentButton}" FontFamily="{ThemeResource MiSansRegular}">
+            <Button Style="{StaticResource TransparentButton}" FontFamily="{ThemeResource MiSansRegular}" Click="ShareImageClick">
                 <StackPanel Spacing="8">
                     <ImageIcon Source="/Assets/Icon/wechat.svg" Width="40" Height="40" HorizontalAlignment="Center"/>
                     <TextBlock Text="微信" HorizontalAlignment="Center"/>
@@ -92,4 +93,4 @@
             </Button>
         </StackPanel>
     </Grid>
-</UserControl>
+</base:UserControlBase>
