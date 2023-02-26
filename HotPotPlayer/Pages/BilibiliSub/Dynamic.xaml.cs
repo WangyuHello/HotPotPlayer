@@ -129,7 +129,7 @@ namespace HotPotPlayer.Pages.BilibiliSub
             }
             else if(v.Modules.ModuleDynamic?.Major?.LiveRcmd != null)
             {
-                var url = v.Modules.ModuleDynamic.Major.LiveRcmd.Link;
+                var url = v.Modules.ModuleDynamic.Major.LiveRcmd.GetLink;
                 await Launcher.LaunchUriAsync(new Uri(url));
             }
 

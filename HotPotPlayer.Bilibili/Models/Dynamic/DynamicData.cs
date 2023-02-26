@@ -114,6 +114,8 @@ namespace HotPotPlayer.Bilibili.Models.Dynamic
         public string Link => ContentJson["live_play_info"]["link"].Value<string>();
         public string TextLarge => ContentJson["live_play_info"]["watched_show"]["text_large"].Value<string>();
         public string AreaName => ContentJson["live_play_info"]["area_name"].Value<string>();
+
+        public string GetLink => Link.StartsWith("//") ? "https:" + Link : Link;
     }
 
     public class MajorArticle
