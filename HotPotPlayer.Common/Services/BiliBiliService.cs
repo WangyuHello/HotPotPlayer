@@ -1,4 +1,5 @@
-﻿using HotPotPlayer.BiliBili;
+﻿using HotPotPlayer.Bilibili.Models.Video;
+using HotPotPlayer.BiliBili;
 using HotPotPlayer.Common.Extension;
 using Microsoft.UI.Dispatching;
 using Newtonsoft.Json.Linq;
@@ -54,6 +55,12 @@ namespace HotPotPlayer.Services
             var code = r["code"].Value<int>();
             IsLogin = code == 0;
             return (bool)IsLogin;
+        }
+
+        public async Task<VideoInfo> GetVideoUrlAsync(string bvid, string aid, string cid)
+        {
+            var res = await API.GetVideoUrl(bvid, aid, cid, DashEnum.Dash8K, FnvalEnum.Dash | FnvalEnum.HDR | FnvalEnum.Fn8K | FnvalEnum.Fn4K | FnvalEnum.AV1 | FnvalEnum.FnDBAudio | FnvalEnum.FnDBVideo);
+            return res.Data;
         }
     }
 }

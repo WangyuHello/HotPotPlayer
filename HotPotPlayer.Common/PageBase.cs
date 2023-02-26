@@ -1,4 +1,5 @@
-﻿using HotPotPlayer.Models;
+﻿using CommunityToolkit.Mvvm.ComponentModel;
+using HotPotPlayer.Models;
 using HotPotPlayer.Services;
 using Microsoft.UI.Windowing;
 using Microsoft.UI.Xaml;
@@ -14,7 +15,8 @@ using System.Threading.Tasks;
 
 namespace HotPotPlayer
 {
-    public class PageBase: Page, INotifyPropertyChanged, IComponentServiceLocator
+    [ObservableObject]
+    public partial class PageBase: Page, IComponentServiceLocator
     {
         public AppBase App => (AppBase)Application.Current;
         public AppWindow AppWindow => ((IComponentServiceLocator)Application.Current).AppWindow;
@@ -31,8 +33,6 @@ namespace HotPotPlayer
 
         public VideoPlayerService VideoPlayerService => ((IComponentServiceLocator)Application.Current).VideoPlayerService;
         public BiliBiliService BiliBiliService => ((IComponentServiceLocator)Application.Current).BiliBiliService;
-
-        public event PropertyChangedEventHandler PropertyChanged;
 
         public void NavigateTo(string name, object parameter = null, NavigationTransitionInfo trans = null)
         {
@@ -67,12 +67,6 @@ namespace HotPotPlayer
 
                 }
             }
-        }
-
-        public void OnPropertyChanged(PropertyChangedEventArgs args = null, [CallerMemberName] string propertyName = "")
-        {
-            args ??= new PropertyChangedEventArgs(propertyName);
-            PropertyChanged?.Invoke(this, args);
         }
     }
 }

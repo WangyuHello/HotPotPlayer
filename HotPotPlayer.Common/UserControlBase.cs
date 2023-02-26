@@ -1,4 +1,5 @@
-﻿using HotPotPlayer.Models;
+﻿using CommunityToolkit.Mvvm.ComponentModel;
+using HotPotPlayer.Models;
 using HotPotPlayer.Services;
 using Microsoft.UI.Windowing;
 using Microsoft.UI.Xaml;
@@ -14,7 +15,8 @@ using System.Threading.Tasks;
 
 namespace HotPotPlayer
 {
-    public class UserControlBase: UserControl, INotifyPropertyChanged, IComponentServiceLocator
+    [ObservableObject]
+    public partial class UserControlBase: UserControl, IComponentServiceLocator
     {
         public AppBase App => (AppBase)Application.Current;
 
@@ -46,7 +48,6 @@ namespace HotPotPlayer
             ((IComponentServiceLocator)Application.Current).ShowToast(toast);
         }
 
-        public event PropertyChangedEventHandler PropertyChanged;
         public void Set<T>(ref T oldValue, T newValue, Action<T> action = null, [CallerMemberName] string propertyName = "")
         {
             if (!EqualityComparer<T>.Default.Equals(oldValue, newValue))
@@ -61,19 +62,6 @@ namespace HotPotPlayer
                 {
 
                 }
-            }
-        }
-
-        public void OnPropertyChanged(PropertyChangedEventArgs args = null, [CallerMemberName] string propertyName = "")
-        {
-            args ??= new PropertyChangedEventArgs(propertyName);
-            try
-            {
-                PropertyChanged?.Invoke(this, args);
-            }
-            catch (Exception)
-            {
-
             }
         }
 
