@@ -1,5 +1,5 @@
-﻿using HotPotPlayer.Services;
-using HotPotPlayer.Services.BiliBili.Reply;
+﻿using HotPotPlayer.Bilibili.Models.Reply;
+using HotPotPlayer.Services;
 using Microsoft.UI.Xaml.Data;
 using System;
 using System.Collections.Generic;

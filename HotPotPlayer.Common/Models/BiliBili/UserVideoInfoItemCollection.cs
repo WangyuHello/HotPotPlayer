@@ -1,15 +1,10 @@
-﻿using HotPotPlayer.Services.BiliBili.Reply;
-using HotPotPlayer.Services;
+﻿using HotPotPlayer.Services;
 using Microsoft.UI.Xaml.Data;
-using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
-using System.Text;
-using System.Threading.Tasks;
 using Windows.Foundation;
-using HotPotPlayer.Services.BiliBili.User;
 using System.Collections.ObjectModel;
+using HotPotPlayer.Bilibili.Models.User;
 
 namespace HotPotPlayer.Models.BiliBili
 {

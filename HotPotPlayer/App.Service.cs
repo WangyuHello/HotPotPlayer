@@ -2,6 +2,7 @@
 using HotPotPlayer.Pages;
 using HotPotPlayer.Services;
 using HotPotPlayer.Video;
+using HotPotPlayer.Video.Models;
 using Microsoft.UI.Xaml;
 using System;
 using System.Collections.Generic;

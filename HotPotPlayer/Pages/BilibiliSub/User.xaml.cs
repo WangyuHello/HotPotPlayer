@@ -2,8 +2,8 @@
 // Licensed under the MIT License.
 
 using CommunityToolkit.Mvvm.ComponentModel;
+using HotPotPlayer.Bilibili.Models.User;
 using HotPotPlayer.Models.BiliBili;
-using HotPotPlayer.Services.BiliBili.User;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Controls.Primitives;

@@ -3,23 +3,25 @@
     xmlns:root="using:HotPotPlayer"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:tplt="using:HotPotPlayer.Templates"
+    xmlns:t="using:HotPotPlayer.Templates"
     >
     <root:AppBase.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
                 <XamlControlsResources xmlns="using:Microsoft.UI.Xaml.Controls" />
                 <ResourceDictionary Source="ms-appx:///Assets/Icon/Icons.xaml" />
+                <!--Styles-->
                 <ResourceDictionary Source="ms-appx:///Styles/Colors.xaml" />
                 <ResourceDictionary Source="ms-appx:///Styles/Buttons.xaml" />
                 <ResourceDictionary Source="ms-appx:///Styles/Images.xaml" />
                 <ResourceDictionary Source="ms-appx:///Styles/Sliders.xaml" />
-                <ResourceDictionary Source="ms-appx:///Styles/GridView.xaml" />
-                <ResourceDictionary Source="ms-appx:///Styles/ListView.xaml" />
-                <ResourceDictionary Source="ms-appx:///Templates/Pivot.xaml" />
-                <tplt:MusicCardView />
-                <tplt:ListView />
-                <tplt:Zoom />
+                <ResourceDictionary Source="ms-appx:///Styles/GridViews.xaml" />
+                <ResourceDictionary Source="ms-appx:///Styles/ListViews.xaml" />
+                <!--Templates-->
+                <ResourceDictionary Source="ms-appx:///Templates/PivotTemplates.xaml" />
+                <t:CardTemplates />
+                <t:ListTemplates />
+                <t:ZoomTemplates />
                 <!-- Other merged dictionaries here -->
             </ResourceDictionary.MergedDictionaries>
             <!-- Other app resources here -->

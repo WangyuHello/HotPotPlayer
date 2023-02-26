@@ -1,5 +1,4 @@
-﻿using BiliBiliAPI.Models;
-using CommunityToolkit.Mvvm.ComponentModel;
+﻿using CommunityToolkit.Mvvm.ComponentModel;
 using HotPotPlayer.Models.BiliBili;
 using HotPotPlayer.Video;
 using Microsoft.UI.Xaml;

@@ -1,5 +1,5 @@
-﻿using HotPotPlayer.Models;
-using HotPotPlayer.Services.FFmpeg;
+﻿using HotPotPlayer.Helpers.FFmpeg;
+using HotPotPlayer.Models;
 using System;
 using System.Collections.Generic;
 using System.IO;

@@ -16,6 +16,7 @@ using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Navigation;
 using CommunityToolkit.Mvvm.ComponentModel;
+using HotPotPlayer.Bilibili.Models.User;
 
 // To learn more about WinUI, the WinUI project structure,
 // and more about our project templates, see: http://aka.ms/winui-project-info.
@@ -44,7 +45,7 @@ namespace HotPotPlayer.Controls.BilibiliSub
         }
 
         [ObservableProperty]
-        private Services.BiliBili.User.UserCardBundle userCardBundle;
+        private UserCardBundle userCardBundle;
 
         public string GetFollowStr(bool isFollow)
         {

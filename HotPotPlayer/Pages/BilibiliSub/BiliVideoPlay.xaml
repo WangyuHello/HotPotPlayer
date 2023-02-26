@@ -9,7 +9,7 @@
     xmlns:local="using:HotPotPlayer.Pages.BiliBiliSub"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    xmlns:video="using:HotPotPlayer.Video"
+    xmlns:vcont="using:HotPotPlayer.Video.UI.Controls"
     xmlns:cont2="using:HotPotPlayer.UI.Controls"
     xmlns:cont3="using:HotPotPlayer.Controls.BilibiliSub"
     xmlns:animations="using:CommunityToolkit.WinUI.UI.Animations"
@@ -32,7 +32,7 @@
                 <RowDefinition Height="{x:Bind GetTitleHeight(IsFullPage)}" />
                 <RowDefinition Height="{x:Bind GetTitleHeight(IsFullPage)}" />
             </Grid.RowDefinitions>
-            <video:VideoControl x:Name="VideoPlayer" 
+            <vcont:VideoControl x:Name="VideoPlayer" 
                                 Source="{x:Bind Source}" 
                                 DmData="{x:Bind DmData}" 
                                 Pbp="{x:Bind Pbp}"

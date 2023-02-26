@@ -8,9 +8,9 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:controls="using:CommunityToolkit.WinUI.UI.Controls"
     xmlns:cont="using:HotPotPlayer.UI.Controls"
-    xmlns:convs="using:HotPotPlayer.Converters"
+    xmlns:convs="using:HotPotPlayer.UI.Converters"
     xmlns:media="using:Microsoft.UI.Xaml.Media"
-    xmlns:me="using:HotPotPlayer.Media"
+    xmlns:me="using:HotPotPlayer.UI.Media"
     xmlns:model="using:HotPotPlayer.Models"
     mc:Ignorable="d">
 
@@ -95,7 +95,7 @@
 
         <StackPanel Grid.Column="2" Margin="8,0" Orientation="Horizontal" Spacing="8" HorizontalAlignment="Right">
             <Button Style="{StaticResource VolumeButton}">
-                <local:VolumePresenter Volume="{x:Bind MusicPlayer.Volume, Mode=OneWay}"/>
+                <cont:VolumePresenter Volume="{x:Bind MusicPlayer.Volume, Mode=OneWay}"/>
                 <Button.Flyout>
                     <Flyout FlyoutPresenterStyle="{StaticResource VolumePopupStyle}">
                         <Slider Margin="0,2,0,0" Value="{x:Bind MusicPlayer.Volume, Mode=TwoWay, Converter={StaticResource SliderVolumeConverter}}" IsThumbToolTipEnabled="False"/>

@@ -1,13 +1,8 @@
-﻿using HotPotPlayer.Services.BiliBili;
-using HotPotPlayer.Services.BiliBili.Extensions;
+﻿using HotPotPlayer.BiliBili;
+using HotPotPlayer.Common.Extension;
 using Microsoft.UI.Dispatching;
-using NeteaseCloudMusicApi;
 using Newtonsoft.Json.Linq;
 using QRCoder;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace HotPotPlayer.Services
@@ -32,21 +27,6 @@ namespace HotPotPlayer.Services
                     _api.LoadCookie(Config);
                 }
                 return _api;
-            }
-        }
-
-        private ProxyServer _proxy;
-
-        public ProxyServer Proxy
-        {
-            get 
-            {
-                if (_proxy == null)
-                {
-                    _proxy = new ProxyServer(API.HttpClientFactory, "http://localhost:18909/");
-                    _proxy.Start();
-                }
-                return _proxy;
             }
         }
 

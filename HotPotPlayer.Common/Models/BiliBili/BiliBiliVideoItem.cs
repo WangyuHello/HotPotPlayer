@@ -1,5 +1,5 @@
-﻿using HotPotPlayer.Services.BiliBili.HomeVideo;
-using HotPotPlayer.Services.BiliBili.Video;
+﻿using HotPotPlayer.Bilibili.Models.HomeVideo;
+using HotPotPlayer.Bilibili.Models.Video;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;

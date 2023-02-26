@@ -8,6 +8,7 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:model="using:HotPotPlayer.Models"
     xmlns:helper="using:HotPotPlayer.Pages.Helper"
+    xmlns:sel="using:HotPotPlayer.UI.Templates.Selectors"
     mc:Ignorable="d">
 
     <base:UserControlBase.Resources>
@@ -50,7 +51,7 @@
             </Grid>
         </DataTemplate>
 
-        <local:SelectedTemplateSelector x:Key="PlayListBarListTemplateSelector" NormalTemplate="{StaticResource PlayListBarListTemplate}" SelectedTemplate="{StaticResource PlayListBarListSelectedTemplate}"/>
+        <sel:SelectedTemplateSelector x:Key="PlayListBarListTemplateSelector" NormalTemplate="{StaticResource PlayListBarListTemplate}" SelectedTemplate="{StaticResource PlayListBarListSelectedTemplate}"/>
 
         <Style x:Key="PlayListBarListContainerStyle" TargetType="ListViewItem">
             <Setter Property="HorizontalContentAlignment" Value="Stretch"/>

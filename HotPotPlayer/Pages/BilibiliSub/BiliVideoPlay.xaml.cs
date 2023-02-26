@@ -15,22 +15,22 @@ using Microsoft.UI.Xaml.Data;
 using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Navigation;
-using HotPotPlayer.Services.BiliBili.Video;
 using CommunityToolkit.Mvvm.ComponentModel;
 using HotPotPlayer.Video;
 using HotPotPlayer.Models.BiliBili;
-using HotPotPlayer.Services.BiliBili.HomeVideo;
-using HotPotPlayer.Services.BiliBili.Reply;
 using System.Threading.Tasks;
 using Windows.UI;
 using Microsoft.UI;
-using HotPotPlayer.Services.BiliBili.Danmaku;
 using Windows.System;
 using CommunityToolkit.WinUI.UI.Controls;
 using HotPotPlayer.Controls.BilibiliSub;
 using System.ComponentModel;
 using CommunityToolkit.WinUI.UI;
 using HotPotPlayer.Extensions;
+using HotPotPlayer.Bilibili.Models.Video;
+using HotPotPlayer.Video.Models;
+using HotPotPlayer.Bilibili.Models.Danmaku;
+using HotPotPlayer.Bilibili.Models.HomeVideo;
 
 // To learn more about WinUI, the WinUI project structure,
 // and more about our project templates, see: http://aka.ms/winui-project-info.

@@ -8,31 +8,21 @@
     <Platforms>x86;x64;arm64</Platforms>
   </PropertyGroup>
   <ItemGroup>
-    <None Remove="Bilibili\DanmakuRenderer.xaml" />
-    <None Remove="Control\InfoViewer.xaml" />
-    <None Remove="Control\PbpViewer.xaml" />
-    <None Remove="NativeMethods.txt" />
-    <None Remove="VideoControl.xaml" />
-    <None Remove="VideoControl3.xaml" />
-    <None Remove="VideoPlayListBar.xaml" />
+    <None Remove="UI\Controls\DanmakuRenderer.xaml" />
+    <None Remove="UI\Controls\InfoViewer.xaml" />
+    <None Remove="UI\Controls\PbpViewer.xaml" />
+    <None Remove="UI\Controls\VideoControl.xaml" />
+    <None Remove="UI\Controls\VideoPlayListBar.xaml" />
   </ItemGroup>
+    
   <ItemGroup>
-    <AdditionalFiles Include="NativeMethods.txt" />
-  </ItemGroup>
-	
-  <ItemGroup>
-	  <PackageReference Include="CommunityToolkit.WinUI.UI.Animations" Version="7.1.2" />
-	  <PackageReference Include="DirectNCore" Version="1.13.0.1" />
-	  <PackageReference Include="Microsoft.Graphics.Win2D" Version="1.0.4" />
-	  <PackageReference Include="Microsoft.WindowsAppSDK" Version="1.2.221209.1" />
-	  <PackageReference Include="CommunityToolkit.WinUI.UI" Version="7.1.2" />
-	  <PackageReference Include="FFmpeg.AutoGen" Version="5.0.0" />
-	  <PackageReference Include="Microsoft.Windows.CsWin32" Version="0.1.647-beta">
-		  <PrivateAssets>all</PrivateAssets>
-		  <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-	  </PackageReference>
-	  <!--<PackageReference Include="HotPotPlayer.Interop.Projection" Version="0.1.0" />-->
-	  <PackageReference Include="WinUIEx" Version="1.3.0" />
+      <PackageReference Include="CommunityToolkit.WinUI.UI.Animations" Version="7.1.2" />
+      <PackageReference Include="DirectNCore" Version="1.13.0.1" />
+      <PackageReference Include="Microsoft.Graphics.Win2D" Version="1.0.4" />
+      <PackageReference Include="Microsoft.WindowsAppSDK" Version="1.2.221209.1" />
+      <PackageReference Include="CommunityToolkit.WinUI.UI" Version="7.1.2" />
+      <!--<PackageReference Include="HotPotPlayer.Interop.Projection" Version="0.1.0" />-->
+      <PackageReference Include="WinUIEx" Version="1.3.0" />
   </ItemGroup>
 
   <ItemGroup>
@@ -41,50 +31,30 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Page Update="Bilibili\DanmakuRenderer.xaml">
+    <Page Update="UI\Controls\DanmakuRenderer.xaml">
       <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
       <SubType>Designer</SubType>
     </Page>
-    <Page Update="VideoPlayListBar.xaml">
+    <Page Update="UI\Control\InfoViewer.xaml">
+      <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
+      <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-  </ItemGroup>
-
-  <ItemGroup>
-    <Page Update="VideoControl3.xaml">
+    <Page Update="UI\Control\PbpViewer.xaml">
+      <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
+      <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-  </ItemGroup>
-
-  <ItemGroup>
-    <Page Update="VideoControl.xaml">
+    <Page Update="UI\Controls\VideoPlayListBar.xaml">
       <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Update="UI\Controls\VideoControl.xaml">
+        <Generator>MSBuild:Compile</Generator>
     </Page>
   </ItemGroup>
 
   <ItemGroup>
     <Service Include="{508349b6-6b84-4df5-91f0-309beebad82d}" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Compile Update="Util\Dash.cs">
-      <DesignTime>True</DesignTime>
-      <AutoGen>True</AutoGen>
-      <DependentUpon>Dash.tt</DependentUpon>
-    </Compile>
-  </ItemGroup>
-
-  <ItemGroup>
-    <Page Update="Control\InfoViewer.xaml">
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Update="Control\PbpViewer.xaml">
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <None Update="Util\Dash.tt">
-      <Generator>TextTemplatingFilePreprocessor</Generator>
-      <LastGenOutput>Dash.cs</LastGenOutput>
-    </None>
   </ItemGroup>
 
 </Project>

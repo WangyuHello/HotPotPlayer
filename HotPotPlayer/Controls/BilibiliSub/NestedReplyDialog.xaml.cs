@@ -1,6 +1,7 @@
 // Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT License. See LICENSE in the project root for license information.
 
+using HotPotPlayer.Bilibili.Models.Reply;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Controls.Primitives;
@@ -26,12 +27,12 @@ namespace HotPotPlayer.Controls.BilibiliSub
     /// </summary>
     public sealed partial class NestedReplyDialog : Page
     {
-        public NestedReplyDialog(Services.BiliBili.Reply.Reply reply)
+        public NestedReplyDialog(Reply reply)
         {
             Reply = reply;
             this.InitializeComponent();
         }
 
-        readonly Services.BiliBili.Reply.Reply Reply;
+        readonly Reply Reply;
     }
 }

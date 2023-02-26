@@ -1,9 +1,9 @@
-﻿using HotPotPlayer.Controls;
+﻿using HotPotPlayer.Bilibili.Models.Reply;
+using HotPotPlayer.Controls;
 using HotPotPlayer.Controls.BilibiliSub;
 using HotPotPlayer.Helpers;
 using HotPotPlayer.Models.CloudMusic;
 using HotPotPlayer.Services;
-using HotPotPlayer.Services.BiliBili.Reply;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using System;

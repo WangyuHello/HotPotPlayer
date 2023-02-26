@@ -2,11 +2,10 @@
 // Licensed under the MIT License. See LICENSE in the project root for license information.
 
 using CommunityToolkit.Mvvm.ComponentModel;
+using HotPotPlayer.Bilibili.Models.Dynamic;
+using HotPotPlayer.Bilibili.Models.Reply;
 using HotPotPlayer.Models.BiliBili;
 using HotPotPlayer.Services;
-using HotPotPlayer.Services.BiliBili.Dynamic;
-using HotPotPlayer.Services.BiliBili.Reply;
-using HotPotPlayer.Services.BiliBili.Video;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Controls.Primitives;

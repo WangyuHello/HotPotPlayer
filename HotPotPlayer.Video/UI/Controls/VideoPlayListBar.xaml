@@ -1,0 +1,93 @@
+<!-- Copyright (c) Microsoft Corporation. All rights reserved. -->
+<!-- Licensed under the MIT License. See LICENSE in the project root for license information. -->
+
+<base:UserControlBase
+    x:Class="HotPotPlayer.Video.UI.Controls.VideoPlayListBar"
+    xmlns:base="using:HotPotPlayer"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:io="using:System.IO"
+    xmlns:model="using:HotPotPlayer.Models"
+    xmlns:control="using:HotPotPlayer.UI.Controls"
+    xmlns:sel="using:HotPotPlayer.UI.Templates.Selectors"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d">
+
+    <base:UserControlBase.Resources>
+        <DataTemplate x:Key="PlayListBarListTemplate" x:DataType="model:VideoItem">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="32" />
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="38" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+                <Grid Grid.Column="1" Margin="0,0,8,0">
+                    <TextBlock Foreground="White" Text="{x:Bind Title}" VerticalAlignment="Center" FontSize="14" TextTrimming="CharacterEllipsis" FontFamily="{ThemeResource MiSansRegular}"/>
+                </Grid>
+                <Button Grid.Column="3" Foreground="White" Style="{StaticResource TransparentWhiteButton}" Margin="8,0,0,0" Padding="4" CornerRadius="8" Tag="{x:Bind }" >
+                    <SymbolIcon Symbol="More" />
+                </Button>
+            </Grid>
+        </DataTemplate>
+
+        <DataTemplate x:Key="PlayListBarListSelectedTemplate" x:DataType="model:VideoItem">
+            <Grid >
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="32" />
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="38" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+                <FontIcon FontFamily="{ThemeResource SegoeIcons}" Glyph="&#xE013;" VerticalAlignment="Center" HorizontalAlignment="Center" Foreground="White"/>
+                <Grid Grid.Column="1" Margin="0,0,8,0">
+                    <TextBlock Foreground="White" Text="{x:Bind Title}" VerticalAlignment="Center" FontSize="14" TextTrimming="CharacterEllipsis" FontFamily="{ThemeResource MiSansRegular}"/>
+                </Grid>
+                <Button Grid.Column="3" Foreground="White" Style="{StaticResource TransparentWhiteButton}" Margin="8,0,0,0" Padding="4" CornerRadius="8" Tag="{x:Bind }" >
+                    <SymbolIcon Symbol="More" />
+                </Button>
+            </Grid>
+        </DataTemplate>
+
+        <sel:SelectedTemplateSelector x:Key="PlayListBarListTemplateSelector" NormalTemplate="{StaticResource PlayListBarListTemplate}" SelectedTemplate="{StaticResource PlayListBarListSelectedTemplate}"/>
+
+        <Style x:Key="PlayListBarListContainerStyle" TargetType="ListViewItem">
+            <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+            <Setter Property="VerticalContentAlignment" Value="Stretch"/>
+            <Setter Property="Padding" Value="8,4,16,4" />
+            <Setter Property="Margin" Value="0" />
+        </Style>
+    </base:UserControlBase.Resources>
+
+    <Grid x:Name="Root" Tapped="RootTapped" Background="#00000000" >
+        <Grid Background="{StaticResource PlayListBarBackground}" Padding="0,36,0,0" Width="400" HorizontalAlignment="Right" Tapped="InnerTapped">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
+
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+
+                <Button Width="40" Height="40" Style="{StaticResource TransparentWhiteButton}" Foreground="White" Click="BackClick">
+                    <SymbolIcon Symbol="Back" />
+                </Button>
+                <TextBlock Grid.Column="1" Text="正在播放" Margin="0,-2,0,0" VerticalAlignment="Center" FontSize="22" Foreground="White" FontFamily="{ThemeResource MiSansMedium}"/>
+                <Button Grid.Column="2" Width="40" Height="40" Style="{StaticResource TransparentWhiteButton}" ToolTipService.ToolTip="清空" Foreground="White">
+                    <FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="&#xE10A;" />
+                </Button>
+            </Grid>
+
+            <ListView x:Name="PlayList" Grid.Row="1" SelectionMode="Single" ItemsSource="{x:Bind CurrentPlayList, Mode=OneWay}" ItemTemplateSelector="{StaticResource PlayListBarListTemplateSelector}" ItemContainerStyle="{StaticResource PlayListBarListContainerStyle}" SelectedIndex="{x:Bind CurrentPlayIndex, Mode=TwoWay}" IsItemClickEnabled="True" >
+                <ListView.Footer>
+                    <Grid Height="100"/>
+                </ListView.Footer>
+            </ListView>
+        </Grid>
+    </Grid>
+</base:UserControlBase>

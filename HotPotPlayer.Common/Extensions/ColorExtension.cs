@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace HotPotPlayer.Extensions
 {
-    internal static class ColorExtension
+    public static class ColorExtension
     {
         public static int ToInt(this Color color)
         {
@@ -41,6 +41,11 @@ namespace HotPotPlayer.Extensions
             int g = (pix.G + pix1.G + pix2.G + pix3.G + pix4.G) / 5;
             int b = (pix.B + pix1.B + pix2.B + pix3.B + pix4.B) / 5;
             return Color.FromRgba((byte)r, (byte)g, (byte)b, (byte)a);
+        }
+
+        public static Windows.UI.Color ToWindowsColor(this System.Drawing.Color color)
+        {
+            return Windows.UI.Color.FromArgb(color.A, color.R, color.G, color.B);
         }
     }
 }

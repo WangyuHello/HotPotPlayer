@@ -95,14 +95,14 @@
     <None Remove="Pages\VideoPlayPage.xaml" />
     <None Remove="Styles\Buttons.xaml" />
     <None Remove="Styles\Colors.xaml" />
-    <None Remove="Styles\GridView.xaml" />
+    <None Remove="Styles\GridViews.xaml" />
     <None Remove="Styles\Images.xaml" />
-    <None Remove="Styles\ListView.xaml" />
+    <None Remove="Styles\ListViews.xaml" />
     <None Remove="Styles\Sliders.xaml" />
-    <None Remove="Templates\ListView.xaml" />
-    <None Remove="Templates\MusicCardView.xaml" />
-    <None Remove="Templates\Pivot.xaml" />
-    <None Remove="Templates\Zoom.xaml" />
+    <None Remove="Templates\CardTemplates.xaml" />
+    <None Remove="Templates\ListTemplates.xaml" />
+    <None Remove="Templates\PivotTemplates.xaml" />
+    <None Remove="Templates\ZoomTemplates.xaml" />
   </ItemGroup>
 
   <ItemGroup>
@@ -237,31 +237,31 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Page Update="Styles\ListView.xaml">
+    <Page Update="Styles\ListViews.xaml">
       <Generator>MSBuild:Compile</Generator>
     </Page>
   </ItemGroup>
 
   <ItemGroup>
-    <Page Update="Templates\ListView.xaml">
+    <Page Update="Templates\ListTemplates.xaml">
       <Generator>MSBuild:Compile</Generator>
     </Page>
   </ItemGroup>
 
   <ItemGroup>
-    <Page Update="Templates\Zoom.xaml">
+    <Page Update="Templates\ZoomTemplates.xaml">
       <Generator>MSBuild:Compile</Generator>
     </Page>
   </ItemGroup>
 
   <ItemGroup>
-    <Page Update="Templates\Pivot.xaml">
+    <Page Update="Templates\PivotTemplates.xaml">
       <Generator>MSBuild:Compile</Generator>
     </Page>
   </ItemGroup>
 
   <ItemGroup>
-    <Page Update="Styles\GridView.xaml">
+    <Page Update="Styles\GridViews.xaml">
       <Generator>MSBuild:Compile</Generator>
     </Page>
   </ItemGroup>
@@ -372,7 +372,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Page Update="Templates\MusicCardView.xaml">
+    <Page Update="Templates\CardTemplates.xaml">
       <Generator>MSBuild:Compile</Generator>
     </Page>
   </ItemGroup>

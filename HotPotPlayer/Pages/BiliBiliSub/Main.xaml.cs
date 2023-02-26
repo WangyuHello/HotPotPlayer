@@ -2,10 +2,10 @@
 // Licensed under the MIT License. See LICENSE in the project root for license information.
 
 using CommunityToolkit.Mvvm.ComponentModel;
+using HotPotPlayer.Bilibili.Models.HomeVideo;
+using HotPotPlayer.Bilibili.Models.Video;
 using HotPotPlayer.Models.BiliBili;
 using HotPotPlayer.Services;
-using HotPotPlayer.Services.BiliBili.HomeVideo;
-using HotPotPlayer.Services.BiliBili.Video;
 using HotPotPlayer.Video;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
@@ -54,66 +54,6 @@ namespace HotPotPlayer.Pages.BilibiliSub
             var v = e.ClickedItem as HomeDataItem;
             var v2 = (await BiliBiliService.API.GetVideoInfo(v.Bvid)).Data;
             NavigateTo("BilibiliSub.BiliVideoPlay", v2);
-        }
-    }
-
-    public class PopularVideoCollection : ObservableCollection<VideoContent>, ISupportIncrementalLoading
-    {
-        int _pageNum;
-        readonly BiliBiliService _service;
-        public PopularVideoCollection(PopularVideos data, BiliBiliService service) : base(data.List)
-        {
-            _pageNum = 1;
-            _service = service;
-            _hasMore = !data.NoMore;
-        }
-
-        private bool _hasMore;
-        public bool HasMoreItems => _hasMore;
-
-        public IAsyncOperation<LoadMoreItemsResult> LoadMoreItemsAsync(uint count)
-        {
-            return AsyncInfo.Run(async (token) =>
-            {
-                _pageNum++;
-                var dyn = await _service.API.GetPopularVideo(_pageNum);
-                foreach (var item in dyn.Data.List)
-                {
-                    Add(item);
-                }
-                _hasMore = !dyn.Data.NoMore;
-                return new LoadMoreItemsResult() { Count = (uint)dyn.Data.List.Count };
-            });
-        }
-    }
-
-    public class RecVideoCollection : ObservableCollection<HomeDataItem>, ISupportIncrementalLoading
-    {
-        int _pageNum;
-        readonly BiliBiliService _service;
-        public RecVideoCollection(HomeData data, BiliBiliService service) : base(data.Items)
-        {
-            _pageNum = 1;
-            _service = service;
-            _hasMore = true;
-        }
-
-        private bool _hasMore;
-        public bool HasMoreItems => _hasMore;
-
-        public IAsyncOperation<LoadMoreItemsResult> LoadMoreItemsAsync(uint count)
-        {
-            return AsyncInfo.Run(async (token) =>
-            {
-                _pageNum++;
-                var dyn = await _service.API.GetRecVideo(_pageNum);
-                foreach (var item in dyn.Data.Items)
-                {
-                    Add(item);
-                }
-                _hasMore = true;
-                return new LoadMoreItemsResult() { Count = (uint)dyn.Data.Items.Count };
-            });
         }
     }
 }
