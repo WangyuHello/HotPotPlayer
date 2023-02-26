@@ -15,28 +15,50 @@ namespace HotPotPlayer.Models.BiliBili
 {
     public class HistoryCollection : ObservableCollection<HistoryItem>, ISupportIncrementalLoading
     {
-        int _max;
+        HistoryCursor _cursor;
         readonly BiliBiliService _service;
 
-        public HistoryCollection(HistoryData data, BiliBiliService service) : base(data.List)
+        public HistoryCollection(HistoryData data, BiliBiliService service) : base(data == null ? Enumerable.Empty<HistoryItem>() : data.List)
         {
-            _max = data.Cursor.Max;
+            if (data == null)
+            {
+                _hasMore = false;
+            }
+            else
+            {
+                _hasMore = true;
+                _cursor = data.Cursor;
+            }
             _service = service;
         }
 
-        public bool HasMoreItems => true;
+        private bool _hasMore;
+        public bool HasMoreItems => _hasMore;
 
         public IAsyncOperation<LoadMoreItemsResult> LoadMoreItemsAsync(uint count)
         {
             return AsyncInfo.Run(async (token) =>
             {
-                var his = await _service.API.History(_max);
-                _max = his.Data.Cursor.Max;
-                foreach (var item in his.Data.List)
+                var his = await _service.API.History(_cursor.Max, _cursor.Business, _cursor.ViewAt);
+                if (his.Data == null)
                 {
-                    Add(item);
+                    _hasMore = false;
+                    foreach (var item in his.Data.List)
+                    {
+                        Add(item);
+                    }
+                    return new LoadMoreItemsResult() { Count = 0 };
                 }
-                return new LoadMoreItemsResult() { Count = (uint)his.Data.List.Count };
+                else
+                {
+                    _cursor = his.Data.Cursor;
+                    foreach (var item in his.Data.List)
+                    {
+                        Add(item);
+                    }
+                    return new LoadMoreItemsResult() { Count = (uint)his.Data.List.Count };
+                }
+
             });
         }
     }

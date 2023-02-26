@@ -474,7 +474,7 @@ namespace HotPotPlayer.BiliBili
         /// <param name="max"></param>
         /// <param name="business"></param>
         /// <returns></returns>
-        public async Task<BiliResult<HistoryData>?> History(int max = 0, string business = "archive")
+        public async Task<BiliResult<HistoryData>?> History(int max = 0, string business = "archive", int viewat = 0)
         {
             var r = await GetAsync("https://api.bilibili.com/x/web-interface/history/cursor", ResponseEnum.Web,
                 new Dictionary<string, string>
@@ -482,7 +482,8 @@ namespace HotPotPlayer.BiliBili
                     ["max"] = max.ToString(),
                     ["business"] = business,
                     ["type"] = "archive",
-                    ["ps"] = "30"
+                    ["view_at"] = viewat.ToString(),
+                    ["ps"] = "20"
                 });
             var res = JsonConvert.DeserializeObject<BiliResult<HistoryData>>(r);
             return res;
