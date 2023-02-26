@@ -180,7 +180,7 @@ namespace HotPotPlayer.Video.UI.Controls
 
         private static void DMChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
-            ((DanmakuRenderer)d).LoadDMDate(e.NewValue as DMData);
+            ((DanmakuRenderer)d).LoadDMData(e.NewValue as DMData);
             ((DanmakuRenderer)d).Refresh();
         }
 
@@ -251,7 +251,7 @@ namespace HotPotPlayer.Video.UI.Controls
         Compositor _compositor;
         Queue<DanmakuTextControl> _texts;
 
-        private void LoadDMDate(DMData n)
+        private void LoadDMData(DMData n)
         {
             _timeLine = new Dictionary<int, List<DMItem>>();
             _toptimeLine = new Dictionary<int, List<DMItem>>();

@@ -178,6 +178,7 @@ namespace HotPotPlayer.Pages.BilibiliSub
             }
 
             VideoPlayerService.IsVideoPagePresent = false;
+            VideoPlayer.Close();
         }
 
         GridLength GetCommentWidth(bool isFullPage)
