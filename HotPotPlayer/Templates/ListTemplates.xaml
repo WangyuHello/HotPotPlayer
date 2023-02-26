@@ -440,7 +440,7 @@
     </DataTemplate>
 
     <DataTemplate x:Key="DynamicTemplate" x:DataType="dyn:DynamicItem">
-        <StackPanel Padding ="16" Background="White">
+        <StackPanel Padding="16" Background="White">
             <!--Header-->
             <Grid >
                 <Grid.RowDefinitions>

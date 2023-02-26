@@ -13,13 +13,15 @@ namespace HotPotPlayer.UI.Extensions
     {
         public static RichTextBlock GenRichTextBlock(this ModuleDesc node)
         {
-
             var b = new RichTextBlock
             {
                 TextWrapping = Microsoft.UI.Xaml.TextWrapping.Wrap,
                 IsTextSelectionEnabled = true,
             };
-            b.Blocks.Add(GenRichText(node));
+            if (node != null)
+            {
+                b.Blocks.Add(GenRichText(node));
+            }
             return b;
             
         }
