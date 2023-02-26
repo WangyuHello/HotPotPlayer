@@ -61,7 +61,7 @@ namespace HotPotPlayer.Video.UI.Controls
 
         private async void Dispatcher_AcceleratorKeyActivated(CoreDispatcher sender, AcceleratorKeyEventArgs args)
         {
-            if (args.EventType.ToString().Contains("KeyUP") && _currentMediaInited)
+            if (args.EventType.ToString().Contains("KeyUP") && _mediaInited)
             {
                 var virtualKey = args.VirtualKey;
                 switch (virtualKey)
@@ -305,8 +305,8 @@ namespace HotPotPlayer.Video.UI.Controls
         MpvPlayer _mpv;
         bool _suppressCurrentTimeTrigger;
         DispatcherTimer _inActiveTimer;
-        bool _currentMediaInited;
-        bool _currentMediaEnded;
+        bool _mediaInited;
+        bool _mediaFinished;
 
         IntPtr _devicePtr;
         ID3D11Device _device;
@@ -338,191 +338,6 @@ namespace HotPotPlayer.Video.UI.Controls
             currentPlayList = new ObservableCollection<VideoItem>(info.VideoItems);
             currentPlayIndex = info.Index;
             StartPlay();
-        }
-
-        void InitMpv(bool isFullPageHost, int width, int height, float scalex, float scaley)
-        {
-            _mpv = new MpvPlayer(App.MainWindowHandle, @"NativeLibs\mpv-2.dll", width, height, scalex, scaley, _currentWindowBounds)
-            {
-                AutoPlay = true,
-                Volume = 100,
-                LogLevel = MpvLogLevel.Debug,
-                Loop = false,
-                LoopPlaylist = isFullPageHost,
-            };
-            _mpv.SetD3DInitCallback(D3DInitCallback);
-            _mpv.MediaResumed += MediaResumed;
-            _mpv.MediaPaused += MediaPaused;
-            _mpv.MediaLoaded += MediaLoaded;
-            _mpv.MediaFinished += MediaFinished;
-            _mpv.PositionChanged += PositionChanged;
-            _mpv.MediaUnloaded += MediaUnloaded;
-        }
-
-        private void MediaUnloaded(object sender, EventArgs e)
-        {
-            
-        }
-
-        private void PositionChanged(object sender, MpvPlayerPositionChangedEventArgs e)
-        {
-            UIQueue.TryEnqueue(() =>
-            {
-                CurrentTime = e.NewPosition;
-                //CurrentPlayingDuration = _mpv.Duration;
-            });
-        }
-
-        private void MediaFinished(object sender, EventArgs e)
-        {
-            UIQueue.TryEnqueue(() =>
-            {
-                IsPlaying = false;
-                DM.Pause();
-            });
-            //DisplayReq.RequestRelease();
-            _currentMediaEnded = true;
-        }
-
-
-        private async void MediaLoaded(object sender, EventArgs e)
-        {
-            _currentMediaEnded = false;
-            App?.Taskbar.AddPlayButtons();
-            //DisplayReq.RequestActive();
-
-            UIQueue.TryEnqueue(() => 
-            {
-                OnMediaLoaded?.Invoke();
-                Title = CurrentPlayList[CurrentPlayIndex].Title;
-                IsPlaying = true;
-                CurrentPlayingDuration = _mpv.Duration;
-                OnPropertyChanged(propertyName: nameof(Volume));
-            });
-
-            await Task.Run(async () =>
-            {
-                await Task.Delay(1000);
-                _currentMediaInited = true;
-                UIQueue.TryEnqueue(() => PlayBarVisible = true);
-            });
-        }
-
-        private void MediaPaused(object sender, EventArgs e)
-        {
-            UIQueue.TryEnqueue(() =>
-            {
-                IsPlaying = false;
-                DM.Pause();
-            });
-            //DisplayReq.RequestRelease();
-        }
-
-        private void MediaResumed(object sender, EventArgs e)
-        {
-            UIQueue.TryEnqueue(() =>
-            {
-                IsPlaying = true;
-                DM.Resume();
-            });
-            //DisplayReq.RequestActive();
-        }
-
-
-        private void D3DInitCallback(IntPtr d3d11Device, IntPtr swapChain)
-        {
-            _swapChain1Ptr = swapChain;
-            _devicePtr = d3d11Device;
-            UIQueue.TryEnqueue(() =>
-            {
-                _swapChain1 = (IDXGISwapChain1)Marshal.GetObjectForIUnknown(_swapChain1Ptr);
-                _device = (ID3D11Device)Marshal.GetObjectForIUnknown(_devicePtr);
-                //_swapChain1 = ObjectReference<IDXGISwapChain1>.FromAbi(swapChain).Vftbl;
-                var nativepanel = Host.As<ISwapChainPanelNative>();
-                _swapChain1.GetDesc1(out var desp);
-                nativepanel.SetSwapChain(_swapChain1);
-                _swapChainLoaded = true;
-            });
-        }
-
-        public void StartPlay(string selectedDefinition = "")
-        {
-            if (!Host.IsLoaded || Host.ActualSize.X <= 1 || Host.ActualSize.Y <= 1 || CurrentPlayList == null)
-            {
-                return;
-            }
-            var isFullPageHost = IsFullPageHost;
-
-            // 在独立线程初始化MPV
-            Task.Run(async () =>
-            {
-                await Task.Delay(TimeSpan.FromSeconds(1));
-                if (_mpv == null)
-                {
-                    InitMpv(isFullPageHost, _currentWidth, _currentHeight, _currentScaleX, _currentScaleY);
-                }
-
-                //_mpv.API.SetPropertyString("vo", "gpu");
-                _mpv.API.SetPropertyString("vo", "gpu-next");
-                _mpv.API.SetPropertyString("gpu-context", "d3d11");
-                _mpv.API.SetPropertyString("hwdec", "d3d11va");
-                _mpv.API.SetPropertyString("d3d11-composition", "yes");
-                _mpv.API.SetPropertyString("target-colorspace-hint", "yes"); //HDR passthrough
-
-                if (CurrentPlayList[CurrentPlayIndex] is BiliBiliVideoItem bv)
-                {
-                    _mpv.API.SetPropertyString("user-agent", BiliAPI.UserAgent);
-                    _mpv.API.SetPropertyString("cookies", "yes");
-                    _mpv.API.SetPropertyString("ytdl", "no");
-                    _mpv.API.SetPropertyString("cookies-file", GetCookieFile());
-                    _mpv.API.SetPropertyString("http-header-fields", "Referer: http://www.bilibili.com/");
-                    //_mpv.API.SetPropertyString("demuxer-lavf-o", $"headers=\"Referer: http://www.bilibili.com/\r\nUserAgent: {BiliAPI.UserAgent}\r\n\"");
-                    //_mpv.API.SetPropertyString("demuxer-lavf-probescore", "1");
-
-                    IEnumerable<string> videourls;
-                    if (bv.DashVideos == null)
-                    {
-                        videourls = CurrentPlayList.Cast<BiliBiliVideoItem>().Select(b => b.Urls[0].Url);
-                        _mpv.LoadPlaylist(videourls);
-                    }
-                    else
-                    {
-                        //var mpd = bv.WriteToMPD(Config);
-                        SelectedCodecStrategy = Config.GetConfig("CodecStrategy", CodecStrategy.Default);
-                        (var sel, var vurl) = bv.GetPreferVideoUrl(selectedDefinition, SelectedCodecStrategy);
-                        if (!_currentMediaInited)
-                        {
-                            UIQueue.TryEnqueue(() => 
-                            {
-                                Definitions = bv.Videos.Keys.ToList();
-                                selectedDefinitionGuard = true;
-                                SelectedDefinition = sel;
-                                selectedDefinitionGuard = false;
-                            });
-                        }
-                        var aurl = bv.GetPreferAudioUrl();
-                        //BiliBiliService.Proxy.AudioUrl = bv.GetPreferAudioUrl();
-                        //BiliBiliService.Proxy.CookieString = BiliBiliService.API.CookieString;
-                        if (sel.Contains("杜比") || sel.Contains("HDR")) _mpv.API.SetPropertyString("vo", "gpu");
-                        //_mpv.Load(BiliBiliService.Proxy.VideoUrl);
-                        //_mpv.Load(mpd);
-                        //_mpv.Load("http://localhost:18909/video.m4s");
-                        var edl = bv.GetEdlProtocal(vurl, aurl);
-                        //_mpv.PlaylistClear();
-                        //if (_currentMediaInited)
-                        //{
-                        //    _mpv.Stop();
-                        //}
-                        _mpv.LoadAsync(edl, true);
-                    }
-                }
-                else
-                {
-                    _mpv.LoadPlaylist(CurrentPlayList.Select(f => f.Source.FullName));
-                    _mpv.PlaylistPlayIndex(CurrentPlayIndex);
-                }
-
-            });
         }
 
         private string GetCookieFile()
@@ -561,18 +376,13 @@ namespace HotPotPlayer.Video.UI.Controls
         private void Host_Unloaded(object sender, RoutedEventArgs e)
         {
             DM.Pause();
-            _swapChainLoaded = false;
-            _mpv.MediaPaused -= MediaPaused;
-            _mpv.MediaResumed -= MediaResumed;
-            _mpv.MediaLoaded -= MediaLoaded;
-            _mpv.MediaFinished -= MediaFinished;
-            _mpv.Dispose();
+            DisposeMpv();
             //DisplayReq.RequestRelease();
         }
 
         void UpdateSize()
         {
-            if (Host is null || !_swapChainLoaded || _currentMediaEnded || _mpv == null)
+            if (Host is null || !_swapChainLoaded || _mediaFinished || _mpv == null)
                 return;
 
             lock (_criticalLock)
@@ -583,7 +393,7 @@ namespace HotPotPlayer.Video.UI.Controls
 
         void UpdateScale()
         {
-            if (Host is null || !_swapChainLoaded || _currentMediaEnded)
+            if (Host is null || !_swapChainLoaded || _mediaFinished)
                 return;
 
             lock (_criticalLock2)
@@ -602,7 +412,6 @@ namespace HotPotPlayer.Video.UI.Controls
         {
             _mpv.StopAsync();
         }
-
 
         void StopInactiveTimer()
         {
@@ -629,8 +438,6 @@ namespace HotPotPlayer.Video.UI.Controls
             _inActiveTimer.Stop();
             PlayBarVisible = false;
         }
-
-        
 
         private void PlayButtonClick(object sender, RoutedEventArgs e)
         {
@@ -725,7 +532,7 @@ namespace HotPotPlayer.Video.UI.Controls
 
         private void Grid_PointerEntered(object sender, PointerRoutedEventArgs e)
         {
-            if (!_currentMediaInited) return;
+            if (!_mediaInited) return;
             PlayBarVisible = true;
         }
 
@@ -741,7 +548,7 @@ namespace HotPotPlayer.Video.UI.Controls
 
         private void Grid_PointerMoved(object sender, PointerRoutedEventArgs e)
         {
-            if (!_currentMediaInited) return;
+            if (!_mediaInited) return;
             PlayBarVisible = true;
         }
 
@@ -758,8 +565,6 @@ namespace HotPotPlayer.Video.UI.Controls
 
         [DllImport("user32.dll", EntryPoint = "ShowCursor", CharSet = CharSet.Auto)]
         public extern static void ShowCursor(int status);
-
-
 
         private void ToggleFullScreenClick(object sender, RoutedEventArgs e)
         {

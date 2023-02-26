@@ -34,31 +34,31 @@ namespace HotPotPlayer.Video.UI.Controls
         {
             this.InitializeComponent();
             _compositor = App.MainWindow.Compositor;
-            _tickTimer = new DispatcherTimer
+            _horizontalTimer = new DispatcherTimer
             {
                 Interval = TimeSpan.FromSeconds(5)
             };
-            _tickTimer.Tick += DmTick;
-            _topTickTimer = new DispatcherTimer
+            _horizontalTimer.Tick += DmTick;
+            _topTimer = new DispatcherTimer
             {
                 Interval = TimeSpan.FromSeconds(1)
             };
-            _topTickTimer.Tick += TopDmTick;
+            _topTimer.Tick += TopDmTick;
         }
 
         private void TopDmTick(object sender, object e)
         {
             var curTime = CurrentTime;
             var curSecs = Convert.ToInt32(curTime.TotalSeconds);
-            if (_toptimeLine.ContainsKey(curSecs))
+            if (_topDMs.ContainsKey(curSecs))
             {
                 int takeIndex = 0;
                 for (int i = 0; i < TotalSlot; i++)
                 {
                     var tb = (DanmakuTextControl)TopHost.Children[i];
                     if (tb.ExitTime > curTime) continue;
-                    if (takeIndex > _toptimeLine[curSecs].Count - 1) break;
-                    var d = _toptimeLine[curSecs][takeIndex];
+                    if (takeIndex > _topDMs[curSecs].Count - 1) break;
+                    var d = _topDMs[curSecs][takeIndex];
                     takeIndex++;
 
                     var drawDm = DrawDanmaku(d);
@@ -73,15 +73,15 @@ namespace HotPotPlayer.Video.UI.Controls
                 }
             }
 
-            if (_bottomtimeLine.ContainsKey(curSecs))
+            if (_bottomDMs.ContainsKey(curSecs))
             {
                 int takeIndex = 0;
                 for (int i = 0; i < TotalSlot; i++)
                 {
                     var tb = (DanmakuTextControl)BottomHost.Children[TotalSlot - i - 1];
                     if (tb.ExitTime > curTime) continue;
-                    if (takeIndex > _bottomtimeLine[curSecs].Count - 1) break;
-                    var d = _bottomtimeLine[curSecs][takeIndex];
+                    if (takeIndex > _bottomDMs[curSecs].Count - 1) break;
+                    var d = _bottomDMs[curSecs][takeIndex];
                     takeIndex++;
 
                     var drawDm = DrawDanmaku(d);
@@ -105,28 +105,28 @@ namespace HotPotPlayer.Video.UI.Controls
             var curSecs = Convert.ToInt32(curTime.TotalSeconds);
             for (int sec = curSecs; sec < curSecs + 5; sec++)
             {
-                if (_timeLine.ContainsKey(sec))
+                if (_horizontalDMs.ContainsKey(sec))
                 {
                     int takeIndex = 0;
                     for (int i = 0; i < Slot; i++)
                     {
                         if (_masks[sec][i].occupied) continue;
-                        if (takeIndex > _timeLine[sec].Count - 1)
+                        if (takeIndex > _horizontalDMs[sec].Count - 1)
                         {
                             break;
                         }
-                        var d = _timeLine[sec][takeIndex];
+                        var d = _horizontalDMs[sec][takeIndex];
                         takeIndex++;
 
                         if (d.Time < curTime) continue;
 
                         DanmakuTextControl tb;
-                        var hasText = _texts.TryPeek(out var reuseText);
+                        var hasText = _toBeRecycledTexts.TryPeek(out var reuseText);
                         bool isReuse = false;
                         var drawDm = DrawDanmaku(d);
                         if (hasText && curTime > reuseText.ExitTime)
                         {
-                            tb = _texts.Dequeue();
+                            tb = _toBeRecycledTexts.Dequeue();
                             tb.SetVisual(drawDm);
                             isReuse = true;
                         }
@@ -153,7 +153,7 @@ namespace HotPotPlayer.Video.UI.Controls
                         tb.SetupOffsetAnimation(curTime, len, _slotStep, Speed, i, Host.ActualWidth);
                         tb.StartOffsetAnimation();
 
-                        _texts.Enqueue(tb);
+                        _toBeRecycledTexts.Enqueue(tb);
 
                         var segs = Convert.ToInt32(Math.Floor(len * 1.3 / Speed));
                         for (int s = 0; s < segs; s++)
@@ -222,6 +222,21 @@ namespace HotPotPlayer.Video.UI.Controls
         public static readonly DependencyProperty CurrentTimeProperty =
             DependencyProperty.Register("CurrentTime", typeof(TimeSpan), typeof(DanmakuRenderer), new PropertyMetadata(default));
 
+
+        public bool IsPlaying
+        {
+            get { return (bool)GetValue(IsPlayingProperty); }
+            set { SetValue(IsPlayingProperty, value); }
+        }
+
+        public static readonly DependencyProperty IsPlayingProperty =
+            DependencyProperty.Register("IsPlaying", typeof(bool), typeof(DanmakuRenderer), new PropertyMetadata(false, IsPlayingChanged));
+
+        private static void IsPlayingChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+            ((DanmakuRenderer)d).OnIsPlayingChanged((bool)e.OldValue, (bool)e.NewValue);
+        }
+
         public double OutlineThickness
         {
             get { return (double)GetValue(OutlineThicknessProperty); }
@@ -241,21 +256,21 @@ namespace HotPotPlayer.Video.UI.Controls
             DependencyProperty.Register("OutlineColor", typeof(Color), typeof(DanmakuRenderer), new PropertyMetadata(Colors.Black));
 
 
-        DispatcherTimer _tickTimer;
-        DispatcherTimer _topTickTimer;
+        DispatcherTimer _horizontalTimer;
+        DispatcherTimer _topTimer;
         Dictionary<int, Mask[]> _masks;
         List<int> _availTime;
-        Dictionary<int, List<DMItem>> _timeLine;
-        Dictionary<int, List<DMItem>> _toptimeLine;
-        Dictionary<int, List<DMItem>> _bottomtimeLine;
+        Dictionary<int, List<DMItem>> _horizontalDMs;
+        Dictionary<int, List<DMItem>> _topDMs;
+        Dictionary<int, List<DMItem>> _bottomDMs;
         Compositor _compositor;
-        Queue<DanmakuTextControl> _texts;
+        Queue<DanmakuTextControl> _toBeRecycledTexts;
 
         private void LoadDMData(DMData n)
         {
-            _timeLine = new Dictionary<int, List<DMItem>>();
-            _toptimeLine = new Dictionary<int, List<DMItem>>();
-            _bottomtimeLine = new Dictionary<int, List<DMItem>>();
+            _horizontalDMs = new Dictionary<int, List<DMItem>>();
+            _topDMs = new Dictionary<int, List<DMItem>>();
+            _bottomDMs = new Dictionary<int, List<DMItem>>();
             for (int i = 0; i < n.Dms.Count; i++)
             {
                 var d = n.Dms[i];
@@ -264,22 +279,22 @@ namespace HotPotPlayer.Video.UI.Controls
                     case 1:
                     case 2:
                     case 3:
-                        AddToTimeline(Convert.ToInt32(d.Time.TotalSeconds), d, _timeLine);
+                        AddToTimeline(Convert.ToInt32(d.Time.TotalSeconds), d, _horizontalDMs);
                         break;
                     case 4:
-                        AddToTimeline(Convert.ToInt32(d.Time.TotalSeconds), d, _toptimeLine);
+                        AddToTimeline(Convert.ToInt32(d.Time.TotalSeconds), d, _topDMs);
                         break;
                     case 5:
-                        AddToTimeline(Convert.ToInt32(d.Time.TotalSeconds), d, _bottomtimeLine);
+                        AddToTimeline(Convert.ToInt32(d.Time.TotalSeconds), d, _bottomDMs);
                         break;
                     default:
-                        AddToTimeline(Convert.ToInt32(d.Time.TotalSeconds), d, _timeLine);
+                        AddToTimeline(Convert.ToInt32(d.Time.TotalSeconds), d, _horizontalDMs);
                         break;
                 }
 
             }
-            Debug.WriteLine($"DMs: {n.Dms.Count}, timeLines: {_timeLine.Count}");
-            _availTime = _timeLine.Keys.ToList();
+            Debug.WriteLine($"DMs: {n.Dms.Count}, timeLines: {_horizontalDMs.Count}");
+            _availTime = _horizontalDMs.Keys.ToList();
             _masks = _availTime.ToDictionary(a => a, b => Enumerable.Range(0, Slot).Select(x => new Mask()).ToArray());
 
             static void AddToTimeline(int t, DMItem item, Dictionary<int, List<DMItem>> container)
@@ -295,12 +310,31 @@ namespace HotPotPlayer.Video.UI.Controls
                 }
             }
 
-            _texts = new Queue<DanmakuTextControl>();
+            _toBeRecycledTexts = new Queue<DanmakuTextControl>();
         }
 
         private void Host_SizeChanged(object sender, SizeChangedEventArgs e)
         {
             Refresh();
+        }
+
+        void OnIsPlayingChanged(bool oldVal, bool newVal)
+        {
+            if (!oldVal && newVal) //from pause to playing
+            {
+                if (_horizontalTimer.IsEnabled)
+                {
+                    //already playing dm
+                }
+                else
+                {
+                    Resume();
+                }
+            }
+            else if(oldVal && !newVal)
+            {
+                Pause();
+            }
         }
 
         public void Pause()
@@ -309,9 +343,9 @@ namespace HotPotPlayer.Video.UI.Controls
             {
                 return;
             }
-            _tickTimer.Stop();
-            _topTickTimer.Stop();
-            _texts.Select(tb =>
+            _horizontalTimer.Stop();
+            _topTimer.Stop();
+            _toBeRecycledTexts.Select(tb =>
             {
                 tb.StopOffsetAnimation();
                 return true;
@@ -324,13 +358,10 @@ namespace HotPotPlayer.Video.UI.Controls
             {
                 return;
             }
-            if (_texts.Count == 0)
-            {
-                return;
-            }
-            _tickTimer.Start();
-            _topTickTimer.Start();
-            _texts.Select(tb =>
+            _horizontalTimer.Start();
+            _topTimer.Start();
+            if (_toBeRecycledTexts.Count == 0) return;
+            _toBeRecycledTexts.Select(tb =>
             {
                 tb.ContinueOffsetAnimation();
                 return true;
@@ -347,34 +378,44 @@ namespace HotPotPlayer.Video.UI.Controls
             {
                 return;
             }
-            CalculateTotalSlot();
-            if (!_tickTimer.IsEnabled)
+            RefreshVerticalSlot();
+
+            if (!IsPlaying)
+            {
+                return;
+            }
+            if (!_horizontalTimer.IsEnabled)
             {
                 DmTick(null, null);
 
-                _tickTimer.Start();
-                _topTickTimer.Start();
+                _horizontalTimer.Start();
+                _topTimer.Start();
             }
             else
             {
-                _tickTimer.Stop();
-                _topTickTimer.Stop();
+                _horizontalTimer.Stop();
+                _topTimer.Stop();
                 Host.Children.Clear();
-                _texts?.Clear();
-                foreach (var (i, m) in _masks)
-                {
-                    foreach (var item in m)
-                    {
-                        item.occupied = false;
-                    }
-                }
+                _toBeRecycledTexts?.Clear();
+                ClearMask();
                 DmTick(null, null);
-                _tickTimer.Start();
-                _topTickTimer.Start();
+                _horizontalTimer.Start();
+                _topTimer.Start();
             }
         }
 
-        private void CalculateTotalSlot()
+        private void ClearMask()
+        {
+            foreach (var (i, m) in _masks)
+            {
+                foreach (var item in m)
+                {
+                    item.occupied = false;
+                }
+            }
+        }
+
+        private void RefreshVerticalSlot()
         {
             var height = Host.ActualHeight;
             var step = _slotStep;
