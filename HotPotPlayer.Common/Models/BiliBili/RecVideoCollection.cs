@@ -16,11 +16,11 @@ namespace HotPotPlayer.Models.BiliBili
     {
         int _pageNum;
         readonly BiliBiliService _service;
-        public RecVideoCollection(HomeData data, BiliBiliService service) : base(data?.Items)
+        public RecVideoCollection(HomeData data, BiliBiliService service) : base(data == null ? Enumerable.Empty<HomeDataItem>() : data.Items)
         {
             _pageNum = 1;
             _service = service;
-            _hasMore = true;
+            _hasMore = data == null ? false: true;
         }
 
         private bool _hasMore;
