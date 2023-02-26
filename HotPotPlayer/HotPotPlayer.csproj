@@ -78,6 +78,7 @@
     <None Remove="Pages\Bilibili.xaml" />
     <None Remove="Pages\BilibiliSub\BiliVideoPlay.xaml" />
     <None Remove="Pages\BilibiliSub\Dynamic.xaml" />
+    <None Remove="Pages\BilibiliSub\History.xaml" />
     <None Remove="Pages\BilibiliSub\Login.xaml" />
     <None Remove="Pages\BilibiliSub\Main.xaml" />
     <None Remove="Pages\BilibiliSub\User.xaml" />
@@ -410,6 +411,11 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Remove="Pages\BilibiliSub\User.xaml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Page Update="Pages\BilibiliSub\History.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
   </ItemGroup>
   <ItemGroup>
     <Page Update="Controls\BilibiliSub\ShareFlyout.xaml">

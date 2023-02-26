@@ -1,0 +1,29 @@
+<!-- Copyright (c) Microsoft Corporation and Contributors. -->
+<!-- Licensed under the MIT License. -->
+
+<base:UserControlBase
+    x:Class="HotPotPlayer.Pages.BilibiliSub.History"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:base="using:HotPotPlayer"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:HotPotPlayer.Pages.BilibiliSub"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    x:DefaultBindMode="OneWay"
+    mc:Ignorable="d">
+
+    <Grid >
+        <GridView
+                ItemsSource="{x:Bind HistoryItems}" 
+                Style="{StaticResource CardGridViewStyle}"
+                ItemTemplate="{StaticResource BiliHistoryCardViewTemplate}"
+                ItemClick="BiliHistoryClick"
+                IncrementalLoadingTrigger="Edge"
+                IncrementalLoadingThreshold="1"
+            >
+            <GridView.Footer>
+                <Grid Height="100"/>
+            </GridView.Footer>
+        </GridView>
+    </Grid>
+</base:UserControlBase>

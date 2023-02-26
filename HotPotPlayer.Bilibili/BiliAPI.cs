@@ -21,6 +21,9 @@ using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
 using HotPotPlayer.Bilibili.ApiTools;
+using System.Diagnostics;
+using System.Security.Cryptography;
+using HotPotPlayer.Bilibili.Models.History;
 
 namespace HotPotPlayer.BiliBili
 {
@@ -440,6 +443,48 @@ namespace HotPotPlayer.BiliBili
                 ["csrf"] = GetCsrf()
             });
             var res = JsonConvert.DeserializeObject<BiliResult>(r);
+            return res;
+        }
+
+        /// <summary>
+        /// https://github.com/SocialSisterYi/bilibili-API-collect/blob/master/docs/video/report.md
+        /// </summary>
+        /// <param name="bvid"></param>
+        /// <param name="cid"></param>
+        /// <param name="playedTime"></param>
+        /// <param name="playType"></param>
+        /// <returns></returns>
+        public async Task<BiliResult?> HeartBeat(string bvid, string cid, int playedTime, int playType)
+        {
+            var r = await PostAsync("https://api.bilibili.com/x/click-interface/web/heartbeat", new Dictionary<string, string>
+            {
+                ["bvid"] = bvid,
+                ["cid"] = cid,
+                ["played_time"] = playedTime.ToString(),
+                ["play_type"] = playType.ToString(),
+                ["csrf"] = GetCsrf()
+            });
+            var res = JsonConvert.DeserializeObject<BiliResult>(r);
+            return res;
+        }
+
+        /// <summary>
+        /// https://github.com/SocialSisterYi/bilibili-API-collect/blob/master/docs/history%26toview/history.md
+        /// </summary>
+        /// <param name="max"></param>
+        /// <param name="business"></param>
+        /// <returns></returns>
+        public async Task<BiliResult<HistoryData>?> History(int max = 0, string business = "archive")
+        {
+            var r = await GetAsync("https://api.bilibili.com/x/web-interface/history/cursor", ResponseEnum.Web,
+                new Dictionary<string, string>
+                {
+                    ["max"] = max.ToString(),
+                    ["business"] = business,
+                    ["type"] = "archive",
+                    ["ps"] = "30"
+                });
+            var res = JsonConvert.DeserializeObject<BiliResult<HistoryData>>(r);
             return res;
         }
 

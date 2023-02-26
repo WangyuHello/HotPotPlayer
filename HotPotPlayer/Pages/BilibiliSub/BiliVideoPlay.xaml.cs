@@ -138,6 +138,7 @@ namespace HotPotPlayer.Pages.BilibiliSub
 
             IsLoading = false;
 
+            await BiliBiliService.API.Report(aid, cid, 0);
             OnLineCount = await BiliBiliService.API.GetOnlineCount(Video.Bvid, Video.FirstCid);
             var replies = (await BiliBiliService.API.GetVideoReplyAsync(Video.Aid)).Data;
             Replies = new ReplyItemCollection(replies, "1", Video.Aid, BiliBiliService);
@@ -306,22 +307,31 @@ namespace HotPotPlayer.Pages.BilibiliSub
 
         Visibility GetMultiPageVisible(VideoContent video)
         {
+            if (video == null)
+            {
+                return Visibility.Collapsed;
+            }
             return video.Videos > 1 ? Visibility.Visible : Visibility.Collapsed;
         }
 
         Visibility GetUgcSeasonVisible(VideoContent video)
         {
+            if (video == null)
+            {
+                return Visibility.Collapsed;
+            }
             return video.UgcSeason != null ? Visibility.Visible : Visibility.Collapsed;
         }
 
         string GetSelectedPageAndAll(int selectedPage, VideoContent video)
         {
+            if (video == null) return "";
             return $"({selectedPage+1}/{video.Videos})";
         }
 
         string GetSelectedEpisodeAndAll(int selectedEpisode, VideoContent video)
         {
-            if (video.UgcSeason == null)
+            if (video?.UgcSeason == null)
             {
                 return "-";
             }

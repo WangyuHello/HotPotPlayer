@@ -1,4 +1,4 @@
-﻿using HotPotPlayer.Bilibili.Models.HomeVideo;
+﻿using HotPotPlayer.Bilibili.Models.Dynamic;
 using HotPotPlayer.Services;
 using Microsoft.UI.Xaml.Data;
 using System;
@@ -12,15 +12,17 @@ using Windows.Foundation;
 
 namespace HotPotPlayer.Models.BiliBili
 {
-    public class RecVideoCollection : ObservableCollection<HomeDataItem>, ISupportIncrementalLoading
+    public class DynamicItemCollection : ObservableCollection<DynamicItem>, ISupportIncrementalLoading
     {
         int _pageNum;
+        string _prevOffset;
         readonly BiliBiliService _service;
-        public RecVideoCollection(HomeData data, BiliBiliService service) : base(data?.Items)
+        public DynamicItemCollection(DynamicData data, BiliBiliService service) : base(data.DynamicItems)
         {
             _pageNum = 1;
+            _prevOffset = data.OffSet;
             _service = service;
-            _hasMore = true;
+            _hasMore = data.HasMore;
         }
 
         private bool _hasMore;
@@ -31,21 +33,14 @@ namespace HotPotPlayer.Models.BiliBili
             return AsyncInfo.Run(async (token) =>
             {
                 _pageNum++;
-                var dyn = await _service.API.GetRecVideo(_pageNum);
-                if (dyn.Data == null)
+                var dyn = await _service.API.GetDynamic(DynamicType.All, _prevOffset, _pageNum);
+                foreach (var item in dyn.Data.DynamicItems)
                 {
-                    _hasMore = false;
-                    return new LoadMoreItemsResult() { Count = 0 };
+                    Add(item);
                 }
-                else
-                {
-                    _hasMore = true;
-                    foreach (var item in dyn.Data.Items)
-                    {
-                        Add(item);
-                    }
-                    return new LoadMoreItemsResult() { Count = (uint)dyn.Data.Items.Count };
-                }
+                _prevOffset = dyn.Data.OffSet;
+                _hasMore = dyn.Data.HasMore;
+                return new LoadMoreItemsResult() { Count = (uint)dyn.Data.DynamicItems.Count };
             });
         }
     }

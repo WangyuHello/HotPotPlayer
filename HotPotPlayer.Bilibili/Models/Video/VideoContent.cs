@@ -1,4 +1,5 @@
-﻿using HotPotPlayer.Bilibili.Models.Dynamic;
+﻿using HotPotPlayer.Bilibili.Extensions;
+using HotPotPlayer.Bilibili.Models.Dynamic;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -78,12 +79,7 @@ namespace HotPotPlayer.Bilibili.Models.Video
 
         public string GetUpDateTime2()
         {
-            int i = int.Parse(PubDate);
-            var ts = TimeSpan.FromSeconds(i);
-            var time = new DateTime(ts.Ticks);
-            time = time.AddYears(1969);
-            time = time.AddHours(8);
-            return $"{time.Year}-{time.Month}-{time.Day} {time:hh\\:mm\\:ss}";
+            return PubDate.GetDateTime();
         }
 
         /// <summary>

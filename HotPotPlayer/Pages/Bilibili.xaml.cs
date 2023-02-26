@@ -41,6 +41,10 @@ namespace HotPotPlayer.Pages
                 {
                     BiliDynamic.LoadDynamicAsync();
                 }
+                else if(nv == 2)
+                {
+                    BiliHistory.LoadHistoryAsync();
+                }
             });
         }
 
@@ -66,9 +70,13 @@ namespace HotPotPlayer.Pages
             {
                 BiliMain.LoadPopularVideosAsync();
             }
-            else
+            else if(SelectedSubPage == 1)
             {
                 BiliDynamic.LoadDynamicAsync(true);
+            }
+            else if(SelectedSubPage == 2)
+            {
+                BiliHistory.LoadHistoryAsync(true);
             }
         }
 

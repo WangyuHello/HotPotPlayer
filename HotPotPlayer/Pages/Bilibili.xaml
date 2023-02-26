@@ -20,6 +20,9 @@
             <PivotItem Header="动态" Margin="0">
                 <bili:Dynamic x:Name="BiliDynamic" Margin="-36,0,0,0"/>
             </PivotItem>
+            <PivotItem Header="播放历史" Margin="0">
+                <bili:History x:Name="BiliHistory" />
+            </PivotItem>
             <PivotItem Header="番剧" Margin="0">
 
             </PivotItem>

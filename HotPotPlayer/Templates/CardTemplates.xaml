@@ -7,6 +7,8 @@
     xmlns:bili="using:HotPotPlayer.Bilibili.Models.HomeVideo"
     xmlns:bili2="using:HotPotPlayer.Bilibili.Models.Video"
     xmlns:bili3="using:HotPotPlayer.Bilibili.Models.User"
+    xmlns:biliHis="using:HotPotPlayer.Bilibili.Models.History"
+    xmlns:biliext="using:HotPotPlayer.Bilibili.Extensions"
     xmlns:cont2="using:HotPotPlayer.UI.Controls"
     xmlns:ui="using:CommunityToolkit.WinUI.UI"
     xmlns:conv="using:HotPotPlayer.UI.Converters"
@@ -578,5 +580,62 @@
             <TextBlock Text="{Binding RelativeSource={RelativeSource Mode=TemplatedParent}, Converter={StaticResource GridIndexConverter}}" FontFamily="{ThemeResource MiSansRegular}" />
             <TextBlock Margin="20,0,0,0" Text="{x:Bind SearchWord}" FontFamily="{ThemeResource MiSansRegular}" TextTrimming="CharacterEllipsis"/>
         </Grid>
+    </DataTemplate>
+
+    <DataTemplate x:Key="BiliHistoryCardViewTemplate" x:DataType="biliHis:HistoryItem">
+        <StackPanel 
+            Width="300"
+            Padding="0,0,0,12"
+            x:Name="BiliHistoryCardConnectedElement"
+            BorderBrush="{ThemeResource ButtonBorderBrush}"
+            BorderThickness="{ThemeResource ButtonBorderThemeThickness}"
+            CornerRadius="4"
+            ui:VisualExtensions.NormalizedCenterPoint="0.5"
+            Loaded="Root_Loaded"
+            Background="White"
+            >
+            <cont2:ImageEx2 
+                CornerRadius="4"
+                Source="{x:Bind Cover}" 
+                Style="{StaticResource LocalVideoImageStyle}"
+                />
+            <Grid Margin="0,-24,0,0" Height="24" Padding="8,0">
+                <Grid.Background>
+                    <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
+                        <GradientStop Offset="0" Color="Transparent"/>
+                        <GradientStop Offset="0.2" Color="#10000000"/>
+                        <GradientStop Offset="0.8" Color="#80000000"/>
+                    </LinearGradientBrush>
+                </Grid.Background>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+                <FontIcon FontFamily="{ThemeResource SegoeIcons}" Foreground="White" FontSize="13" Margin="0,-6,4,0" Glyph="&#xE102;" />
+                <FontIcon Grid.Column="2" FontFamily="{ThemeResource SegoeIcons}" Foreground="White" FontSize="13" Margin="12,-6,4,0" Glyph="&#xE134;" />
+                <TextBlock Grid.Column="5" Text="{x:Bind biliext:TimeExtensions.GetDuration(Duration)}" FontSize="13" Foreground="White" FontFamily="{ThemeResource MiSansRegular}" />
+            </Grid>
+            <TextBlock 
+                Margin="8,8" 
+                Text="{x:Bind Title}" 
+                LineStackingStrategy="BaselineToBaseline" 
+                FontSize="14" 
+                MaxLines="2" 
+                TextTrimming="CharacterEllipsis" 
+                TextWrapping="Wrap" 
+                Height="40" 
+                ToolTipService.ToolTip="{x:Bind Title}" 
+                FontFamily="{ThemeResource MiSansMedium}"
+                />
+            <StackPanel Orientation="Horizontal" Padding="8,0">
+                <FontIcon Grid.Column="2" FontFamily="{ThemeResource SegoeIcons}" Foreground="Gray" FontSize="13" Margin="0,0,6,0" Glyph="&#xE125;" />
+                <TextBlock Text="{x:Bind AuthorName}" Foreground="Gray" FontFamily="{ThemeResource MiSansRegular}" />
+                <TextBlock Margin="12,0" Text="{x:Bind biliext:TimeExtensions.GetDateTime(ViewAt)}" Foreground="Gray" FontFamily="{ThemeResource MiSansRegular}" />
+            </StackPanel>
+        </StackPanel>
     </DataTemplate>
 </ResourceDictionary>
