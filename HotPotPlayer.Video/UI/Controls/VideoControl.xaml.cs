@@ -244,13 +244,13 @@ namespace HotPotPlayer.Video.UI.Controls
         }
 
         private string selectedDefinition;
-
+        bool selectedDefinitionGuard;
         public string SelectedDefinition
         {
             get => selectedDefinition;
             set => Set(ref selectedDefinition, value, nv =>
             {
-                if (_currentMediaInited && !string.IsNullOrEmpty(nv))
+                if (!selectedDefinitionGuard && !string.IsNullOrEmpty(nv))
                 {
                     StartPlay(nv);
                 }
@@ -492,8 +492,13 @@ namespace HotPotPlayer.Video.UI.Controls
                         (var sel, var vurl) = bv.GetPreferVideoUrl(selectedDefinition, SelectedCodecStrategy);
                         if (!_currentMediaInited)
                         {
-                            SelectedDefinition = sel;
-                            UIQueue.TryEnqueue(() => Definitions = bv.Videos.Keys.ToList());
+                            UIQueue.TryEnqueue(() => 
+                            {
+                                Definitions = bv.Videos.Keys.ToList();
+                                selectedDefinitionGuard = true;
+                                SelectedDefinition = sel;
+                                selectedDefinitionGuard = false;
+                            });
                         }
                         var aurl = bv.GetPreferAudioUrl();
                         //BiliBiliService.Proxy.AudioUrl = bv.GetPreferAudioUrl();
