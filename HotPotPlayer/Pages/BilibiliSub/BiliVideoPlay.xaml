@@ -32,6 +32,7 @@
                 <RowDefinition Height="{x:Bind GetTitleHeight(IsFullPage)}" />
                 <RowDefinition Height="{x:Bind GetTitleHeight(IsFullPage)}" />
             </Grid.RowDefinitions>
+            <FontIcon FontFamily="{ThemeResource BiliIcons}" Glyph="&#xEA10;" FontSize="120" Foreground="#dbdcdc"/>
             <vcont:VideoControl x:Name="VideoPlayer" 
                                 Source="{x:Bind Source}" 
                                 DmData="{x:Bind DmData}" 
