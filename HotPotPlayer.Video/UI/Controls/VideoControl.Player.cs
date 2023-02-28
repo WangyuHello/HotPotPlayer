@@ -167,6 +167,7 @@ namespace HotPotPlayer.Video.UI.Controls
             Task.Run(() =>
             {
                 _fence.WaitOne();
+                Task.Delay(500).Wait();
                 if (_mpv == null)
                 {
                     InitMpv(isFullPageHost, _currentWidth, _currentHeight, _currentScaleX, _currentScaleY);
@@ -211,18 +212,8 @@ namespace HotPotPlayer.Video.UI.Controls
                             });
                         }
                         var aurl = bv.GetPreferAudioUrl();
-                        //BiliBiliService.Proxy.AudioUrl = bv.GetPreferAudioUrl();
-                        //BiliBiliService.Proxy.CookieString = BiliBiliService.API.CookieString;
                         if (sel.Contains("杜比") || sel.Contains("HDR")) _mpv.API.SetPropertyString("vo", "gpu");
-                        //_mpv.Load(BiliBiliService.Proxy.VideoUrl);
-                        //_mpv.Load(mpd);
-                        //_mpv.Load("http://localhost:18909/video.m4s");
                         var edl = bv.GetEdlProtocal(vurl, aurl);
-                        //_mpv.PlaylistClear();
-                        //if (_mediaInited)
-                        //{
-                        //    _mpv.Stop();
-                        //}
                         _mpv.LoadAsync(edl, true);
                     }
                 }
