@@ -17,9 +17,9 @@ namespace HotPotPlayer.Video.UI.Controls
 {
     public partial class VideoControl
     {
-        void InitMpv(bool isFullPageHost, int width, int height, float scalex, float scaley)
+        void InitMpv(bool isFullPageHost)
         {
-            _mpv = new MpvPlayer(App.MainWindowHandle, @"NativeLibs\mpv-2.dll", width, height, scalex, scaley, _currentWindowBounds)
+            _mpv = new MpvPlayer(App.MainWindowHandle, @"NativeLibs\mpv-2.dll", _currentWidth, _currentHeight, _currentScaleX, _currentScaleY, _currentWindowBounds)
             {
                 AutoPlay = true,
                 Volume = 100,
@@ -36,6 +36,12 @@ namespace HotPotPlayer.Video.UI.Controls
             _mpv.MediaUnloaded += MediaUnloaded;
             _mpv.MediaStartedSeeking += MediaStartedSeeking;
             _mpv.MediaEndedSeeking += MediaEndedSeeking;
+        }
+
+        void InitMpvGeometry()
+        {
+            _mpv.SetPanelSize(_currentWidth, _currentHeight);
+            _mpv.SetPanelScale(_currentScaleX, _currentScaleY);
         }
 
         void DisposeMpv()
@@ -166,12 +172,13 @@ namespace HotPotPlayer.Video.UI.Controls
             // 在独立线程初始化MPV
             Task.Run(() =>
             {
-                _fence.WaitOne();
-                Task.Delay(500).Wait();
                 if (_mpv == null)
                 {
-                    InitMpv(isFullPageHost, _currentWidth, _currentHeight, _currentScaleX, _currentScaleY);
+                    _fence.WaitOne();
+                    Task.Delay(500).Wait();
+                    InitMpv(isFullPageHost);
                 }
+                InitMpvGeometry();
 
                 //_mpv.API.SetPropertyString("vo", "gpu");
                 _mpv.API.SetPropertyString("vo", "gpu-next");
