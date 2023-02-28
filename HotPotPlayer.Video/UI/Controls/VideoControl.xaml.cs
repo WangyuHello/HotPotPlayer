@@ -307,6 +307,7 @@ namespace HotPotPlayer.Video.UI.Controls
         DispatcherTimer _inActiveTimer;
         bool _mediaInited;
         bool _mediaFinished;
+        AutoResetEvent _fence = new(false);
 
         IntPtr _devicePtr;
         ID3D11Device _device;

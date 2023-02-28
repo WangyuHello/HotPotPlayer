@@ -103,6 +103,7 @@ namespace HotPotPlayer.Pages.BilibiliSub
         {
             IsLoading = true;
             IsAdditionLoading = true;
+            VideoPlayer.SetPlayerFence();
 
             if (para is string b) //bvid
             {
@@ -164,6 +165,8 @@ namespace HotPotPlayer.Pages.BilibiliSub
             {
                 DetermineSelectedEpisode();
             }
+
+            VideoPlayer.ReleasePlayerFence();
         }
 
         protected override async void OnNavigatedFrom(NavigationEventArgs e)

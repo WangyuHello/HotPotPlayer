@@ -145,6 +145,16 @@ namespace HotPotPlayer.Video.UI.Controls
             });
         }
 
+        public void SetPlayerFence()
+        {
+            _fence.Reset();
+        }
+
+        public void ReleasePlayerFence()
+        {
+            _fence.Set();
+        }
+
         public void StartPlay(string selectedDefinition = "")
         {
             if (!Host.IsLoaded || Host.ActualSize.X <= 1 || Host.ActualSize.Y <= 1 || CurrentPlayList == null)
@@ -154,9 +164,9 @@ namespace HotPotPlayer.Video.UI.Controls
             var isFullPageHost = IsFullPageHost;
 
             // 在独立线程初始化MPV
-            Task.Run(async () =>
+            Task.Run(() =>
             {
-                await Task.Delay(TimeSpan.FromSeconds(1));
+                _fence.WaitOne();
                 if (_mpv == null)
                 {
                     InitMpv(isFullPageHost, _currentWidth, _currentHeight, _currentScaleX, _currentScaleY);

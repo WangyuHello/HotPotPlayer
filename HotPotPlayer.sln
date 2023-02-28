@@ -19,7 +19,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HotPotPlayer.Native", "HotP
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HotPotPlayer.Bilibili", "HotPotPlayer.Bilibili\HotPotPlayer.Bilibili.csproj", "{0A8242CF-11BF-44F0-A178-8F985EF90DCE}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HotPotPlayer.Interop", "HotPotPlayer.Interop\HotPotPlayer.Interop.csproj", "{2FCFD18B-83FF-473E-B84B-E47A131A1C9F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HotPotPlayer.Interop", "HotPotPlayer.Interop\HotPotPlayer.Interop.csproj", "{2FCFD18B-83FF-473E-B84B-E47A131A1C9F}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -163,8 +163,8 @@ Global
 		{8FBB9609-E71F-4CB3-9DF8-009513F42741}.Release|x64.Build.0 = Release|x64
 		{8FBB9609-E71F-4CB3-9DF8-009513F42741}.Release|x86.ActiveCfg = Release|x64
 		{8FBB9609-E71F-4CB3-9DF8-009513F42741}.Release|x86.Build.0 = Release|x64
-		{A6E18E69-095A-438B-B002-48FE9F3B3FF1}.Debug|Any CPU.ActiveCfg = Debug|x64
-		{A6E18E69-095A-438B-B002-48FE9F3B3FF1}.Debug|Any CPU.Build.0 = Debug|x64
+		{A6E18E69-095A-438B-B002-48FE9F3B3FF1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A6E18E69-095A-438B-B002-48FE9F3B3FF1}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A6E18E69-095A-438B-B002-48FE9F3B3FF1}.Debug|ARM.ActiveCfg = Debug|x64
 		{A6E18E69-095A-438B-B002-48FE9F3B3FF1}.Debug|ARM.Build.0 = Debug|x64
 		{A6E18E69-095A-438B-B002-48FE9F3B3FF1}.Debug|arm64.ActiveCfg = Debug|x64
