@@ -493,7 +493,7 @@
                         ContentTemplate="{TemplateBinding RightHeaderTemplate}"
                         HorizontalAlignment="Stretch"
                         VerticalAlignment="Stretch" />
-                                        <ItemsPresenter x:Name="PivotItemPresenter" Grid.Row="1" Grid.ColumnSpan="3" Padding="24,0">
+                                        <ItemsPresenter x:Name="PivotItemPresenter" Grid.Row="1" Grid.ColumnSpan="3" Padding="0,0">
                                             <ItemsPresenter.RenderTransform>
                                                 <TransformGroup>
                                                     <TranslateTransform x:Name="ItemsPresenterTranslateTransform" />

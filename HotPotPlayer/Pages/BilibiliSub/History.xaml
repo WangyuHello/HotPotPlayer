@@ -20,6 +20,7 @@
                 ItemClick="BiliHistoryClick"
                 IncrementalLoadingTrigger="Edge"
                 IncrementalLoadingThreshold="1"
+                Padding="24,0"
             >
             <GridView.Footer>
                 <Grid Height="100"/>
