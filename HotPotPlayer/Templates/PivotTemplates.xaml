@@ -6,7 +6,6 @@
     <DataTemplate x:Key="GeneralPivotHeaderTemplate">
         <TextBlock 
             Text="{Binding }" 
-            FontSize="24" 
             FontWeight="Medium" 
             FontFamily="{ThemeResource MiSansRegular}"
             />

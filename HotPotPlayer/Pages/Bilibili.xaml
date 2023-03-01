@@ -12,8 +12,11 @@
     NavigationCacheMode="Enabled"
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
 
-    <Grid Background="White" Padding="36,28,0,0">
-        <Pivot HeaderTemplate="{StaticResource GeneralPivotHeaderTemplate}" SelectedIndex="{x:Bind SelectedSubPage, Mode=TwoWay}">
+    <Grid Background="White" Padding="0,0,0,0">
+        <Pivot Style="{StaticResource HorizontalCenterPivot}" Background="#f0f3f2"
+               HeaderTemplate="{StaticResource GeneralPivotHeaderTemplate}" 
+               SelectedIndex="{x:Bind SelectedSubPage, Mode=TwoWay}"
+               >
             <PivotItem Header="推荐" Margin="0">
                 <bili:Main x:Name="BiliMain"/>
             </PivotItem>
@@ -27,14 +30,21 @@
 
             </PivotItem>
         </Pivot>
-        <StackPanel Margin="0,8,8,0" Orientation="Horizontal" VerticalAlignment="Top" HorizontalAlignment="Right" >
+        <!--<StackPanel Margin="0,8,8,0" Orientation="Horizontal" VerticalAlignment="Top" HorizontalAlignment="Right" >
             <TextBox x:Name="BVID" PlaceholderText="输入BV号" Width="160" Height="28"/>
             <Button Margin="8,0,0,0" Click="BVPlay">播放</Button>
             <Button Width="40" Height="40" Margin="12,0,0,0"
                 Style="{StaticResource TransparentButton}" Click="RefreshClick">
                 <FontIcon FontFamily="{ThemeResource SegoeIcons}" Glyph="&#xE149;" />
             </Button>
-        </StackPanel>
+        </StackPanel>-->
+        <Grid x:Name="Search" Margin="24,18" VerticalAlignment="Top" HorizontalAlignment="Left" Height="32" Width="260" CornerRadius="16" Background="White" BorderThickness="0.8" BorderBrush="{ThemeResource ButtonBorderThemeBrush}" >
+            <TextBlock Text="搜索" Margin="12,0" Foreground="Gray" HorizontalAlignment="Left" VerticalAlignment="Center" FontFamily="{ThemeResource MiSansRegular}"/>
+            <FontIcon FontFamily="{ThemeResource SegoeIcons}" Glyph="&#xE11A;" Margin="12,0" HorizontalAlignment="Right" FontSize="16"/>
+        </Grid>
 
+        <StackPanel Margin="24,18" VerticalAlignment="Top" HorizontalAlignment="Right">
+            
+        </StackPanel>
     </Grid>
 </base:PageBase>

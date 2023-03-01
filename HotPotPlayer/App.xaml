@@ -17,6 +17,7 @@
                 <ResourceDictionary Source="ms-appx:///Styles/Sliders.xaml" />
                 <ResourceDictionary Source="ms-appx:///Styles/GridViews.xaml" />
                 <ResourceDictionary Source="ms-appx:///Styles/ListViews.xaml" />
+                <ResourceDictionary Source="ms-appx:///Styles/Pivots.xaml" />
                 <!--Templates-->
                 <ResourceDictionary Source="ms-appx:///Templates/PivotTemplates.xaml" />
                 <t:CardTemplates />
