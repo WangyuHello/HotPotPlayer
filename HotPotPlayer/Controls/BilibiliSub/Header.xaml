@@ -1,0 +1,73 @@
+<!-- Copyright (c) Microsoft Corporation and Contributors. -->
+<!-- Licensed under the MIT License. -->
+
+<UserControl
+    x:Class="HotPotPlayer.Controls.BilibiliSub.Header"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:HotPotPlayer.Controls.BilibiliSub"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:cont2="using:HotPotPlayer.UI.Controls"
+    xmlns:bcont="using:HotPotPlayer.Controls.BilibiliSub"
+    x:DefaultBindMode="OneWay"
+    mc:Ignorable="d">
+
+    <UserControl.Resources>
+        
+    </UserControl.Resources>
+
+    <Grid Height="64" Background="{ThemeResource AcrylicInAppFillColorDefaultBrush}">
+
+        <StackPanel x:Name="HeaderContainer" Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center" Spacing="8">
+            <ToggleButton Click="HeaderItemClick" Style="{StaticResource BiliHeaderToggleButton}" IsChecked="True">
+                推荐
+            </ToggleButton>
+            <ToggleButton Click="HeaderItemClick" Style="{StaticResource BiliHeaderToggleButton}">
+                动态
+            </ToggleButton>
+            <ToggleButton Click="HeaderItemClick" Style="{StaticResource BiliHeaderToggleButton}" Padding="8,8">
+                <FontIcon FontFamily="{ThemeResource BiliIcons}" Glyph="&#xEA0E;" />
+            </ToggleButton>
+            <ToggleButton Click="HeaderItemClick" Style="{StaticResource BiliHeaderToggleButton}">
+                番剧
+            </ToggleButton>
+        </StackPanel>
+
+
+
+        <cont2:ImageEx2 x:Name="Avatar"
+            VerticalAlignment="Top" HorizontalAlignment="Right"
+            Margin="0,12,150,0"
+            Source="{x:Bind NavData.Face}" 
+            Style="{StaticResource LocalMusicImageStyle}" 
+            Width="40" Height="40"
+            CornerRadius="22"
+            Tapped="Avatar_Tapped"
+            >
+            <cont2:ImageEx2.ContextFlyout>
+                <Flyout>
+                    <bcont:SelfAvatar NavData="{x:Bind NavData}" NavStatData="{x:Bind NavStatData}"/>
+                </Flyout>
+            </cont2:ImageEx2.ContextFlyout>
+        </cont2:ImageEx2>
+
+        <StackPanel Margin="0,24,8,0" VerticalAlignment="Top" HorizontalAlignment="Right">
+            <Button Width="36" Height="36" Margin="12,0,0,0"
+                Style="{StaticResource TransparentButton}" Click="RefreshClick">
+                <FontIcon FontFamily="{ThemeResource SegoeIcons}" Glyph="&#xE149;" />
+            </Button>
+        </StackPanel>
+        
+        <Grid x:Name="Search" Margin="24,16" VerticalAlignment="Top" HorizontalAlignment="Left" Height="32" Width="260" CornerRadius="16" Background="White" BorderThickness="0.8" BorderBrush="{ThemeResource ButtonBorderThemeBrush}" >
+            <TextBlock Text="搜索" Margin="12,0" Foreground="Gray" HorizontalAlignment="Left" VerticalAlignment="Center" FontFamily="{ThemeResource MiSansRegular}"/>
+            <FontIcon FontFamily="{ThemeResource SegoeIcons}" Glyph="&#xE11A;" Margin="12,0" HorizontalAlignment="Right" FontSize="16"/>
+        </Grid>
+        
+        <!--<StackPanel Margin="0,8,8,0" Orientation="Horizontal" VerticalAlignment="Top" HorizontalAlignment="Right" >
+            <TextBox x:Name="BVID" PlaceholderText="" Width="160" Height="28"/>
+            <Button Margin="8,0,0,0" Click="BVPlay"></Button>
+            
+        </StackPanel>-->
+    </Grid>
+</UserControl>

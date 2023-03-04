@@ -72,7 +72,7 @@ namespace HotPotPlayer.Pages
             IsFirstNavigate = false;
         }
 
-        private void RefreshClick(object sender, RoutedEventArgs args)
+        private void RefreshClick()
         {
             if (SelectedSubPage == 0)
             {
@@ -123,9 +123,5 @@ namespace HotPotPlayer.Pages
             if (drag != null) { App.SetDragRegionForTitleBar(drag); }
         }
 
-        private void Avatar_Tapped(object sender, TappedRoutedEventArgs e)
-        {
-            Avatar.ContextFlyout.ShowAt(Avatar);
-        }
     }
 }

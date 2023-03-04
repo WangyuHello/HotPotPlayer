@@ -19,8 +19,11 @@
                 ItemClick="BiliVideoClick"
                 IncrementalLoadingTrigger="Edge"
                 IncrementalLoadingThreshold="1"
-                Padding="24,0"
+                Padding="24,0,24,0"
             >
+            <GridView.Header>
+                <Grid Height="72"/>
+            </GridView.Header>
             <GridView.Footer>
                 <Grid Height="100"/>
             </GridView.Footer>

@@ -8,7 +8,6 @@
     xmlns:control="using:HotPotPlayer.Controls"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    xmlns:cont2="using:HotPotPlayer.UI.Controls"
     xmlns:bcont="using:HotPotPlayer.Controls.BilibiliSub"
     mc:Ignorable="d"
     x:DefaultBindMode="OneWay"
@@ -17,54 +16,21 @@
     >
 
     <Grid x:Name="Root" Background="White" Padding="0,0,0,0" SizeChanged="Root_SizeChanged">
-        <Pivot Style="{StaticResource HorizontalCenterPivot}" Background="#f0f3f2"
-               HeaderTemplate="{StaticResource GeneralPivotHeaderTemplate}" 
-               SelectedIndex="{x:Bind SelectedSubPage, Mode=TwoWay}"
-               >
-            <PivotItem Header="推荐" Margin="0">
+        <Pivot Margin="0,-56,0,0" Background="#f0f3f2" SelectedIndex="{x:Bind SelectedSubPage, Mode=TwoWay}" HeaderTemplate="{x:Null}">
+            <PivotItem Margin="0">
                 <bili:Main x:Name="BiliMain"/>
             </PivotItem>
-            <PivotItem Header="动态" Margin="0">
+            <PivotItem Margin="0">
                 <bili:Dynamic x:Name="BiliDynamic" Margin="-36,0,0,0"/>
             </PivotItem>
-            <PivotItem Header="播放历史" Margin="0">
+            <PivotItem Margin="0">
                 <bili:History x:Name="BiliHistory" />
             </PivotItem>
-            <PivotItem Header="番剧" Margin="0">
+            <PivotItem Margin="0">
 
             </PivotItem>
         </Pivot>
-        <!--<StackPanel Margin="0,8,8,0" Orientation="Horizontal" VerticalAlignment="Top" HorizontalAlignment="Right" >
-            <TextBox x:Name="BVID" PlaceholderText="输入BV号" Width="160" Height="28"/>
-            <Button Margin="8,0,0,0" Click="BVPlay">播放</Button>
-            
-        </StackPanel>-->
-        <Grid x:Name="Search" Margin="24,18" VerticalAlignment="Top" HorizontalAlignment="Left" Height="32" Width="260" CornerRadius="16" Background="White" BorderThickness="0.8" BorderBrush="{ThemeResource ButtonBorderThemeBrush}" >
-            <TextBlock Text="搜索" Margin="12,0" Foreground="Gray" HorizontalAlignment="Left" VerticalAlignment="Center" FontFamily="{ThemeResource MiSansRegular}"/>
-            <FontIcon FontFamily="{ThemeResource SegoeIcons}" Glyph="&#xE11A;" Margin="12,0" HorizontalAlignment="Right" FontSize="16"/>
-        </Grid>
-
-        <cont2:ImageEx2 x:Name="Avatar"
-            VerticalAlignment="Top" HorizontalAlignment="Right"
-            Margin="0,12,150,0"
-            Source="{x:Bind NavData.Face}" 
-            Style="{StaticResource LocalMusicImageStyle}" 
-            Width="40" Height="40"
-            CornerRadius="22"
-            Tapped="Avatar_Tapped"
-            >
-            <cont2:ImageEx2.ContextFlyout>
-                <Flyout>
-                    <bcont:SelfAvatar NavData="{x:Bind NavData}" NavStatData="{x:Bind NavStatData}"/>
-                </Flyout>
-            </cont2:ImageEx2.ContextFlyout>
-        </cont2:ImageEx2>
-
-        <StackPanel Margin="0,24,8,0" VerticalAlignment="Top" HorizontalAlignment="Right">
-            <Button Width="36" Height="36" Margin="12,0,0,0"
-                Style="{StaticResource TransparentButton}" Click="RefreshClick">
-                <FontIcon FontFamily="{ThemeResource SegoeIcons}" Glyph="&#xE149;" />
-            </Button>
-        </StackPanel>
+        
+        <bcont:Header VerticalAlignment="Top" NavData="{x:Bind NavData}" NavStatData="{x:Bind NavStatData}" SelectedIndex="{x:Bind SelectedSubPage, Mode=TwoWay}" OnRefreshClick="RefreshClick"/>
     </Grid>
 </base:PageBase>
