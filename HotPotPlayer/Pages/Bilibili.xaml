@@ -27,6 +27,12 @@
                 <bili:History x:Name="BiliHistory" />
             </PivotItem>
             <PivotItem Margin="0">
+                <bili:Favor x:Name="BiliFavor" />
+            </PivotItem>
+            <PivotItem Margin="0">
+                <bili:Message x:Name="BiliMessage" />
+            </PivotItem>
+            <PivotItem Margin="0">
 
             </PivotItem>
         </Pivot>

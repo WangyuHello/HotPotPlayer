@@ -316,6 +316,8 @@ namespace HotPotPlayer.Pages.BilibiliSub
                     Likes--;
                 }
             }
+            var b = sender as ToggleButton;
+            b.IsChecked = IsLike;
         }
 
         bool GetCoinButtonCheck(int coin)

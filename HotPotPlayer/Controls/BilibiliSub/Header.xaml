@@ -20,16 +20,28 @@
     <Grid Height="64" Background="{ThemeResource AcrylicInAppFillColorDefaultBrush}">
 
         <StackPanel x:Name="HeaderContainer" Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center" Spacing="8">
-            <ToggleButton Click="HeaderItemClick" Style="{StaticResource BiliHeaderToggleButton}" IsChecked="True">
-                推荐
+            <ToggleButton Click="HeaderItemClick" Tapped="HeaderItemTapped" Style="{StaticResource BiliHeaderToggleButton}" IsChecked="True" IsDoubleTapEnabled="False" IsHoldingEnabled="False" IsRightTapEnabled="False">
+                <StackPanel Orientation="Horizontal" Spacing="4">
+                    <FontIcon Margin="0,0,0,-4" FontFamily="{ThemeResource BiliIcons}" Glyph="&#xEA1A;" />
+                    <TextBlock Text="推荐" />
+                </StackPanel>
             </ToggleButton>
-            <ToggleButton Click="HeaderItemClick" Style="{StaticResource BiliHeaderToggleButton}">
-                动态
+            <ToggleButton Click="HeaderItemClick" Tapped="HeaderItemTapped" Style="{StaticResource BiliHeaderToggleButton}" IsDoubleTapEnabled="False" IsHoldingEnabled="False" IsRightTapEnabled="False">
+                <StackPanel Orientation="Horizontal" Spacing="4">
+                    <FontIcon Margin="0,0,0,-4" FontFamily="{ThemeResource BiliIcons}" Glyph="&#xEA1B;" />
+                    <TextBlock Text="动态" />
+                </StackPanel>
             </ToggleButton>
-            <ToggleButton Click="HeaderItemClick" Style="{StaticResource BiliHeaderToggleButton}" Padding="8,8">
+            <ToggleButton Click="HeaderItemClick" Tapped="HeaderItemTapped" Style="{StaticResource BiliHeaderToggleButton}" Padding="8,8" IsDoubleTapEnabled="False" IsHoldingEnabled="False" IsRightTapEnabled="False">
                 <FontIcon FontFamily="{ThemeResource BiliIcons}" Glyph="&#xEA0E;" />
             </ToggleButton>
-            <ToggleButton Click="HeaderItemClick" Style="{StaticResource BiliHeaderToggleButton}">
+            <ToggleButton Click="HeaderItemClick" Tapped="HeaderItemTapped" Style="{StaticResource BiliHeaderToggleButton}" Padding="8,8" IsDoubleTapEnabled="False" IsHoldingEnabled="False" IsRightTapEnabled="False">
+                <FontIcon FontFamily="{ThemeResource BiliIcons}" Glyph="&#xEA13;" />
+            </ToggleButton>
+            <ToggleButton Click="HeaderItemClick" Tapped="HeaderItemTapped" Style="{StaticResource BiliHeaderToggleButton}" Padding="8,8" IsDoubleTapEnabled="False" IsHoldingEnabled="False" IsRightTapEnabled="False">
+                <FontIcon FontFamily="{ThemeResource BiliIcons}" Glyph="&#xEA15;" />
+            </ToggleButton>
+            <ToggleButton Click="HeaderItemClick" Tapped="HeaderItemTapped" Style="{StaticResource BiliHeaderToggleButton}" IsDoubleTapEnabled="False" IsHoldingEnabled="False" IsRightTapEnabled="False">
                 番剧
             </ToggleButton>
         </StackPanel>

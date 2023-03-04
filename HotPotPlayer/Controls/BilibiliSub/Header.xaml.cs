@@ -98,6 +98,17 @@ namespace HotPotPlayer.Controls.BilibiliSub
             var b = sender as UIElement;
             var index = headers.IndexOf(b);
             SelectedIndex = index;
+            SelectedIndexChanged(index);
+        }
+
+        private void HeaderItemTapped(object sender, TappedRoutedEventArgs e)
+        {
+            e.Handled = true;
+            var headers = HeaderContainer.Children;
+            var b = sender as UIElement;
+            var index = headers.IndexOf(b);
+            SelectedIndex = index;
+            SelectedIndexChanged(index);
         }
     }
 }
