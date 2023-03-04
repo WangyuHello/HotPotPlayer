@@ -24,6 +24,7 @@ using HotPotPlayer.Bilibili.ApiTools;
 using System.Diagnostics;
 using System.Security.Cryptography;
 using HotPotPlayer.Bilibili.Models.History;
+using HotPotPlayer.Bilibili.Models.Nav;
 
 namespace HotPotPlayer.BiliBili
 {
@@ -637,7 +638,19 @@ namespace HotPotPlayer.BiliBili
             return res;
         }
 
+        public async Task<BiliResult<NavData>?> GetNav()
+        {
+            var r = await GetAsync("https://api.bilibili.com/x/web-interface/nav", ResponseEnum.Web);
+            var res = JsonConvert.DeserializeObject<BiliResult<NavData>>(r);
+            return res;
+        }
 
+        public async Task<BiliResult<NavStatData>?> GetNavStat()
+        {
+            var r = await GetAsync("https://api.bilibili.com/x/web-interface/nav/stat", ResponseEnum.Web);
+            var res = JsonConvert.DeserializeObject<BiliResult<NavStatData>>(r);
+            return res;
+        }
         #region Cookie
         public static CookieCollection ParseCookies(IEnumerable<string> cookieHeaders)
         {

@@ -1,4 +1,5 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
+using HotPotPlayer.Bilibili.Models.Nav;
 using HotPotPlayer.Models.BiliBili;
 using HotPotPlayer.Video;
 using Microsoft.UI.Xaml;
@@ -32,21 +33,25 @@ namespace HotPotPlayer.Pages
             this.InitializeComponent();
         }
 
+        [ObservableProperty]
         int selectedSubPage;
-        public int SelectedSubPage
+
+        [ObservableProperty]
+        NavData navData;
+
+        [ObservableProperty]
+        NavStatData navStatData;
+
+        partial void OnSelectedSubPageChanged(int value)
         {
-            get => selectedSubPage;
-            set => Set(ref selectedSubPage, value, nv =>
+            if (value == 1)
             {
-                if (nv == 1)
-                {
-                    BiliDynamic.LoadDynamicAsync();
-                }
-                else if(nv == 2)
-                {
-                    BiliHistory.LoadHistoryAsync();
-                }
-            });
+                BiliDynamic.LoadDynamicAsync();
+            }
+            else if (value == 2)
+            {
+                BiliHistory.LoadHistoryAsync();
+            }
         }
 
         bool IsFirstNavigate = true;
@@ -62,6 +67,8 @@ namespace HotPotPlayer.Pages
                 NavigateTo("BilibiliSub.Login");
             }
             BiliMain.LoadPopularVideosAsync();
+            NavData = (await BiliBiliService.API.GetNav()).Data;
+            NavStatData = (await BiliBiliService.API.GetNavStat()).Data;
             IsFirstNavigate = false;
         }
 
@@ -95,7 +102,7 @@ namespace HotPotPlayer.Pages
         public override RectangleF[] GetTitleBarDragArea()
         {
             const float pivotHeaderWidth = 340;
-            const float threeButtonWidth = 140;
+            const float threeButtonWidth = 190;
             const float height = 64;
 
             return new RectangleF[]
@@ -114,7 +121,11 @@ namespace HotPotPlayer.Pages
         {
             var drag = GetTitleBarDragArea();
             if (drag != null) { App.SetDragRegionForTitleBar(drag); }
-            
+        }
+
+        private void Avatar_Tapped(object sender, TappedRoutedEventArgs e)
+        {
+            Avatar.ContextFlyout.ShowAt(Avatar);
         }
     }
 }
