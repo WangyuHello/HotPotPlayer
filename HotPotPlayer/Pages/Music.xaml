@@ -28,7 +28,7 @@
         <CollectionViewSource x:Name="LocalAlbumGroups" Source="{x:Bind LocalMusicService.LocalAlbumGroup}" IsSourceGrouped="True" />
     </base:PageBase.Resources>
 
-    <Grid Padding="36,28,0,0">
+    <Grid Padding="36,28,0,0" SizeChanged="Root_SizeChanged">
         <Pivot HeaderTemplate="{StaticResource GeneralPivotHeaderTemplate}" >
             <PivotItem Header="专辑" Margin="0" >
                 <SemanticZoom>

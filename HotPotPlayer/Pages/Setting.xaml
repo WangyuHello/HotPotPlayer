@@ -54,8 +54,8 @@
             <Setter Property="Margin" Value="0" />
         </Style>
     </base:PageBase.Resources>
-    
-    <Grid Background="White" Padding="0,28,0,0">
+
+    <Grid Background="White" Padding="0,28,0,0" SizeChanged="Root_SizeChanged">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />

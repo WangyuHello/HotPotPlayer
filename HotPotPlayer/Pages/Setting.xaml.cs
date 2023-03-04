@@ -11,6 +11,7 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Runtime.CompilerServices;
@@ -211,6 +212,18 @@ namespace HotPotPlayer.Pages
         private void ReloadMusicLibrary(object sender, RoutedEventArgs e)
         {
             LocalMusicService.StartLoadLocalMusic();
+        }
+        public override RectangleF[] GetTitleBarDragArea()
+        {
+            return new RectangleF[]
+            {
+                new RectangleF(0, 0, (float)(ActualWidth), 28),
+            };
+        }
+        private void Root_SizeChanged(object sender, SizeChangedEventArgs e)
+        {
+            var drag = GetTitleBarDragArea();
+            if (drag != null) { App.SetDragRegionForTitleBar(drag); }
         }
     }
 }

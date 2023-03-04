@@ -21,6 +21,7 @@ using System.Text;
 using Microsoft.UI.Xaml.Media.Animation;
 using HotPotPlayer.Services;
 using HotPotPlayer.Extensions;
+using System.Drawing;
 
 // To learn more about WinUI, the WinUI project structure,
 // and more about our project templates, see: http://aka.ms/winui-project-info.
@@ -99,6 +100,17 @@ namespace HotPotPlayer.Pages
         //    await SeriesGridView.TryStartConnectedAnimationAsync(anim, SelectedSeries, "SeriesConnectedElement");
         //    SeriesOverlayPopup.Visibility = Visibility.Collapsed;
         //}
-
+        public override RectangleF[] GetTitleBarDragArea()
+        {
+            return new RectangleF[]
+            {
+                new RectangleF(0, 0, (float)(ActualWidth), 28),
+            };
+        }
+        private void Root_SizeChanged(object sender, SizeChangedEventArgs e)
+        {
+            var drag = GetTitleBarDragArea();
+            if (drag != null) { App.SetDragRegionForTitleBar(drag); }
+        }
     }
 }
