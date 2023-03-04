@@ -138,10 +138,14 @@ namespace HotPotPlayer.BiliBili
             return "";
         }
 
-        private async Task<string> PostAsync(string url, Dictionary<string, string>? keyValues = null)
+        private async Task<string> PostAsync(string url, Dictionary<string, string>? keyValues = null, string? referrer = null)
         {
             using (var webClient = _httpClientFactory.CreateClient("web"))
             {
+                if (!string.IsNullOrEmpty(referrer))
+                {
+                    webClient.DefaultRequestHeaders.Referrer = new Uri(referrer);
+                }
                 webClient.DefaultRequestHeaders.Add("Cookie", CookieString);
                 keyValues ??= new Dictionary<string, string>();
                 var form = new FormUrlEncodedContent(keyValues);
@@ -495,14 +499,15 @@ namespace HotPotPlayer.BiliBili
         /// <param name="aid"></param>
         /// <param name="like"></param>
         /// <returns></returns>
-        public async Task<BiliResult?> Like(string aid, bool like)
+        public async Task<BiliResult?> Like(string aid, string bvid, bool like)
         {
+            var referrer = $"https://www.bilibili.com/video/{bvid}";
             var r = await PostAsync("https://api.bilibili.com/x/web-interface/archive/like", new Dictionary<string, string>
             {
                 ["aid"] = aid,
                 ["like"] = like ? "1" : "2",
                 ["csrf"] = GetCsrf()
-            });
+            }, referrer);
             var res = JsonConvert.DeserializeObject<BiliResult>(r);
             return res;
         }

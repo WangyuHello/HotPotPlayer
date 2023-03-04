@@ -14,6 +14,7 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Runtime.CompilerServices;
@@ -163,6 +164,22 @@ namespace HotPotPlayer.Pages
         private void Search_Tapped(object sender, TappedRoutedEventArgs e)
         {
             NavigateTo("CloudMusicSub.Search", null, new SlideNavigationTransitionInfo());
+        }
+
+        public override RectangleF[] GetTitleBarDragArea()
+        {
+            return new RectangleF[]
+            {
+                new RectangleF(0, 0, 28, 64),
+                new RectangleF(28, 0, 260, 16),
+                new RectangleF(28, 48, 260, 16),
+                new RectangleF(288, 0, (float)(ActualWidth-288-260), 64)
+            };
+        }
+        private void Root_SizeChanged(object sender, SizeChangedEventArgs e)
+        {
+            var drag = GetTitleBarDragArea();
+            if (drag != null) { App.SetDragRegionForTitleBar(drag); }
         }
     }
 }

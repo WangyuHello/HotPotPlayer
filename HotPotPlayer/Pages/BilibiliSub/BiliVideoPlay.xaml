@@ -18,7 +18,7 @@
     x:DefaultBindMode="OneWay"
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
 
-    <Grid Background="White" >
+    <Grid Background="White" x:Name="Root" SizeChanged="Root_SizeChanged">
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="*" />
             <ColumnDefinition Width="{x:Bind GetCommentWidth(IsFullPage)}" />

@@ -10,9 +10,10 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d"
     NavigationCacheMode="Enabled"
-    Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+    Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
+    >
 
-    <Grid Background="White" Padding="0,0,0,0">
+    <Grid x:Name="Root" Background="White" Padding="0,0,0,0" SizeChanged="Root_SizeChanged">
         <Pivot Style="{StaticResource HorizontalCenterPivot}" Background="#f0f3f2"
                HeaderTemplate="{StaticResource GeneralPivotHeaderTemplate}" 
                SelectedIndex="{x:Bind SelectedSubPage, Mode=TwoWay}"

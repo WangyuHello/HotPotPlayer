@@ -8,6 +8,7 @@ using Microsoft.UI.Xaml.Media.Animation;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -55,6 +56,7 @@ namespace HotPotPlayer
         public abstract void ShowToast(ToastInfo toast);
         public abstract void NavigateTo(string name, object parameter = null, NavigationTransitionInfo trans = null);
         public abstract void NavigateBack();
+        public abstract void SetDragRegionForTitleBar(RectangleF[] dragArea);
         public abstract IntPtr MainWindowHandle { get; }
 
         public abstract Rect Bounds { get; }

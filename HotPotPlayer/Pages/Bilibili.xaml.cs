@@ -10,6 +10,7 @@ using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Navigation;
 using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
@@ -90,5 +91,30 @@ namespace HotPotPlayer.Pages
         //    var video = (await BiliBiliService.API.GetVideoInfo(bv)).Data;
         //    NavigateTo("BilibiliSub.BiliVideoPlay", video);
         //}
+
+        public override RectangleF[] GetTitleBarDragArea()
+        {
+            const float pivotHeaderWidth = 340;
+            const float threeButtonWidth = 140;
+            const float height = 64;
+
+            return new RectangleF[]
+            {
+                new RectangleF(0, 0, 24, height),
+                new RectangleF(24, 0, 260, 18),
+                new RectangleF(24, 50, 260, 14), //284
+                new RectangleF(284, 0, (float)((Root.ActualWidth-pivotHeaderWidth)/2 - 284), height),
+                new RectangleF((float)(Root.ActualWidth/2 + pivotHeaderWidth/2), 0, (float)((Root.ActualWidth-pivotHeaderWidth)/2 - threeButtonWidth), height),
+                new RectangleF((float)((Root.ActualWidth-pivotHeaderWidth)/2), 0, pivotHeaderWidth, 14),
+                new RectangleF((float)((Root.ActualWidth-pivotHeaderWidth)/2), 50, pivotHeaderWidth, 14),
+            };
+        }
+
+        private void Root_SizeChanged(object sender, SizeChangedEventArgs e)
+        {
+            var drag = GetTitleBarDragArea();
+            if (drag != null) { App.SetDragRegionForTitleBar(drag); }
+            
+        }
     }
 }

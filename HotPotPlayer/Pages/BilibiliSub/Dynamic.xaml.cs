@@ -113,14 +113,12 @@ namespace HotPotPlayer.Pages.BilibiliSub
             if (v.Modules.ModuleDynamic?.Major?.Archive != null)
             {
                 var bvid = v.Modules.ModuleDynamic.Major.Archive.Bvid;
-                var v2 = (await BiliBiliService.API.GetVideoInfo(bvid)).Data;
-                NavigateTo("BilibiliSub.BiliVideoPlay", v2);
+                NavigateTo("BilibiliSub.BiliVideoPlay", bvid);
             }
             else if(v.HasOrigin && v.Origin.Modules.ModuleDynamic?.Major?.Archive != null)
             {
                 var bvid = v.Origin.Modules.ModuleDynamic.Major.Archive.Bvid;
-                var v2 = (await BiliBiliService.API.GetVideoInfo(bvid)).Data;
-                NavigateTo("BilibiliSub.BiliVideoPlay", v2);
+                NavigateTo("BilibiliSub.BiliVideoPlay", bvid);
             }
             else if(v.Modules.ModuleDynamic?.Major?.Article != null)
             {

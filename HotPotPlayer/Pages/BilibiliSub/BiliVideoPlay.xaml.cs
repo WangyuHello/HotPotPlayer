@@ -16,6 +16,7 @@ using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Navigation;
 using System;
 using System.Collections.Generic;
+using System.Drawing;
 
 // To learn more about WinUI, the WinUI project structure,
 // and more about our project templates, see: http://aka.ms/winui-project-info.
@@ -200,6 +201,20 @@ namespace HotPotPlayer.Pages.BilibiliSub
             return isFullPage ? new Thickness(0) : new Thickness(36, 28, 28, 0);
         }
 
+        public override RectangleF[] GetTitleBarDragArea()
+        {
+            return new RectangleF[]
+            {
+                new RectangleF(0, 0, (float)ActualWidth, 28),
+            };
+        }
+
+        private void Root_SizeChanged(object sender, SizeChangedEventArgs e)
+        {
+            var drag = GetTitleBarDragArea();
+            if (drag != null) { App.SetDragRegionForTitleBar(drag); }
+        }
+
         private void OnToggleFullScreen()
         {
             IsFullPage = !IsFullPage;
@@ -288,7 +303,7 @@ namespace HotPotPlayer.Pages.BilibiliSub
 
         private async void LikeClick(object sender, RoutedEventArgs e)
         {
-            var r = await BiliBiliService.API.Like(aid, !IsLike);
+            var r = await BiliBiliService.API.Like(aid, bvid, !IsLike);
             if (r.Code == 0)
             {
                 IsLike = !IsLike;

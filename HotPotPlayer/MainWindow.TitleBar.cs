@@ -20,6 +20,8 @@ using WinRT;
 using Windows.UI;
 using Windows.Graphics;
 using HotPotPlayer.Extensions;
+using System.Drawing;
+using Color = Windows.UI.Color;
 
 namespace HotPotPlayer
 {
@@ -190,6 +192,18 @@ namespace HotPotPlayer
 
                 appWindow.TitleBar.SetDragRectangles(dragRects);
             }
+        }
+
+        public void SetDragRegionForCustomTitleBar(RectangleF[] dragArea, AppWindow appWindow = null)
+        {
+            appWindow ??= m_AppWindow;
+            if (!AppWindowTitleBar.IsCustomizationSupported() || !appWindow.TitleBar.ExtendsContentIntoTitleBar) return;
+
+            double scaleAdjustment = Root.XamlRoot.RasterizationScale;
+
+            float leftBarWidth = 60;
+            var rects = dragArea.Select(r => new RectInt32((int)((r.X + leftBarWidth)* scaleAdjustment), (int)(r.Y * scaleAdjustment), (int)(r.Width * scaleAdjustment), (int)(r.Height * scaleAdjustment))).ToArray();
+            appWindow.TitleBar.SetDragRectangles(rects);
         }
 
         WindowsSystemDispatcherQueueHelper m_wsdqHelper; // See separate sample below for implementation

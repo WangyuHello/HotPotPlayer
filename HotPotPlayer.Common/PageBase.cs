@@ -8,6 +8,7 @@ using Microsoft.UI.Xaml.Media.Animation;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Drawing;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Text;
@@ -48,6 +49,8 @@ namespace HotPotPlayer
         {
             ((IComponentServiceLocator)Application.Current).ShowToast(toast);
         }
+
+        public virtual RectangleF[] GetTitleBarDragArea() => null;
 
         public void Set<T>(ref T oldValue, T newValue, Action<T> action = null, bool guard = false, [CallerMemberName] string propertyName = "")
         {
