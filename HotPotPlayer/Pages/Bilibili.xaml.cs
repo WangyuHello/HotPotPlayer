@@ -92,7 +92,7 @@ namespace HotPotPlayer.Pages
             await LoadEntranceDataAsync();
         }
 
-        private void RefreshClick()
+        private async void RefreshClick()
         {
             if (SelectedSubPage == 0)
             {
@@ -106,6 +106,7 @@ namespace HotPotPlayer.Pages
             {
                 BiliHistory.LoadHistoryAsync(true);
             }
+            await LoadEntranceDataAsync();
         }
 
         //private async void BVPlay(object sender, RoutedEventArgs args)

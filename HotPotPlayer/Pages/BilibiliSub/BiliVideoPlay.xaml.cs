@@ -157,7 +157,7 @@ namespace HotPotPlayer.Pages.BilibiliSub
 
             IsAdditionLoading = false;
 
-            if (Video.Videos > 1)
+            if (Video.Videos > 1 && Video.Pages != null)
             {
                 DetermineSelectedPage();
             }

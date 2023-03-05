@@ -50,8 +50,8 @@
                     <animations:ScaleAnimation Duration="0:0:0.4" From="0.8,0.8,1" To="1,1,1" />
                 </animations:Implicit.ShowAnimations>
                 <animations:Implicit.HideAnimations>
-                    <animations:OpacityAnimation Duration="0:0:1" From="1.0" To="0.0" />
-                    <animations:ScaleAnimation Duration="0:0:1" From="1,1,1" To="0.8,0.8,1" />
+                    <animations:OpacityAnimation Duration="0:0:0.4" From="1.0" To="0.0" />
+                    <animations:ScaleAnimation Duration="0:0:0.4" From="1,1,1" To="0.8,0.8,1" />
                 </animations:Implicit.HideAnimations>
             </Border>
             <ToggleButton Grid.Column="2" Margin="8,0,0,0" Click="HeaderItemClick" Tapped="HeaderItemTapped" Style="{StaticResource BiliHeaderToggleButton}" Padding="8,8" IsDoubleTapEnabled="False" IsHoldingEnabled="False" IsRightTapEnabled="False">

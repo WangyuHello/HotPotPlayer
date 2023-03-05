@@ -145,18 +145,26 @@ namespace HotPotPlayer.Video.UI.Controls
             }
             UIQueue.TryEnqueue(() =>
             {
-                _swapChain1 = (IDXGISwapChain1)Marshal.GetObjectForIUnknown(_swapChain1Ptr);
-                _device = (ID3D11Device)Marshal.GetObjectForIUnknown(_devicePtr);
-                //_swapChain1 = ObjectReference<IDXGISwapChain1>.FromAbi(swapChain).Vftbl;
-                if (Host == null || !Host.IsLoaded)
+                try
                 {
-                    return;
+                    _swapChain1 = (IDXGISwapChain1)Marshal.GetObjectForIUnknown(_swapChain1Ptr);
+                    _device = (ID3D11Device)Marshal.GetObjectForIUnknown(_devicePtr);
+                    //_swapChain1 = ObjectReference<IDXGISwapChain1>.FromAbi(swapChain).Vftbl;
+                    if (Host == null || !Host.IsLoaded)
+                    {
+                        return;
+                    }
+                    var nativepanel = Host.As<ISwapChainPanelNative>();
+                    if (nativepanel == null) { return; }
+                    _swapChain1.GetDesc1(out var desp);
+                    nativepanel.SetSwapChain(_swapChain1);
+                    _swapChainLoaded = true;
                 }
-                var nativepanel = Host.As<ISwapChainPanelNative>();
-                if (nativepanel == null) { return; }
-                _swapChain1.GetDesc1(out var desp);
-                nativepanel.SetSwapChain(_swapChain1);
-                _swapChainLoaded = true;
+                catch (Exception)
+                {
+
+                }
+
             });
         }
 
