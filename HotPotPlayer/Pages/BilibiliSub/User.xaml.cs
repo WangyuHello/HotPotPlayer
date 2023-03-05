@@ -43,10 +43,10 @@ namespace HotPotPlayer.Pages.BilibiliSub
         protected override async void OnNavigatedTo(NavigationEventArgs e)
         {
             base.OnNavigatedTo(e);
-            userCardBundle = e.Parameter as UserCardBundle;
+            UserCardBundle = e.Parameter as UserCardBundle;
 
-            var userVideoInfo = (await BiliBiliService.API.GetUserVideoInfo(userCardBundle.Card.Mid, 1, 20)).Data;
-            UserVideoInfoItems = new UserVideoInfoItemCollection(userVideoInfo, userCardBundle.Card.Mid, BiliBiliService);
+            var userVideoInfo = (await BiliBiliService.API.GetUserVideoInfo(UserCardBundle.Card.Mid, 1, 20)).Data;
+            UserVideoInfoItems = new UserVideoInfoItemCollection(userVideoInfo, UserCardBundle.Card.Mid, BiliBiliService);
         }
 
         private async void BiliVideoClick(object sender, ItemClickEventArgs e)

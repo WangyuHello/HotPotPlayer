@@ -132,7 +132,7 @@
                 <ListView Grid.Column="10" ItemsSource="{x:Bind Tags}" Height="28" Margin="12,0,0,0" Style="{StaticResource HorizontalListViewStyle}" ItemTemplate="{StaticResource TagTemplate}" ItemContainerStyle="{StaticResource TransparentListContainerCompactHPaddingStyle}"/>
             </Grid>
             <TextBlock Text="{x:Bind Video.VideoDEsc}" Grid.Row="3" IsTextSelectionEnabled="True" FontFamily="{ThemeResource MiSansRegular}" MaxLines="3" TextWrapping="Wrap" TextTrimming="CharacterEllipsis"/>
-            <ListView Grid.Row="4" Margin="-36,2,-28,0" Padding="36,0,28,0" Height="220" ItemsSource="{x:Bind RelatedVideos}" Style="{StaticResource HorizontalListViewStyle}" ItemContainerStyle="{StaticResource GeneralListContainerCompactPaddingStyle}" ItemTemplate="{StaticResource BiliVideoCardViewTemplate2}" ItemClick="RelateVideoClick">
+            <ListView x:Name="RelatedList" Grid.Row="4" Margin="-36,2,-28,0" Padding="36,0,28,0" Height="220" ItemsSource="{x:Bind RelatedVideos}" Style="{StaticResource HorizontalListViewStyle}" ItemContainerStyle="{StaticResource GeneralListContainerCompactPaddingStyle}" ItemTemplate="{StaticResource BiliVideoCardViewTemplate2}" ItemClick="RelateVideoClick">
 
             </ListView>
             <Grid Grid.Row="4" Margin="-36,2,-28,0" Height="220" Visibility="{x:Bind IsAdditionLoading}" ui:VisualExtensions.NormalizedCenterPoint="0.5" >
