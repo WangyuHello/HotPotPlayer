@@ -1,4 +1,5 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
+using HotPotPlayer.Bilibili.Models.Dynamic;
 using HotPotPlayer.Bilibili.Models.Nav;
 using HotPotPlayer.Models.BiliBili;
 using HotPotPlayer.Video;
@@ -15,6 +16,7 @@ using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
+using System.Threading.Tasks;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
 
@@ -42,6 +44,9 @@ namespace HotPotPlayer.Pages
         [ObservableProperty]
         NavStatData navStatData;
 
+        [ObservableProperty]
+        EntranceData entranceData;
+
         partial void OnSelectedSubPageChanged(int value)
         {
             if (value == 1)
@@ -60,6 +65,7 @@ namespace HotPotPlayer.Pages
             base.OnNavigatedTo(e);
             if (!IsFirstNavigate)
             {
+                await LoadEntranceDataAsync();
                 return;
             }
             if (!(await BiliBiliService.IsLoginAsync()))
@@ -69,7 +75,21 @@ namespace HotPotPlayer.Pages
             BiliMain.LoadPopularVideosAsync();
             NavData = (await BiliBiliService.API.GetNav()).Data;
             NavStatData = (await BiliBiliService.API.GetNavStat()).Data;
+            await LoadEntranceDataAsync();
             IsFirstNavigate = false;
+        }
+
+        private async Task LoadEntranceDataAsync()
+        {
+            if (Config.HasConfig("BiliDynamicOffset"))
+            {
+                EntranceData = (await BiliBiliService.API.GetDynamicEntrance(Config.GetConfig<string>("BiliDynamicOffset"))).Data;
+            }
+        }
+
+        private async void LoadDynamicCompleted(string offset)
+        {
+            await LoadEntranceDataAsync();
         }
 
         private void RefreshClick()

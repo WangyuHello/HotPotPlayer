@@ -16,6 +16,7 @@ using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Navigation;
 using HotPotPlayer.Bilibili.Models.Nav;
+using HotPotPlayer.Bilibili.Models.Dynamic;
 
 // To learn more about WinUI, the WinUI project structure,
 // and more about our project templates, see: http://aka.ms/winui-project-info.
@@ -63,12 +64,26 @@ namespace HotPotPlayer.Controls.BilibiliSub
             ((Header)d).SelectedIndexChanged((int)e.NewValue);
         }
 
+        public EntranceData EntranceData
+        {
+            get { return (EntranceData)GetValue(EntranceDataProperty); }
+            set { SetValue(EntranceDataProperty, value); }
+        }
+
+        public static readonly DependencyProperty EntranceDataProperty =
+            DependencyProperty.Register("EntranceData", typeof(EntranceData), typeof(Header), new PropertyMetadata(null));
+
         void SelectedIndexChanged(int ind)
         {
             var headers = HeaderContainer.Children;
             for (int i = 0; i < headers.Count; i++)
             {
                 var h = headers[i] as ToggleButton;
+                if (h == null)
+                {
+                    ind++;
+                    continue;
+                }
                 if (i == ind)
                 {
                     h.IsChecked = true;
@@ -96,7 +111,7 @@ namespace HotPotPlayer.Controls.BilibiliSub
         {
             var headers = HeaderContainer.Children;
             var b = sender as UIElement;
-            var index = headers.IndexOf(b);
+            var index = headers.Where(u => u is ToggleButton).ToList().IndexOf(b);
             SelectedIndex = index;
             SelectedIndexChanged(index);
         }
@@ -106,9 +121,18 @@ namespace HotPotPlayer.Controls.BilibiliSub
             e.Handled = true;
             var headers = HeaderContainer.Children;
             var b = sender as UIElement;
-            var index = headers.IndexOf(b);
+            var index = headers.Where(u => u is ToggleButton).ToList().IndexOf(b);
             SelectedIndex = index;
             SelectedIndexChanged(index);
+        }
+
+        public Visibility GetDynamicEntranceVisible(EntranceData d)
+        {
+            if (d != null && d.UpdateInfo.Item.Count != 0)
+            {
+                return Visibility.Visible;
+            }
+            return Visibility.Collapsed;
         }
     }
 }

@@ -77,6 +77,11 @@ namespace HotPotPlayer
             File.WriteAllText(configFile, json);
         }
 
+        public bool HasConfig(string key)
+        {
+            return Settings.TryGetValue(key, out var value);
+        }
+
         public T GetConfig<T>(string key, T defaultValue = default)
         {
             var r = Settings.TryGetValue(key, out var value);

@@ -56,8 +56,12 @@ namespace HotPotPlayer.Pages.BilibiliSub
             }
             var dynamicData = (await BiliBiliService.API.GetDynamic(DynamicType.All)).Data;
             DynamicItems = new DynamicItemCollection(dynamicData, BiliBiliService);
+            Config.SetConfig("BiliDynamicOffset", dynamicData.OffSet);
+            LoadDynamicCompleted?.Invoke(dynamicData.OffSet);
             isFirstLoad = false;
         }
+
+        public event Action<string> LoadDynamicCompleted;
 
         public void ToggleComment(DynamicItem dyn)
         {

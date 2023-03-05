@@ -651,6 +651,19 @@ namespace HotPotPlayer.BiliBili
             var res = JsonConvert.DeserializeObject<BiliResult<NavStatData>>(r);
             return res;
         }
+
+        public async Task<BiliResult<EntranceData>?> GetDynamicEntrance(string offset)
+        {
+            var r = await GetAsync("https://api.bilibili.com/x/web-interface/dynamic/entrance", ResponseEnum.Web,
+                new Dictionary<string, string>
+                {
+                    ["alltype_offset"] = "0",
+                    ["video_offset"] = offset,
+                    ["article_offset"] = "0"
+                });
+            var res = JsonConvert.DeserializeObject<BiliResult<EntranceData>>(r);
+            return res;
+        }
         #region Cookie
         public static CookieCollection ParseCookies(IEnumerable<string> cookieHeaders)
         {

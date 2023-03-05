@@ -21,7 +21,7 @@
                 <bili:Main x:Name="BiliMain"/>
             </PivotItem>
             <PivotItem Margin="0">
-                <bili:Dynamic x:Name="BiliDynamic" Margin="-36,0,0,0"/>
+                <bili:Dynamic x:Name="BiliDynamic" Margin="-36,0,0,0" LoadDynamicCompleted="LoadDynamicCompleted"/>
             </PivotItem>
             <PivotItem Margin="0">
                 <bili:History x:Name="BiliHistory" />
@@ -37,6 +37,12 @@
             </PivotItem>
         </Pivot>
         
-        <bcont:Header VerticalAlignment="Top" NavData="{x:Bind NavData}" NavStatData="{x:Bind NavStatData}" SelectedIndex="{x:Bind SelectedSubPage, Mode=TwoWay}" OnRefreshClick="RefreshClick"/>
+        <bcont:Header 
+            VerticalAlignment="Top" 
+            NavData="{x:Bind NavData}" 
+            NavStatData="{x:Bind NavStatData}" 
+            EntranceData="{x:Bind EntranceData}"
+            SelectedIndex="{x:Bind SelectedSubPage, Mode=TwoWay}" 
+            OnRefreshClick="RefreshClick"/>
     </Grid>
 </base:PageBase>
