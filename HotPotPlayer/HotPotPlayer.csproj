@@ -100,6 +100,7 @@
     <None Remove="Pages\VideoPlayPage.xaml" />
     <None Remove="Styles\Buttons.xaml" />
     <None Remove="Styles\Colors.xaml" />
+    <None Remove="Styles\Expanders.xaml" />
     <None Remove="Styles\GridViews.xaml" />
     <None Remove="Styles\Images.xaml" />
     <None Remove="Styles\ListViews.xaml" />
@@ -416,6 +417,11 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Remove="Pages\BilibiliSub\User.xaml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Page Update="Styles\Expanders.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
   </ItemGroup>
   <ItemGroup>
     <Page Update="Pages\BilibiliSub\Message.xaml">

@@ -39,7 +39,6 @@ namespace HotPotPlayer.Controls.BilibiliSub
         public static readonly DependencyProperty NavDataProperty =
             DependencyProperty.Register("NavData", typeof(NavData), typeof(Header), new PropertyMetadata(null));
 
-
         public NavStatData NavStatData
         {
             get { return (NavStatData)GetValue(NavStatDataProperty); }
@@ -72,6 +71,17 @@ namespace HotPotPlayer.Controls.BilibiliSub
 
         public static readonly DependencyProperty EntranceDataProperty =
             DependencyProperty.Register("EntranceData", typeof(EntranceData), typeof(Header), new PropertyMetadata(null));
+
+
+        public bool IsExpanded
+        {
+            get { return (bool)GetValue(IsExpandedProperty); }
+            set { SetValue(IsExpandedProperty, value); }
+        }
+
+        public static readonly DependencyProperty IsExpandedProperty =
+            DependencyProperty.Register("IsExpanded", typeof(bool), typeof(Header), new PropertyMetadata(false));
+
 
         void SelectedIndexChanged(int ind)
         {
@@ -112,8 +122,17 @@ namespace HotPotPlayer.Controls.BilibiliSub
             var headers = HeaderContainer.Children;
             var b = sender as UIElement;
             var index = headers.Where(u => u is ToggleButton).ToList().IndexOf(b);
+            bool alreadySelectedFirst = (index == SelectedIndex) && (index == 0);
             SelectedIndex = index;
             SelectedIndexChanged(index);
+            if (alreadySelectedFirst)
+            {
+                IsExpanded = !IsExpanded;
+            }
+            else
+            {
+                IsExpanded = false;
+            }
         }
 
         private void HeaderItemTapped(object sender, TappedRoutedEventArgs e)

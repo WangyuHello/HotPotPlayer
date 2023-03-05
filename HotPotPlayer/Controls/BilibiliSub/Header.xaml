@@ -11,6 +11,7 @@
     xmlns:cont2="using:HotPotPlayer.UI.Controls"
     xmlns:bcont="using:HotPotPlayer.Controls.BilibiliSub"
     xmlns:animations="using:CommunityToolkit.WinUI.UI.Animations"
+    xmlns:controls="using:CommunityToolkit.WinUI.UI.Controls"
     x:DefaultBindMode="OneWay"
     mc:Ignorable="d">
 
@@ -18,9 +19,32 @@
         
     </UserControl.Resources>
 
-    <Grid Height="64" Background="{ThemeResource AcrylicInAppFillColorDefaultBrush}">
+    <Grid Background="{ThemeResource AcrylicInAppFillColorDefaultBrush}">
 
-        <Grid x:Name="HeaderContainer" HorizontalAlignment="Center" VerticalAlignment="Center">
+        <Expander x:Name="More" IsExpanded="{x:Bind IsExpanded}" HorizontalAlignment="Stretch" VerticalAlignment="Top" Style="{StaticResource BiliHeaderExpander}">
+            <Expander.Content>
+                <controls:AdaptiveGridView DesiredWidth="120" SelectionMode="None">
+                    <Button Content="动画" Margin="4,0" HorizontalAlignment="Stretch"/>
+                    <Button Content="音乐" Margin="4,0" HorizontalAlignment="Stretch"/>
+                    <Button Content="舞蹈" Margin="4,0" HorizontalAlignment="Stretch"/>
+                    <Button Content="游戏" Margin="4,0" HorizontalAlignment="Stretch"/>
+                    <Button Content="知识" Margin="4,0" HorizontalAlignment="Stretch"/>
+                    <Button Content="科技" Margin="4,0" HorizontalAlignment="Stretch"/>
+                    <Button Content="资讯" Margin="4,0" HorizontalAlignment="Stretch"/>
+                    <Button Content="运动" Margin="4,0" HorizontalAlignment="Stretch"/>
+                    <Button Content="汽车" Margin="4,0" HorizontalAlignment="Stretch"/>
+                    <Button Content="生活" Margin="4,0" HorizontalAlignment="Stretch"/>
+                    <Button Content="美食" Margin="4,0" HorizontalAlignment="Stretch"/>
+                    <Button Content="动物圈" Margin="4,0" HorizontalAlignment="Stretch"/>
+                    <Button Content="鬼畜" Margin="4,0" HorizontalAlignment="Stretch"/>
+                    <Button Content="时尚" Margin="4,0" HorizontalAlignment="Stretch"/>
+                    <Button Content="娱乐" Margin="4,0" HorizontalAlignment="Stretch"/>
+                    <Button Content="影视" Margin="4,0" HorizontalAlignment="Stretch"/>
+                </controls:AdaptiveGridView>
+            </Expander.Content>
+        </Expander>
+
+        <Grid Height="64" Margin="0,0,0,0" x:Name="HeaderContainer" HorizontalAlignment="Center" VerticalAlignment="Top">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="Auto" />
                 <ColumnDefinition Width="Auto" />
@@ -67,7 +91,6 @@
                 番剧
             </ToggleButton>
         </Grid>
-
 
 
         <cont2:ImageEx2 x:Name="Avatar"
