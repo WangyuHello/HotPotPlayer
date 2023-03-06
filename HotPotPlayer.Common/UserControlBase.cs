@@ -43,6 +43,11 @@ namespace HotPotPlayer
             ((IComponentServiceLocator)Application.Current).NavigateBack();
         }
 
+        public void PlayVideo(string bvid)
+        {
+            ((IComponentServiceLocator)Application.Current).PlayVideo(bvid);
+        }
+
         public void ShowToast(ToastInfo toast)
         {
             ((IComponentServiceLocator)Application.Current).ShowToast(toast);

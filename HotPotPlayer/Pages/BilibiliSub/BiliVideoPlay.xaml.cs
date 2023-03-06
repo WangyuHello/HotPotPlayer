@@ -33,6 +33,8 @@ namespace HotPotPlayer.Pages.BilibiliSub
             this.InitializeComponent();
         }
 
+        public bool IsIndependentWindowHost { get; set; }
+
         [ObservableProperty]
         VideoContent video;
 
@@ -100,7 +102,7 @@ namespace HotPotPlayer.Pages.BilibiliSub
             StartPlay(e.Parameter);
         }
 
-        private async void StartPlay(object para, string targetCid = null)
+        public async void StartPlay(object para, string targetCid = null)
         {
             IsLoading = true;
             IsAdditionLoading = true;
@@ -186,6 +188,11 @@ namespace HotPotPlayer.Pages.BilibiliSub
             VideoPlayer.Close();
         }
 
+        public void StopPlay()
+        {
+            VideoPlayer.Close();
+        }
+
         GridLength GetCommentWidth(bool isFullPage)
         {
             return isFullPage ? new GridLength(0) : new GridLength(400);
@@ -211,8 +218,11 @@ namespace HotPotPlayer.Pages.BilibiliSub
 
         private void Root_SizeChanged(object sender, SizeChangedEventArgs e)
         {
-            var drag = GetTitleBarDragArea();
-            if (drag != null) { App.SetDragRegionForTitleBar(drag); }
+            if (!IsIndependentWindowHost)
+            {
+                var drag = GetTitleBarDragArea();
+                if (drag != null) { App.SetDragRegionForTitleBar(drag); }
+            }
         }
 
         private void OnToggleFullScreen()

@@ -112,17 +112,15 @@ namespace HotPotPlayer.Pages.BilibiliSub
         private async void DynamicItemClick(object sender, ItemClickEventArgs e)
         {
             var v = e.ClickedItem as DynamicItem;
-            //VideoPlayer.Close();
-            //await StartPlay(v);
             if (v.Modules.ModuleDynamic?.Major?.Archive != null)
             {
                 var bvid = v.Modules.ModuleDynamic.Major.Archive.Bvid;
-                NavigateTo("BilibiliSub.BiliVideoPlay", bvid);
+                PlayVideo(bvid);
             }
             else if(v.HasOrigin && v.Origin.Modules.ModuleDynamic?.Major?.Archive != null)
             {
                 var bvid = v.Origin.Modules.ModuleDynamic.Major.Archive.Bvid;
-                NavigateTo("BilibiliSub.BiliVideoPlay", bvid);
+                PlayVideo(bvid);
             }
             else if(v.Modules.ModuleDynamic?.Major?.Article != null)
             {

@@ -1,4 +1,5 @@
-﻿using HotPotPlayer.Bilibili.Models.Reply;
+﻿using CommunityToolkit.WinUI.UI;
+using HotPotPlayer.Bilibili.Models.Reply;
 using HotPotPlayer.Controls;
 using HotPotPlayer.Controls.BilibiliSub;
 using HotPotPlayer.Helpers;
@@ -6,6 +7,7 @@ using HotPotPlayer.Models.CloudMusic;
 using HotPotPlayer.Services;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
+using Microsoft.UI.Xaml.Media;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -32,7 +34,7 @@ namespace HotPotPlayer.Pages.Helper
                 CloseButtonText = "关闭",
                 DefaultButton = ContentDialogButton.Close,
                 Content = new CommentFloorDialog(l, comment),
-                XamlRoot = XamlRoot,
+                XamlRoot = element.XamlRoot,
                 Style = App.Resources["DefaultContentDialogStyle"] as Style
             };
 
@@ -55,7 +57,7 @@ namespace HotPotPlayer.Pages.Helper
                 CloseButtonText = "关闭",
                 DefaultButton = ContentDialogButton.Close,
                 Content = new NestedReplyDialog(reply),
-                XamlRoot = XamlRoot,
+                XamlRoot = element.XamlRoot,
                 Style = App.Resources["DefaultContentDialogStyle"] as Style
             };
 
