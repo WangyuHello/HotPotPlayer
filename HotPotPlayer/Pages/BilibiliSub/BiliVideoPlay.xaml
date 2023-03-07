@@ -37,9 +37,10 @@
                                 Source="{x:Bind Source}" 
                                 DmData="{x:Bind DmData}" 
                                 Pbp="{x:Bind Pbp}"
-                                OnToggleFullScreen="OnToggleFullScreen" 
+                                OnToggleFullScreen="OnToggleFullScreen"
                                 OnToggleFullPage="OnToggleFullPage" 
-                                IsFullPage="{x:Bind IsFullPage}" 
+                                IsFullPage="{x:Bind IsFullPage}"
+                                IsFullScreen="{x:Bind IsFullScreen}"
                                 IsFullPageHost="False" 
                                 OnMediaLoaded="OnMediaLoaded"/>
 

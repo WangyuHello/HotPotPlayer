@@ -140,6 +140,15 @@ namespace HotPotPlayer.Video.UI.Controls
         public static readonly DependencyProperty PbpProperty =
             DependencyProperty.Register("Pbp", typeof(Pbp), typeof(VideoControl), new PropertyMetadata(default));
 
+        public bool IsFullScreen
+        {
+            get { return (bool)GetValue(IsFullScreenProperty); }
+            set { SetValue(IsFullScreenProperty, value); }
+        }
+
+        public static readonly DependencyProperty IsFullScreenProperty =
+            DependencyProperty.Register("IsFullScreen", typeof(bool), typeof(VideoControl), new PropertyMetadata(false));
+
         #endregion
 
         #region ObsProp
@@ -287,18 +296,6 @@ namespace HotPotPlayer.Video.UI.Controls
             });
         }
 
-        public bool IsFullScreen
-        {
-            get => AppWindow.Presenter.Kind == AppWindowPresenterKind.FullScreen;
-            set
-            {
-                if ((AppWindow.Presenter.Kind == AppWindowPresenterKind.FullScreen) != value)
-                {
-                    AppWindow.SetPresenter(value ? AppWindowPresenterKind.FullScreen : AppWindowPresenterKind.Default);
-                    OnPropertyChanged();
-                }
-            }
-        }
         #endregion
 
         #region Prop
@@ -406,7 +403,6 @@ namespace HotPotPlayer.Video.UI.Controls
         public void Close()
         {
             _mpv.StopAsync();
-            IsFullScreen = false;
         }
 
         public void Stop()
@@ -570,7 +566,6 @@ namespace HotPotPlayer.Video.UI.Controls
         private void ToggleFullScreenClick(object sender, RoutedEventArgs e)
         {
             OnToggleFullScreen?.Invoke();
-            IsFullScreen = !IsFullScreen;
         }
 
         private void ToggleFullPageClick(object sender, RoutedEventArgs e)

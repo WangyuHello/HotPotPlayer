@@ -9,6 +9,7 @@ using HotPotPlayer.Bilibili.Models.Video;
 using HotPotPlayer.Extensions;
 using HotPotPlayer.Models.BiliBili;
 using HotPotPlayer.Video.Models;
+using Microsoft.UI.Windowing;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Controls.Primitives;
@@ -17,6 +18,7 @@ using Microsoft.UI.Xaml.Navigation;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
+using WinUIEx;
 
 // To learn more about WinUI, the WinUI project structure,
 // and more about our project templates, see: http://aka.ms/winui-project-info.
@@ -34,6 +36,7 @@ namespace HotPotPlayer.Pages.BilibiliSub
         }
 
         public bool IsIndependentWindowHost { get; set; }
+        public Window PlayWindow { get; set; }
 
         [ObservableProperty]
         VideoContent video;
@@ -43,6 +46,9 @@ namespace HotPotPlayer.Pages.BilibiliSub
 
         [ObservableProperty]
         bool isFullPage;
+
+        [ObservableProperty]
+        bool isFullScreen;
 
         [ObservableProperty]
         string onLineCount;
@@ -185,7 +191,8 @@ namespace HotPotPlayer.Pages.BilibiliSub
             }
 
             VideoPlayerService.IsVideoPagePresent = false;
-            VideoPlayer.Close();
+            IsFullScreen = false;
+            StopPlay();
         }
 
         public void StopPlay()
@@ -227,14 +234,49 @@ namespace HotPotPlayer.Pages.BilibiliSub
 
         private void OnToggleFullScreen()
         {
-            IsFullPage = !IsFullPage;
-            VideoPlayerService.IsVideoPagePresent = IsFullPage;
+            if (IsFullPage)
+            {
+                IsFullScreen = !IsFullScreen;
+            }
+            else
+            {
+                IsFullScreen = !IsFullScreen;
+                IsFullPage = !IsFullPage;
+            }
+            
+            if (!IsIndependentWindowHost)
+            {
+                VideoPlayerService.IsVideoPagePresent = IsFullPage;
+            }
         }
 
         private void OnToggleFullPage()
         {
-            IsFullPage = !IsFullPage;
-            VideoPlayerService.IsVideoPagePresent = IsFullPage;
+            if (IsFullScreen) 
+            { 
+                IsFullScreen = !IsFullScreen;
+                IsFullPage = !IsFullPage;
+            }
+            else
+            {
+                IsFullPage = !IsFullPage;
+            }
+            if (!IsIndependentWindowHost)
+            {
+                VideoPlayerService.IsVideoPagePresent = IsFullPage;
+            }
+        }
+
+        partial void OnIsFullScreenChanged(bool value)
+        {
+            if (IsIndependentWindowHost)
+            {
+                PlayWindow.GetAppWindow().SetPresenter(value ? AppWindowPresenterKind.FullScreen : AppWindowPresenterKind.Default);
+            }
+            else
+            {
+                AppWindow.SetPresenter(value ? AppWindowPresenterKind.FullScreen : AppWindowPresenterKind.Default);
+            }
         }
 
         private void RelateVideoClick(object sender, ItemClickEventArgs e)

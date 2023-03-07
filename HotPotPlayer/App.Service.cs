@@ -69,6 +69,7 @@ namespace HotPotPlayer
                     _biliPlay = new BiliVideoPlay()
                     {
                         IsIndependentWindowHost = true,
+                        PlayWindow = _playWindow,
                     };
                     _playWindow.Content = _biliPlay;
                 }
