@@ -3,6 +3,7 @@ using HotPotPlayer.Bilibili.Models.Video;
 using HotPotPlayer.BiliBili;
 using HotPotPlayer.Models.BiliBili;
 using HotPotPlayer.Video.Extensions;
+using Microsoft.UI.Xaml.Input;
 using Mpv.NET.API;
 using Mpv.NET.Player;
 using System;
@@ -248,6 +249,20 @@ namespace HotPotPlayer.Video.UI.Controls
                 }
 
             });
+        }
+
+
+        private void Host_ManipulationStarted(object sender, ManipulationStartedRoutedEventArgs e)
+        {
+
+        }
+        private void Host_ManipulationCompleted(object sender, ManipulationCompletedRoutedEventArgs e)
+        {
+
+        }
+        private void Host_ManipulationDelta(object sender, ManipulationDeltaRoutedEventArgs e)
+        {
+
         }
     }
 }

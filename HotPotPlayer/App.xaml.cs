@@ -118,9 +118,9 @@ namespace HotPotPlayer
             MainWindow.NavigateTo(name, parameter, trans);
         }
 
-        public override void NavigateBack()
+        public override void NavigateBack(bool force = false)
         {
-            MainWindow.NavigateBack();
+            MainWindow.NavigateBack(force);
         }
 
         public override void SetDragRegionForTitleBar(RectangleF[] dragArea)

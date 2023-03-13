@@ -18,6 +18,7 @@ using Microsoft.UI.Xaml.Navigation;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Threading.Tasks;
 using WinUIEx;
 
 // To learn more about WinUI, the WinUI project structure,
@@ -178,9 +179,8 @@ namespace HotPotPlayer.Pages.BilibiliSub
             VideoPlayer.ReleasePlayerFence();
         }
 
-        protected override async void OnNavigatedFrom(NavigationEventArgs e)
+        public async void RequestNavigateBack()
         {
-            base.OnNavigatedFrom(e);
             if (VideoPlayer.CurrentTime == TimeSpan.Zero && VideoPlayer.CurrentPlayingDuration.HasValue)
             {
                 await BiliBiliService.API.Report(aid, cid, (int)VideoPlayer.CurrentPlayingDuration.Value.TotalSeconds);
@@ -192,7 +192,11 @@ namespace HotPotPlayer.Pages.BilibiliSub
 
             VideoPlayerService.IsVideoPagePresent = false;
             IsFullScreen = false;
-            StopPlay();
+            if (VideoPlayer.IsPlaying)
+            {
+                await Task.Run(() => StopPlay());
+            }
+            App.NavigateBack(true);
         }
 
         public void StopPlay()

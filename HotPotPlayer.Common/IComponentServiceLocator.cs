@@ -27,7 +27,7 @@ namespace HotPotPlayer
 
         public void ShowToast(ToastInfo toast);
         public void NavigateTo(string name, object parameter = null, NavigationTransitionInfo trans = null);
-        public void NavigateBack();
+        public void NavigateBack(bool force = false);
         public void PlayVideo(string bvid);
     }
 }

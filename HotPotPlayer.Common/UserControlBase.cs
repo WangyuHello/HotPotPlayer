@@ -38,9 +38,9 @@ namespace HotPotPlayer
         {
             ((IComponentServiceLocator)Application.Current).NavigateTo(name, parameter, trans);
         }
-        public void NavigateBack()
+        public void NavigateBack(bool force = false)
         {
-            ((IComponentServiceLocator)Application.Current).NavigateBack();
+            ((IComponentServiceLocator)Application.Current).NavigateBack(force);
         }
 
         public void PlayVideo(string bvid)

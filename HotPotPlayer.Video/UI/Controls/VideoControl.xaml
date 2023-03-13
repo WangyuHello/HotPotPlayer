@@ -38,8 +38,19 @@
 
     </base:UserControlBase.Resources>
 
-    <Grid PointerEntered="Grid_PointerEntered" PointerMoved="Grid_PointerMoved" ui:UIElementExtensions.ClipToBounds="True">
-        <SwapChainPanel x:Name="Host" Loaded="Host_Loaded" CompositionScaleChanged="Host_CompositionScaleChanged" SizeChanged="Host_SizeChanged" Unloaded="Host_Unloaded" PointerReleased="Host_PointerReleased"/>
+    <Grid PointerEntered="Grid_PointerEntered" 
+          PointerMoved="Grid_PointerMoved" 
+          ManipulationStarted="Host_ManipulationStarted"
+          ManipulationCompleted="Host_ManipulationCompleted"
+          ManipulationDelta="Host_ManipulationDelta"
+          ui:UIElementExtensions.ClipToBounds="True">
+        <SwapChainPanel x:Name="Host" 
+                        Loaded="Host_Loaded" 
+                        CompositionScaleChanged="Host_CompositionScaleChanged" 
+                        SizeChanged="Host_SizeChanged" 
+                        Unloaded="Host_Unloaded" 
+                        PointerReleased="Host_PointerReleased"
+                        />
 
         <vcont:DanmakuRenderer 
             x:Name="DM" 

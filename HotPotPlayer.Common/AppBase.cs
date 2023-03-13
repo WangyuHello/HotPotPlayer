@@ -55,7 +55,7 @@ namespace HotPotPlayer
 
         public abstract void ShowToast(ToastInfo toast);
         public abstract void NavigateTo(string name, object parameter = null, NavigationTransitionInfo trans = null);
-        public abstract void NavigateBack();
+        public abstract void NavigateBack(bool force = false);
         public abstract void SetDragRegionForTitleBar(RectangleF[] dragArea);
         public abstract IntPtr MainWindowHandle { get; }
 

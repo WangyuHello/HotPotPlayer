@@ -1,4 +1,5 @@
-﻿using HotPotPlayer.Video;
+﻿using HotPotPlayer.Pages.BilibiliSub;
+using HotPotPlayer.Video;
 using HotPotPlayer.Video.Models;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
@@ -57,15 +58,31 @@ namespace HotPotPlayer
             SelectedPageName = name;
         }
 
-        public void NavigateBack()
+        public void NavigateBack(bool force = false)
         {
             if (!MainFrame.CanGoBack)
             {
                 return;
             }
             var topName = MainFrame.BackStack.Last().SourcePageType.Name;
-            MainFrame.GoBack();
-            SelectedPageName = topName;
+            if (force)
+            {
+                MainFrame.GoBack();
+                SelectedPageName = topName;
+            }
+            else
+            {
+                if (MainFrame.CurrentSourcePageType.Name == "BiliVideoPlay")
+                {
+                    var biliPlay = MainFrame.Content as BiliVideoPlay;
+                    biliPlay.RequestNavigateBack();
+                }
+                else
+                {
+                    MainFrame.GoBack();
+                    SelectedPageName = topName;
+                }
+            }
         }
 
         private void MainFrame_Navigated(object sender, NavigationEventArgs e)
