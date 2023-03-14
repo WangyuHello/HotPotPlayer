@@ -401,12 +401,12 @@ namespace HotPotPlayer.Video.UI.Controls
 
         public void Close()
         {
-            _mpv.StopAsync();
+            _mpv?.StopAsync();
         }
 
         public void Stop()
         {
-            _mpv.StopAsync();
+            _mpv?.StopAsync();
         }
 
         void StopInactiveTimer()

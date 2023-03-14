@@ -47,6 +47,10 @@ namespace HotPotPlayer.Video.UI.Controls
 
         void DisposeMpv()
         {
+            if (_mpv==null)
+            {
+                return;
+            }
             _swapChainLoaded = false;
             _mpv.MediaPaused -= MediaPaused;
             _mpv.MediaResumed -= MediaResumed;
