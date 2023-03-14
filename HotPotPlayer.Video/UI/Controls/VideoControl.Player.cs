@@ -55,6 +55,7 @@ namespace HotPotPlayer.Video.UI.Controls
             _mpv.MediaStartedSeeking -= MediaStartedSeeking;
             _mpv.MediaEndedSeeking -= MediaEndedSeeking;
             _mpv.Dispose();
+            _mpv = null;
         }
 
         private void MediaEndedSeeking(object sender, EventArgs e)
@@ -91,7 +92,10 @@ namespace HotPotPlayer.Video.UI.Controls
 
         private void MediaFinished(object sender, EventArgs e)
         {
-            _mediaFinished = true;
+            Task.Run(() =>
+            {
+                DisposeMpv();
+            });
 
             UIQueue.TryEnqueue(() =>
             {
@@ -101,8 +105,6 @@ namespace HotPotPlayer.Video.UI.Controls
 
         private async void MediaLoaded(object sender, EventArgs e)
         {
-            _mediaFinished = false;
-
             UIQueue.TryEnqueue(() =>
             {
                 IsPlaying = true;
@@ -179,7 +181,7 @@ namespace HotPotPlayer.Video.UI.Controls
             _fence.Set();
         }
 
-        public void StartPlay(string selectedDefinition = "")
+        public void StartPlay(string selectedDefinition = "", bool immediateInit = false)
         {
             if (!Host.IsLoaded || Host.ActualSize.X <= 1 || Host.ActualSize.Y <= 1 || CurrentPlayList == null)
             {
@@ -192,8 +194,12 @@ namespace HotPotPlayer.Video.UI.Controls
             {
                 if (_mpv == null)
                 {
-                    _fence.WaitOne();
-                    Task.Delay(500).Wait();
+                    if (!immediateInit)
+                    {
+                        _fence.WaitOne();
+                        Task.Delay(500).Wait();
+                    }
+                    
                     InitMpv(isFullPageHost);
                 }
                 InitMpvGeometry();

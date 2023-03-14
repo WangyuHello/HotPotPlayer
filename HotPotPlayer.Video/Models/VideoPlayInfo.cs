@@ -12,5 +12,6 @@ namespace HotPotPlayer.Video.Models
     {
         public IEnumerable<VideoItem> VideoItems { get; set; }
         public int Index { get; set; }
+        public bool ImmediateLoad { get; set; }
     }
 }

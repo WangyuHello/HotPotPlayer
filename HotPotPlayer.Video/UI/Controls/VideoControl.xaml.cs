@@ -303,7 +303,6 @@ namespace HotPotPlayer.Video.UI.Controls
         bool _suppressCurrentTimeTrigger;
         DispatcherTimer _inActiveTimer;
         bool _mediaInited;
-        bool _mediaFinished;
         AutoResetEvent _fence = new(false);
 
         IntPtr _devicePtr;
@@ -335,7 +334,7 @@ namespace HotPotPlayer.Video.UI.Controls
         {
             currentPlayList = new ObservableCollection<VideoItem>(info.VideoItems);
             currentPlayIndex = info.Index;
-            StartPlay();
+            StartPlay(immediateInit: info.ImmediateLoad);
         }
 
         private string GetCookieFile()
@@ -380,7 +379,7 @@ namespace HotPotPlayer.Video.UI.Controls
 
         void UpdateSize()
         {
-            if (Host is null || !_swapChainLoaded || _mediaFinished || _mpv == null)
+            if (Host is null || !_swapChainLoaded ||  _mpv == null)
                 return;
 
             lock (_criticalLock)
@@ -391,7 +390,7 @@ namespace HotPotPlayer.Video.UI.Controls
 
         void UpdateScale()
         {
-            if (Host is null || !_swapChainLoaded || _mediaFinished)
+            if (Host is null || !_swapChainLoaded || _mpv == null)
                 return;
 
             lock (_criticalLock2)
@@ -438,7 +437,11 @@ namespace HotPotPlayer.Video.UI.Controls
 
         private void PlayButtonClick(object sender, RoutedEventArgs e)
         {
-            if(_mpv.IsPlaying)
+            if(_mpv == null)
+            {
+                StartPlay(immediateInit: true);
+            }
+            else if(_mpv.IsPlaying)
             {
                 _mpv.Pause();
             }

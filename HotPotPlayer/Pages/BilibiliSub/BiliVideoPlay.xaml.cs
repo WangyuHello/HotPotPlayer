@@ -109,11 +109,14 @@ namespace HotPotPlayer.Pages.BilibiliSub
             StartPlay(e.Parameter);
         }
 
-        public async void StartPlay(object para, string targetCid = null)
+        public async void StartPlay(object para, string targetCid = null, bool immediateLoad = false)
         {
             IsLoading = true;
             IsAdditionLoading = true;
-            VideoPlayer.SetPlayerFence();
+            if (!immediateLoad)
+            {
+                VideoPlayer.SetPlayerFence();
+            }
 
             if (para is string b) //bvid
             {
@@ -124,7 +127,7 @@ namespace HotPotPlayer.Pages.BilibiliSub
                 bvid = videoContent.Bvid;
                 var url = await BiliBiliService.GetVideoUrlAsync(bvid, aid, cid);
                 var videoItem = BiliBiliVideoItem.FromRaw(url, Video);
-                Source = new VideoPlayInfo { VideoItems = new List<BiliBiliVideoItem> { videoItem }, Index = 0 };
+                Source = new VideoPlayInfo { VideoItems = new List<BiliBiliVideoItem> { videoItem }, Index = 0, ImmediateLoad = immediateLoad };
             }
             else if (para is VideoContent videoContent)
             {
@@ -134,7 +137,7 @@ namespace HotPotPlayer.Pages.BilibiliSub
                 bvid = videoContent.Bvid;
                 var url = await BiliBiliService.GetVideoUrlAsync(bvid, aid, cid);
                 var videoItem = BiliBiliVideoItem.FromRaw(url, Video);
-                Source = new VideoPlayInfo { VideoItems = new List<BiliBiliVideoItem> { videoItem }, Index = 0 };
+                Source = new VideoPlayInfo { VideoItems = new List<BiliBiliVideoItem> { videoItem }, Index = 0, ImmediateLoad = immediateLoad };
             }
             else if (para is HomeDataItem h)
             {
@@ -143,7 +146,7 @@ namespace HotPotPlayer.Pages.BilibiliSub
                 bvid = h.Bvid;
                 var url = await BiliBiliService.GetVideoUrlAsync(bvid, aid, cid);
                 var videoItem = BiliBiliVideoItem.FromRaw(url, h);
-                Source = new VideoPlayInfo { VideoItems = new List<BiliBiliVideoItem> { videoItem }, Index = 0 };
+                Source = new VideoPlayInfo { VideoItems = new List<BiliBiliVideoItem> { videoItem }, Index = 0, ImmediateLoad = immediateLoad };
                 Video = (await BiliBiliService.API.GetVideoInfo(bvid)).Data;
             }
 
@@ -176,7 +179,10 @@ namespace HotPotPlayer.Pages.BilibiliSub
                 DetermineSelectedEpisode();
             }
 
-            VideoPlayer.ReleasePlayerFence();
+            if (!immediateLoad)
+            {
+                VideoPlayer.ReleasePlayerFence();
+            }
         }
 
         public async void RequestNavigateBack()
@@ -286,7 +292,7 @@ namespace HotPotPlayer.Pages.BilibiliSub
         private void RelateVideoClick(object sender, ItemClickEventArgs e)
         {
             var v = e.ClickedItem as VideoContent;
-            StartPlay(v);
+            StartPlay(v, immediateLoad: true);
         }
 
         private void OnMediaLoaded()
@@ -320,7 +326,7 @@ namespace HotPotPlayer.Pages.BilibiliSub
                 return;
             }
             var sel = Video.UgcSeason.GetAllEpisodes[value];
-            StartPlay(sel.Bvid);
+            StartPlay(sel.Bvid, immediateLoad: true);
         }
 
         private async void DetermineSelectedPage()
@@ -347,7 +353,7 @@ namespace HotPotPlayer.Pages.BilibiliSub
                 return;
             }
             var sel = Video.Pages[value];
-            StartPlay(Video, sel.Cid);
+            StartPlay(Video, sel.Cid, immediateLoad: true);
         }
 
 
@@ -454,6 +460,8 @@ namespace HotPotPlayer.Pages.BilibiliSub
                     Favors--;
                 }
             }
+            var b = sender as ToggleButton;
+            b.IsChecked = IsFavor;
         }
 
         private void ShareClick(object sender, RoutedEventArgs e)
