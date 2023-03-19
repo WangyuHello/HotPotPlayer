@@ -33,7 +33,8 @@ namespace HotPotPlayer
 
         private void MainSidebar_SelectedPageNameChanged(string name)
         {
-            MainFrame.Navigate(Type.GetType("HotPotPlayer.Pages." + name), null, new DrillInNavigationTransitionInfo());
+            var target = Type.GetType("HotPotPlayer.Pages." + name) ?? Type.GetType("HotPotPlayer.Pages.Music");
+            MainFrame.Navigate(target, null, new DrillInNavigationTransitionInfo());
         }
 
         private void MainSidebar_OnBackClick()
