@@ -7,6 +7,7 @@
     xmlns:bili="using:HotPotPlayer.Bilibili.Models.HomeVideo"
     xmlns:bili2="using:HotPotPlayer.Bilibili.Models.Video"
     xmlns:bili3="using:HotPotPlayer.Bilibili.Models.User"
+    xmlns:bili4="using:HotPotPlayer.Bilibili.Models.Search"
     xmlns:biliHis="using:HotPotPlayer.Bilibili.Models.History"
     xmlns:biliext="using:HotPotPlayer.Bilibili.Extensions"
     xmlns:cont2="using:HotPotPlayer.UI.Controls"
@@ -386,6 +387,65 @@
                 />
             <StackPanel Orientation="Horizontal" Padding="8,0" Margin="0,0,0,8">
                 <TextBlock Text="{x:Bind GetUpDateTime()}" Foreground="Gray" FontFamily="{ThemeResource MiSansRegular}" />
+            </StackPanel>
+        </StackPanel>
+    </DataTemplate>
+
+    <DataTemplate x:Key="BiliVideoCardViewTemplate4" x:DataType="bili4:SearchResultData">
+        <StackPanel 
+            Width="300"
+            Padding="0,0,0,12"
+            x:Name="BiliVideoCardConnectedElement"
+            BorderBrush="{ThemeResource ButtonBorderBrush}"
+            BorderThickness="{ThemeResource ButtonBorderThemeThickness}"
+            CornerRadius="4"
+            ui:VisualExtensions.NormalizedCenterPoint="0.5"
+            Loaded="Root_Loaded"
+            Background="White"
+            >
+            <cont2:ImageEx2 
+                CornerRadius="4"
+                Source="{x:Bind GetCover()}" 
+                Style="{StaticResource LocalVideoImageStyle}"
+                />
+            <Grid Margin="0,-24,0,0" Height="24" Padding="8,0">
+                <Grid.Background>
+                    <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
+                        <GradientStop Offset="0" Color="Transparent"/>
+                        <GradientStop Offset="0.2" Color="#10000000"/>
+                        <GradientStop Offset="0.8" Color="#80000000"/>
+                    </LinearGradientBrush>
+                </Grid.Background>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+                <FontIcon FontFamily="{ThemeResource SegoeIcons}" Foreground="White" FontSize="13" Margin="0,-6,4,0" Glyph="&#xE102;" />
+                <TextBlock Grid.Column="1" Text="{x:Bind Play}" FontSize="13" Foreground="White" FontFamily="{ThemeResource MiSansRegular}" />
+                <FontIcon Grid.Column="2" FontFamily="{ThemeResource SegoeIcons}" Foreground="White" FontSize="13" Margin="12,-6,4,0" Glyph="&#xE134;" />
+                <TextBlock Grid.Column="3" Text="{x:Bind VideoReview}" FontSize="13" Foreground="White" FontFamily="{ThemeResource MiSansRegular}" />
+                <TextBlock Grid.Column="5" Text="{x:Bind Duration}" FontSize="13" Foreground="White" FontFamily="{ThemeResource MiSansRegular}" />
+            </Grid>
+            <TextBlock 
+                Margin="8,8" 
+                Text="{x:Bind GetTitle()}" 
+                LineStackingStrategy="BaselineToBaseline" 
+                FontSize="14" 
+                MaxLines="2" 
+                TextTrimming="CharacterEllipsis" 
+                TextWrapping="Wrap" 
+                Height="40" 
+                ToolTipService.ToolTip="{x:Bind GetTitle()}" 
+                FontFamily="{ThemeResource MiSansMedium}"
+                />
+            <StackPanel Orientation="Horizontal" Padding="8,0">
+                <FontIcon Grid.Column="2" FontFamily="{ThemeResource SegoeIcons}" Foreground="Gray" FontSize="13" Margin="0,0,6,0" Glyph="&#xE125;" />
+                <TextBlock Text="{x:Bind Author}" Foreground="Gray" FontFamily="{ThemeResource MiSansRegular}" />
+                <TextBlock Margin="12,0" Text="{x:Bind GetPubDate()}" Foreground="Gray" FontFamily="{ThemeResource MiSansRegular}" />
             </StackPanel>
         </StackPanel>
     </DataTemplate>

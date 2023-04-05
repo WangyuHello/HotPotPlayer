@@ -13,7 +13,7 @@ namespace HotPotPlayer.Common.Extension
             var cookie = api.Cookies;
             var folder = config.CookieFolder;
             var file = Path.Combine(folder, "BiliCookies.json");
-            var json = JsonConvert.SerializeObject(cookie);
+            var json = JsonConvert.SerializeObject(cookie, Formatting.Indented);
             File.WriteAllText(file, json);
         }
 

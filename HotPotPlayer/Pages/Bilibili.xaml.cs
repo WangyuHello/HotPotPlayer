@@ -77,6 +77,7 @@ namespace HotPotPlayer.Pages
             NavStatData = (await BiliBiliService.API.GetNavStat()).Data;
             await LoadEntranceDataAsync();
             IsFirstNavigate = false;
+            await BiliBiliService.API.GetBiliBili();
         }
 
         private async Task LoadEntranceDataAsync()

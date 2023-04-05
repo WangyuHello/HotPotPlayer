@@ -25,6 +25,7 @@ using System.Diagnostics;
 using System.Security.Cryptography;
 using HotPotPlayer.Bilibili.Models.History;
 using HotPotPlayer.Bilibili.Models.Nav;
+using HotPotPlayer.Bilibili.Models.Search;
 
 namespace HotPotPlayer.BiliBili
 {
@@ -205,6 +206,12 @@ namespace HotPotPlayer.BiliBili
             return j;
         }
 
+        public async Task GetBiliBili()
+        {
+            // For cookie
+            var _ = await GetAsync("https://bilibili.com");
+        }
+
         /// <summary>
         /// https://github.com/SocialSisterYi/bilibili-API-collect/blob/master/video/videostream_url.md
         /// </summary>
@@ -245,6 +252,12 @@ namespace HotPotPlayer.BiliBili
                 });
             var res = JsonConvert.DeserializeObject<BiliResult<VideoContent>>(r);
             return res;
+        }
+
+
+        public async Task GetVideoWeb(string bvid)
+        {
+            var _ = await GetAsync("https://www.bilibili.com/video/" + bvid, ResponseEnum.Web);
         }
 
         /// <summary>
@@ -396,19 +409,19 @@ namespace HotPotPlayer.BiliBili
         }
 
         /// <summary>
-        /// https://github.com/SocialSisterYi/bilibili-API-collect/blob/master/search/search_request.md
+        /// https://github.com/SocialSisterYi/bilibili-API-collect/blob/master/docs/search/search_request.md
         /// </summary>
         /// <param name="keyword"></param>
-        //public async void Search(string keyword)
-        //{
-        //    var r = await GetAsync("https://api.bilibili.com/x/web-interface/search/all/v2", ResponseEnum.Web,
-        //        new Dictionary<string, string>
-        //        {
-        //            ["keyword"] = keyword,
-        //        });
-        //    var res = JsonConvert.DeserializeObject<BiliResult<List<VideoContent>>>(r);
-        //    return res;
-        //}
+        public async Task<BiliResult<SearchData>?> SearchAsync(string keyword)
+        {
+            var r = await GetAsync("https://api.bilibili.com/x/web-interface/search/all/v2", ResponseEnum.Web,
+                new Dictionary<string, string>
+                {
+                    ["keyword"] = keyword,
+                });
+            var res = JsonConvert.DeserializeObject<BiliResult<SearchData>>(r);
+            return res;
+        }
 
         // https://github.com/SocialSisterYi/bilibili-API-collect/blob/master/user/info.md
         public async Task<BiliResult<UserCardBundle>?> GetUserCardBundle(string mid, bool requestTopPhoto)
@@ -725,6 +738,10 @@ namespace HotPotPlayer.BiliBili
                     {
                         continue;
                     }
+                }
+                if (cookie.Expires == DateTime.MinValue)
+                {
+                    cookie.Expires = DateTime.MaxValue;
                 }
                 cookies.Add(cookie);
             }

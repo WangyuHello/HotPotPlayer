@@ -23,7 +23,7 @@ using HotPotPlayer.Bilibili.Models.Dynamic;
 
 namespace HotPotPlayer.Controls.BilibiliSub
 {
-    public sealed partial class Header : UserControl
+    public sealed partial class Header : UserControlBase
     {
         public Header()
         {
@@ -152,6 +152,11 @@ namespace HotPotPlayer.Controls.BilibiliSub
                 return Visibility.Visible;
             }
             return Visibility.Collapsed;
+        }
+
+        private void Search_Tapped(object sender, TappedRoutedEventArgs e)
+        {
+            NavigateTo("BilibiliSub.Search");
         }
     }
 }

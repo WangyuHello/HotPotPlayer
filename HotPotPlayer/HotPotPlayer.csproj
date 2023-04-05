@@ -85,6 +85,7 @@
     <None Remove="Pages\BilibiliSub\Login.xaml" />
     <None Remove="Pages\BilibiliSub\Main.xaml" />
     <None Remove="Pages\BilibiliSub\Message.xaml" />
+    <None Remove="Pages\BilibiliSub\Search.xaml" />
     <None Remove="Pages\BilibiliSub\User.xaml" />
     <None Remove="Pages\BilibiliSub\VideoView.xaml" />
     <None Remove="Pages\CloudMusic.xaml" />
@@ -417,6 +418,11 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Remove="Pages\BilibiliSub\User.xaml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Page Update="Pages\BilibiliSub\Search.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
   </ItemGroup>
   <ItemGroup>
     <Page Update="Styles\Expanders.xaml">

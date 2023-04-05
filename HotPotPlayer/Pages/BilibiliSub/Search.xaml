@@ -1,0 +1,41 @@
+<!-- Copyright (c) Microsoft Corporation and Contributors. -->
+<!-- Licensed under the MIT License. -->
+
+<base:PageBase
+    x:Class="HotPotPlayer.Pages.BilibiliSub.Search"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:base="using:HotPotPlayer"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:HotPotPlayer.Pages.BilibiliSub"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d"
+    NavigationCacheMode="Enabled"
+    Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+
+        <AutoSuggestBox 
+            x:Name="SearchBox" 
+            Margin="120,64,120,40" 
+            MinWidth="500" 
+            QueryIcon="Find" 
+            QuerySubmitted="Search_QuerySubmitted"
+            PlaceholderText="搜索" 
+            VerticalAlignment="Center" 
+            HorizontalAlignment="Center" 
+            CornerRadius="8" />
+
+        <GridView Grid.Row="1" Padding="24,0,24,0"
+                  ItemsSource="{x:Bind VideoResult, Mode=OneWay}" 
+                  Style="{StaticResource CardGridViewStyle}"
+                  ItemTemplate="{StaticResource BiliVideoCardViewTemplate4}"
+                  ItemClick="SearchVideoClick">
+
+        </GridView>
+    </Grid>
+</base:PageBase>

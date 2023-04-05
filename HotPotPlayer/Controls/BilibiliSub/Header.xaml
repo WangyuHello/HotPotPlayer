@@ -1,9 +1,10 @@
 <!-- Copyright (c) Microsoft Corporation and Contributors. -->
 <!-- Licensed under the MIT License. -->
 
-<UserControl
+<base:UserControlBase
     x:Class="HotPotPlayer.Controls.BilibiliSub.Header"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:base="using:HotPotPlayer"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:local="using:HotPotPlayer.Controls.BilibiliSub"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
@@ -14,10 +15,6 @@
     xmlns:controls="using:CommunityToolkit.WinUI.UI.Controls"
     x:DefaultBindMode="OneWay"
     mc:Ignorable="d">
-
-    <UserControl.Resources>
-        
-    </UserControl.Resources>
 
     <Grid Background="{ThemeResource AcrylicInAppFillColorDefaultBrush}">
 
@@ -116,7 +113,7 @@
             </Button>
         </StackPanel>
         
-        <Grid x:Name="Search" Margin="24,16" VerticalAlignment="Top" HorizontalAlignment="Left" Height="32" Width="260" CornerRadius="16" Background="White" BorderThickness="0.8" BorderBrush="{ThemeResource ButtonBorderThemeBrush}" >
+        <Grid x:Name="Search" Margin="24,16" VerticalAlignment="Top" HorizontalAlignment="Left" Height="32" Width="260" CornerRadius="16" Background="White" BorderThickness="0.8" BorderBrush="{ThemeResource ButtonBorderThemeBrush}" Tapped="Search_Tapped">
             <TextBlock Text="搜索" Margin="12,0" Foreground="Gray" HorizontalAlignment="Left" VerticalAlignment="Center" FontFamily="{ThemeResource MiSansRegular}"/>
             <FontIcon FontFamily="{ThemeResource SegoeIcons}" Glyph="&#xE11A;" Margin="12,0" HorizontalAlignment="Right" FontSize="16"/>
         </Grid>
@@ -127,4 +124,4 @@
             
         </StackPanel>-->
     </Grid>
-</UserControl>
+</base:UserControlBase>
