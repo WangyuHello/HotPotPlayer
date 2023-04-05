@@ -38,7 +38,7 @@ namespace HotPotPlayer.Pages.BilibiliSub
         [ObservableProperty]
         List<SearchResultData> videoResult;
 
-        protected override void OnNavigatedTo(NavigationEventArgs e)
+        protected override async void OnNavigatedTo(NavigationEventArgs e)
         {
             base.OnNavigatedTo(e);
             var defa = e.Parameter as string;

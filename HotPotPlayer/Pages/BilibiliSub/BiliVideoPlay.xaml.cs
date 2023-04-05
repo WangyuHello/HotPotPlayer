@@ -184,7 +184,7 @@ namespace HotPotPlayer.Pages.BilibiliSub
                 VideoPlayer.ReleasePlayerFence();
             }
 
-            await BiliBiliService.API.GetVideoWeb(bvid);
+            //await BiliBiliService.API.GetVideoWeb(bvid);
         }
 
         public async void RequestNavigateBack()
