@@ -38,6 +38,13 @@ namespace HotPotPlayer.Pages.BilibiliSub
         [ObservableProperty]
         List<SearchResultData> videoResult;
 
+        protected override void OnNavigatedTo(NavigationEventArgs e)
+        {
+            base.OnNavigatedTo(e);
+            var defa = e.Parameter as string;
+            SearchBox.Text = defa;
+        }
+
         private async void Search_QuerySubmitted(AutoSuggestBox sender, AutoSuggestBoxQuerySubmittedEventArgs args)
         {
             var search = await BiliBiliService.API.SearchAsync(sender.Text);

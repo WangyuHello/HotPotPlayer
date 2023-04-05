@@ -28,7 +28,9 @@
             PlaceholderText="搜索" 
             VerticalAlignment="Center" 
             HorizontalAlignment="Center" 
-            CornerRadius="8" />
+            CornerRadius="8" 
+            FontFamily="{ThemeResource MiSansRegular}"
+            />
 
         <GridView Grid.Row="1" Padding="24,0,24,0"
                   ItemsSource="{x:Bind VideoResult, Mode=OneWay}" 

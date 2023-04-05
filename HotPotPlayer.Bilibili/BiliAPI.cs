@@ -423,6 +423,17 @@ namespace HotPotPlayer.BiliBili
             return res;
         }
 
+        /// <summary>
+        /// https://github.com/SocialSisterYi/bilibili-API-collect/blob/master/docs/search/hot.md
+        /// </summary>
+        /// <returns></returns>
+        public async Task<BiliResult<SearchDefaultData>?> GetSearchDefaultAsync()
+        {
+            var r = await GetAsync("https://api.bilibili.com/x/web-interface/search/default", ResponseEnum.Web);
+            var res = JsonConvert.DeserializeObject<BiliResult<SearchDefaultData>>(r);
+            return res;
+        }
+
         // https://github.com/SocialSisterYi/bilibili-API-collect/blob/master/user/info.md
         public async Task<BiliResult<UserCardBundle>?> GetUserCardBundle(string mid, bool requestTopPhoto)
         {

@@ -17,6 +17,8 @@ using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Navigation;
 using HotPotPlayer.Bilibili.Models.Nav;
 using HotPotPlayer.Bilibili.Models.Dynamic;
+using CommunityToolkit.Mvvm.ComponentModel;
+using System.ComponentModel.Design;
 
 // To learn more about WinUI, the WinUI project structure,
 // and more about our project templates, see: http://aka.ms/winui-project-info.
@@ -107,6 +109,15 @@ namespace HotPotPlayer.Controls.BilibiliSub
 
         public event Action OnRefreshClick;
 
+        [ObservableProperty]
+        string searchDefault;
+
+        private async void RootLoaded(object sender, RoutedEventArgs args)
+        {
+            var def = await BiliBiliService.API.GetSearchDefaultAsync();
+            SearchDefault = def.Data.ShowName;
+        }
+
         private void RefreshClick(object sender, RoutedEventArgs args)
         {
             OnRefreshClick?.Invoke();
@@ -156,7 +167,7 @@ namespace HotPotPlayer.Controls.BilibiliSub
 
         private void Search_Tapped(object sender, TappedRoutedEventArgs e)
         {
-            NavigateTo("BilibiliSub.Search");
+            NavigateTo("BilibiliSub.Search", SearchDefault);
         }
     }
 }

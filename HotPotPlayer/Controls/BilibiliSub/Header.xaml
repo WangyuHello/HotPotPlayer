@@ -14,9 +14,10 @@
     xmlns:animations="using:CommunityToolkit.WinUI.UI.Animations"
     xmlns:controls="using:CommunityToolkit.WinUI.UI.Controls"
     x:DefaultBindMode="OneWay"
-    mc:Ignorable="d">
+    mc:Ignorable="d"
+    >
 
-    <Grid Background="{ThemeResource AcrylicInAppFillColorDefaultBrush}">
+    <Grid Background="{ThemeResource AcrylicInAppFillColorDefaultBrush}" Loaded="RootLoaded">
 
         <Expander x:Name="More" IsExpanded="{x:Bind IsExpanded}" HorizontalAlignment="Stretch" VerticalAlignment="Top" Style="{StaticResource BiliHeaderExpander}">
             <Expander.Content>
@@ -114,8 +115,8 @@
         </StackPanel>
         
         <Grid x:Name="Search" Margin="24,16" VerticalAlignment="Top" HorizontalAlignment="Left" Height="32" Width="260" CornerRadius="16" Background="White" BorderThickness="0.8" BorderBrush="{ThemeResource ButtonBorderThemeBrush}" Tapped="Search_Tapped">
-            <TextBlock Text="搜索" Margin="12,0" Foreground="Gray" HorizontalAlignment="Left" VerticalAlignment="Center" FontFamily="{ThemeResource MiSansRegular}"/>
-            <FontIcon FontFamily="{ThemeResource SegoeIcons}" Glyph="&#xE11A;" Margin="12,0" HorizontalAlignment="Right" FontSize="16"/>
+            <TextBlock Text="{x:Bind SearchDefault}" Margin="12,0" Foreground="Gray" HorizontalAlignment="Left" VerticalAlignment="Center" FontFamily="{ThemeResource MiSansRegular}"/>
+            <FontIcon FontFamily="{ThemeResource SegoeIcons}" Glyph="&#xE11A;" Margin="12,0" HorizontalAlignment="Right" FontSize="16" />
         </Grid>
         
         <!--<StackPanel Margin="0,8,8,0" Orientation="Horizontal" VerticalAlignment="Top" HorizontalAlignment="Right" >
