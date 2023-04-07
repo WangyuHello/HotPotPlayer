@@ -106,6 +106,7 @@
                     <ColumnDefinition Width="Auto" />
                     <ColumnDefinition Width="Auto" />
                     <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="Auto" />
                     <ColumnDefinition Width="*" />
                 </Grid.ColumnDefinitions>
                 <cont2:ImageEx2 Grid.Column="0" x:Name="UserAvatar" Source="{x:Bind Video.Up.Face}" Style="{StaticResource LocalMusicImageStyle}" 
@@ -121,16 +122,20 @@
 
                 <ListView Grid.Column="0" Visibility="{x:Bind Video.IsMultiStaff}" MaxWidth="260" ItemsSource="{x:Bind Video.Staff}" Style="{StaticResource HorizontalListViewStyle}" ItemTemplate="{StaticResource StaffTemplate}" ItemContainerStyle="{StaticResource TransparentListContainerCompactHPaddingStyle}"/>
 
-                <ImageIcon Grid.Column="2" Source="ms-appx:///Assets/Icon/View.svg" Margin="12,0,0,0" Width="20" Foreground="Gray"/>
-                <TextBlock Grid.Column="3" VerticalAlignment="Center" Margin="4,0" Text="{x:Bind Video.Stat.GetViews()}" Foreground="Gray" FontFamily="{ThemeResource MiSansRegular}" />
-                <ImageIcon Grid.Column="4" Source="ms-appx:///Assets/Icon/Dan.svg" Margin="12,0,0,0" Width="20" Foreground="Gray"/>
-                <TextBlock Grid.Column="5" VerticalAlignment="Center" Margin="4,0" Text="{x:Bind Video.Stat.GetDanMaku()}" Foreground="Gray" FontFamily="{ThemeResource MiSansRegular}" />
-                <ImageIcon Grid.Column="6" Source="ms-appx:///Assets/Icon/Time.svg" Margin="12,0,0,0" Width="20" Foreground="Gray"/>
-                <TextBlock Grid.Column="7" VerticalAlignment="Center" Margin="4,0" Text="{x:Bind Video.GetUpDateTime2()}" Foreground="Gray" FontFamily="{ThemeResource MiSansRegular}" />
-                <FontIcon Grid.Column="8" FontFamily="{ThemeResource SegoeIcons}" Margin="12,0,0,0" Glyph="&#xE18B;" Foreground="Gray" FontSize="16"/>
-                <TextBlock Grid.Column="9" VerticalAlignment="Center" Margin="6,0" Text="{x:Bind OnLineCount}" Foreground="Gray" FontFamily="{ThemeResource MiSansRegular}" />
+                <StackPanel Grid.Column="2" CornerRadius="2" Background="#ffeff4" Orientation="Horizontal" Spacing="4" Padding="8,0" Visibility="{x:Bind Video.HasHonorToDisplay}">
+                    <FontIcon FontFamily="{ThemeResource BiliIcons}" Glyph="&#xEA1C;" Foreground="#ff6698" FontSize="13"/>
+                    <TextBlock VerticalAlignment="Center" Text="{x:Bind Video.HonorReply.Honor[0].Desc}" Foreground="#ff6698" FontFamily="{ThemeResource MiSansRegular}" />
+                </StackPanel>
+                <ImageIcon Grid.Column="3" Source="ms-appx:///Assets/Icon/View.svg" Margin="12,0,0,0" Width="20" Foreground="Gray"/>
+                <TextBlock Grid.Column="4" VerticalAlignment="Center" Margin="4,0" Text="{x:Bind Video.Stat.GetViews()}" Foreground="Gray" FontFamily="{ThemeResource MiSansRegular}" />
+                <ImageIcon Grid.Column="5" Source="ms-appx:///Assets/Icon/Dan.svg" Margin="12,0,0,0" Width="20" Foreground="Gray"/>
+                <TextBlock Grid.Column="6" VerticalAlignment="Center" Margin="4,0" Text="{x:Bind Video.Stat.GetDanMaku()}" Foreground="Gray" FontFamily="{ThemeResource MiSansRegular}" />
+                <ImageIcon Grid.Column="7" Source="ms-appx:///Assets/Icon/Time.svg" Margin="12,0,0,0" Width="20" Foreground="Gray"/>
+                <TextBlock Grid.Column="8" VerticalAlignment="Center" Margin="4,0" Text="{x:Bind Video.GetUpDateTime2()}" Foreground="Gray" FontFamily="{ThemeResource MiSansRegular}" />
+                <FontIcon Grid.Column="9" FontFamily="{ThemeResource SegoeIcons}" Margin="12,0,0,0" Glyph="&#xE18B;" Foreground="Gray" FontSize="16"/>
+                <TextBlock Grid.Column="10" VerticalAlignment="Center" Margin="6,0" Text="{x:Bind OnLineCount}" Foreground="Gray" FontFamily="{ThemeResource MiSansRegular}" />
 
-                <ListView Grid.Column="10" ItemsSource="{x:Bind Tags}" Height="28" Margin="12,0,0,0" Style="{StaticResource HorizontalListViewStyle}" ItemTemplate="{StaticResource TagTemplate}" ItemContainerStyle="{StaticResource TransparentListContainerCompactHPaddingStyle}"/>
+                <ListView Grid.Column="11" ItemsSource="{x:Bind Tags}" Height="28" Margin="12,0,0,0" Style="{StaticResource HorizontalListViewStyle}" ItemTemplate="{StaticResource TagTemplate}" ItemContainerStyle="{StaticResource TransparentListContainerCompactHPaddingStyle}"/>
             </Grid>
             <TextBlock Text="{x:Bind Video.VideoDEsc}" Grid.Row="3" IsTextSelectionEnabled="True" FontFamily="{ThemeResource MiSansRegular}" MaxLines="3" TextWrapping="Wrap" TextTrimming="CharacterEllipsis"/>
             <ListView x:Name="RelatedList" Grid.Row="4" Margin="-36,2,-28,0" Padding="36,0,28,0" Height="220" ItemsSource="{x:Bind RelatedVideos}" Style="{StaticResource HorizontalListViewStyle}" ItemContainerStyle="{StaticResource GeneralListContainerCompactPaddingStyle}" ItemTemplate="{StaticResource BiliVideoCardViewTemplate2}" ItemClick="RelateVideoClick">

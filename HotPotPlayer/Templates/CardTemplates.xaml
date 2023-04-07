@@ -217,7 +217,7 @@
         </StackPanel>
     </DataTemplate>
 
-    <DataTemplate x:Key="BiliVideoCardViewTemplate" x:DataType="bili:HomeDataItem">
+    <DataTemplate x:Key="BiliVideoCardViewTemplate" x:DataType="bili:RecommendVideoItem">
         <StackPanel 
             Width="300"
             Padding="0,0,0,12"
@@ -269,9 +269,12 @@
                 FontFamily="{ThemeResource MiSansMedium}"
                 />
             <StackPanel Orientation="Horizontal" Padding="8,0">
-                <FontIcon Grid.Column="2" FontFamily="{ThemeResource SegoeIcons}" Foreground="Gray" FontSize="13" Margin="0,0,6,0" Glyph="&#xE125;" />
+                <Border Visibility="{x:Bind HasRcmdReasonContent}" CornerRadius="2" Background="#fef1e2" Padding="6,0" Margin="0,0,8,0">
+                    <TextBlock Text="{x:Bind RcmdReason.Content}" Foreground="#ff7f23" FontFamily="{ThemeResource MiSansRegular}" VerticalAlignment="Center"/>
+                </Border>
+                <FontIcon Visibility="{x:Bind NoRcmdReasonContent}" FontFamily="{ThemeResource SegoeIcons}" Foreground="Gray" FontSize="13" Margin="0,0,6,0" Glyph="&#xE125;" />
                 <TextBlock Text="{x:Bind Owner.UpName}" Foreground="Gray" FontFamily="{ThemeResource MiSansRegular}" />
-                <TextBlock Margin="12,0" Text="{x:Bind GetUpDateTime()}" Foreground="Gray" FontFamily="{ThemeResource MiSansRegular}" />
+                <TextBlock Visibility="{x:Bind NoRcmdReasonContent}" Margin="12,0" Text="{x:Bind GetUpDateTime()}" Foreground="Gray" FontFamily="{ThemeResource MiSansRegular}" />
             </StackPanel>
         </StackPanel>
     </DataTemplate>

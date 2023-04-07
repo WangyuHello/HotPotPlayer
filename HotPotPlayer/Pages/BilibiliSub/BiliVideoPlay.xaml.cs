@@ -139,7 +139,7 @@ namespace HotPotPlayer.Pages.BilibiliSub
                 var videoItem = BiliBiliVideoItem.FromRaw(url, Video);
                 Source = new VideoPlayInfo { VideoItems = new List<BiliBiliVideoItem> { videoItem }, Index = 0, ImmediateLoad = immediateLoad };
             }
-            else if (para is HomeDataItem h)
+            else if (para is RecommendVideoItem h)
             {
                 aid = h.Aid;
                 cid = string.IsNullOrEmpty(targetCid) ? h.Cid : targetCid;

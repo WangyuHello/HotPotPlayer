@@ -183,6 +183,12 @@ namespace HotPotPlayer.Bilibili.Models.Video
 
         [JsonProperty("ugc_season")]
         public UGCSeason UgcSeason { get; set; }
+
+        [JsonProperty("honor_reply")] public VideoHonorReply? HonorReply { get; set; }
+
+        public bool HasHonorReply => HonorReply != null && HonorReply.Honor != null;
+
+        public bool HasHonorToDisplay => HasHonorReply && HonorReply!.Honor!.Any(h => h.Type != 4);
     }
 
 

@@ -53,7 +53,7 @@ namespace HotPotPlayer.Models.BiliBili
             return video;
         }
 
-        public static BiliBiliVideoItem FromRaw(VideoInfo videoInfo, HomeDataItem videosContent)
+        public static BiliBiliVideoItem FromRaw(VideoInfo videoInfo, RecommendVideoItem videosContent)
         {
             var dict = new Dictionary<string, Dictionary<string, DashVideo>>();
 

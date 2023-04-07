@@ -12,11 +12,11 @@ using Windows.Foundation;
 
 namespace HotPotPlayer.Models.BiliBili
 {
-    public class RecVideoCollection : ObservableCollection<HomeDataItem>, ISupportIncrementalLoading
+    public class RecVideoCollection : ObservableCollection<RecommendVideoItem>, ISupportIncrementalLoading
     {
         int _pageNum;
         readonly BiliBiliService _service;
-        public RecVideoCollection(HomeData data, BiliBiliService service) : base(data == null ? Enumerable.Empty<HomeDataItem>() : data.Items)
+        public RecVideoCollection(RecommendVideoData data, BiliBiliService service) : base(data == null ? Enumerable.Empty<RecommendVideoItem>() : data.Items)
         {
             _pageNum = 1;
             _service = service;

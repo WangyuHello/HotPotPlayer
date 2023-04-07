@@ -687,7 +687,7 @@
                 <ColumnDefinition Width="Auto" />
             </Grid.ColumnDefinitions>
             <cont2:ImageEx2 Margin="-8,-2,4,-2" Source="{x:Bind Cover}" Visibility="{x:Bind HasCover}" Style="{StaticResource DynamicImageStyle}" Width="26" Height="26" DecodePixelWidth="26" DecodePixelHeight="26"/>
-            <TextBlock Grid.Column="1" Text="{x:Bind Name}" FontFamily="{ThemeResource MiSansRegular}" Foreground="#62676e" VerticalAlignment="Center"/>
+            <TextBlock Grid.Column="1" Text="{x:Bind Name}" FontFamily="{ThemeResource MiSansRegular}" Foreground="#62676e" VerticalAlignment="Center" />
         </Grid>
     </DataTemplate>
 

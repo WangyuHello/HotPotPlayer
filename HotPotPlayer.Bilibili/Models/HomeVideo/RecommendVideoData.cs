@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json;
+﻿using HotPotPlayer.Bilibili.Extensions;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,13 +11,13 @@ namespace HotPotPlayer.Bilibili.Models.HomeVideo
     /// <summary>
     /// 新首页的推荐视频
     /// </summary>
-    public class HomeData
+    public class RecommendVideoData
     {
-        [JsonProperty("mid")] public string Mid { get; set; }
-        [JsonProperty("item")] public List<HomeDataItem> Items { get; set; }
+        [JsonProperty("mid")] public string? Mid { get; set; }
+        [JsonProperty("item")] public List<RecommendVideoItem>? Items { get; set; }
     }
 
-    public class HomeDataItem
+    public class RecommendVideoItem
     {
         [JsonProperty("id")] public string Aid { get; set; }
         [JsonProperty("bvid")] public string Bvid { get; set; }
@@ -30,21 +31,15 @@ namespace HotPotPlayer.Bilibili.Models.HomeVideo
         [JsonProperty("av_feature")] public object AV_feature { get; set; }
         [JsonProperty("owner")] public Owner Owner { get; set; }
         [JsonProperty("stat")] public HomeVideoStat Stat { get; set; }
+        [JsonProperty("rcmd_reason")] public Rcmd RcmdReason { get; set; }
 
-        [JsonProperty("rcmd_reason")] public Rcmd SubTitle { get; set; }
+        public bool HasRcmdReasonContent => RcmdReason != null && !string.IsNullOrEmpty(RcmdReason.Content);
+
+        public bool NoRcmdReasonContent => !HasRcmdReasonContent;
 
         public string GetDuration()
         {
-            int i = int.Parse(Duration);
-            var time = TimeSpan.FromSeconds(i);
-            if (time.Hours > 0)
-            {
-                return time.ToString("hh\\:mm\\:ss");
-            }
-            else
-            {
-                return time.ToString("mm\\:ss");
-            }
+            return Duration.GetDuration();
         }
 
         public string GetUpDateTime()
@@ -58,7 +53,7 @@ namespace HotPotPlayer.Bilibili.Models.HomeVideo
 
     public class Rcmd
     {
-        [JsonProperty("content")] public string Content { get; set; }
+        [JsonProperty("content")] public string? Content { get; set; }
 
         [JsonProperty("reason_type")] public int Type { get; set; }
     }
