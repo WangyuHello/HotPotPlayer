@@ -272,7 +272,7 @@
                 <Border Visibility="{x:Bind HasRcmdReasonContent}" CornerRadius="2" Background="#fef1e2" Padding="6,0" Margin="0,0,8,0">
                     <TextBlock Text="{x:Bind GetRcmdReason}" Foreground="#ff7f23" FontFamily="{ThemeResource MiSansRegular}" VerticalAlignment="Center"/>
                 </Border>
-                <FontIcon Visibility="{x:Bind NoRcmdReasonContent}" FontFamily="{ThemeResource SegoeIcons}" Foreground="Gray" FontSize="13" Margin="0,0,6,0" Glyph="&#xE125;" />
+                <FontIcon Visibility="{x:Bind NoRcmdReasonContent}" FontFamily="{ThemeResource BiliIcons}" Foreground="Gray" FontSize="13" Margin="0,0,6,-2" Glyph="&#xEA1D;" />
                 <TextBlock Text="{x:Bind Owner.UpName}" Foreground="Gray" FontFamily="{ThemeResource MiSansRegular}" />
                 <TextBlock Visibility="{x:Bind NoRcmdReasonContent}" Margin="12,0" Text="{x:Bind GetUpDateTime()}" Foreground="Gray" FontFamily="{ThemeResource MiSansRegular}" />
             </StackPanel>
@@ -331,7 +331,7 @@
                 FontFamily="{ThemeResource MiSansMedium}"
                 />
             <StackPanel Orientation="Horizontal" Padding="8,0" >
-                <FontIcon Grid.Column="2" FontFamily="{ThemeResource SegoeIcons}" Foreground="Gray" FontSize="13" Margin="0,0,6,0" Glyph="&#xE125;" />
+                <FontIcon Grid.Column="2" FontFamily="{ThemeResource BiliIcons}" Foreground="Gray" FontSize="13" Margin="0,0,6,-2" Glyph="&#xEA1D;" />
                 <TextBlock Text="{x:Bind Up.Name}" Foreground="Gray" FontFamily="{ThemeResource MiSansRegular}" />
                 <TextBlock Margin="12,0" Text="{x:Bind GetUpDateTime()}" Foreground="Gray" FontFamily="{ThemeResource MiSansRegular}" />
             </StackPanel>
@@ -446,7 +446,7 @@
                 FontFamily="{ThemeResource MiSansMedium}"
                 />
             <StackPanel Orientation="Horizontal" Padding="8,0">
-                <FontIcon Grid.Column="2" FontFamily="{ThemeResource SegoeIcons}" Foreground="Gray" FontSize="13" Margin="0,0,6,0" Glyph="&#xE125;" />
+                <FontIcon Grid.Column="2" FontFamily="{ThemeResource BiliIcons}" Foreground="Gray" FontSize="13" Margin="0,0,6,-2" Glyph="&#xEA1D;" />
                 <TextBlock Text="{x:Bind Author}" Foreground="Gray" FontFamily="{ThemeResource MiSansRegular}" />
                 <TextBlock Margin="12,0" Text="{x:Bind GetPubDate()}" Foreground="Gray" FontFamily="{ThemeResource MiSansRegular}" />
             </StackPanel>
@@ -695,7 +695,7 @@
                 FontFamily="{ThemeResource MiSansMedium}"
                 />
             <StackPanel Orientation="Horizontal" Padding="8,0">
-                <FontIcon Grid.Column="2" FontFamily="{ThemeResource SegoeIcons}" Foreground="Gray" FontSize="13" Margin="0,0,6,0" Glyph="&#xE125;" />
+                <FontIcon Grid.Column="2" FontFamily="{ThemeResource BiliIcons}" Foreground="Gray" FontSize="13" Margin="0,0,6,-2" Glyph="&#xEA1D;" />
                 <TextBlock Text="{x:Bind AuthorName}" Foreground="Gray" FontFamily="{ThemeResource MiSansRegular}" />
                 <TextBlock Margin="12,0" Text="{x:Bind biliext:TimeExtensions.GetDateTime(ViewAt)}" Foreground="Gray" FontFamily="{ThemeResource MiSansRegular}" />
             </StackPanel>
