@@ -31,11 +31,13 @@ namespace HotPotPlayer.Bilibili.Models.HomeVideo
         [JsonProperty("av_feature")] public object AV_feature { get; set; }
         [JsonProperty("owner")] public Owner Owner { get; set; }
         [JsonProperty("stat")] public HomeVideoStat Stat { get; set; }
-        [JsonProperty("rcmd_reason")] public Rcmd RcmdReason { get; set; }
+        [JsonProperty("rcmd_reason")] public Rcmd? RcmdReason { get; set; }
 
-        public bool HasRcmdReasonContent => RcmdReason != null && !string.IsNullOrEmpty(RcmdReason.Content);
+        public bool HasRcmdReasonContent => RcmdReason != null && RcmdReason.Type != 0;
 
         public bool NoRcmdReasonContent => !HasRcmdReasonContent;
+
+        public string GetRcmdReason => HasRcmdReasonContent ? (RcmdReason!.Type == 1 ? "已关注" : RcmdReason!.Content!) : "";
 
         public string GetDuration()
         {
