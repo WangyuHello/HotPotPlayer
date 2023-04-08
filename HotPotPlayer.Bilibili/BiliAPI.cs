@@ -26,6 +26,7 @@ using System.Security.Cryptography;
 using HotPotPlayer.Bilibili.Models.History;
 using HotPotPlayer.Bilibili.Models.Nav;
 using HotPotPlayer.Bilibili.Models.Search;
+using Microsoft.Extensions.Caching.Memory;
 
 namespace HotPotPlayer.BiliBili
 {
@@ -41,6 +42,11 @@ namespace HotPotPlayer.BiliBili
         public string CookieString => string.Join("; ", Cookies.Cast<System.Net.Cookie>().Select(t => t.Name + "=" + t.Value));
         private Dictionary<string, BiliResult<UserCardBundle>>? userCardCache;
         private Dictionary<string, BiliResult<UserCardBundle>> UserCardCache => userCardCache ??= new Dictionary<string, BiliResult<UserCardBundle>>();
+        
+        IMemoryCache _cache = new MemoryCache(new MemoryCacheOptions
+        {
+            ExpirationScanFrequency = TimeSpan.FromMinutes(2),
+        });
 
         public BiliAPI()
         {
@@ -116,14 +122,13 @@ namespace HotPotPlayer.BiliBili
                     using (var webClient = _httpClientFactory.CreateClient("web"))
                     {
                         webClient.DefaultRequestHeaders.Add("Cookie", CookieString);
-                        //if (keyValues != null)
-                        //{
-                        //    foreach (var item in keyValues)
-                        //    {
-                        //        //webClient.DefaultRequestHeaders.Add(item.Key, item.Value);
-                        //    }
-                        //}
                         string url2 = keyValues == null ? url : QueryHelpers.AddQueryString(url, keyValues);
+                        var suc = _cache.TryGetValue(url2, out var cac);
+                        var cacheJson = cac as string;
+                        if (suc && !string.IsNullOrEmpty(cacheJson ))
+                        {
+                            return cacheJson;
+                        }
                         using var webhr = await webClient.GetAsync(url2).ConfigureAwait(false);
                         webhr.EnsureSuccessStatusCode();
 
@@ -134,6 +139,7 @@ namespace HotPotPlayer.BiliBili
 
                         var webencodeResults = await webhr.Content.ReadAsByteArrayAsync().ConfigureAwait(false);
                         string webstr = Encoding.UTF8.GetString(webencodeResults, 0, webencodeResults.Length);
+                        _cache.Set(url2, webstr);
                         return webstr;
                     }
             }
