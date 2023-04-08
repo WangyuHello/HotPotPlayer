@@ -24,7 +24,7 @@ namespace HotPotPlayer.Video.UI.Controls
             {
                 AutoPlay = true,
                 Volume = 100,
-                LogLevel = MpvLogLevel.Debug,
+                LogLevel = MpvLogLevel.None,
                 Loop = false,
                 LoopPlaylist = isFullPageHost,
             };
@@ -249,7 +249,14 @@ namespace HotPotPlayer.Video.UI.Controls
                         var aurl = bv.GetPreferAudioUrl();
                         if (sel.Contains("杜比") || sel.Contains("HDR")) _mpv.API.SetPropertyString("vo", "gpu");
                         var edl = bv.GetEdlProtocal(vurl, aurl);
-                        _mpv.LoadAsync(edl, true);
+                        _mpv.Load(edl, true);
+
+                        //if (!immediateInit)
+                        //{
+                        //    _fence.WaitOne();
+                        //    //Task.Delay(500).Wait();
+                        //}
+                        //_mpv.Resume();
                     }
                 }
                 else

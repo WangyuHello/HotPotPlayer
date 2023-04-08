@@ -122,7 +122,7 @@
 
                 <ListView Grid.Column="0" Visibility="{x:Bind Video.IsMultiStaff}" MaxWidth="260" ItemsSource="{x:Bind Video.Staff}" Style="{StaticResource HorizontalListViewStyle}" ItemTemplate="{StaticResource StaffTemplate}" ItemContainerStyle="{StaticResource TransparentListContainerCompactHPaddingStyle}"/>
 
-                <StackPanel Grid.Column="2" CornerRadius="2" Background="#ffeff4" Orientation="Horizontal" Spacing="4" Padding="8,0" Visibility="{x:Bind Video.HasHonorToDisplay}">
+                <StackPanel Grid.Column="2" CornerRadius="2" Background="#ffeff4" Orientation="Horizontal" Spacing="4" Padding="8,2" Visibility="{x:Bind Video.HasHonorToDisplay}" VerticalAlignment="Center">
                     <FontIcon FontFamily="{ThemeResource BiliIcons}" Glyph="&#xEA1C;" Foreground="#ff6698" FontSize="13"/>
                     <TextBlock VerticalAlignment="Center" Text="{x:Bind Video.HonorReply.Honor[0].Desc}" Foreground="#ff6698" FontFamily="{ThemeResource MiSansRegular}" />
                 </StackPanel>
