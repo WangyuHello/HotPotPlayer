@@ -224,13 +224,13 @@
             x:Name="BiliVideoCardConnectedElement"
             BorderBrush="{ThemeResource ButtonBorderBrush}"
             BorderThickness="{ThemeResource ButtonBorderThemeThickness}"
-            CornerRadius="4"
+            CornerRadius="6"
             ui:VisualExtensions.NormalizedCenterPoint="0.5"
             Loaded="Root_Loaded"
             Background="White"
             >
             <cont2:ImageEx2 
-                CornerRadius="4"
+                CornerRadius="6"
                 Source="{x:Bind Cover}" 
                 Style="{StaticResource LocalVideoImageStyle}"
                 />
@@ -268,14 +268,25 @@
                 ToolTipService.ToolTip="{x:Bind Title}" 
                 FontFamily="{ThemeResource MiSansMedium}"
                 />
-            <StackPanel Orientation="Horizontal" Padding="8,0">
-                <Border Visibility="{x:Bind HasRcmdReasonContent}" CornerRadius="2" Background="#fef1e2" Padding="6,0" Margin="0,0,8,0">
-                    <TextBlock Text="{x:Bind GetRcmdReason}" Foreground="#ff7f23" FontFamily="{ThemeResource MiSansRegular}" VerticalAlignment="Center"/>
-                </Border>
-                <FontIcon Visibility="{x:Bind NoRcmdReasonContent}" FontFamily="{ThemeResource BiliIcons}" Foreground="Gray" FontSize="13" Margin="0,0,6,-2" Glyph="&#xEA1D;" />
-                <TextBlock Text="{x:Bind Owner.UpName}" Foreground="Gray" FontFamily="{ThemeResource MiSansRegular}" />
-                <TextBlock Visibility="{x:Bind NoRcmdReasonContent}" Margin="12,0" Text="{x:Bind GetUpDateTime()}" Foreground="Gray" FontFamily="{ThemeResource MiSansRegular}" />
-            </StackPanel>
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+                <StackPanel Orientation="Horizontal" Padding="8,0" HorizontalAlignment="Stretch">
+                    <Border Visibility="{x:Bind HasRcmdReasonContent}" CornerRadius="2" Background="#fef1e2" Padding="6,0" Margin="0,0,8,0">
+                        <TextBlock Text="{x:Bind GetRcmdReason}" Foreground="#ff7f23" FontFamily="{ThemeResource MiSansRegular}" VerticalAlignment="Center"/>
+                    </Border>
+                    <FontIcon Visibility="{x:Bind NoRcmdReasonContent}" FontFamily="{ThemeResource BiliIcons}" Foreground="Gray" FontSize="13" Margin="0,0,6,-2" Glyph="&#xEA1D;" />
+                    <TextBlock Text="{x:Bind Owner.UpName}" Foreground="Gray" FontFamily="{ThemeResource MiSansRegular}" />
+                    <TextBlock Visibility="{x:Bind NoRcmdReasonContent}" Margin="12,0" Text="{x:Bind GetUpDateTime()}" Foreground="Gray" FontFamily="{ThemeResource MiSansRegular}" />
+
+                </StackPanel>
+                <Button Grid.Column="1" Style="{StaticResource TransparentButton}" Margin="0,0,8,0" Foreground="Gray">
+                    <FontIcon HorizontalAlignment="Right" FontFamily="{ThemeResource SegoeIcons}" Glyph="&#xE10C;" />
+                </Button>
+            </Grid>
+
         </StackPanel>
     </DataTemplate>
 

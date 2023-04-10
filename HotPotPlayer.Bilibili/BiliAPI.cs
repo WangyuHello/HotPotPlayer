@@ -100,7 +100,7 @@ namespace HotPotPlayer.BiliBili
         }
 
 
-        private async Task<string> GetAsync(string url, ResponseEnum responseEnum = ResponseEnum.Web, Dictionary<string, string>? keyValues = null, bool IsAcess = true, string BuildString = "&platform=android&device=android&actionKey=appkey&build=5442100&mobi_app=android_comic")
+        private async Task<string> GetAsync(string url, ResponseEnum responseEnum = ResponseEnum.Web, Dictionary<string, string>? keyValues = null, bool IsAcess = true, string BuildString = "&platform=android&device=android&actionKey=appkey&build=5442100&mobi_app=android_comic", bool noCache = false)
         {
             switch (responseEnum)
             {
@@ -123,11 +123,14 @@ namespace HotPotPlayer.BiliBili
                     {
                         webClient.DefaultRequestHeaders.Add("Cookie", CookieString);
                         string url2 = keyValues == null ? url : QueryHelpers.AddQueryString(url, keyValues);
-                        var suc = _cache.TryGetValue(url2, out var cac);
-                        var cacheJson = cac as string;
-                        if (suc && !string.IsNullOrEmpty(cacheJson ))
+                        if (!noCache)
                         {
-                            return cacheJson;
+                            var suc = _cache.TryGetValue(url2, out var cac);
+                            var cacheJson = cac as string;
+                            if (suc && !string.IsNullOrEmpty(cacheJson))
+                            {
+                                return cacheJson;
+                            }
                         }
                         using var webhr = await webClient.GetAsync(url2).ConfigureAwait(false);
                         webhr.EnsureSuccessStatusCode();
@@ -314,7 +317,7 @@ namespace HotPotPlayer.BiliBili
                     ["pn"] = pn.ToString(),
                     ["ps"] = ps.ToString(),
                     ["plat"] = "1"
-                });
+                }, noCache: true);
             var res = JsonConvert.DeserializeObject<BiliResult<RecommendVideoData>>(r);
             return res;
         }
