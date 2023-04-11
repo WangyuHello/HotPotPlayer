@@ -4,6 +4,7 @@
 using CommunityToolkit.Mvvm.ComponentModel;
 using HotPotPlayer.Bilibili.Models.HomeVideo;
 using HotPotPlayer.Bilibili.Models.Search;
+using HotPotPlayer.Models.BiliBili;
 using HotPotPlayer.Services;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
@@ -17,6 +18,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
+using System.Threading.Tasks;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
 
@@ -41,15 +43,24 @@ namespace HotPotPlayer.Pages.BilibiliSub
         protected override async void OnNavigatedTo(NavigationEventArgs e)
         {
             base.OnNavigatedTo(e);
-            var defa = e.Parameter as string;
-            SearchBox.Text = defa;
+            var req = e.Parameter as SearchRequest;
+            SearchBox.Text = req.Keyword;
+            if (req.DoSearch)
+            {
+                await DoSearch(req.Keyword);
+            }
+        }
+
+        private async Task DoSearch(string keyword)
+        {
+            var search = await BiliBiliService.API.SearchAsync(keyword);
+            var video = search.Data.Result.FirstOrDefault(r => r.ResultType == "video");
+            VideoResult = video.Data;
         }
 
         private async void Search_QuerySubmitted(AutoSuggestBox sender, AutoSuggestBoxQuerySubmittedEventArgs args)
         {
-            var search = await BiliBiliService.API.SearchAsync(sender.Text);
-            var video = search.Data.Result.FirstOrDefault(r => r.ResultType == "video");
-            VideoResult = video.Data;
+            await DoSearch(sender.Text);
         }
 
         private void SearchVideoClick(object sender, ItemClickEventArgs e)

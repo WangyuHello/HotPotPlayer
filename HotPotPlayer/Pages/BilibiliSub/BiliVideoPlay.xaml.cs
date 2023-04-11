@@ -187,7 +187,7 @@ namespace HotPotPlayer.Pages.BilibiliSub
             //await BiliBiliService.API.GetVideoWeb(bvid);
         }
 
-        public async void RequestNavigateBack()
+        public async Task RequestNavigateFrom()
         {
             if (VideoPlayer.CurrentTime == TimeSpan.Zero && VideoPlayer.CurrentPlayingDuration.HasValue)
             {
@@ -204,7 +204,6 @@ namespace HotPotPlayer.Pages.BilibiliSub
             {
                 await Task.Run(() => StopPlay());
             }
-            App.NavigateBack(true);
         }
 
         public void StopPlay()
@@ -476,6 +475,16 @@ namespace HotPotPlayer.Pages.BilibiliSub
         string GetString(int v)
         {
             return v.ToHumanString();
+        }
+
+        private void TagClick(object sender, ItemClickEventArgs e)
+        {
+            var v = e.ClickedItem as Tag;
+            NavigateTo("BilibiliSub.Search", new SearchRequest
+            {
+                Keyword = v.Name,
+                DoSearch = true
+            });
         }
     }
 }

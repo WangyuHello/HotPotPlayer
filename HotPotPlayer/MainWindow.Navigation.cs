@@ -52,14 +52,19 @@ namespace HotPotPlayer
             SelectedPageName = InitPageName;
         }
 
-        public void NavigateTo(string name, object parameter = null, NavigationTransitionInfo trans = null)
+        public async void NavigateTo(string name, object parameter = null, NavigationTransitionInfo trans = null)
         {
+            if (MainFrame.CurrentSourcePageType.Name == "BiliVideoPlay")
+            {
+                var biliPlay = MainFrame.Content as BiliVideoPlay;
+                await biliPlay.RequestNavigateFrom();
+            }
             trans ??= new DrillInNavigationTransitionInfo();
             MainFrame.Navigate(Type.GetType("HotPotPlayer.Pages." + name), parameter, trans);
             SelectedPageName = name;
         }
 
-        public void NavigateBack(bool force = false)
+        public async void NavigateBack(bool force = false)
         {
             if (!MainFrame.CanGoBack)
             {
@@ -76,7 +81,8 @@ namespace HotPotPlayer
                 if (MainFrame.CurrentSourcePageType.Name == "BiliVideoPlay")
                 {
                     var biliPlay = MainFrame.Content as BiliVideoPlay;
-                    biliPlay.RequestNavigateBack();
+                    await biliPlay.RequestNavigateFrom();
+                    NavigateBack(true);
                 }
                 else
                 {

@@ -19,6 +19,7 @@ using HotPotPlayer.Bilibili.Models.Nav;
 using HotPotPlayer.Bilibili.Models.Dynamic;
 using CommunityToolkit.Mvvm.ComponentModel;
 using System.ComponentModel.Design;
+using HotPotPlayer.Models.BiliBili;
 
 // To learn more about WinUI, the WinUI project structure,
 // and more about our project templates, see: http://aka.ms/winui-project-info.
@@ -167,7 +168,11 @@ namespace HotPotPlayer.Controls.BilibiliSub
 
         private void Search_Tapped(object sender, TappedRoutedEventArgs e)
         {
-            NavigateTo("BilibiliSub.Search", SearchDefault);
+            NavigateTo("BilibiliSub.Search", new SearchRequest
+            {
+                Keyword = SearchDefault,
+                DoSearch = false
+            });
         }
     }
 }
