@@ -234,14 +234,18 @@
                 Source="{x:Bind Cover}" 
                 Style="{StaticResource LocalVideoImageStyle}"
                 />
-            <Grid Margin="0,-24,0,0" Height="24" Padding="8,0">
+            <Grid Margin="0,-38,0,0" Height="38" Padding="8,0">
                 <Grid.Background>
                     <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
                         <GradientStop Offset="0" Color="Transparent"/>
-                        <GradientStop Offset="0.2" Color="#10000000"/>
-                        <GradientStop Offset="0.8" Color="#80000000"/>
+                        <GradientStop Offset="1" Color="#CC000000"/>
                     </LinearGradientBrush>
                 </Grid.Background>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="*" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="4" />
+                </Grid.RowDefinitions>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="Auto" />
                     <ColumnDefinition Width="Auto" />
@@ -250,11 +254,11 @@
                     <ColumnDefinition Width="*" />
                     <ColumnDefinition Width="Auto" />
                 </Grid.ColumnDefinitions>
-                <FontIcon FontFamily="{ThemeResource SegoeIcons}" Foreground="White" FontSize="13" Margin="0,-6,4,0" Glyph="&#xE102;" />
-                <TextBlock Grid.Column="1" Text="{x:Bind Stat.GetViews()}" FontSize="13" Foreground="White" FontFamily="{ThemeResource MiSansRegular}" />
-                <FontIcon Grid.Column="2" FontFamily="{ThemeResource SegoeIcons}" Foreground="White" FontSize="13" Margin="12,-6,4,0" Glyph="&#xE134;" />
-                <TextBlock Grid.Column="3" Text="{x:Bind Stat.Danmaku}" FontSize="13" Foreground="White" FontFamily="{ThemeResource MiSansRegular}" />
-                <TextBlock Grid.Column="5" Text="{x:Bind GetDuration()}" FontSize="13" Foreground="White" FontFamily="{ThemeResource MiSansRegular}" />
+                <FontIcon Grid.Row="1" FontFamily="{ThemeResource BiliIcons}" Glyph="&#xEA0F;" Foreground="White" FontSize="18" Margin="0,-1,4,0"/>
+                <TextBlock Grid.Column="1" Grid.Row="1" Text="{x:Bind Stat.GetViews()}" FontSize="13" Foreground="White" FontFamily="{ThemeResource MiSansRegular}" />
+                <FontIcon Grid.Column="2" Grid.Row="1" FontFamily="{ThemeResource BiliIcons}" Glyph="&#xEA05;" Foreground="White" FontSize="18" Margin="12,-1,4,0" />
+                <TextBlock Grid.Column="3" Grid.Row="1" Text="{x:Bind Stat.Danmaku}" FontSize="13" Foreground="White" FontFamily="{ThemeResource MiSansRegular}" />
+                <TextBlock Grid.Column="5" Grid.Row="1" Text="{x:Bind GetDuration()}" FontSize="13" Foreground="White" FontFamily="{ThemeResource MiSansRegular}" />
             </Grid>
             <TextBlock 
                 Margin="8,8" 
@@ -284,6 +288,32 @@
                 </StackPanel>
                 <Button Grid.Column="1" Style="{StaticResource TransparentButton}" Margin="0,0,8,0" Foreground="Gray">
                     <FontIcon HorizontalAlignment="Right" FontFamily="{ThemeResource SegoeIcons}" Glyph="&#xE10C;" />
+                    <Button.Flyout>
+                        <Flyout>
+                            <Grid Width="300">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="1*" />
+                                    <ColumnDefinition Width="1*" />
+                                </Grid.ColumnDefinitions>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto" />
+                                    <RowDefinition Height="Auto" />
+                                    <RowDefinition Height="Auto" />
+                                    <RowDefinition Height="Auto" />
+                                    <RowDefinition Height="Auto" />
+                                </Grid.RowDefinitions>
+                                <Button Margin="0,0,0,16" Grid.ColumnSpan="2" HorizontalAlignment="Stretch">添加至稍后再看</Button>
+                                <TextBlock Grid.Row="1" Grid.ColumnSpan="2" Text="反馈" FontFamily="{ThemeResource MiSansRegular}" />
+                                <TextBlock Grid.Row="1" Grid.ColumnSpan="2" Margin="28,0,0,0" Text="（选择后将优化首页此类内容）" VerticalAlignment="Center" FontFamily="{ThemeResource MiSansRegular}" Foreground="Gray" FontSize="13"/>
+                                <Button Grid.Row="2" Margin="0,16,4,8" HorizontalAlignment="Stretch">恐怖血腥</Button>
+                                <Button Grid.Row="2" Margin="4,16,0,8" Grid.Column="1" HorizontalAlignment="Stretch">色情低俗</Button>
+                                <Button Grid.Row="3" Margin="0,0,4,16" HorizontalAlignment="Stretch">封面恶心</Button>
+                                <Button Grid.Row="3" Margin="4,0,0,16" Grid.Column="1" HorizontalAlignment="Stretch">标题党/封面党</Button>
+                                <TextBlock Grid.Row="4" Grid.ColumnSpan="2" Text="我不想看" FontFamily="{ThemeResource MiSansRegular}" />
+                                <TextBlock Grid.Row="4" Grid.ColumnSpan="2" Margin="56,0,0,0" Text="（选择后将减少相似内容推荐）" VerticalAlignment="Center" FontFamily="{ThemeResource MiSansRegular}" Foreground="Gray" FontSize="13"/>
+                            </Grid>
+                        </Flyout>
+                    </Button.Flyout>
                 </Button>
             </Grid>
 
@@ -307,14 +337,18 @@
                 Style="{StaticResource LocalVideoImageStyle}"
                 Width="240" Height="120"
                 />
-            <Grid Margin="0,-24,0,0" Height="24" Padding="8,0">
+            <Grid Margin="0,-38,0,0" Height="38" Padding="8,0">
                 <Grid.Background>
                     <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
                         <GradientStop Offset="0" Color="Transparent"/>
-                        <GradientStop Offset="0.2" Color="#10000000"/>
-                        <GradientStop Offset="0.8" Color="#80000000"/>
+                        <GradientStop Offset="1" Color="#CC000000"/>
                     </LinearGradientBrush>
                 </Grid.Background>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="*" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="4" />
+                </Grid.RowDefinitions>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="Auto" />
                     <ColumnDefinition Width="Auto" />
@@ -323,11 +357,11 @@
                     <ColumnDefinition Width="*" />
                     <ColumnDefinition Width="Auto" />
                 </Grid.ColumnDefinitions>
-                <FontIcon FontFamily="{ThemeResource SegoeIcons}" Foreground="White" FontSize="13" Margin="0,-6,4,0" Glyph="&#xE102;" />
-                <TextBlock Grid.Column="1" Text="{x:Bind Stat.GetViews()}" FontSize="13" Foreground="White" FontFamily="{ThemeResource MiSansRegular}" />
-                <FontIcon Grid.Column="2" FontFamily="{ThemeResource SegoeIcons}" Foreground="White" FontSize="13" Margin="12,-6,4,0" Glyph="&#xE134;" />
-                <TextBlock Grid.Column="3" Text="{x:Bind Stat.DanMaku}" FontSize="13" Foreground="White" FontFamily="{ThemeResource MiSansRegular}" />
-                <TextBlock Grid.Column="5" Text="{x:Bind GetDuration()}" FontSize="13" Foreground="White" FontFamily="{ThemeResource MiSansRegular}" />
+                <FontIcon Grid.Row="1" FontFamily="{ThemeResource BiliIcons}" Glyph="&#xEA0F;" Foreground="White" FontSize="18" Margin="0,-1,4,0"/>
+                <TextBlock Grid.Column="1" Grid.Row="1" Text="{x:Bind Stat.GetViews()}" FontSize="13" Foreground="White" FontFamily="{ThemeResource MiSansRegular}" />
+                <FontIcon Grid.Column="2" Grid.Row="1" FontFamily="{ThemeResource BiliIcons}" Glyph="&#xEA05;" Foreground="White" FontSize="18" Margin="12,-1,4,0" />
+                <TextBlock Grid.Column="3" Grid.Row="1" Text="{x:Bind Stat.DanMaku}" FontSize="13" Foreground="White" FontFamily="{ThemeResource MiSansRegular}" />
+                <TextBlock Grid.Column="5" Grid.Row="1" Text="{x:Bind GetDuration()}" FontSize="13" Foreground="White" FontFamily="{ThemeResource MiSansRegular}" />
             </Grid>
             <TextBlock 
                 Margin="8,8" 
@@ -365,14 +399,18 @@
                 Source="{x:Bind Pic}" 
                 Style="{StaticResource LocalVideoImageStyle}"
                 />
-            <Grid Margin="0,-24,0,0" Height="24" Padding="8,0">
+            <Grid Margin="0,-38,0,0" Height="38" Padding="8,0">
                 <Grid.Background>
                     <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
                         <GradientStop Offset="0" Color="Transparent"/>
-                        <GradientStop Offset="0.2" Color="#10000000"/>
-                        <GradientStop Offset="0.8" Color="#80000000"/>
+                        <GradientStop Offset="1" Color="#CC000000"/>
                     </LinearGradientBrush>
                 </Grid.Background>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="*" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="4" />
+                </Grid.RowDefinitions>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="Auto" />
                     <ColumnDefinition Width="Auto" />
@@ -381,11 +419,11 @@
                     <ColumnDefinition Width="*" />
                     <ColumnDefinition Width="Auto" />
                 </Grid.ColumnDefinitions>
-                <FontIcon FontFamily="{ThemeResource SegoeIcons}" Foreground="White" FontSize="13" Margin="0,-6,4,0" Glyph="&#xE102;" />
-                <TextBlock Grid.Column="1" Text="{x:Bind GetViews()}" FontSize="13" Foreground="White" FontFamily="{ThemeResource MiSansRegular}" />
-                <FontIcon Grid.Column="2" FontFamily="{ThemeResource SegoeIcons}" Foreground="White" FontSize="13" Margin="12,-6,4,0" Glyph="&#xE134;" />
-                <TextBlock Grid.Column="3" Text="{x:Bind GetDanMaku()}" FontSize="13" Foreground="White" FontFamily="{ThemeResource MiSansRegular}" />
-                <TextBlock Grid.Column="5" Text="{x:Bind Length}" FontSize="13" Foreground="White" FontFamily="{ThemeResource MiSansRegular}" />
+                <FontIcon Grid.Row="1" FontFamily="{ThemeResource BiliIcons}" Glyph="&#xEA0F;" Foreground="White" FontSize="18" Margin="0,-1,4,0"/>
+                <TextBlock Grid.Column="1" Grid.Row="1" Text="{x:Bind GetViews()}" FontSize="13" Foreground="White" FontFamily="{ThemeResource MiSansRegular}" />
+                <FontIcon Grid.Column="2" Grid.Row="1" FontFamily="{ThemeResource BiliIcons}" Glyph="&#xEA05;" Foreground="White" FontSize="18" Margin="12,-1,4,0" />
+                <TextBlock Grid.Column="3" Grid.Row="1" Text="{x:Bind GetDanMaku()}" FontSize="13" Foreground="White" FontFamily="{ThemeResource MiSansRegular}" />
+                <TextBlock Grid.Column="5" Grid.Row="1" Text="{x:Bind Length}" FontSize="13" Foreground="White" FontFamily="{ThemeResource MiSansRegular}" />
             </Grid>
             <TextBlock 
                 Margin="8,8" 
@@ -422,14 +460,18 @@
                 Source="{x:Bind GetCover()}" 
                 Style="{StaticResource LocalVideoImageStyle}"
                 />
-            <Grid Margin="0,-24,0,0" Height="24" Padding="8,0">
+            <Grid Margin="0,-38,0,0" Height="38" Padding="8,0">
                 <Grid.Background>
                     <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
                         <GradientStop Offset="0" Color="Transparent"/>
-                        <GradientStop Offset="0.2" Color="#10000000"/>
-                        <GradientStop Offset="0.8" Color="#80000000"/>
+                        <GradientStop Offset="1" Color="#CC000000"/>
                     </LinearGradientBrush>
                 </Grid.Background>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="*" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="4" />
+                </Grid.RowDefinitions>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="Auto" />
                     <ColumnDefinition Width="Auto" />
@@ -438,11 +480,11 @@
                     <ColumnDefinition Width="*" />
                     <ColumnDefinition Width="Auto" />
                 </Grid.ColumnDefinitions>
-                <FontIcon FontFamily="{ThemeResource SegoeIcons}" Foreground="White" FontSize="13" Margin="0,-6,4,0" Glyph="&#xE102;" />
-                <TextBlock Grid.Column="1" Text="{x:Bind Play}" FontSize="13" Foreground="White" FontFamily="{ThemeResource MiSansRegular}" />
-                <FontIcon Grid.Column="2" FontFamily="{ThemeResource SegoeIcons}" Foreground="White" FontSize="13" Margin="12,-6,4,0" Glyph="&#xE134;" />
-                <TextBlock Grid.Column="3" Text="{x:Bind VideoReview}" FontSize="13" Foreground="White" FontFamily="{ThemeResource MiSansRegular}" />
-                <TextBlock Grid.Column="5" Text="{x:Bind Duration}" FontSize="13" Foreground="White" FontFamily="{ThemeResource MiSansRegular}" />
+                <FontIcon Grid.Row="1" FontFamily="{ThemeResource BiliIcons}" Glyph="&#xEA0F;" Foreground="White" FontSize="18" Margin="0,-1,4,0"/>
+                <TextBlock Grid.Column="1" Grid.Row="1" Text="{x:Bind Play}" FontSize="13" Foreground="White" FontFamily="{ThemeResource MiSansRegular}" />
+                <FontIcon Grid.Column="2" Grid.Row="1" FontFamily="{ThemeResource BiliIcons}" Glyph="&#xEA05;" Foreground="White" FontSize="18" Margin="12,-1,4,0" />
+                <TextBlock Grid.Column="3" Grid.Row="1" Text="{x:Bind VideoReview}" FontSize="13" Foreground="White" FontFamily="{ThemeResource MiSansRegular}" />
+                <TextBlock Grid.Column="5" Grid.Row="1" Text="{x:Bind Duration}" FontSize="13" Foreground="White" FontFamily="{ThemeResource MiSansRegular}" />
             </Grid>
             <TextBlock 
                 Margin="8,8" 
