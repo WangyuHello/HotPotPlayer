@@ -169,6 +169,12 @@ namespace HotPotPlayer.Pages.BilibiliSub
 
             IsAdditionLoading = false;
 
+            if (!immediateLoad)
+            {
+                VideoPlayer.ReleasePlayerFence();
+            }
+
+            await Task.Delay(2000);
             if (Video.Videos > 1 && Video.Pages != null)
             {
                 DetermineSelectedPage();
@@ -179,11 +185,7 @@ namespace HotPotPlayer.Pages.BilibiliSub
                 DetermineSelectedEpisode();
             }
 
-            if (!immediateLoad)
-            {
-                VideoPlayer.ReleasePlayerFence();
-            }
-
+            //await RelatedList.SmoothScrollIntoViewWithIndexAsync(0, ScrollItemPlacement.Right);
             //await BiliBiliService.API.GetVideoWeb(bvid);
         }
 
@@ -204,6 +206,7 @@ namespace HotPotPlayer.Pages.BilibiliSub
             {
                 await Task.Run(() => StopPlay());
             }
+            App.NavigateBack(true);
         }
 
         public void StopPlay()
