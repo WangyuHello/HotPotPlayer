@@ -14,13 +14,13 @@ namespace HotPotPlayer.Models.BiliBili
         int _loadedCount;
         string _mid;
         readonly BiliBiliService _service;
-        public UserVideoInfoItemCollection(UserVideoInfo data, string mid, BiliBiliService service) : base(data.List.VList)
+        public UserVideoInfoItemCollection(string mid, BiliBiliService service)
         {
-            _pageNum = 1;
+            _pageNum = 0;
             _service = service;
-            _loadedCount = data.List.VList.Count;
+            _loadedCount = 0;
             _mid = mid;
-            _hasMore = data.Page.Count > _loadedCount;
+            _hasMore = true;
         }
 
         private bool _hasMore;

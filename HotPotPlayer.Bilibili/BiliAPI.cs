@@ -27,6 +27,7 @@ using HotPotPlayer.Bilibili.Models.History;
 using HotPotPlayer.Bilibili.Models.Nav;
 using HotPotPlayer.Bilibili.Models.Search;
 using Microsoft.Extensions.Caching.Memory;
+using HotPotPlayer.Bilibili.Extensions;
 
 namespace HotPotPlayer.BiliBili
 {
@@ -656,8 +657,10 @@ namespace HotPotPlayer.BiliBili
                     ["pn"] = pn.ToString(),
                     ["ps"] = ps.ToString()
                 });
-            var res = JsonConvert.DeserializeObject<BiliResult<UserVideoInfo>>(r);
-            return res;
+            var r2 = r.SplitJson();
+            var res = r2.Select(s => JsonConvert.DeserializeObject<BiliResult<UserVideoInfo>>(s));
+            var res2 = res.FirstOrDefault(re => re != null && re.Code == "0");
+            return res2;
         }
 
         public async Task<Pbp?> GetPbp(string cid)
