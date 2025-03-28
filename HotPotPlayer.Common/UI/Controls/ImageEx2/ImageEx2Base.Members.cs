@@ -1,5 +1,5 @@
 ﻿using System;
-using CommunityToolkit.WinUI.UI.Controls;
+using CommunityToolkit.WinUI;
 using Microsoft.UI.Composition;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Media;
@@ -162,5 +162,9 @@ namespace HotPotPlayer.UI.Controls
                 control.InvalidateLazyLoading();
             }
         }
+
+        public delegate void ImageExFailedEventHandler(object sender, ImageExFailedEventArgs e);
+
+        public delegate void ImageExOpenedEventHandler(object sender, ImageExOpenedEventArgs e);
     }
 }

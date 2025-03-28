@@ -1,4 +1,4 @@
-﻿using CommunityToolkit.Common.Collections;
+﻿using CommunityToolkit.Mvvm.Collections;
 using HotPotPlayer.Extensions;
 using HotPotPlayer.Models;
 using Microsoft.UI.Dispatching;

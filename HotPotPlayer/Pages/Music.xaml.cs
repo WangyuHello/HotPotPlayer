@@ -1,5 +1,4 @@
-﻿using CommunityToolkit.WinUI.UI;
-using CommunityToolkit.WinUI.UI.Controls;
+﻿using CommunityToolkit.WinUI;
 using HotPotPlayer.Extensions;
 using HotPotPlayer.Helpers;
 using HotPotPlayer.Models;

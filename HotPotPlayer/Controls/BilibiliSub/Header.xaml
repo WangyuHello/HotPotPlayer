@@ -11,8 +11,8 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:cont2="using:HotPotPlayer.UI.Controls"
     xmlns:bcont="using:HotPotPlayer.Controls.BilibiliSub"
-    xmlns:animations="using:CommunityToolkit.WinUI.UI.Animations"
-    xmlns:controls="using:CommunityToolkit.WinUI.UI.Controls"
+    xmlns:animations="using:CommunityToolkit.WinUI.Animations"
+    xmlns:controls="using:CommunityToolkit.WinUI.Helpers"
     x:DefaultBindMode="OneWay"
     mc:Ignorable="d"
     >
@@ -21,7 +21,7 @@
 
         <Expander x:Name="More" IsExpanded="{x:Bind IsExpanded}" HorizontalAlignment="Stretch" VerticalAlignment="Top" Style="{StaticResource BiliHeaderExpander}">
             <Expander.Content>
-                <controls:AdaptiveGridView DesiredWidth="120" SelectionMode="None">
+                <!--<controls:AdaptiveGridView DesiredWidth="120" SelectionMode="None">
                     <Button Content="动画" Margin="4,0" HorizontalAlignment="Stretch"/>
                     <Button Content="音乐" Margin="4,0" HorizontalAlignment="Stretch"/>
                     <Button Content="舞蹈" Margin="4,0" HorizontalAlignment="Stretch"/>
@@ -38,7 +38,7 @@
                     <Button Content="时尚" Margin="4,0" HorizontalAlignment="Stretch"/>
                     <Button Content="娱乐" Margin="4,0" HorizontalAlignment="Stretch"/>
                     <Button Content="影视" Margin="4,0" HorizontalAlignment="Stretch"/>
-                </controls:AdaptiveGridView>
+                </controls:AdaptiveGridView>-->
             </Expander.Content>
         </Expander>
 

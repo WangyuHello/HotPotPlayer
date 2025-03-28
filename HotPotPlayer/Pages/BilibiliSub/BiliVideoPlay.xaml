@@ -12,8 +12,8 @@
     xmlns:vcont="using:HotPotPlayer.Video.UI.Controls"
     xmlns:cont2="using:HotPotPlayer.UI.Controls"
     xmlns:cont3="using:HotPotPlayer.Controls.BilibiliSub"
-    xmlns:animations="using:CommunityToolkit.WinUI.UI.Animations"
-    xmlns:ui="using:CommunityToolkit.WinUI.UI"
+    xmlns:animations="using:CommunityToolkit.WinUI.Animations"
+    xmlns:ui="using:CommunityToolkit.WinUI"
     mc:Ignorable="d"
     x:DefaultBindMode="OneWay"
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">

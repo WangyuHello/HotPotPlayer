@@ -135,6 +135,6 @@ namespace HotPotPlayer
         public override Rect Bounds => bounds;
         public override XamlRoot XamlRoot => MainWindow.Content.XamlRoot;
 
-        public override AppWindow AppWindow => MainWindow.GetAppWindow();
+        public override AppWindow AppWindow => MainWindow.AppWindow;
     }
 }

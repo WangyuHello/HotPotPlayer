@@ -6,9 +6,9 @@
     xmlns:modc="using:HotPotPlayer.Models.CloudMusic"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    xmlns:animations="using:CommunityToolkit.WinUI.UI.Animations"
+    xmlns:animations="using:CommunityToolkit.WinUI.Animations"
     xmlns:cont2="using:HotPotPlayer.UI.Controls"
-    xmlns:controls="using:CommunityToolkit.WinUI.UI.Controls"
+    xmlns:controls="using:CommunityToolkit.WinUI.Helpers"
     xmlns:helper="using:HotPotPlayer.Pages.Helper"
     xmlns:me="using:HotPotPlayer.Media"
     xmlns:winui="using:Microsoft.UI.Xaml.Controls"
@@ -47,9 +47,9 @@
                 <TextBlock FontSize="15" FontWeight="Bold" VerticalAlignment="Center" Text="{x:Bind ((modc:CloudPlayListItem)PlayList).Creator.NickName, Mode=OneWay}" FontFamily="{StaticResource MiSansRegular}" IsTextSelectionEnabled="True"/>
             </StackPanel>
             <winui:ItemsRepeater Grid.Row="3" Margin="12,0,8,0" ItemsSource="{x:Bind ((modc:CloudPlayListItem)PlayList).Tags, Mode=OneWay}" ItemTemplate="{StaticResource TagWrapTemplate}">
-                <winui:ItemsRepeater.Layout>
+                <!--<winui:ItemsRepeater.Layout>
                     <controls:WrapLayout VerticalSpacing="4" HorizontalSpacing="8"/>
-                </winui:ItemsRepeater.Layout>
+                </winui:ItemsRepeater.Layout>-->
             </winui:ItemsRepeater>
             <ScrollViewer Grid.Row="4" Margin="12,8,0,0" Grid.Column="1" >
                 <TextBlock Text="{x:Bind ((modc:CloudPlayListItem)PlayList).Description, Mode=OneWay}" TextWrapping="Wrap" TextTrimming="CharacterEllipsis" FontFamily="{StaticResource MiSansRegular}" IsTextSelectionEnabled="True"/>

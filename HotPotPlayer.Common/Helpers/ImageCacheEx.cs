@@ -1,5 +1,4 @@
 ﻿using CommunityToolkit.WinUI;
-using CommunityToolkit.WinUI.UI;
 using Microsoft.UI.Dispatching;
 using Microsoft.UI.Xaml.Media.Imaging;
 using System;

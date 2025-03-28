@@ -8,8 +8,8 @@
     xmlns:cont2="using:HotPotPlayer.UI.Controls"
     xmlns:cont3="using:HotPotPlayer.Controls"
     xmlns:helper="using:HotPotPlayer.Pages.Helper"
-    xmlns:animations="using:CommunityToolkit.WinUI.UI.Animations"
-    xmlns:ui="using:CommunityToolkit.WinUI.UI"
+    xmlns:animations="using:CommunityToolkit.WinUI.Animations"
+    xmlns:ui="using:CommunityToolkit.WinUI"
     mc:Ignorable="d"
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}" >
 

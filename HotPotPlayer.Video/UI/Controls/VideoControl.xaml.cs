@@ -153,7 +153,7 @@ namespace HotPotPlayer.Video.UI.Controls
 
         #region ObsProp
         [ObservableProperty]
-        [AlsoNotifyChangeFor(nameof(CurrentPlayItem))]
+        //[AlsoNotifyChangeFor(nameof(CurrentPlayItem))]
         private ObservableCollection<VideoItem> currentPlayList;
 
         private int currentPlayIndex;

@@ -4,8 +4,6 @@ using Windows.Foundation;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Media;
-using CommunityToolkit.WinUI.UI;
-using CommunityToolkit.WinUI.UI.Controls;
 using CommunityToolkit.WinUI;
 
 namespace HotPotPlayer.UI.Controls
@@ -238,6 +236,19 @@ namespace HotPotPlayer.UI.Controls
             {
                 _isInViewport = false;
             }
+        }
+    }
+
+    public class ImageExOpenedEventArgs: EventArgs
+    {
+
+    }
+
+    public class ImageExFailedEventArgs : EventArgs
+    {
+        public ImageExFailedEventArgs(Exception exception)
+        {
+
         }
     }
 }

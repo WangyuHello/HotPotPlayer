@@ -54,7 +54,7 @@ namespace HotPotPlayer
                     _playWindow = new Window();
                     _playWindow.Activated += PlayWindow_Activated;
                     _playWindow.Closed += PlayWindow_Closed;
-                    _playAppWindow = _playWindow.GetAppWindow();
+                    _playAppWindow = _playWindow.AppWindow;
 
                     if (AppWindowTitleBar.IsCustomizationSupported())
                     {

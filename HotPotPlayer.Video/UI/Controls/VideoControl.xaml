@@ -7,11 +7,11 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:canvas="using:Microsoft.Graphics.Canvas.UI.Xaml"
-    xmlns:controls="using:CommunityToolkit.WinUI.UI.Controls"
+    xmlns:controls="using:CommunityToolkit.WinUI.Helpers"
     xmlns:vcont="using:HotPotPlayer.Video.UI.Controls"
     xmlns:convs="using:HotPotPlayer.UI.Converters"
-    xmlns:ui="using:CommunityToolkit.WinUI.UI"
-    xmlns:animations="using:CommunityToolkit.WinUI.UI.Animations"
+    xmlns:ui="using:CommunityToolkit.WinUI"
+    xmlns:animations="using:CommunityToolkit.WinUI.Animations"
     x:DefaultBindMode="OneWay"
     mc:Ignorable="d">
 

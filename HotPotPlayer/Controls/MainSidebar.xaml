@@ -5,13 +5,10 @@
     xmlns:local="using:HotPotPlayer.Controls"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:cont="using:HotPotPlayer.UI.Controls"
-    xmlns:ani="using:CommunityToolkit.WinUI.UI.Animations"
+    xmlns:ani="using:CommunityToolkit.WinUI.Animations"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    xmlns:ui="using:CommunityToolkit.WinUI.UI"
+    xmlns:ui="using:CommunityToolkit.WinUI"
     xmlns:interactivity="using:Microsoft.Xaml.Interactivity"
-    xmlns:interactions="using:Microsoft.Xaml.Interactions.Core"
-    xmlns:behaviors="using:CommunityToolkit.WinUI.UI.Behaviors"
-    xmlns:core="using:Microsoft.Xaml.Interactions.Core"
     mc:Ignorable="d">
 
     <UserControl.Resources>

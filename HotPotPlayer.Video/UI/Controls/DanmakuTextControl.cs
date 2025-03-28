@@ -17,7 +17,7 @@ using Microsoft.Graphics.DirectX;
 using System.Numerics;
 using Windows.UI;
 using Microsoft.UI.Xaml.Media;
-using CommunityToolkit.WinUI.UI.Animations;
+using CommunityToolkit.WinUI.Animations;
 using System.Reflection;
 using Windows.Foundation;
 using System.Diagnostics;

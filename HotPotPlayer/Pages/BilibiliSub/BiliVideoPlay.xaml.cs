@@ -2,7 +2,7 @@
 // Licensed under the MIT License. See LICENSE in the project root for license information.
 
 using CommunityToolkit.Mvvm.ComponentModel;
-using CommunityToolkit.WinUI.UI;
+using CommunityToolkit.WinUI;
 using HotPotPlayer.Bilibili.Models.Danmaku;
 using HotPotPlayer.Bilibili.Models.HomeVideo;
 using HotPotPlayer.Bilibili.Models.Video;
@@ -285,7 +285,7 @@ namespace HotPotPlayer.Pages.BilibiliSub
         {
             if (IsIndependentWindowHost)
             {
-                PlayWindow.GetAppWindow().SetPresenter(value ? AppWindowPresenterKind.FullScreen : AppWindowPresenterKind.Default);
+                PlayWindow.AppWindow.SetPresenter(value ? AppWindowPresenterKind.FullScreen : AppWindowPresenterKind.Default);
             }
             else
             {

@@ -31,7 +31,7 @@ namespace HotPotPlayer
 
         public void SetAppTitleBar()
         {
-            m_AppWindow = this.GetAppWindow();
+            m_AppWindow = this.AppWindow;
             m_AppWindow.Changed += AppWindow_Changed;
             if (AppWindowTitleBar.IsCustomizationSupported())
             {
@@ -141,7 +141,8 @@ namespace HotPotPlayer
             appWindow ??= m_AppWindow;
             if (AppWindowTitleBar.IsCustomizationSupported() && appWindow.TitleBar.ExtendsContentIntoTitleBar)
             {
-                double scaleAdjustment = Root.XamlRoot.RasterizationScale;
+                //double scaleAdjustment = Root.XamlRoot.RasterizationScale;
+                double scaleAdjustment = Root.RasterizationScale;
 
                 //RightPaddingColumn.Width = new GridLength(appWindow.TitleBar.RightInset / scaleAdjustment);
 

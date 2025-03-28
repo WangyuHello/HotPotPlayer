@@ -11,7 +11,7 @@
     xmlns:biliHis="using:HotPotPlayer.Bilibili.Models.History"
     xmlns:biliext="using:HotPotPlayer.Bilibili.Extensions"
     xmlns:cont2="using:HotPotPlayer.UI.Controls"
-    xmlns:ui="using:CommunityToolkit.WinUI.UI"
+    xmlns:ui="using:CommunityToolkit.WinUI"
     xmlns:conv="using:HotPotPlayer.UI.Converters"
     xmlns:helper="using:HotPotPlayer.Pages.Helper"
     >
