@@ -22,7 +22,7 @@
     Background="White">
 
     <base:PageBase.Resources>
-        <CollectionViewSource x:Name="LocalAlbumGroups" Source="{x:Bind LocalMusicService.LocalAlbumGroup}" IsSourceGrouped="True" />
+        <CollectionViewSource x:Name="LocalAlbumGroupView" Source="{x:Bind JellyfinMusicService.LocalAlbumGroup}" IsSourceGrouped="True" />
     </base:PageBase.Resources>
 
     <Grid Padding="36,28,0,0" SizeChanged="Root_SizeChanged">
@@ -30,37 +30,32 @@
             <PivotItem Header="专辑" Margin="0" >
                 <SemanticZoom>
                     <SemanticZoom.ZoomedInView>
-                        <GridView x:Name="AlbumGridView" ItemsSource="{x:Bind LocalAlbumGroups.View}" Style="{StaticResource AlbumCardViewWithFooterStyle}" ItemClick="AlbumGridView_ItemClick" >
+                        <GridView x:Name="AlbumGridView" ItemsSource="{x:Bind LocalAlbumGroupView.View}" Style="{StaticResource AlbumCardViewWithFooterStyle}" ItemClick="AlbumGridView_ItemClick" >
                             <GridView.GroupStyle>
                                 <GroupStyle HeaderTemplate="{StaticResource GeneralZoomedInGroupHeaderTemplate}" />
                             </GridView.GroupStyle>
                             <GridView.ItemContainerTransitions>
                                 <TransitionCollection>
-                                    
+
                                 </TransitionCollection>
                             </GridView.ItemContainerTransitions>
                         </GridView>
                     </SemanticZoom.ZoomedInView>
                     <SemanticZoom.ZoomedOutView>
-                        <GridView ItemsSource="{x:Bind LocalAlbumGroups.View.CollectionGroups}" Style="{StaticResource GeneralZoomOutGridViewStyle}"/>
+                        <GridView ItemsSource="{x:Bind LocalAlbumGroupView.View.CollectionGroups}" Style="{StaticResource GeneralZoomOutGridViewStyle}"/>
                     </SemanticZoom.ZoomedOutView>
                 </SemanticZoom>
             </PivotItem>
             <PivotItem Header="播放列表" Margin="0" >
                 <GridView 
                     x:Name="PlayListGridView" 
-                    ItemsSource="{x:Bind LocalMusicService.LocalPlayListList, Mode=OneWay}" 
+                    ItemsSource="{x:Bind JellyfinMusicService.LocalPlayListList, Mode=OneWay}" 
                     Style="{StaticResource PlayListCardViewWithFooterStyle}" 
                     ItemClick="PlayListGridView_ItemClick"
                     >
                 </GridView>
             </PivotItem>
         </Pivot>
-
-        <StackPanel VerticalAlignment="Top" HorizontalAlignment="Right" Spacing="8" Orientation="Horizontal" Margin="0,16,24,0" Visibility="{x:Bind GetLoadingVisibility(LocalMusicService.State), Mode=OneWay}">
-            <ProgressRing IsActive="True" Height="20" Width="20"/>
-            <TextBlock FontSize="14">正在扫描音乐库</TextBlock>
-        </StackPanel>
 
         <Grid x:Name="AlbumPopupOverlay" Margin="-36,-28,0,0" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Visibility="Collapsed" Background="#00FFFFFF" Tapped="AlbumPopupOverlay_Tapped">
             <cont3:AlbumPopup x:Name="AlbumPopupTarget" Margin="0,-32,0,0" Album="{x:Bind SelectedAlbum, Mode=OneWay}" Tapped="{x:Bind helper:AlbumHelper.SuppressTap}">

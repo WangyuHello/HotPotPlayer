@@ -1,9 +1,11 @@
-﻿using CommunityToolkit.WinUI;
+﻿using CommunityToolkit.Mvvm.Collections;
+using CommunityToolkit.WinUI;
 using HotPotPlayer.Extensions;
 using HotPotPlayer.Helpers;
 using HotPotPlayer.Models;
 using HotPotPlayer.Pages.Helper;
 using HotPotPlayer.Services;
+using Jellyfin.Sdk.Generated.Models;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Controls.Primitives;
@@ -42,8 +44,8 @@ namespace HotPotPlayer.Pages
             InitializeComponent();
         }
 
-        private AlbumItem _selectedAlbum;
-        public AlbumItem SelectedAlbum
+        private BaseItemDto _selectedAlbum;
+        public BaseItemDto SelectedAlbum
         {
             get => _selectedAlbum;
             set => Set(ref _selectedAlbum, value);
@@ -57,20 +59,15 @@ namespace HotPotPlayer.Pages
 
         bool IsFirstNavigate = true;
 
-        protected override void OnNavigatedTo(NavigationEventArgs e)
+        protected override async void OnNavigatedTo(NavigationEventArgs e)
         {
             base.OnNavigatedTo(e);
 
             if (IsFirstNavigate)
             {
                 IsFirstNavigate = false;
-                LocalMusicService.StartLoadLocalMusic();
+                await JellyfinMusicService.LoadJellyfinMusicAsync();
             }
-        }
-
-        Visibility GetLoadingVisibility(LocalServiceState state)
-        {
-            return state == LocalServiceState.Loading ? Visibility.Visible : Visibility.Collapsed;
         }
 
         private async void AlbumPopupOverlay_Tapped(object sender, TappedRoutedEventArgs e)
@@ -99,7 +96,7 @@ namespace HotPotPlayer.Pages
 
         private void AlbumGridView_ItemClick(object sender, ItemClickEventArgs e)
         {
-            var album = e.ClickedItem as AlbumItem;
+            var album = e.ClickedItem as BaseItemDto;
             SelectedAlbum = album;
 
             var ani = AlbumGridView.PrepareConnectedAnimation("forwardAnimation", album, "AlbumCardConnectedElement");

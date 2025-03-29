@@ -24,10 +24,10 @@ namespace HotPotPlayer
 
         public NetEaseMusicService NetEaseMusicService => ((IComponentServiceLocator)Application.Current).NetEaseMusicService;
 
-        public LocalMusicService LocalMusicService => ((IComponentServiceLocator)Application.Current).LocalMusicService;
+        public JellyfinMusicService JellyfinMusicService => ((IComponentServiceLocator)Application.Current).JellyfinMusicService;
         public LocalVideoService LocalVideoService => ((IComponentServiceLocator)Application.Current).LocalVideoService;
 
-        public MusicPlayer MusicPlayer => ((IComponentServiceLocator)Application.Current).MusicPlayer;
+        public MusicPlayerService MusicPlayer => ((IComponentServiceLocator)Application.Current).MusicPlayer;
         public VideoPlayerService VideoPlayerService => ((IComponentServiceLocator)Application.Current).VideoPlayerService;
         public BiliBiliService BiliBiliService => ((IComponentServiceLocator)Application.Current).BiliBiliService;
 

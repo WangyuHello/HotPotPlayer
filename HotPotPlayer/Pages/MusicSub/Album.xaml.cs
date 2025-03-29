@@ -64,7 +64,7 @@ namespace HotPotPlayer.Pages.MusicSub
         {
             var album = await Task.Run(() =>
             {
-                var musicService = ((App)Application.Current).LocalMusicService;
+                var musicService = ((App)Application.Current).JellyfinMusicService;
                 var album = musicService.QueryAlbum(m);
                 return album;
             });

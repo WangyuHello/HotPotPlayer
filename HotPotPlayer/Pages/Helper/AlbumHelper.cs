@@ -4,6 +4,7 @@ using HotPotPlayer.Helpers;
 using HotPotPlayer.Models;
 using HotPotPlayer.Models.CloudMusic;
 using HotPotPlayer.Services;
+using Jellyfin.Sdk.Generated.Models;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Input;
@@ -490,6 +491,17 @@ namespace HotPotPlayer.Pages.Helper
         public static void SuppressTap(object sender, TappedRoutedEventArgs e)
         {
             e.Handled = true;
+        }
+
+        public static Uri GetPrimaryJellyfinImage(BaseItemDto_ImageTags tag, Guid? parentId)
+        {
+            var JellyfinMusicService = ((IComponentServiceLocator)Application.Current).JellyfinMusicService;
+            return JellyfinMusicService.GetPrimaryJellyfinImage(tag, parentId);
+        }
+
+        public static string GetJellyfinArtists(List<string> artists)
+        {
+            return string.Join(", ", artists);
         }
     }
 }

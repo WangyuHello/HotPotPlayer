@@ -4,6 +4,7 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:models="using:HotPotPlayer.Models"
     xmlns:modelsC="using:HotPotPlayer.Models.CloudMusic"
+    xmlns:jmodel="using:Jellyfin.Sdk.Generated.Models"
     xmlns:helper="using:HotPotPlayer.Pages.Helper"
     xmlns:conv="using:HotPotPlayer.UI.Converters"
     xmlns:cont2="using:HotPotPlayer.UI.Controls"
@@ -47,7 +48,7 @@
 
     <sel:EvenOldTemplateSelector x:Key="EvenOldMusicListInAlbumTemplate" >
         <sel:EvenOldTemplateSelector.EvenTemplate>
-            <DataTemplate x:DataType="models:MusicItem">
+            <DataTemplate x:DataType="jmodel:BaseItemDto">
                 <Grid Background="#40F4F7FE" Padding="{StaticResource ListItemPadding}"
                       RightTapped="{x:Bind helper:ListHelper.RightTapMusicInListClick}" >
                     <Grid.ColumnDefinitions>
@@ -57,10 +58,10 @@
                         <ColumnDefinition Width="38" />
                         <ColumnDefinition Width="Auto" />
                     </Grid.ColumnDefinitions>
-                    <TextBlock Text="{x:Bind Track}" VerticalAlignment="Center"/>
-                    <TextBlock Grid.Column="1" Text="{x:Bind Title}" TextTrimming="CharacterEllipsis" VerticalAlignment="Center" />
-                    <HyperlinkButton Grid.Column="2" Content="{x:Bind GetArtists()}" VerticalAlignment="Center" Click="{x:Bind helper:AlbumHelper.ArtistClick}" Tag="{x:Bind }"  FontFamily="{ThemeResource MiSansRegular}"/>
-                    <TextBlock Grid.Column="3" Text="{x:Bind Duration.ToString('mm\\\\:ss')}" VerticalAlignment="Center" />
+                    <TextBlock Text="{x:Bind IndexNumber}" VerticalAlignment="Center"/>
+                    <TextBlock Grid.Column="1" Text="{x:Bind Name}" TextTrimming="CharacterEllipsis" VerticalAlignment="Center" />
+                    <HyperlinkButton Grid.Column="2" Content="{x:Bind helper:AlbumHelper.GetJellyfinArtists(Artists)}" VerticalAlignment="Center" Click="{x:Bind helper:AlbumHelper.ArtistClick}" Tag="{x:Bind }"  FontFamily="{ThemeResource MiSansRegular}"/>
+                    <TextBlock Grid.Column="3" Text="00:00:00" VerticalAlignment="Center" />
                     <Button Grid.Column="4" Style="{StaticResource TransparentButton}" Margin="16,0,0,0" CornerRadius="4" Padding="4" Tag="{x:Bind }" Click="{x:Bind helper:ListHelper.RightTapMusicInListClick}" >
                         <SymbolIcon Symbol="More" />
                     </Button>
@@ -68,7 +69,7 @@
             </DataTemplate>
         </sel:EvenOldTemplateSelector.EvenTemplate>
         <sel:EvenOldTemplateSelector.OddTemplate>
-            <DataTemplate x:DataType="models:MusicItem">
+            <DataTemplate x:DataType="jmodel:BaseItemDto">
                 <Grid Padding="{StaticResource ListItemPadding}"
                     RightTapped="{x:Bind helper:ListHelper.RightTapMusicInListClick}">
                     <Grid.ColumnDefinitions>
@@ -78,10 +79,10 @@
                         <ColumnDefinition Width="38" />
                         <ColumnDefinition Width="Auto" />
                     </Grid.ColumnDefinitions>
-                    <TextBlock Text="{x:Bind Track}" VerticalAlignment="Center" />
-                    <TextBlock Grid.Column="1" Text="{x:Bind Title}" TextTrimming="CharacterEllipsis" VerticalAlignment="Center" />
-                    <HyperlinkButton Grid.Column="2" Content="{x:Bind GetArtists()}" VerticalAlignment="Center" Click="{x:Bind helper:AlbumHelper.ArtistClick}" Tag="{x:Bind }"  FontFamily="{ThemeResource MiSansRegular}"/>
-                    <TextBlock Grid.Column="3" Text="{x:Bind Duration.ToString('mm\\\\:ss')}" VerticalAlignment="Center" />
+                    <TextBlock Text="{x:Bind IndexNumber}" VerticalAlignment="Center" />
+                    <TextBlock Grid.Column="1" Text="{x:Bind Name}" TextTrimming="CharacterEllipsis" VerticalAlignment="Center" />
+                    <HyperlinkButton Grid.Column="2" Content="{x:Bind helper:AlbumHelper.GetJellyfinArtists(Artists)}" VerticalAlignment="Center" Click="{x:Bind helper:AlbumHelper.ArtistClick}" Tag="{x:Bind }"  FontFamily="{ThemeResource MiSansRegular}"/>
+                    <TextBlock Grid.Column="3" Text="00:00:00" VerticalAlignment="Center" />
                     <Button Grid.Column="4" Style="{StaticResource TransparentButton}" Margin="16,0,0,0" CornerRadius="4" Padding="4" Tag="{x:Bind }" Click="{x:Bind helper:ListHelper.RightTapMusicInListClick}">
                         <SymbolIcon Symbol="More" />
                     </Button>

@@ -30,7 +30,7 @@
                 <Grid Height="100" />
             </ListView.Footer>
         </ListView>
-        <Grid Grid.RowSpan="6" x:Name="AlbumPopupOverlay" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Visibility="Collapsed" Background="#00FFFFFF" Tapped="AlbumPopupOverlay_Tapped">
+        <!--<Grid Grid.RowSpan="6" x:Name="AlbumPopupOverlay" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Visibility="Collapsed" Background="#00FFFFFF" Tapped="AlbumPopupOverlay_Tapped">
             <cont3:AlbumPopup x:Name="AlbumPopupTarget" Margin="0,-60,0,0" Album="{x:Bind SelectedAlbum, Mode=OneWay}" Tapped="{x:Bind helper:AlbumHelper.SuppressTap}">
                 <animations:Implicit.HideAnimations>
                     <animations:OpacityAnimation Duration="0:0:0.45" From="1" To="0" />
@@ -40,6 +40,6 @@
                     <animations:OpacityAnimation Duration="0:0:0.01" From="0" To="1" />
                 </animations:Implicit.ShowAnimations>
             </cont3:AlbumPopup>
-        </Grid>
+        </Grid>-->
     </Grid>
 </base:PageBase>

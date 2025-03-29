@@ -16,16 +16,16 @@ namespace HotPotPlayer.Test
         {
             var config = new MockConfig();
             config.ClearDb();
-            var musicService = new LocalMusicService(config);
-            musicService.StartLoadLocalMusic();
+            var musicService = new JellyfinMusicService(config);
+            musicService.LoadJellyfinMusicAsync();
         }
 
         [Fact]
         public void Test2()
         {
             var config = new MockConfig();
-            var musicService = new LocalMusicService(config);
-            musicService.StartLoadLocalMusic();
+            var musicService = new JellyfinMusicService(config);
+            musicService.LoadJellyfinMusicAsync();
         }
 
         [Fact]
@@ -33,16 +33,16 @@ namespace HotPotPlayer.Test
         {
             var config = new MockConfig2();
             config.ClearDb();
-            var musicService = new LocalMusicService(config);
-            musicService.StartLoadLocalMusic();
+            var musicService = new JellyfinMusicService(config);
+            musicService.LoadJellyfinMusicAsync();
         }
 
         [Fact]
         public void Test4()
         {
             var config = new MockConfig2();
-            var musicService = new LocalMusicService(config);
-            musicService.StartLoadLocalMusic();
+            var musicService = new JellyfinMusicService(config);
+            musicService.LoadJellyfinMusicAsync();
         }
 
         MockConfig2 config;
@@ -52,15 +52,15 @@ namespace HotPotPlayer.Test
         {
             config = new MockConfig2();
             config.ClearDb();
-            var musicService = new LocalMusicService(config);
+            var musicService = new JellyfinMusicService(config);
             musicService.PropertyChanged += MusicService_PropertyChanged;
-            musicService.StartLoadLocalMusic();
+            musicService.LoadJellyfinMusicAsync();
             Console.Read();
         }
 
         private void MusicService_PropertyChanged(object sender, PropertyChangedEventArgs e)
         {
-            var service = (LocalMusicService)sender;
+            var service = (JellyfinMusicService)sender;
             if (e.PropertyName == "State" && service.State == LocalServiceState.Complete)
             {
                 var m1 = service.LocalAlbumGroup[0][3].MusicItems[0];

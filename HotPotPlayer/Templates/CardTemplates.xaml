@@ -4,6 +4,7 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:models="using:HotPotPlayer.Models"
     xmlns:modelsC="using:HotPotPlayer.Models.CloudMusic"
+    xmlns:jmodel="using:Jellyfin.Sdk.Generated.Models"
     xmlns:bili="using:HotPotPlayer.Bilibili.Models.HomeVideo"
     xmlns:bili2="using:HotPotPlayer.Bilibili.Models.Video"
     xmlns:bili3="using:HotPotPlayer.Bilibili.Models.User"
@@ -61,7 +62,7 @@
         </StackPanel>
     </DataTemplate>
 
-    <DataTemplate x:Key="AlbumCardViewTemplate" x:DataType="models:AlbumItem">
+    <DataTemplate x:Key="AlbumCardViewTemplate" x:DataType="jmodel:BaseItemDto">
         <StackPanel 
             Width="170"
             Spacing="8" 
@@ -75,31 +76,31 @@
             Background="White"
             >
             <cont2:ImageEx2 
-                Source="{x:Bind Cover}" 
+                Source="{x:Bind helper:AlbumHelper.GetPrimaryJellyfinImage(ImageTags, Id)}" 
                 Style="{StaticResource LocalMusicImageStyle}" 
                 x:Phase="2" 
                 />
             <TextBlock 
                 Margin="8,0" 
-                Text="{x:Bind Title}" 
+                Text="{x:Bind Name}" 
                 LineStackingStrategy="BaselineToBaseline" 
                 FontSize="14" 
                 MaxLines="2" 
                 TextTrimming="CharacterEllipsis" 
                 TextWrapping="Wrap" 
                 Height="40" 
-                ToolTipService.ToolTip="{x:Bind Title}" 
+                ToolTipService.ToolTip="{x:Bind Name}" 
                 x:Phase="0" 
                 FontFamily="{ThemeResource MiSansBold}"
                 />
             <TextBlock 
                 Margin="8,0" 
-                Text="{x:Bind GetArtists()}" 
+                Text="{x:Bind AlbumArtist}" 
                 Foreground="Gray" 
-                ToolTipService.ToolTip="{x:Bind GetArtists()}" 
+                ToolTipService.ToolTip="{x:Bind AlbumArtist}" 
                 x:Phase="1" 
                 FontFamily="{ThemeResource MiSansRegular}"
-                />
+            />
         </StackPanel>
     </DataTemplate>
 

@@ -78,31 +78,31 @@ namespace HotPotPlayer.Pages.MusicSub
         {
             var albums = await Task.Run(() =>
             {
-                var musicService = ((App)Application.Current).LocalMusicService;
+                var musicService = ((App)Application.Current).JellyfinMusicService;
                 var albums = musicService.GetArtistAlbumGroup(name);
                 return albums;
             });
             return albums;
         }
 
-        private async void AlbumPopupOverlay_Tapped(object sender, TappedRoutedEventArgs e)
-        {
-            var anim = ConnectedAnimationService.GetForCurrentView().PrepareToAnimate("backwardsAnimation", AlbumPopupTarget);
-            anim.Configuration = new BasicConnectedAnimationConfiguration();
-            await AlbumListView.TryStartConnectedAnimationAsync(anim, SelectedAlbum, "AlbumCardConnectedElement");
-            AlbumPopupOverlay.Visibility = Visibility.Collapsed;
-        }
+        //private async void AlbumPopupOverlay_Tapped(object sender, TappedRoutedEventArgs e)
+        //{
+        //    var anim = ConnectedAnimationService.GetForCurrentView().PrepareToAnimate("backwardsAnimation", AlbumPopupTarget);
+        //    anim.Configuration = new BasicConnectedAnimationConfiguration();
+        //    await AlbumListView.TryStartConnectedAnimationAsync(anim, SelectedAlbum, "AlbumCardConnectedElement");
+        //    AlbumPopupOverlay.Visibility = Visibility.Collapsed;
+        //}
 
         private void AlbumListView_ItemClick(object sender, ItemClickEventArgs e)
         {
-            var album = e.ClickedItem as AlbumItem;
-            SelectedAlbum = album;
+            //var album = e.ClickedItem as AlbumItem;
+            //SelectedAlbum = album;
 
-            var ani = AlbumListView.PrepareConnectedAnimation("forwardAnimation", album, "AlbumCardConnectedElement");
-            ani.Configuration = new BasicConnectedAnimationConfiguration();
-            ani.TryStart(AlbumPopupTarget);
+            //var ani = AlbumListView.PrepareConnectedAnimation("forwardAnimation", album, "AlbumCardConnectedElement");
+            //ani.Configuration = new BasicConnectedAnimationConfiguration();
+            //ani.TryStart(AlbumPopupTarget);
 
-            AlbumPopupOverlay.Visibility = Visibility.Visible;
+            //AlbumPopupOverlay.Visibility = Visibility.Visible;
         }
     }
 }

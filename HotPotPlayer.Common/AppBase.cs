@@ -27,17 +27,17 @@ namespace HotPotPlayer
         DispatcherQueue _uiQueue;
         DispatcherQueue UIQueue => _uiQueue ??= DispatcherQueue.GetForCurrentThread();
 
-        LocalMusicService localMusicService;
-        public LocalMusicService LocalMusicService => localMusicService ??= new LocalMusicService(Config, UIQueue, this);
+        JellyfinMusicService jellyfinMusicService;
+        public JellyfinMusicService JellyfinMusicService => jellyfinMusicService ??= new JellyfinMusicService(Config, UIQueue, this);
 
         NetEaseMusicService netEaseMusicService;
-        public NetEaseMusicService NetEaseMusicService => netEaseMusicService ??= new NetEaseMusicService(Config, UIQueue, this, LocalMusicService);
+        public NetEaseMusicService NetEaseMusicService => netEaseMusicService ??= new NetEaseMusicService(Config, UIQueue, this, JellyfinMusicService);
 
         LocalVideoService localVideoService;
         public LocalVideoService LocalVideoService => localVideoService ??= new LocalVideoService(Config, UIQueue, this);
 
-        MusicPlayer musicPlayer;
-        public MusicPlayer MusicPlayer => musicPlayer ??= new MusicPlayer(Config, UIQueue, this);
+        MusicPlayerService musicPlayer;
+        public MusicPlayerService MusicPlayer => musicPlayer ??= new MusicPlayerService(Config, UIQueue, this);
 
         VideoPlayerService videoPlayerService;
         public VideoPlayerService VideoPlayerService => videoPlayerService ??= new VideoPlayerService(Config, UIQueue, this);
@@ -47,7 +47,7 @@ namespace HotPotPlayer
 
         public void ShutDown()
         {
-            localMusicService?.Dispose();
+            jellyfinMusicService?.Dispose();
             netEaseMusicService?.Dispose();
             localVideoService?.Dispose();
             musicPlayer?.Dispose();

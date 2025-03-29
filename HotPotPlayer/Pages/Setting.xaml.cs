@@ -209,9 +209,9 @@ namespace HotPotPlayer.Pages
             LocalVideoService.StartLoadLocalVideo();
         }
 
-        private void ReloadMusicLibrary(object sender, RoutedEventArgs e)
+        private async void ReloadMusicLibrary(object sender, RoutedEventArgs e)
         {
-            LocalMusicService.StartLoadLocalMusic();
+            await JellyfinMusicService.LoadJellyfinMusicAsync();
         }
         public override RectangleF[] GetTitleBarDragArea()
         {

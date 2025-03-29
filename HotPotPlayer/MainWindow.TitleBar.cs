@@ -60,7 +60,7 @@ namespace HotPotPlayer
         {
             if (e.PropertyName == "IsPlayListBarVisible")
             {
-                var musicPlayer = (MusicPlayer)sender;
+                var musicPlayer = (MusicPlayerService)sender;
                 m_AppWindow.SetTitleBarForegroundColor(musicPlayer.IsPlayListBarVisible);
                 if (musicPlayer.IsPlayListBarVisible)
                 {

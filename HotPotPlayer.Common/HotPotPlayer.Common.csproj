@@ -20,6 +20,7 @@
       <PackageReference Include="CommunityToolkit.WinUI.Animations" Version="8.2.250129-preview2" />
       <PackageReference Include="CommunityToolkit.WinUI.Helpers" Version="8.2.250129-preview2" />
       <PackageReference Include="HttpClientFactoryLite" Version="0.4.0" />
+      <PackageReference Include="Jellyfin.Sdk" Version="2025.3.28-unstable.202503280050" />
       <PackageReference Include="Microsoft.AspNetCore.WebUtilities" Version="9.0.3" />
 	  <PackageReference Include="Microsoft.WindowsAppSDK" Version="1.7.250310001" />
 	  <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />

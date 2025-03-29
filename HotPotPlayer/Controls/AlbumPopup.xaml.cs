@@ -1,6 +1,8 @@
-﻿using HotPotPlayer.Models;
+﻿using CommunityToolkit.Mvvm.ComponentModel;
+using HotPotPlayer.Models;
 using HotPotPlayer.Pages.Helper;
 using HotPotPlayer.Services;
+using Jellyfin.Sdk.Generated.Models;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Controls.Primitives;
@@ -15,6 +17,7 @@ using System.IO;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices.WindowsRuntime;
+using System.Threading.Tasks;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
 
@@ -30,25 +33,29 @@ namespace HotPotPlayer.Controls
             this.InitializeComponent();
         }
 
-        public AlbumItem Album
+        public BaseItemDto Album
         {
-            get { return (AlbumItem)GetValue(AlbumProperty); }
+            get { return (BaseItemDto)GetValue(AlbumProperty); }
             set { SetValue(AlbumProperty, value); }
         }
 
         public static readonly DependencyProperty AlbumProperty =
-            DependencyProperty.Register("Album", typeof(AlbumItem), typeof(AlbumPopup), new PropertyMetadata(default(AlbumItem), AlbumChanged));
+            DependencyProperty.Register("Album", typeof(BaseItemDto), typeof(AlbumPopup), new PropertyMetadata(default(BaseItemDto), AlbumChanged));
 
-        private static void AlbumChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        [ObservableProperty]
+        private List<BaseItemDto> albumMusicItems;
+
+        private static async void AlbumChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
             var @this = (AlbumPopup)d;
+            @this.AlbumMusicItems = await @this.JellyfinMusicService.GetAlbumMusicItemsAsync(@this.Album);
             //AlbumHelper.InitSplitButtonFlyout(@this.AlbumSplitButton, @this.Album);
         }
 
         private void ListView_ItemClick(object sender, ItemClickEventArgs e)
         {
-            var music = e.ClickedItem as MusicItem;
-            MusicPlayer.PlayNext(music, Album);
+            var music = e.ClickedItem as BaseItemDto;
+            //MusicPlayer.PlayNext(music, Album);
         }
     }
 }

@@ -30,7 +30,7 @@ namespace HotPotPlayer.Services
         Shuffle
     }
 
-    public class MusicPlayer: ServiceBaseWithConfig
+    public class MusicPlayerService: ServiceBaseWithConfig
     {
         public enum PlayerState 
         {   
@@ -438,7 +438,7 @@ namespace HotPotPlayer.Services
         readonly Timer _playerTimer;
         bool _isMusicSwitching;
 
-        public MusicPlayer(ConfigBase config, DispatcherQueue queue, AppBase app): base(config, queue, app)
+        public MusicPlayerService(ConfigBase config, DispatcherQueue queue, AppBase app): base(config, queue, app)
         {
             _playerStarter = new BackgroundWorker
             {

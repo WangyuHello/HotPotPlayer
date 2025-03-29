@@ -18,8 +18,8 @@ namespace HotPotPlayer.Services
 {
     public class NetEaseMusicService: ServiceBaseWithConfig
     {
-        LocalMusicService LocalMusic;
-        public NetEaseMusicService(ConfigBase config, DispatcherQueue uiThread = null, AppBase app = null, LocalMusicService localMusic = null) : base(config, uiThread, app)
+        JellyfinMusicService LocalMusic;
+        public NetEaseMusicService(ConfigBase config, DispatcherQueue uiThread = null, AppBase app = null, JellyfinMusicService localMusic = null) : base(config, uiThread, app)
         {
             Config.SaveConfigWhenExit(() => _api.SaveCookie(Config));
             LocalMusic = localMusic;

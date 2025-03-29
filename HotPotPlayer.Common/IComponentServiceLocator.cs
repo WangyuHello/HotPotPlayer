@@ -18,9 +18,9 @@ namespace HotPotPlayer
         public Window MainWindow { get; }
         public ConfigBase Config { get; }
         public NetEaseMusicService NetEaseMusicService { get; }
-        public LocalMusicService LocalMusicService { get; }
+        public JellyfinMusicService JellyfinMusicService { get; }
         public LocalVideoService LocalVideoService { get; }
-        public MusicPlayer MusicPlayer { get; }
+        public MusicPlayerService MusicPlayer { get; }
         public VideoPlayerService VideoPlayerService { get; }
         public BiliBiliService BiliBiliService { get; }
 

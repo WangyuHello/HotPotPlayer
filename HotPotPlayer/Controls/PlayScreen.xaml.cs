@@ -41,7 +41,7 @@ namespace HotPotPlayer.Controls
         bool _pendingChange = true;
         private async void MusicPlayer_PropertyChanged(object sender, PropertyChangedEventArgs e)
         {
-            MusicPlayer m = (MusicPlayer)sender;
+            MusicPlayerService m = (MusicPlayerService)sender;
             if (m.CurrentPlaying != null && m.CurrentPlaying is CloudMusicItem c)
             {
                 if (e.PropertyName == "IsPlayScreenVisible" && m.IsPlayScreenVisible)
