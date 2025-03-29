@@ -241,12 +241,16 @@ namespace HotPotPlayer.Services
             else 
             {
                 // Single Music
+                CurrentPlayList = new ObservableCollection<BaseItemDto> { music };
+                PlayNext(0);
             }
         }
 
-        public void PlayNext(BaseItemDto music, BaseItemDto album)
+        public async void PlayNext(BaseItemDto music, BaseItemDto album)
         {
-
+            var albumItems = await App.JellyfinMusicService.GetAlbumMusicItemsAsync(album);
+            CurrentPlayList = [.. albumItems];
+            PlayNext(music.IndexNumber - 1);
         }
 
         public void PlayNext(MusicItem music, IEnumerable<MusicItem> list)
@@ -329,7 +333,7 @@ namespace HotPotPlayer.Services
 
         public void AddToPlayListLast(BaseItemDto music)
         {
-
+            CurrentPlayList?.Add(music);
         }
 
         public void AddToPlayListNext(MusicItem music)
@@ -339,7 +343,7 @@ namespace HotPotPlayer.Services
 
         public void AddToPlayListNext(BaseItemDto music)
         {
-
+            CurrentPlayList?.Insert(CurrentPlayingIndex + 1, music);
         }
 
         /// <summary>

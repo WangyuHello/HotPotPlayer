@@ -417,16 +417,16 @@ namespace HotPotPlayer.Pages.Helper
         internal static void RightTapMusicInCurrentPlayListClick(object sender, RoutedEventArgs e)
         {
             FrameworkElement target = null;
-            MusicItem music = null;
+            BaseItemDto music = null;
             if (sender is Button button)
             {
-                music = (MusicItem)button.Tag;
+                music = (BaseItemDto)button.Tag;
                 target = button;
             }
             else if (sender is Grid g)
             {
                 var e2 = e as RightTappedRoutedEventArgs;
-                music = ((FrameworkElement)e2.OriginalSource).DataContext as MusicItem;
+                music = ((FrameworkElement)e2.OriginalSource).DataContext as BaseItemDto;
                 target = g;
             }
             if (target == null || music == null) return;
@@ -455,17 +455,17 @@ namespace HotPotPlayer.Pages.Helper
                 i.Click += (s, e) => AlbumHelper.AddToNewPlayList(music);
                 sub.Items.Add(i);
 
-                if (music is CloudMusicItem c)
+                if (false) // TODO Cloudmusic
                 {
-                    foreach (var item in NetEaseMusicService.UserPlayLists)
-                    {
-                        i = new MenuFlyoutItem
-                        {
-                            Text = item.Title,
-                        };
-                        i.Click += (s, e) => NetEaseMusicService.AddMusicToPlayList(item, c);
-                        sub.Items.Add(i);
-                    }
+                    //foreach (var item in NetEaseMusicService.UserPlayLists)
+                    //{
+                    //    i = new MenuFlyoutItem
+                    //    {
+                    //        Text = item.Title,
+                    //    };
+                    //    i.Click += (s, e) => NetEaseMusicService.AddMusicToPlayList(item, c);
+                    //    sub.Items.Add(i);
+                    //}
                 }
                 else
                 {

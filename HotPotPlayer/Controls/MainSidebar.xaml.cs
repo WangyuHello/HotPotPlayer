@@ -24,7 +24,7 @@ using Windows.Foundation.Collections;
 
 namespace HotPotPlayer.Controls
 {
-    public sealed partial class MainSidebar : UserControl
+    public sealed partial class MainSidebar : UserControlBase
     {
         public MainSidebar()
         {

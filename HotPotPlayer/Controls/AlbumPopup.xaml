@@ -48,7 +48,7 @@
                 <ColumnDefinition Width="*" />
             </Grid.ColumnDefinitions>
 
-            <cont2:ImageEx2 Source="{x:Bind helper2:BaseItemDtoHelper.GetPrimaryJellyfinImage(Album.ImageTags, Album.Id), Mode=OneWay}" Style="{StaticResource LocalAlbumPopupImageStyle}" />
+            <cont2:ImageEx2 Source="{x:Bind JellyfinMusicService.GetPrimaryJellyfinImage(Album.ImageTags, Album.Id), Mode=OneWay}" Style="{StaticResource LocalAlbumPopupImageStyle}" />
             <StackPanel Grid.Column="1" Margin="16,0,0,0" >
                 <TextBlock Text="{x:Bind Album.Name, Mode=OneWay}" MaxLines="2" FontSize="32" TextWrapping="Wrap" TextTrimming="CharacterEllipsis" FontFamily="{ThemeResource MiSansMedium}">
 

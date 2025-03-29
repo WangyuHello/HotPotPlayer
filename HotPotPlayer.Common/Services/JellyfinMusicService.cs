@@ -185,6 +185,23 @@ namespace HotPotPlayer.Services
             return uri;
         }
 
+        public Uri GetPrimaryJellyfinImageLarge(BaseItemDto_ImageTags tag, Guid? parentId)
+        {
+            if (!tag.AdditionalData.TryGetValue("Primary", out object value)) return null;
+            var requestInformation = JellyfinApiClient.Items[parentId.Value].Images[ImageType.Primary.ToString()].ToGetRequestInformation(param =>
+            {
+                param.QueryParameters = new Jellyfin.Sdk.Generated.Items.Item.Images.Item.WithImageTypeItemRequestBuilder.WithImageTypeItemRequestBuilderGetQueryParameters
+                {
+                    Tag = value.ToString(),
+                    FillHeight = 600,
+                    FillWidth = 600,
+                    Quality = 96
+                };
+            });
+            var uri = JellyfinApiClient.BuildUri(requestInformation);
+            return uri;
+        }
+
         public async Task JellyfinLoginAsync()
         {
             var systemInfo = await JellyfinApiClient.System.Info.Public.GetAsync();
@@ -249,7 +266,9 @@ namespace HotPotPlayer.Services
                 };
             });
             var uri = JellyfinApiClient.BuildUri(req);
-            return uri.ToString();
+            var url_temp = uri.ToString();
+            url_temp = url_temp + "&api_key=" + SdkClientSettings.AccessToken;
+            return url_temp;
         }
 
         sealed class PlayListItemComparer : EqualityComparer<PlayListItemDb>
