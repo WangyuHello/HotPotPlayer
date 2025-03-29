@@ -1,26 +1,17 @@
-﻿using HotPotPlayer.Extensions;
-using HotPotPlayer.Helpers;
+﻿using HotPotPlayer.Helpers;
 using HotPotPlayer.Models;
-using HotPotPlayer.Models.CloudMusic;
 using Jellyfin.Sdk.Generated.Models;
 using Microsoft.UI.Dispatching;
 using NAudio.Wave;
 using NAudio.Wave.SampleProviders;
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
-using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 using System.Timers;
-using Windows.Foundation;
 using Windows.Media;
-using Windows.Media.Core;
-using Windows.Media.Playback;
-using Windows.Storage;
 using Windows.Storage.Streams;
-using WinRT;
 
 namespace HotPotPlayer.Services
 {
@@ -270,6 +261,12 @@ namespace HotPotPlayer.Services
         {
             //var index = CurrentPlayList?.IndexOf(music);
             //PlayNext(index);
+        }
+
+        public void PlayNextContinue(BaseItemDto music)
+        {
+            var index = CurrentPlayList?.IndexOf(music);
+            PlayNext(index);
         }
 
         public void PlayNext(MusicItem music, AlbumItem album)
@@ -523,7 +520,7 @@ namespace HotPotPlayer.Services
                 e.Result = ValueTuple.Create(index, intercept);
 
                 _smtc ??= InitSmtc();
-                UpdateMstcInfoAsync((int)e.Argument);
+                UpdateMstcInfo((int)e.Argument);
 
                 PreCacheNextMusic(index);
             }
@@ -587,16 +584,13 @@ namespace HotPotPlayer.Services
 
         private async void PreCacheNextMusic(int index)
         {
-            //index += 1;
-            //if (index > CurrentPlayList.Count - 1)
-            //{
-            //    return;
-            //}
-            //var next = CurrentPlayList[index];
-            //if (next.PlayListRef != null)
-            //{
-            //    await ImageCacheEx.Instance.PreCacheAsync(next.Cover);
-            //}
+            index += 1;
+            if (index > CurrentPlayList.Count - 1)
+            {
+                return;
+            }
+            var next = CurrentPlayList[index];
+            await ImageCacheEx.Instance.PreCacheAsync(App.JellyfinMusicService.GetPrimaryJellyfinImageSmall(next.ImageTags, next.Id));
         }
 
         private void PlayerStarterCompleted(object sender, RunWorkerCompletedEventArgs e)
@@ -771,36 +765,31 @@ namespace HotPotPlayer.Services
         /// https://docs.microsoft.com/en-us/windows/uwp/audio-video-camera/system-media-transport-controls
         /// </summary>
         /// <param name="index"></param>
-        private async void UpdateMstcInfoAsync(int index)
+        private void UpdateMstcInfo(int index)
         {
-            //TODO MSTC
-            //SMTC.PlaybackStatus = MediaPlaybackStatus.Playing;
-            //var music = CurrentPlayList[index];
-            //if (false) //TODO cloudmusic
-            //{
-            //    SystemMediaTransportControlsDisplayUpdater updater = SMTC.DisplayUpdater;
+            SMTC.PlaybackStatus = MediaPlaybackStatus.Playing;
+            var music = CurrentPlayList[index];
+            if (false) //TODO cloudmusic
+            {
+                //SystemMediaTransportControlsDisplayUpdater updater = SMTC.DisplayUpdater;
 
-            //    updater.Type = MediaPlaybackType.Music;
-            //    updater.MusicProperties.Artist = c.GetArtists();
-            //    updater.MusicProperties.Title = c.Title;
-            //    updater.Thumbnail = RandomAccessStreamReference.CreateFromUri(c.Cover);
+                //updater.Type = MediaPlaybackType.Music;
+                //updater.MusicProperties.Artist = c.GetArtists();
+                //updater.MusicProperties.Title = c.Title;
+                //updater.Thumbnail = RandomAccessStreamReference.CreateFromUri(c.Cover);
 
-            //}
-            //else
-            //{
-            //    var mediaFile = await StorageFile.GetFileFromPathAsync(music.Source.FullName);
-            //    bool copyFromFileAsyncSuccessful;
-            //    try
-            //    {
-            //        copyFromFileAsyncSuccessful = await SMTC.DisplayUpdater.CopyFromFileAsync(MediaPlaybackType.Music, mediaFile);
-            //    }
-            //    catch (Exception)
-            //    {
+            }
+            else
+            {
+                SystemMediaTransportControlsDisplayUpdater updater = SMTC.DisplayUpdater;
 
-            //    }
-            //}
+                updater.Type = MediaPlaybackType.Music;
+                updater.MusicProperties.Artist = BaseItemDtoHelper.GetJellyfinArtists(music.Artists);
+                updater.MusicProperties.Title = music.Name;
+                updater.Thumbnail = RandomAccessStreamReference.CreateFromUri(App.JellyfinMusicService.GetPrimaryJellyfinImageSmall(music.ImageTags, music.Id));
+            }
 
-            //SMTC.DisplayUpdater.Update();
+            SMTC.DisplayUpdater.Update();
         }
     }
 }

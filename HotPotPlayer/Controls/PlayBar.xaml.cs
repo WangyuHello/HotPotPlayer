@@ -164,13 +164,14 @@ namespace HotPotPlayer.Controls
             }
             else
             {
-                var artists = MusicPlayer.CurrentPlaying.Artists;
+                var artists = MusicPlayer.CurrentPlaying.ArtistItems;
                 foreach (var a in artists)
                 {
                     var item = new MenuFlyoutItem
                     {
-                        Text = a,
-                        Icon = new SymbolIcon { Symbol = Symbol.Contact }
+                        Text = a.Name,
+                        Icon = new SymbolIcon { Symbol = Symbol.Contact },
+                        Tag = a.Id
                     };
                     item.Click += AlbumHelper.ArtistClick;
                     flyout.Items.Add(item);
@@ -200,7 +201,7 @@ namespace HotPotPlayer.Controls
 
         private void Cover_SourceGotFromCache(ImageSource obj)
         {
-            CoverImage = JellyfinMusicService.GetPrimaryJellyfinImage(MusicPlayer.CurrentPlaying.ImageTags, MusicPlayer.CurrentPlaying.Id);
+            CoverImage = JellyfinMusicService.GetPrimaryJellyfinImageSmall(MusicPlayer.CurrentPlaying.ImageTags, MusicPlayer.CurrentPlaying.Id);
         }
     }
 }

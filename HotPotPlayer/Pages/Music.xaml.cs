@@ -1,4 +1,5 @@
 ﻿using CommunityToolkit.Mvvm.Collections;
+using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.WinUI;
 using HotPotPlayer.Extensions;
 using HotPotPlayer.Helpers;
@@ -44,18 +45,11 @@ namespace HotPotPlayer.Pages
             InitializeComponent();
         }
 
-        private BaseItemDto _selectedAlbum;
-        public BaseItemDto SelectedAlbum
-        {
-            get => _selectedAlbum;
-            set => Set(ref _selectedAlbum, value);
-        }
-        private PlayListItem _selectedPlayList;
-        public PlayListItem SelectedPlayList
-        {
-            get => _selectedPlayList;
-            set => Set(ref _selectedPlayList, value);
-        }
+        [ObservableProperty]
+        private BaseItemDto selectedAlbum;
+
+        [ObservableProperty]
+        private PlayListItem selectedPlayList;
 
         bool IsFirstNavigate = true;
 
@@ -125,13 +119,17 @@ namespace HotPotPlayer.Pages
             var root = container.ContentTemplateRoot;
             root.Opacity = 0;
         }
+        Visibility GetLoadingVisibility(LocalServiceState state)
+        {
+            return state == LocalServiceState.Loading ? Visibility.Visible : Visibility.Collapsed;
+        }
 
         public override RectangleF[] GetTitleBarDragArea()
         {
-            return new RectangleF[]
-            {
-                new RectangleF(0, 0, (float)(ActualWidth), 28),
-            };
+            return
+            [
+                new(0, 0, (float)(ActualWidth), 28),
+            ];
         }
         private void Root_SizeChanged(object sender, SizeChangedEventArgs e)
         {

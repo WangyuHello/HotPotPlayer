@@ -1,4 +1,5 @@
-﻿using HotPotPlayer.Interop;
+﻿using DirectN;
+using HotPotPlayer.Interop;
 using HotPotPlayer.Models;
 using HotPotPlayer.Models.CloudMusic;
 using HotPotPlayer.Pages.Helper;
@@ -43,58 +44,56 @@ namespace HotPotPlayer.Controls
         private async void MusicPlayer_PropertyChanged(object sender, PropertyChangedEventArgs e)
         {
             MusicPlayerService m = (MusicPlayerService)sender;
+            var music = m.CurrentPlaying;
             //TODO cloudmusic
             //if (m.CurrentPlaying != null && m.CurrentPlaying is CloudMusicItem c)
-            //{
-            //    if (e.PropertyName == "IsPlayScreenVisible" && m.IsPlayScreenVisible)
-            //    {
-            //        if (_pendingChange)
-            //        {
-            //            Comments ??= new ObservableCollection<CloudCommentItem>();
-            //            Comments.Clear();
-            //            var l = await NetEaseMusicService.GetSongCommentAsync(c.SId);
-            //            //await NetEaseMusicService.GetSimilarUserAsync(c.SId);
-            //            foreach (var item in l)
-            //            {
-            //                Comments.Add(item);
-            //            }
+            if (m.CurrentPlaying != null)
+            {
+                if (e.PropertyName == "IsPlayScreenVisible" && m.IsPlayScreenVisible)
+                {
+                    if (_pendingChange)
+                    {
+                        //Comments ??= new ObservableCollection<CloudCommentItem>();
+                        //Comments.Clear();
+                        //var l = await NetEaseMusicService.GetSongCommentAsync(c.SId);
+                        ////await NetEaseMusicService.GetSimilarUserAsync(c.SId);
+                        //foreach (var item in l)
+                        //{
+                        //    Comments.Add(item);
+                        //}
 
-            //            SimiSongs ??= new ObservableCollection<CloudMusicItem>();
-            //            SimiSongs.Clear();
-            //            var ss = await NetEaseMusicService.GetSimilarSongAsync(c.SId);
-            //            foreach (var item in ss)
-            //            {
-            //                SimiSongs.Add(item);
-            //            }
-            //            Lyric = await NetEaseMusicService.GetLyric(c.SId);
-            //            _pendingChange = false;
-            //        }
-            //    }
-            //    else if (e.PropertyName == "CurrentPlaying")
-            //    {
-            //        if (m.IsPlayScreenVisible)
-            //        {
-            //            Comments.Clear();
-            //            var l = await NetEaseMusicService.GetSongCommentAsync(c.SId);
-            //            //await NetEaseMusicService.GetSimilarUserAsync(c.SId);
-            //            foreach (var item in l)
-            //            {
-            //                Comments.Add(item);
-            //            }
-            //            SimiSongs.Clear();
-            //            var ss = await NetEaseMusicService.GetSimilarSongAsync(c.SId);
-            //            foreach (var item in ss)
-            //            {
-            //                SimiSongs.Add(item);
-            //            }
-            //            Lyric = await NetEaseMusicService.GetLyric(c.SId);
-            //        }
-            //        else
-            //        {
-            //            _pendingChange = true;
-            //        }
-            //    }
-            //}
+                        SimiSongs ??= new ObservableCollection<BaseItemDto>();
+                        SimiSongs.Clear();
+                        var ss = await JellyfinMusicService.GetSimilarAlbumAsync(music);
+                        SimiSongs.AddRange(ss);
+                        //Lyric = await NetEaseMusicService.GetLyric(c.SId);
+                        _pendingChange = false;
+                    }
+                }
+                else if (e.PropertyName == "CurrentPlaying")
+                {
+                    if (m.IsPlayScreenVisible)
+                    {
+                        //Comments.Clear();
+                        //var l = await NetEaseMusicService.GetSongCommentAsync(c.SId);
+                        ////await NetEaseMusicService.GetSimilarUserAsync(c.SId);
+                        //foreach (var item in l)
+                        //{
+                        //    Comments.Add(item);
+                        //}
+
+                        SimiSongs.Clear();
+                        var ss = await JellyfinMusicService.GetSimilarAlbumAsync(music);
+                        SimiSongs.AddRange(ss);
+
+                        //Lyric = await NetEaseMusicService.GetLyric(c.SId);
+                    }
+                    else
+                    {
+                        _pendingChange = true;
+                    }
+                }
+            }
         }
 
         private ObservableCollection<CloudCommentItem> _comments;
@@ -104,8 +103,8 @@ namespace HotPotPlayer.Controls
             set => Set(ref _comments, value);
         }
 
-        private ObservableCollection<CloudMusicItem> _simiSongs;
-        public ObservableCollection<CloudMusicItem> SimiSongs
+        private ObservableCollection<BaseItemDto> _simiSongs;
+        public ObservableCollection<BaseItemDto> SimiSongs
         {
             get => _simiSongs;
             set => Set(ref _simiSongs, value);
@@ -205,7 +204,7 @@ namespace HotPotPlayer.Controls
 
         private void SimiSongsList_ItemClick(object sender, ItemClickEventArgs e)
         {
-            var music = e.ClickedItem as CloudMusicItem;
+            var music = e.ClickedItem as BaseItemDto;
             MusicPlayer.AddToPlayListNext(music);
             MusicPlayer.PlayNext();
         }

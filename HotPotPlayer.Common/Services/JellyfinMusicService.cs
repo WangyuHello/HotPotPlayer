@@ -18,10 +18,9 @@ using SortOrder = Jellyfin.Sdk.Generated.Models.SortOrder;
 
 namespace HotPotPlayer.Services
 {
-    public class JellyfinMusicService: ServiceBaseWithConfig
+    public partial class JellyfinMusicService(ConfigBase config, DispatcherQueue uiQueue = null, AppBase app = null) : ServiceBaseWithConfig(config, uiQueue, app)
     {
-        public JellyfinMusicService(ConfigBase config, DispatcherQueue uiQueue = null, AppBase app = null) : base(config, uiQueue, app) { }
-        
+
         #region State
         private LocalServiceState _state = LocalServiceState.Idle;
 
@@ -62,7 +61,7 @@ namespace HotPotPlayer.Services
                 {
                     sdkClientSettings = new JellyfinSdkSettings();
                     sdkClientSettings.Initialize(
-                        "My-Jellyfin-Client",
+                        "HotpotPlayer",
                         "0.0.1",
                         "Sample Device",
                         DevideId);
@@ -116,6 +115,7 @@ namespace HotPotPlayer.Services
 
         public async Task LoadJellyfinMusicAsync()
         {
+            State = LocalServiceState.Loading;
             if (!IsLogin)
             {
                 await JellyfinLoginAsync();
@@ -138,7 +138,7 @@ namespace HotPotPlayer.Services
                     ImageTypeLimit = 1,
                     EnableImageTypes = [ImageType.Primary, ImageType.Backdrop, ImageType.Banner, ImageType.Thumb],
                     StartIndex = 0,
-                    Limit = 100,
+                    //Limit = 100,
                 };
             }).ConfigureAwait(false);
 
@@ -149,17 +149,9 @@ namespace HotPotPlayer.Services
                 {
                     _localAlbumGroup.AddGroup(albumGroup);
                 }
-                LocalPlayListList = new();
+                LocalPlayListList = [];
+                State = LocalServiceState.InitComplete;
             });
-
-            //foreach (var view in views.Items)
-            //{
-            //    var requestInformation = JellyfinApiClient.Items[view.Id.Value].Images[ImageType.Primary.ToString()]
-            //        .ToGetRequestInformation();
-            //    var uri = JellyfinApiClient.BuildUri(requestInformation);
-
-            //    Debug.WriteLine($"{view.Id} - {view.Name} - {uri.ToString()}");
-            //}
         }
 
         static IEnumerable<IGrouping<int, BaseItemDto>> GroupAllAlbumByYear(BaseItemDtoQueryResult albums)
@@ -168,7 +160,7 @@ namespace HotPotPlayer.Services
             return r;
         }
 
-        public Uri GetPrimaryJellyfinImage(BaseItemDto_ImageTags tag, Guid? parentId)
+        private Uri GetPrimaryJellyfinImageBase(BaseItemDto_ImageTags tag, Guid? parentId, int widthHeigh)
         {
             if (!tag.AdditionalData.TryGetValue("Primary", out object value)) return null;
             var requestInformation = JellyfinApiClient.Items[parentId.Value].Images[ImageType.Primary.ToString()].ToGetRequestInformation(param =>
@@ -176,8 +168,8 @@ namespace HotPotPlayer.Services
                 param.QueryParameters = new Jellyfin.Sdk.Generated.Items.Item.Images.Item.WithImageTypeItemRequestBuilder.WithImageTypeItemRequestBuilderGetQueryParameters
                 {
                     Tag = value.ToString(),
-                    FillHeight = 300,
-                    FillWidth = 300,
+                    FillHeight = widthHeigh,
+                    FillWidth = widthHeigh,
                     Quality = 96
                 };
             });
@@ -185,21 +177,19 @@ namespace HotPotPlayer.Services
             return uri;
         }
 
+        public Uri GetPrimaryJellyfinImage(BaseItemDto_ImageTags tag, Guid? parentId)
+        {
+            return GetPrimaryJellyfinImageBase(tag, parentId, 300);
+        }
+
         public Uri GetPrimaryJellyfinImageLarge(BaseItemDto_ImageTags tag, Guid? parentId)
         {
-            if (!tag.AdditionalData.TryGetValue("Primary", out object value)) return null;
-            var requestInformation = JellyfinApiClient.Items[parentId.Value].Images[ImageType.Primary.ToString()].ToGetRequestInformation(param =>
-            {
-                param.QueryParameters = new Jellyfin.Sdk.Generated.Items.Item.Images.Item.WithImageTypeItemRequestBuilder.WithImageTypeItemRequestBuilderGetQueryParameters
-                {
-                    Tag = value.ToString(),
-                    FillHeight = 600,
-                    FillWidth = 600,
-                    Quality = 96
-                };
-            });
-            var uri = JellyfinApiClient.BuildUri(requestInformation);
-            return uri;
+            return GetPrimaryJellyfinImageBase(tag, parentId, 600);
+        }
+
+        public Uri GetPrimaryJellyfinImageSmall(BaseItemDto_ImageTags tag, Guid? parentId)
+        {
+            return GetPrimaryJellyfinImageBase(tag, parentId, 100);
         }
 
         public async Task JellyfinLoginAsync()
@@ -244,6 +234,66 @@ namespace HotPotPlayer.Services
             }).ConfigureAwait(false);
             
             return result;
+        }
+
+        public async Task<BaseItemDto> GetAlbumInfoFromMusicAsync(BaseItemDto music)
+        {
+            var result = await JellyfinApiClient.Items[music.AlbumId.Value].GetAsync(param =>
+            {
+                param.QueryParameters = new Jellyfin.Sdk.Generated.Items.Item.WithItemItemRequestBuilder.WithItemItemRequestBuilderGetQueryParameters
+                {
+                    UserId = userDto.Id,
+                };
+            }).ConfigureAwait(false);
+
+            return result;
+        }
+
+        public async Task<List<BaseItemDto>> GetSimilarAlbumAsync(BaseItemDto music)
+        {
+            var result = await JellyfinApiClient.Items[music.Id.Value].Similar.GetAsync(param =>
+            {
+                param.QueryParameters = new Jellyfin.Sdk.Generated.Items.Item.Similar.SimilarRequestBuilder.SimilarRequestBuilderGetQueryParameters
+                {
+                    UserId = userDto.Id,
+                    Limit = 7,
+                    Fields = [ItemFields.PrimaryImageAspectRatio, ItemFields.CanDelete],
+                    ExcludeArtistIds = [.. music.AlbumArtists.Select(a => a.Id)]
+                };
+            }).ConfigureAwait(false);
+            return result.Items;
+        }
+
+        public async Task<BaseItemDto> GetArtistAsync(Guid id)
+        {
+            var result = await JellyfinApiClient.Items[id].GetAsync(param =>
+            {
+                param.QueryParameters = new Jellyfin.Sdk.Generated.Items.Item.WithItemItemRequestBuilder.WithItemItemRequestBuilderGetQueryParameters
+                {
+                    UserId = userDto.Id,
+                };
+            }).ConfigureAwait(false);
+            return result;
+        }
+
+        public async Task<List<BaseItemDto>> GetAlbumsFromArtistAsync(Guid id)
+        {
+            var result = await JellyfinApiClient.Items.GetAsync(param =>
+            {
+                param.QueryParameters = new ItemsRequestBuilder.ItemsRequestBuilderGetQueryParameters
+                {
+                    SortOrder = [SortOrder.Descending],
+                    IncludeItemTypes = [BaseItemKind.MusicAlbum],
+                    Recursive = true,
+                    Fields = [ItemFields.ParentId, ItemFields.PrimaryImageAspectRatio],
+                    Limit = 10,
+                    StartIndex = 0,
+                    CollapseBoxSetItems = false,
+                    AlbumArtistIds = [id],
+                    SortBy = [ItemSortBy.PremiereDate, ItemSortBy.ProductionYear, ItemSortBy.SortName]
+                };
+            }).ConfigureAwait(false);
+            return result.Items;
         }
 
         public string GetMusicStream(BaseItemDto music)

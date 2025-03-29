@@ -1,8 +1,10 @@
 ﻿using CommunityToolkit.Common.Collections;
+using CommunityToolkit.Mvvm.ComponentModel;
 using HotPotPlayer.Extensions;
 using HotPotPlayer.Models;
 using HotPotPlayer.Pages.Helper;
 using HotPotPlayer.Services;
+using Jellyfin.Sdk.Generated.Models;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Controls.Primitives;
@@ -38,71 +40,45 @@ namespace HotPotPlayer.Pages.MusicSub
             this.InitializeComponent();
         }
 
-        public ObservableCollection<AlbumItem> LocalAlbumMusic { get; set; } = new();
         public ObservableCollection<MusicItem> LocalArtistMusic { get; set; } = new();
 
-        private string _artistName;
-        public string ArtistName
-        {
-            get => _artistName;
-            set => Set(ref _artistName, value);
-        }
+        [ObservableProperty]
+        private BaseItemDto theArtist;
 
-        private AlbumItem _selectedAlbum;
-        public AlbumItem SelectedAlbum
-        {
-            get => _selectedAlbum;
-            set => Set(ref _selectedAlbum, value);
-        }
+        [ObservableProperty]
+        private List<BaseItemDto> artistAlbums;
+
+        [ObservableProperty]
+        private BaseItemDto selectedAlbum;
 
         protected override async void OnNavigatedTo(NavigationEventArgs e)
         {
-            var artistName = (string)e.Parameter;
-            ArtistName = artistName;
+            var artistId = (Guid)e.Parameter;
 
-            var (albumList, musicList) = await GetArtistWorksAsync(artistName);
-            LocalAlbumMusic.Clear();
-            foreach (var item in albumList)
-            {
-                LocalAlbumMusic.Add(item);
-            }
-            LocalArtistMusic.Clear();
-            foreach (var item in musicList)
-            {
-                LocalArtistMusic.Add(item);
-            }
+            TheArtist = await JellyfinMusicService.GetArtistAsync(artistId);
+            ArtistAlbums = await JellyfinMusicService.GetAlbumsFromArtistAsync(artistId);
+
             base.OnNavigatedTo(e);
         }
 
-        static async Task<(IEnumerable<AlbumItem>, IEnumerable<MusicItem>)> GetArtistWorksAsync(string name)
+        private async void AlbumPopupOverlay_Tapped(object sender, TappedRoutedEventArgs e)
         {
-            var albums = await Task.Run(() =>
-            {
-                var musicService = ((App)Application.Current).JellyfinMusicService;
-                var albums = musicService.GetArtistAlbumGroup(name);
-                return albums;
-            });
-            return albums;
+            var anim = ConnectedAnimationService.GetForCurrentView().PrepareToAnimate("backwardsAnimation", AlbumPopupTarget);
+            anim.Configuration = new BasicConnectedAnimationConfiguration();
+            await AlbumListView.TryStartConnectedAnimationAsync(anim, SelectedAlbum, "AlbumCardConnectedElement");
+            AlbumPopupOverlay.Visibility = Visibility.Collapsed;
         }
-
-        //private async void AlbumPopupOverlay_Tapped(object sender, TappedRoutedEventArgs e)
-        //{
-        //    var anim = ConnectedAnimationService.GetForCurrentView().PrepareToAnimate("backwardsAnimation", AlbumPopupTarget);
-        //    anim.Configuration = new BasicConnectedAnimationConfiguration();
-        //    await AlbumListView.TryStartConnectedAnimationAsync(anim, SelectedAlbum, "AlbumCardConnectedElement");
-        //    AlbumPopupOverlay.Visibility = Visibility.Collapsed;
-        //}
 
         private void AlbumListView_ItemClick(object sender, ItemClickEventArgs e)
         {
-            //var album = e.ClickedItem as AlbumItem;
-            //SelectedAlbum = album;
+            var album = e.ClickedItem as BaseItemDto;
+            SelectedAlbum = album;
 
-            //var ani = AlbumListView.PrepareConnectedAnimation("forwardAnimation", album, "AlbumCardConnectedElement");
-            //ani.Configuration = new BasicConnectedAnimationConfiguration();
-            //ani.TryStart(AlbumPopupTarget);
+            var ani = AlbumListView.PrepareConnectedAnimation("forwardAnimation", album, "AlbumCardConnectedElement");
+            ani.Configuration = new BasicConnectedAnimationConfiguration();
+            ani.TryStart(AlbumPopupTarget);
 
-            //AlbumPopupOverlay.Visibility = Visibility.Visible;
+            AlbumPopupOverlay.Visibility = Visibility.Visible;
         }
     }
 }

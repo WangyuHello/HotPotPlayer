@@ -49,7 +49,7 @@ namespace HotPotPlayer.Pages.Helper
         internal static void AlbumDetailClick(object sender, RoutedEventArgs e)
         {
             var button = sender as Button;
-            var selectedAlbum = button.Tag as AlbumItem;
+            var selectedAlbum = button.Tag as BaseItemDto;
             App.NavigateTo("MusicSub.Album", selectedAlbum);
         }
 
@@ -57,10 +57,9 @@ namespace HotPotPlayer.Pages.Helper
         {
             MusicPlayer.HidePlayScreen();
             var el = sender as FrameworkElement;
-            var music = el.Tag as MusicItem;
+            var music = el.Tag as BaseItemDto;
             var targetPage = music switch
             {
-                CloudMusicItem => "CloudMusicSub.Album",
                 _ => "MusicSub.Album"
             };
             App.NavigateTo(targetPage, music);
@@ -108,23 +107,23 @@ namespace HotPotPlayer.Pages.Helper
                 }
                 else
                 {
-                    var artist = (string)button.Content;
-                    var segs = artist.GetArtists();
-                    if (segs.Length == 1)
+                    var music = button.Tag as BaseItemDto;
+                    var artists = music.ArtistItems;
+                    if (artists.Count == 1)
                     {
                         MusicPlayer.HidePlayScreen();
-                        App.NavigateTo("MusicSub.Artist", artist);
+                        App.NavigateTo("MusicSub.Artist", artists[0].Id);
                     }
                     else
                     {
                         if (button.ContextFlyout == null)
                         {
                             var flyout = new MenuFlyout();
-                            foreach (var a in segs)
+                            foreach (var a in artists)
                             {
                                 var item = new MenuFlyoutItem
                                 {
-                                    Text = a,
+                                    Text = a.Name,
                                     Icon = new SymbolIcon { Symbol = Symbol.Contact }
                                 };
                                 item.Click += ArtistClick;
@@ -145,8 +144,8 @@ namespace HotPotPlayer.Pages.Helper
                 }
                 else
                 {
-                    var artist = menuItem.Text;
-                    App.NavigateTo("MusicSub.Artist", artist);
+                    var artistId = (Guid)menuItem.Tag;
+                    App.NavigateTo("MusicSub.Artist", artistId);
                 }
             }
             else if (sender is TextBlock t)
@@ -179,23 +178,23 @@ namespace HotPotPlayer.Pages.Helper
                 }
                 else
                 {
-                    var artist = t.Text;
-                    var segs = artist.GetArtists();
-                    if (segs.Length == 1)
+                    var music = t.Tag as BaseItemDto;
+                    var artists = music.ArtistItems;
+                    if (artists.Count == 1)
                     {
                         MusicPlayer.HidePlayScreen();
-                        App.NavigateTo("MusicSub.Artist", artist);
+                        App.NavigateTo("MusicSub.Artist", artists[0].Id);
                     }
                     else
                     {
                         if (t.ContextFlyout == null)
                         {
                             var flyout = new MenuFlyout();
-                            foreach (var a in segs)
+                            foreach (var a in artists)
                             {
                                 var item = new MenuFlyoutItem
                                 {
-                                    Text = a,
+                                    Text = a.Name,
                                     Icon = new SymbolIcon { Symbol = Symbol.Contact }
                                 };
                                 item.Click += ArtistClick;
@@ -222,20 +221,20 @@ namespace HotPotPlayer.Pages.Helper
             }
             else
             {
-                var artist = (string)button.Content;
-                var segs = artist.GetArtists();
-                if (segs.Length == 1)
+                var music = button.Tag as BaseItemDto;
+                var artists = music.ArtistItems;
+                if (artists.Count == 1)
                 {
-                    App.NavigateTo("MusicSub.Artist", artist);
+                    App.NavigateTo("MusicSub.Artist", artists[0].Id);
                 }
                 else
                 {
                     var flyout = new MenuFlyout();
-                    foreach (var a in segs)
+                    foreach (var a in artists)
                     {
                         var item = new MenuFlyoutItem
                         {
-                            Text = a,
+                            Text = a.Name,
                             Icon = new SymbolIcon { Symbol = Symbol.Contact }
                         };
                         item.Click += ArtistClick;
@@ -333,7 +332,7 @@ namespace HotPotPlayer.Pages.Helper
             else if(sender is ListView l)
             {
                 var e2 = e as ItemClickEventArgs;
-                var music = e2.ClickedItem as MusicItem;
+                var music = e2.ClickedItem as BaseItemDto;
                 MusicPlayer.PlayNextContinue(music);
             }
 

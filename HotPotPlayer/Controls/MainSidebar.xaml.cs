@@ -142,8 +142,6 @@ namespace HotPotPlayer.Controls
             }
         }
 
-        MusicPlayerService MusicPlayer => ((App)Application.Current).MusicPlayer;
-
         public Visibility GetShowPlayBarVisible(bool playbarVisible, BaseItemDto currentPlaying)
         {
             if (currentPlaying == null)

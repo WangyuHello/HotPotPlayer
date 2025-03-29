@@ -57,6 +57,11 @@
             </PivotItem>
         </Pivot>
 
+        <StackPanel VerticalAlignment="Top" HorizontalAlignment="Right" Spacing="8" Orientation="Horizontal" Margin="0,16,24,0" Visibility="{x:Bind GetLoadingVisibility(JellyfinMusicService.State), Mode=OneWay}">
+            <ProgressRing IsActive="True" Height="20" Width="20"/>
+            <TextBlock FontSize="14">加载种</TextBlock>
+        </StackPanel>
+
         <Grid x:Name="AlbumPopupOverlay" Margin="-36,-28,0,0" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Visibility="Collapsed" Background="#00FFFFFF" Tapped="AlbumPopupOverlay_Tapped">
             <cont3:AlbumPopup x:Name="AlbumPopupTarget" Margin="0,-32,0,0" Album="{x:Bind SelectedAlbum, Mode=OneWay}" Tapped="{x:Bind helper:AlbumHelper.SuppressTap}">
                 <animations:Implicit.HideAnimations>

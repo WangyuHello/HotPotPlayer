@@ -1,8 +1,10 @@
-﻿using HotPotPlayer.Extensions;
+﻿using CommunityToolkit.Mvvm.ComponentModel;
+using HotPotPlayer.Extensions;
 using HotPotPlayer.Models;
 using HotPotPlayer.Models.CloudMusic;
 using HotPotPlayer.Pages.Helper;
 using HotPotPlayer.Services;
+using Jellyfin.Sdk.Generated.Models;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Controls.Primitives;
@@ -36,36 +38,35 @@ namespace HotPotPlayer.Pages.MusicSub
             this.InitializeComponent();
         }
 
-        private AlbumItem _selectedAlbum;
-        public AlbumItem SelectedAlbum
-        {
-            get => _selectedAlbum;
-            set => Set(ref _selectedAlbum, value);
-        }
+        [ObservableProperty]
+        private BaseItemDto selectedAlbum;
+
+        [ObservableProperty]
+        private List<BaseItemDto> selectedAlbumMusicItems;
 
         protected override async void OnNavigatedTo(NavigationEventArgs e)
         {
             base.OnNavigatedTo(e);
-            SelectedAlbum = e.Parameter switch
+            var album = e.Parameter as BaseItemDto;
+            if (!album.IsFolder.Value)
             {
-                CloudMusicItem => null,
-                MusicItem music => await GetAlbumAsync(music),
-                AlbumItem album => album,
-                _ => throw new NotImplementedException()
-            };
+                album = await GetAlbumAsync(album);
+            }
+            SelectedAlbum = album;
             if (SelectedAlbum == null)
             {
                 return;
             }
+            SelectedAlbumMusicItems = await JellyfinMusicService.GetAlbumMusicItemsAsync(SelectedAlbum);
             //AlbumHelper.InitSplitButtonFlyout(AlbumSplitButton, SelectedAlbum);
         }
 
-        static async Task<AlbumItem> GetAlbumAsync(MusicItem m)
+        static async Task<BaseItemDto> GetAlbumAsync(BaseItemDto m)
         {
             var album = await Task.Run(() =>
             {
                 var musicService = ((App)Application.Current).JellyfinMusicService;
-                var album = musicService.QueryAlbum(m);
+                var album = musicService.GetAlbumInfoFromMusicAsync(m);
                 return album;
             });
             return album;
@@ -73,7 +74,7 @@ namespace HotPotPlayer.Pages.MusicSub
 
         private void ListView_ItemClick(object sender, ItemClickEventArgs e)
         {
-            var music = e.ClickedItem as MusicItem;
+            var music = e.ClickedItem as BaseItemDto;
             MusicPlayer.PlayNext(music, SelectedAlbum);
         }
     }

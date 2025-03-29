@@ -105,7 +105,7 @@
         </StackPanel>
     </DataTemplate>
 
-    <DataTemplate x:Key="AlbumCardViewInArtistTemplate" x:DataType="models:AlbumItem">
+    <DataTemplate x:Key="AlbumCardViewInArtistTemplate" x:DataType="jmodel:BaseItemDto">
         <StackPanel 
             Width="140"
             Spacing="4" 
@@ -119,29 +119,29 @@
             Background="White"
             >
             <cont2:ImageEx2 
-                Source="{x:Bind Cover}" 
+                Source="{x:Bind helper2:BaseItemDtoHelper.GetPrimaryJellyfinImage(ImageTags, Id)}" 
                 Style="{StaticResource LocalMusicImageStyle}" 
                 Width="140" Height="140"
                 x:Phase="2" 
                 />
             <TextBlock 
                 Margin="8,0" 
-                Text="{x:Bind Title}" 
+                Text="{x:Bind Name}" 
                 LineStackingStrategy="BaselineToBaseline" 
                 FontSize="14" 
                 MaxLines="2" 
                 TextTrimming="CharacterEllipsis" 
                 TextWrapping="Wrap" 
                 Height="38" 
-                ToolTipService.ToolTip="{x:Bind Title}" 
+                ToolTipService.ToolTip="{x:Bind Name}" 
                 x:Phase="0" 
                 FontFamily="{ThemeResource MiSansBold}"
                 />
             <TextBlock 
                 Margin="8,0" 
-                Text="{x:Bind GetArtists()}" 
+                Text="{x:Bind helper2:BaseItemDtoHelper.GetJellyfinArtists(Artists)}" 
                 Foreground="Gray" 
-                ToolTipService.ToolTip="{x:Bind GetArtists()}" 
+                ToolTipService.ToolTip="{x:Bind helper2:BaseItemDtoHelper.GetJellyfinArtists(Artists)}" 
                 x:Phase="1" 
                 FontFamily="{ThemeResource MiSansRegular}"
                 />
@@ -681,6 +681,25 @@
                 Width="40" Height="40"
                 CornerRadius="4"
                 ToolTipService.ToolTip="{x:Bind Title}" 
+                />
+        </StackPanel>
+    </DataTemplate>
+
+    <DataTemplate x:Key="JellyfinSimiSongCardViewTemplate" x:DataType="jmodel:BaseItemDto">
+        <StackPanel
+            Width="60"
+            Padding="0,0,0,0"
+            x:Name="CloudSimiSongCardConnectedElement"
+            ui:VisualExtensions.NormalizedCenterPoint="0.5"
+            Loaded="Root_Loaded"
+            >
+            <cont2:ImageEx2 
+                Source="{x:Bind helper2:BaseItemDtoHelper.GetPrimaryJellyfinImageSmall(ImageTags, Id)}" 
+                Style="{StaticResource LocalMusicImageStyle}" 
+                ui:VisualExtensions.NormalizedCenterPoint="0.5"
+                Width="60" Height="60"
+                CornerRadius="6"
+                ToolTipService.ToolTip="{x:Bind Name}" 
                 />
         </StackPanel>
     </DataTemplate>
