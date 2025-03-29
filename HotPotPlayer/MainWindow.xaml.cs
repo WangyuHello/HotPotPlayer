@@ -103,7 +103,7 @@ namespace HotPotPlayer
 
         Thickness GetPlayBarMargin(bool isPlayScreenVisible)
         {
-            return isPlayScreenVisible ? new Thickness(24, 0, 24, 8) : new Thickness(80, 0, 24, 16);
+            return isPlayScreenVisible ? new Thickness(24, 0, 24, 8) : new Thickness(80+100, 0, 24+100, 16);
         }
 
         //private void Tray_TrayIconLeftMouseDown(object sender, EventArgs e)
