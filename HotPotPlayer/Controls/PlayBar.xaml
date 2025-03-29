@@ -6,12 +6,13 @@
     xmlns:base="using:HotPotPlayer"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    xmlns:controls="using:CommunityToolkit.WinUI.UI.Controls"
+    xmlns:controls="using:CommunityToolkit.WinUI.Helpers"
     xmlns:cont="using:HotPotPlayer.UI.Controls"
     xmlns:convs="using:HotPotPlayer.UI.Converters"
     xmlns:media="using:Microsoft.UI.Xaml.Media"
     xmlns:me="using:HotPotPlayer.UI.Media"
     xmlns:model="using:HotPotPlayer.Models"
+    xmlns:helper2="using:HotPotPlayer.Helpers"
     mc:Ignorable="d">
 
     <base:UserControlBase.Resources>
@@ -50,9 +51,9 @@
                 <ColumnDefinition Width="*" />
             </Grid.ColumnDefinitions>
 
-            <cont:ImageEx2 x:Name="Cover" Style="{StaticResource PlayBarImageStyle}" Source="{x:Bind MusicPlayer.CurrentPlaying.Cover, Mode=OneWay}" Tapped="{x:Bind MusicPlayer.ToggleShowPlayScreen}" x:Load="{x:Bind GetCoverLoad(MusicPlayer.IsPlayScreenVisible), Mode=OneWay}" Visibility="{x:Bind GetCoverVisibility(MusicPlayer.IsPlayScreenVisible), Mode=OneWay}" SourceGotFromCache="Cover_SourceGotFromCache"/>
+            <cont:ImageEx2 x:Name="Cover" Style="{StaticResource PlayBarImageStyle}" Source="{x:Bind helper2:BaseItemDtoHelper.GetPrimaryJellyfinImage(MusicPlayer.CurrentPlaying.ImageTags, MusicPlayer.CurrentPlaying.Id)}" Tapped="{x:Bind MusicPlayer.ToggleShowPlayScreen}" x:Load="{x:Bind GetCoverLoad(MusicPlayer.IsPlayScreenVisible), Mode=OneWay}" Visibility="{x:Bind GetCoverVisibility(MusicPlayer.IsPlayScreenVisible), Mode=OneWay}" SourceGotFromCache="Cover_SourceGotFromCache"/>
             <StackPanel x:Name="TitlePanel" Grid.Column="1" Margin="8,4" VerticalAlignment="Center" Spacing="4" Visibility="{x:Bind GetCoverVisibility(MusicPlayer.IsPlayScreenVisible), Mode=OneWay}">
-                <TextBlock MaxLines="2" TextWrapping="Wrap" TextTrimming="CharacterEllipsis" FontSize="18" Text="{x:Bind MusicPlayer.CurrentPlaying.Title, Mode=OneWay}" FontFamily="{ThemeResource MiSansMedium}" />
+                <TextBlock MaxLines="2" TextWrapping="Wrap" TextTrimming="CharacterEllipsis" FontSize="18" Text="{x:Bind MusicPlayer.CurrentPlaying.Name, Mode=OneWay}" FontFamily="{ThemeResource MiSansMedium}" />
                 <Button Style="{StaticResource TextButton}" Click="SubtitleClick">
                     <TextBlock FontSize="12" Foreground="DimGray" TextTrimming="CharacterEllipsis" Text="{x:Bind GetSubtitle(MusicPlayer.CurrentPlaying), Mode=OneWay}" FontFamily="{ThemeResource MiSansRegular}"/>
                 </Button>

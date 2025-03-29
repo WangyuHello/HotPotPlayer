@@ -1,5 +1,6 @@
 ﻿using HotPotPlayer.Models;
 using HotPotPlayer.Services;
+using Jellyfin.Sdk.Generated.Models;
 using Microsoft.UI.Composition;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
@@ -143,7 +144,7 @@ namespace HotPotPlayer.Controls
 
         MusicPlayerService MusicPlayer => ((App)Application.Current).MusicPlayer;
 
-        public Visibility GetShowPlayBarVisible(bool playbarVisible, MusicItem currentPlaying)
+        public Visibility GetShowPlayBarVisible(bool playbarVisible, BaseItemDto currentPlaying)
         {
             if (currentPlaying == null)
             {
@@ -152,7 +153,7 @@ namespace HotPotPlayer.Controls
             return playbarVisible ? Visibility.Collapsed : Visibility.Visible;
         }
 
-        public bool GetShowPlayBarLoad(bool playbarVisible, MusicItem currentPlaying)
+        public bool GetShowPlayBarLoad(bool playbarVisible, BaseItemDto currentPlaying)
         {
             if (currentPlaying == null)
             {

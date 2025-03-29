@@ -15,6 +15,7 @@
     xmlns:ui="using:CommunityToolkit.WinUI"
     xmlns:conv="using:HotPotPlayer.UI.Converters"
     xmlns:helper="using:HotPotPlayer.Pages.Helper"
+    xmlns:helper2="using:HotPotPlayer.Helpers"
     >
 
     <helper:LikeGlyphConverter x:Key="LikeGlyphConverter" />
@@ -76,7 +77,7 @@
             Background="White"
             >
             <cont2:ImageEx2 
-                Source="{x:Bind helper:AlbumHelper.GetPrimaryJellyfinImage(ImageTags, Id)}" 
+                Source="{x:Bind helper2:BaseItemDtoHelper.GetPrimaryJellyfinImage(ImageTags, Id)}" 
                 Style="{StaticResource LocalMusicImageStyle}" 
                 x:Phase="2" 
                 />

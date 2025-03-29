@@ -2,6 +2,7 @@
 using HotPotPlayer.Helpers;
 using HotPotPlayer.Models;
 using HotPotPlayer.Models.CloudMusic;
+using Jellyfin.Sdk.Generated.Models;
 using Microsoft.UI.Dispatching;
 using NAudio.Wave;
 using NAudio.Wave.SampleProviders;
@@ -47,9 +48,9 @@ namespace HotPotPlayer.Services
             set => Set(ref _state, value);
         }
 
-        private MusicItem _currentPlaying;
+        private BaseItemDto _currentPlaying;
 
-        public MusicItem CurrentPlaying
+        public BaseItemDto CurrentPlaying
         {
             get => _currentPlaying;
             set => Set(ref _currentPlaying, value);
@@ -67,9 +68,9 @@ namespace HotPotPlayer.Services
             set => Set(ref _currentPlayingIndex, value);
         }
 
-        private ObservableCollection<MusicItem> _currentPlayList;
+        private ObservableCollection<BaseItemDto> _currentPlayList;
 
-        public ObservableCollection<MusicItem> CurrentPlayList
+        public ObservableCollection<BaseItemDto> CurrentPlayList
         {
             get => _currentPlayList;
             set => Set(ref _currentPlayList, value);
@@ -224,91 +225,121 @@ namespace HotPotPlayer.Services
 
         public void PlayNext(MusicItem music)
         {
-            CurrentPlayList = new ObservableCollection<MusicItem>() { music };
-            PlayNext(0);
+            //CurrentPlayList = new ObservableCollection<MusicItem>() { music };
+            //PlayNext(0);
+        }
+
+        public async void PlayNext(BaseItemDto music)
+        {
+            if (music.IsFolder.Value)
+            {
+                // Album
+                var albumItems = await App.JellyfinMusicService.GetAlbumMusicItemsAsync(music);
+                CurrentPlayList = [.. albumItems];
+                PlayNext(0);
+            }
+            else 
+            {
+                // Single Music
+            }
+        }
+
+        public void PlayNext(BaseItemDto music, BaseItemDto album)
+        {
+
         }
 
         public void PlayNext(MusicItem music, IEnumerable<MusicItem> list)
         {
-            CurrentPlayList = new ObservableCollection<MusicItem>(list);
-            var index = CurrentPlayList.IndexOf(music);
-            PlayNext(index);
+            //CurrentPlayList = new ObservableCollection<MusicItem>(list);
+            //var index = CurrentPlayList.IndexOf(music);
+            //PlayNext(index);
         }
 
         public void PlayNext(int index, IEnumerable<MusicItem> list)
         {
-            CurrentPlayList = new ObservableCollection<MusicItem>(list);
-            PlayNext(index);
+            //CurrentPlayList = new ObservableCollection<MusicItem>(list);
+            //PlayNext(index);
         }
 
         public void PlayNextContinue(MusicItem music)
         {
-            var index = CurrentPlayList?.IndexOf(music);
-            PlayNext(index);
+            //var index = CurrentPlayList?.IndexOf(music);
+            //PlayNext(index);
         }
 
         public void PlayNext(MusicItem music, AlbumItem album)
         {
-            if (album != null)
-            {
-                CurrentPlayList = new ObservableCollection<MusicItem>(album.MusicItems);
-                var index = album.MusicItems.IndexOf(music);
-                PlayNext(index);
-            }
-            else
-            {
-                var index = CurrentPlayList?.IndexOf(music);
-                PlayNext(index);
-            }
+            //if (album != null)
+            //{
+            //    CurrentPlayList = new ObservableCollection<MusicItem>(album.MusicItems);
+            //    var index = album.MusicItems.IndexOf(music);
+            //    PlayNext(index);
+            //}
+            //else
+            //{
+            //    var index = CurrentPlayList?.IndexOf(music);
+            //    PlayNext(index);
+            //}
         }
 
         public void PlayNext(MusicItem music, PlayListItem playList)
         {
-            if (playList != null)
-            {
-                CurrentPlayList = new ObservableCollection<MusicItem>(playList.MusicItems);
-                var index = playList.MusicItems.IndexOf(music);
-                PlayNext(index);
-            }
-            else
-            {
-                var index = CurrentPlayList?.IndexOf(music);
-                PlayNext(index);
-            }
+            //if (playList != null)
+            //{
+            //    CurrentPlayList = new ObservableCollection<MusicItem>(playList.MusicItems);
+            //    var index = playList.MusicItems.IndexOf(music);
+            //    PlayNext(index);
+            //}
+            //else
+            //{
+            //    var index = CurrentPlayList?.IndexOf(music);
+            //    PlayNext(index);
+            //}
         }
 
         public void PlayNext(AlbumItem album)
         {
-            if (album.MusicItems == null)
-            {
-                return;
-            }
-            CurrentPlayList = new ObservableCollection<MusicItem>(album.MusicItems);
-            PlayNext(0);
+            //if (album.MusicItems == null)
+            //{
+            //    return;
+            //}
+            //CurrentPlayList = new ObservableCollection<MusicItem>(album.MusicItems);
+            //PlayNext(0);
         }
 
         public void PlayNext(PlayListItem album)
         {
-            CurrentPlayList = new ObservableCollection<MusicItem>(album.MusicItems);
-            PlayNext(0);
+            //CurrentPlayList = new ObservableCollection<MusicItem>(album.MusicItems);
+            //PlayNext(0);
         }
 
         public void AddToPlayList(AlbumItem album)
         {
-            foreach (var item in album.MusicItems)
-            {
-                CurrentPlayList?.Add(item);
-            }
+            //foreach (var item in album.MusicItems)
+            //{
+            //    CurrentPlayList?.Add(item);
+            //}
         }
 
         public void AddToPlayListLast(MusicItem music)
         {
-            CurrentPlayList?.Add(music);
+            //CurrentPlayList?.Add(music);
+        }
+
+        public void AddToPlayListLast(BaseItemDto music)
+        {
+
         }
 
         public void AddToPlayListNext(MusicItem music)
         {
-            CurrentPlayList?.Insert(CurrentPlayingIndex + 1, music);
+            //CurrentPlayList?.Insert(CurrentPlayingIndex + 1, music);
+        }
+
+        public void AddToPlayListNext(BaseItemDto music)
+        {
+
         }
 
         /// <summary>
@@ -500,7 +531,7 @@ namespace HotPotPlayer.Services
             _isMusicSwitching = false;
         }
 
-        private bool LoadMusic(MusicItem music)
+        private bool LoadMusic(BaseItemDto music)
         {
             bool intercept;
             if (_audioStream == null)
@@ -508,13 +539,13 @@ namespace HotPotPlayer.Services
                 var volume = Volume;
                 (_audioStream, intercept) = music switch
                 {
-                    CloudMusicItem c2 => c2.GetSource() switch
-                    {
-                        Uri uri when uri.IsFile => Tuple.Create<WaveStream, bool>(new AudioFileReader(uri.GetLocalPath()), true),
-                        Uri netUri when !netUri.IsFile => Tuple.Create<WaveStream, bool>(new MediaFoundationReader(netUri.OriginalString), false),
-                        _ => throw new NotImplementedException()
-                    },
-                    _ => Tuple.Create<WaveStream, bool>(new AudioFileReader(music.Source.FullName), false)
+                    //CloudMusicItem c2 => c2.GetSource() switch
+                    //{
+                    //    Uri uri when uri.IsFile => Tuple.Create<WaveStream, bool>(new AudioFileReader(uri.GetLocalPath()), true),
+                    //    Uri netUri when !netUri.IsFile => Tuple.Create<WaveStream, bool>(new MediaFoundationReader(netUri.OriginalString), false),
+                    //    _ => throw new NotImplementedException()
+                    //},
+                    _ => Tuple.Create<WaveStream, bool>(new MediaFoundationReader(App.JellyfinMusicService.GetMusicStream(music)), false)
                 };
                 _volumeSample = new(_audioStream.ToSampleProvider());
 
@@ -531,13 +562,13 @@ namespace HotPotPlayer.Services
 
                 (_audioStream, intercept) = music switch
                 {
-                    CloudMusicItem c2 => c2.GetSource() switch
-                    {
-                        Uri uri when uri.IsFile => Tuple.Create<WaveStream, bool>(new AudioFileReader(uri.GetLocalPath()), true),
-                        Uri netUri when !netUri.IsFile => Tuple.Create<WaveStream, bool>(new MediaFoundationReader(netUri.OriginalString), false),
-                        _ => throw new NotImplementedException()
-                    },
-                    _ => Tuple.Create<WaveStream, bool>(new AudioFileReader(music.Source.FullName), false)
+                    //CloudMusicItem c2 => c2.GetSource() switch
+                    //{
+                    //    Uri uri when uri.IsFile => Tuple.Create<WaveStream, bool>(new AudioFileReader(uri.GetLocalPath()), true),
+                    //    Uri netUri when !netUri.IsFile => Tuple.Create<WaveStream, bool>(new MediaFoundationReader(netUri.OriginalString), false),
+                    //    _ => throw new NotImplementedException()
+                    //},
+                    _ => Tuple.Create<WaveStream, bool>(new MediaFoundationReader(App.JellyfinMusicService.GetMusicStream(music)), false)
                 };
 
                 _volumeSample = new(_audioStream.ToSampleProvider())
@@ -552,16 +583,16 @@ namespace HotPotPlayer.Services
 
         private async void PreCacheNextMusic(int index)
         {
-            index += 1;
-            if (index > CurrentPlayList.Count - 1)
-            {
-                return;
-            }
-            var next = CurrentPlayList[index];
-            if (next.PlayListRef != null)
-            {
-                await ImageCacheEx.Instance.PreCacheAsync(next.Cover);
-            }
+            //index += 1;
+            //if (index > CurrentPlayList.Count - 1)
+            //{
+            //    return;
+            //}
+            //var next = CurrentPlayList[index];
+            //if (next.PlayListRef != null)
+            //{
+            //    await ImageCacheEx.Instance.PreCacheAsync(next.Cover);
+            //}
         }
 
         private void PlayerStarterCompleted(object sender, RunWorkerCompletedEventArgs e)
@@ -574,7 +605,7 @@ namespace HotPotPlayer.Services
                     HasError = false;
                     IsPlaying = true;
                     var music = CurrentPlayList[index];
-                    music.IsIntercept = intercept;
+                    //music.IsIntercept = intercept;
                     CurrentPlaying = music;
                     CurrentPlayingIndex = index;
                     _playerTimer.Start();
@@ -738,33 +769,34 @@ namespace HotPotPlayer.Services
         /// <param name="index"></param>
         private async void UpdateMstcInfoAsync(int index)
         {
-            SMTC.PlaybackStatus = MediaPlaybackStatus.Playing;
-            var music = CurrentPlayList[index];
-            if (music is CloudMusicItem c)
-            {
-                SystemMediaTransportControlsDisplayUpdater updater = SMTC.DisplayUpdater;
+            //TODO MSTC
+            //SMTC.PlaybackStatus = MediaPlaybackStatus.Playing;
+            //var music = CurrentPlayList[index];
+            //if (false) //TODO cloudmusic
+            //{
+            //    SystemMediaTransportControlsDisplayUpdater updater = SMTC.DisplayUpdater;
 
-                updater.Type = MediaPlaybackType.Music;
-                updater.MusicProperties.Artist = c.GetArtists();
-                updater.MusicProperties.Title = c.Title;
-                updater.Thumbnail = RandomAccessStreamReference.CreateFromUri(c.Cover);
+            //    updater.Type = MediaPlaybackType.Music;
+            //    updater.MusicProperties.Artist = c.GetArtists();
+            //    updater.MusicProperties.Title = c.Title;
+            //    updater.Thumbnail = RandomAccessStreamReference.CreateFromUri(c.Cover);
 
-            }
-            else
-            {
-                var mediaFile = await StorageFile.GetFileFromPathAsync(music.Source.FullName);
-                bool copyFromFileAsyncSuccessful;
-                try
-                {
-                    copyFromFileAsyncSuccessful = await SMTC.DisplayUpdater.CopyFromFileAsync(MediaPlaybackType.Music, mediaFile);
-                }
-                catch (Exception)
-                {
+            //}
+            //else
+            //{
+            //    var mediaFile = await StorageFile.GetFileFromPathAsync(music.Source.FullName);
+            //    bool copyFromFileAsyncSuccessful;
+            //    try
+            //    {
+            //        copyFromFileAsyncSuccessful = await SMTC.DisplayUpdater.CopyFromFileAsync(MediaPlaybackType.Music, mediaFile);
+            //    }
+            //    catch (Exception)
+            //    {
 
-                }
-            }
+            //    }
+            //}
 
-            SMTC.DisplayUpdater.Update();
+            //SMTC.DisplayUpdater.Update();
         }
     }
 }

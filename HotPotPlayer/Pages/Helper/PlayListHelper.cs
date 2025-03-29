@@ -34,7 +34,7 @@ namespace HotPotPlayer.Pages.Helper
             }
             else
             {
-                foreach (var item in LocalMusicService.LocalPlayListList)
+                foreach (var item in JellyfinMusicService.LocalPlayListList)
                 {
                     i = new MenuFlyoutItem
                     {

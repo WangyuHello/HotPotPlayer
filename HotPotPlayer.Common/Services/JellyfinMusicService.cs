@@ -49,6 +49,9 @@ namespace HotPotPlayer.Services
         }
         #endregion
         #region Field
+        private string devideId;
+        public string DevideId => devideId ??= $"this-is-my-device-id-{Guid.NewGuid():N}";
+
         private JellyfinSdkSettings sdkClientSettings;
 
         public JellyfinSdkSettings SdkClientSettings
@@ -62,7 +65,7 @@ namespace HotPotPlayer.Services
                         "My-Jellyfin-Client",
                         "0.0.1",
                         "Sample Device",
-                        $"this-is-my-device-id-{Guid.NewGuid():N}");
+                        DevideId);
                     sdkClientSettings.SetServerUrl(Config.GetConfig<string>("JellyfinUrl"));
                 }
                 return sdkClientSettings;
@@ -146,6 +149,7 @@ namespace HotPotPlayer.Services
                 {
                     _localAlbumGroup.AddGroup(albumGroup);
                 }
+                LocalPlayListList = new();
             });
 
             //foreach (var view in views.Items)
@@ -212,6 +216,42 @@ namespace HotPotPlayer.Services
             return result.Items;
         }
 
+        public async Task<BaseItemDto> GetAlbumInfoAsync(BaseItemDto album)
+        {
+            var result = await JellyfinApiClient.Items[album.Id.Value].GetAsync(param =>
+            {
+                param.QueryParameters = new Jellyfin.Sdk.Generated.Items.Item.WithItemItemRequestBuilder.WithItemItemRequestBuilderGetQueryParameters
+                {
+                    UserId = userDto.Id,
+                };
+            }).ConfigureAwait(false);
+            
+            return result;
+        }
+
+        public string GetMusicStream(BaseItemDto music)
+        {
+            var req = JellyfinApiClient.Audio[music.Id.Value].Universal.ToGetRequestInformation(param =>
+            {
+                param.QueryParameters = new Jellyfin.Sdk.Generated.Audio.Item.Universal.UniversalRequestBuilder.UniversalRequestBuilderGetQueryParameters
+                {
+                    UserId = userDto.Id.Value,
+                    DeviceId = DevideId,
+                    MaxStreamingBitrate = 876421732,
+                    Container = ["opus","webm|opus","ts|mp3","mp3","aac","m4a|aac","m4b|aac","flac","webma","webm|webma","wav","ogg"],
+                    TranscodingContainer = "mp4",
+                    TranscodingProtocol = Jellyfin.Sdk.Generated.Audio.Item.Universal.MediaStreamProtocol.Hls,
+                    AudioCodec = "aac",
+                    StartTimeTicks = 0,
+                    EnableRedirection = false,
+                    EnableRemoteMedia = false,
+                    EnableAudioVbrEncoding = false,
+                };
+            });
+            var uri = JellyfinApiClient.BuildUri(req);
+            return uri.ToString();
+        }
+
         sealed class PlayListItemComparer : EqualityComparer<PlayListItemDb>
         {
             public override bool Equals(PlayListItemDb x, PlayListItemDb y)
@@ -274,6 +314,7 @@ namespace HotPotPlayer.Services
 
         public override void Dispose()
         {
+            JellyfinApiClient.Dispose();
             base.Dispose();
         }
     }

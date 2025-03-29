@@ -24,21 +24,22 @@ namespace HotPotPlayer.Pages.Helper
             
             var element = sender as FrameworkElement;
             var comment = element.DataContext as CloudCommentItem;
-            var music = MusicPlayer.CurrentPlaying as CloudMusicItem;
+            //TODO cloudmusic
+            //var music = MusicPlayer.CurrentPlaying as CloudMusicItem;
 
-            ObservableCollection<CloudCommentItem> l = new(await NetEaseMusicService.GetSongCommentFloorAsync(music.SId, comment.CommentId));
+            //ObservableCollection<CloudCommentItem> l = new(await NetEaseMusicService.GetSongCommentFloorAsync(music.SId, comment.CommentId));
 
-            ContentDialog dialog = new()
-            {
-                Title = $"回复({l.Count})",
-                CloseButtonText = "关闭",
-                DefaultButton = ContentDialogButton.Close,
-                Content = new CommentFloorDialog(l, comment),
-                XamlRoot = element.XamlRoot,
-                Style = App.Resources["DefaultContentDialogStyle"] as Style
-            };
+            //ContentDialog dialog = new()
+            //{
+            //    Title = $"回复({l.Count})",
+            //    CloseButtonText = "关闭",
+            //    DefaultButton = ContentDialogButton.Close,
+            //    Content = new CommentFloorDialog(l, comment),
+            //    XamlRoot = element.XamlRoot,
+            //    Style = App.Resources["DefaultContentDialogStyle"] as Style
+            //};
 
-            var result = await dialog.ShowAsync();
+            //var result = await dialog.ShowAsync();
         }
 
         public static void ShowCommentInput(object sender, RoutedEventArgs e)

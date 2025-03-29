@@ -7,12 +7,14 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:model="using:HotPotPlayer.Models"
+    xmlns:jmodel="using:Jellyfin.Sdk.Generated.Models"
     xmlns:helper="using:HotPotPlayer.Pages.Helper"
+    xmlns:helper2="using:HotPotPlayer.Helpers"
     xmlns:sel="using:HotPotPlayer.UI.Templates.Selectors"
     mc:Ignorable="d">
 
     <base:UserControlBase.Resources>
-        <DataTemplate x:Key="PlayListBarListTemplate" x:DataType="model:MusicItem">
+        <DataTemplate x:Key="PlayListBarListTemplate" x:DataType="jmodel:BaseItemDto">
             <Grid RightTapped="{x:Bind helper:ListHelper.RightTapMusicInCurrentPlayListClick}">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="32" />
@@ -21,17 +23,17 @@
                     <ColumnDefinition Width="Auto" />
                 </Grid.ColumnDefinitions>
                 <StackPanel Grid.Column="1" Margin="0,0,8,0">
-                    <TextBlock Foreground="White" Text="{x:Bind Title}" FontSize="14" TextTrimming="CharacterEllipsis" FontFamily="{ThemeResource MiSansRegular}"/>
-                    <TextBlock Foreground="WhiteSmoke" Text="{x:Bind GetArtists()}" FontSize="12" TextTrimming="CharacterEllipsis" FontFamily="{ThemeResource MiSansRegular}"/>
+                    <TextBlock Foreground="White" Text="{x:Bind Name}" FontSize="14" TextTrimming="CharacterEllipsis" FontFamily="{ThemeResource MiSansRegular}"/>
+                    <TextBlock Foreground="WhiteSmoke" Text="{x:Bind helper2:BaseItemDtoHelper.GetJellyfinArtists(Artists)}" FontSize="12" TextTrimming="CharacterEllipsis" FontFamily="{ThemeResource MiSansRegular}"/>
                 </StackPanel>
-                <TextBlock Grid.Column="2" Foreground="White" Text="{x:Bind Duration.ToString('mm\\\\:ss')}" VerticalAlignment="Center" FontFamily="{ThemeResource MiSansRegular}"/>
+                <TextBlock Grid.Column="2" Foreground="White" Text="{x:Bind helper2:BaseItemDtoHelper.GetJellyfinDuration(RunTimeTicks)}" VerticalAlignment="Center" FontFamily="{ThemeResource MiSansRegular}"/>
                 <Button Grid.Column="3" Foreground="White" Style="{StaticResource TransparentWhiteButton}" Margin="8,0,0,0" Padding="4" CornerRadius="8" Tag="{x:Bind }" Click="{x:Bind helper:ListHelper.RightTapMusicInCurrentPlayListClick}">
                     <SymbolIcon Symbol="More" />
                 </Button>
             </Grid>
         </DataTemplate>
 
-        <DataTemplate x:Key="PlayListBarListSelectedTemplate" x:DataType="model:MusicItem">
+        <DataTemplate x:Key="PlayListBarListSelectedTemplate" x:DataType="jmodel:BaseItemDto">
             <Grid RightTapped="{x:Bind helper:ListHelper.RightTapMusicInCurrentPlayListClick}">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="32" />
@@ -41,10 +43,10 @@
                 </Grid.ColumnDefinitions>
                 <FontIcon FontFamily="{ThemeResource SegoeIcons}" Glyph="&#xE013;" VerticalAlignment="Center" HorizontalAlignment="Center" Foreground="White"/>
                 <StackPanel Grid.Column="1" Margin="0,0,8,0">
-                    <TextBlock Foreground="White" Text="{x:Bind Title}" FontSize="14" TextTrimming="CharacterEllipsis" FontFamily="{ThemeResource MiSansRegular}"/>
-                    <TextBlock Foreground="WhiteSmoke" Text="{x:Bind GetArtists()}" FontSize="12" TextTrimming="CharacterEllipsis" FontFamily="{ThemeResource MiSansRegular}"/>
+                    <TextBlock Foreground="White" Text="{x:Bind Name}" FontSize="14" TextTrimming="CharacterEllipsis" FontFamily="{ThemeResource MiSansRegular}"/>
+                    <TextBlock Foreground="WhiteSmoke" Text="{x:Bind helper2:BaseItemDtoHelper.GetJellyfinArtists(Artists)}" FontSize="12" TextTrimming="CharacterEllipsis" FontFamily="{ThemeResource MiSansRegular}"/>
                 </StackPanel>
-                <TextBlock Grid.Column="2" Foreground="White" Text="{x:Bind Duration.ToString('mm\\\\:ss')}" VerticalAlignment="Center" FontFamily="{ThemeResource MiSansRegular}"/>
+                <TextBlock Grid.Column="2" Foreground="White" Text="{x:Bind helper2:BaseItemDtoHelper.GetJellyfinDuration(RunTimeTicks)}" VerticalAlignment="Center" FontFamily="{ThemeResource MiSansRegular}"/>
                 <Button Grid.Column="3" Foreground="White" Style="{StaticResource TransparentWhiteButton}" Margin="8,0,0,0" Padding="4" CornerRadius="8" Tag="{x:Bind }" Click="{x:Bind helper:ListHelper.RightTapMusicInCurrentPlayListClick}">
                     <SymbolIcon Symbol="More" />
                 </Button>

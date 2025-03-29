@@ -6,6 +6,7 @@
     xmlns:modelsC="using:HotPotPlayer.Models.CloudMusic"
     xmlns:jmodel="using:Jellyfin.Sdk.Generated.Models"
     xmlns:helper="using:HotPotPlayer.Pages.Helper"
+    xmlns:helper2="using:HotPotPlayer.Helpers"
     xmlns:conv="using:HotPotPlayer.UI.Converters"
     xmlns:cont2="using:HotPotPlayer.UI.Controls"
     xmlns:cont3="using:HotPotPlayer.Controls.BilibiliSub"
@@ -60,8 +61,8 @@
                     </Grid.ColumnDefinitions>
                     <TextBlock Text="{x:Bind IndexNumber}" VerticalAlignment="Center"/>
                     <TextBlock Grid.Column="1" Text="{x:Bind Name}" TextTrimming="CharacterEllipsis" VerticalAlignment="Center" />
-                    <HyperlinkButton Grid.Column="2" Content="{x:Bind helper:AlbumHelper.GetJellyfinArtists(Artists)}" VerticalAlignment="Center" Click="{x:Bind helper:AlbumHelper.ArtistClick}" Tag="{x:Bind }"  FontFamily="{ThemeResource MiSansRegular}"/>
-                    <TextBlock Grid.Column="3" Text="00:00:00" VerticalAlignment="Center" />
+                    <HyperlinkButton Grid.Column="2" Content="{x:Bind helper2:BaseItemDtoHelper.GetJellyfinArtists(Artists)}" VerticalAlignment="Center" Click="{x:Bind helper:AlbumHelper.ArtistClick}" Tag="{x:Bind }"  FontFamily="{ThemeResource MiSansRegular}"/>
+                    <TextBlock Grid.Column="3" Text="{x:Bind helper2:BaseItemDtoHelper.GetJellyfinDuration(RunTimeTicks)}" VerticalAlignment="Center" />
                     <Button Grid.Column="4" Style="{StaticResource TransparentButton}" Margin="16,0,0,0" CornerRadius="4" Padding="4" Tag="{x:Bind }" Click="{x:Bind helper:ListHelper.RightTapMusicInListClick}" >
                         <SymbolIcon Symbol="More" />
                     </Button>
@@ -81,8 +82,8 @@
                     </Grid.ColumnDefinitions>
                     <TextBlock Text="{x:Bind IndexNumber}" VerticalAlignment="Center" />
                     <TextBlock Grid.Column="1" Text="{x:Bind Name}" TextTrimming="CharacterEllipsis" VerticalAlignment="Center" />
-                    <HyperlinkButton Grid.Column="2" Content="{x:Bind helper:AlbumHelper.GetJellyfinArtists(Artists)}" VerticalAlignment="Center" Click="{x:Bind helper:AlbumHelper.ArtistClick}" Tag="{x:Bind }"  FontFamily="{ThemeResource MiSansRegular}"/>
-                    <TextBlock Grid.Column="3" Text="00:00:00" VerticalAlignment="Center" />
+                    <HyperlinkButton Grid.Column="2" Content="{x:Bind helper2:BaseItemDtoHelper.GetJellyfinArtists(Artists)}" VerticalAlignment="Center" Click="{x:Bind helper:AlbumHelper.ArtistClick}" Tag="{x:Bind }"  FontFamily="{ThemeResource MiSansRegular}"/>
+                    <TextBlock Grid.Column="3" Text="{x:Bind helper2:BaseItemDtoHelper.GetJellyfinDuration(RunTimeTicks)}" VerticalAlignment="Center" />
                     <Button Grid.Column="4" Style="{StaticResource TransparentButton}" Margin="16,0,0,0" CornerRadius="4" Padding="4" Tag="{x:Bind }" Click="{x:Bind helper:ListHelper.RightTapMusicInListClick}">
                         <SymbolIcon Symbol="More" />
                     </Button>

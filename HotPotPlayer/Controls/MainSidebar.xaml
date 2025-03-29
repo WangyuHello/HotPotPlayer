@@ -9,6 +9,7 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:ui="using:CommunityToolkit.WinUI"
     xmlns:interactivity="using:Microsoft.Xaml.Interactivity"
+    xmlns:helper2="using:HotPotPlayer.Helpers"
     mc:Ignorable="d">
 
     <UserControl.Resources>
@@ -44,7 +45,7 @@
             <FontIcon FontFamily="{ThemeResource BiliIcons}" Glyph="&#xEA08;" />
         </Button>
         <Button x:Name="ShowPlayBar" Grid.Row="6" Style="{StaticResource MainNavButton}" VerticalAlignment="Bottom" Visibility="{x:Bind GetShowPlayBarVisible(MusicPlayer.IsPlayBarVisible, MusicPlayer.CurrentPlaying), Mode=OneWay}" x:Load="{x:Bind GetShowPlayBarLoad(MusicPlayer.IsPlayBarVisible, MusicPlayer.CurrentPlaying), Mode=OneWay}" Click="{x:Bind MusicPlayer.ShowPlayBar}" ui:VisualExtensions.NormalizedCenterPoint="0.5" Loaded="ShowPlayBar_Loaded">
-            <cont:ImageEx2 Style="{StaticResource LocalMusicImageStyle}" Width="32" Height="32" CornerRadius="16" Source="{x:Bind MusicPlayer.CurrentPlaying.Cover, Mode=OneWay}"/>
+            <cont:ImageEx2 Style="{StaticResource LocalMusicImageStyle}" Width="32" Height="32" CornerRadius="16" Source="{x:Bind helper2:BaseItemDtoHelper.GetPrimaryJellyfinImage(MusicPlayer.CurrentPlaying.ImageTags, MusicPlayer.CurrentPlaying.Id), Mode=OneWay}"/>
 
             <ani:Explicit.Animations>
                 <ani:AnimationSet x:Name="RotateAnimation">

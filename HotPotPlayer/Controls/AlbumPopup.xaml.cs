@@ -45,17 +45,21 @@ namespace HotPotPlayer.Controls
         [ObservableProperty]
         private List<BaseItemDto> albumMusicItems;
 
+        [ObservableProperty]
+        private BaseItemDto albumInfo;
+
         private static async void AlbumChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
             var @this = (AlbumPopup)d;
             @this.AlbumMusicItems = await @this.JellyfinMusicService.GetAlbumMusicItemsAsync(@this.Album);
+            @this.AlbumInfo = await @this.JellyfinMusicService.GetAlbumInfoAsync(@this.Album);
             //AlbumHelper.InitSplitButtonFlyout(@this.AlbumSplitButton, @this.Album);
         }
 
         private void ListView_ItemClick(object sender, ItemClickEventArgs e)
         {
             var music = e.ClickedItem as BaseItemDto;
-            //MusicPlayer.PlayNext(music, Album);
+            MusicPlayer.PlayNext(music, Album);
         }
     }
 }

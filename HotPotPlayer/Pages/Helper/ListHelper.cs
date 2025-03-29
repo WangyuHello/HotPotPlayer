@@ -2,6 +2,7 @@
 using HotPotPlayer.Models;
 using HotPotPlayer.Models.CloudMusic;
 using HotPotPlayer.Services;
+using Jellyfin.Sdk.Generated.Models;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Input;
@@ -36,7 +37,7 @@ namespace HotPotPlayer.Pages.Helper
         internal static void RightTapMusicInListClick(object sender, RoutedEventArgs e)
         {
             var _element = (FrameworkElement)sender;
-            var music = (MusicItem)_element.DataContext;
+            var music = (BaseItemDto)_element.DataContext;
 
             if (_element.ContextFlyout == null)
             {
@@ -77,21 +78,21 @@ namespace HotPotPlayer.Pages.Helper
                 i.Click += (s, e) => AlbumHelper.AddToNewPlayList(music);
                 sub.Items.Add(i);
 
-                if (music is CloudMusicItem c)
+                if (false) //TODO cloudmusic
                 {
-                    foreach (var item in NetEaseMusicService.UserPlayLists)
-                    {
-                        i = new MenuFlyoutItem
-                        {
-                            Text = item.Title,
-                        };
-                        i.Click += (s, e) => NetEaseMusicService.AddMusicToPlayList(item, c);
-                        sub.Items.Add(i);
-                    }
+                    //foreach (var item in NetEaseMusicService.UserPlayLists)
+                    //{
+                    //    i = new MenuFlyoutItem
+                    //    {
+                    //        Text = item.Title,
+                    //    };
+                    //    i.Click += (s, e) => NetEaseMusicService.AddMusicToPlayList(item, c);
+                    //    sub.Items.Add(i);
+                    //}
                 }
                 else
                 {
-                    foreach (var item in LocalMusicService.LocalPlayListList)
+                    foreach (var item in JellyfinMusicService.LocalPlayListList)
                     {
                         i = new MenuFlyoutItem
                         {
@@ -180,7 +181,7 @@ namespace HotPotPlayer.Pages.Helper
                 }
                 else
                 {
-                    foreach (var item in LocalMusicService.LocalPlayListList)
+                    foreach (var item in JellyfinMusicService.LocalPlayListList)
                     {
                         i = new MenuFlyoutItem
                         {
@@ -198,21 +199,21 @@ namespace HotPotPlayer.Pages.Helper
                     Text = "删除",
                     Icon = new SymbolIcon { Symbol = Symbol.Clear },
                 };
-                i.Click += (s, e) => LocalMusicService.PlayListMusicDelete(music);
+                i.Click += (s, e) => JellyfinMusicService.PlayListMusicDelete(music);
                 flyout.Items.Add(i);
                 i = new MenuFlyoutItem
                 {
                     Text = "上移",
                     Icon = new SymbolIcon { Symbol = Symbol.Up },
                 };
-                i.Click += (s, e) => LocalMusicService.PlayListMusicUp(music);
+                i.Click += (s, e) => JellyfinMusicService.PlayListMusicUp(music);
                 flyout.Items.Add(i);
                 i = new MenuFlyoutItem
                 {
                     Text = "下移",
                     Icon = new FontIcon { FontFamily = (FontFamily)Application.Current.Resources["SegoeIcons"], Glyph = "\uE74B" },
                 };
-                i.Click += (s, e) => LocalMusicService.PlayListMusicDown(music);
+                i.Click += (s, e) => JellyfinMusicService.PlayListMusicDown(music);
                 flyout.Items.Add(i);
                 i = new MenuFlyoutItem
                 {
@@ -291,7 +292,7 @@ namespace HotPotPlayer.Pages.Helper
                 }
                 else
                 {
-                    foreach (var item in LocalMusicService.LocalPlayListList)
+                    foreach (var item in JellyfinMusicService.LocalPlayListList)
                     {
                         i = new MenuFlyoutItem
                         {
@@ -381,7 +382,7 @@ namespace HotPotPlayer.Pages.Helper
                 }
                 else
                 {
-                    foreach (var item in LocalMusicService.LocalPlayListList)
+                    foreach (var item in JellyfinMusicService.LocalPlayListList)
                     {
                         i = new MenuFlyoutItem
                         {
@@ -468,7 +469,7 @@ namespace HotPotPlayer.Pages.Helper
                 }
                 else
                 {
-                    foreach (var item in LocalMusicService.LocalPlayListList)
+                    foreach (var item in JellyfinMusicService.LocalPlayListList)
                     {
                         i = new MenuFlyoutItem
                         {

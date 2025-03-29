@@ -7,6 +7,7 @@
     xmlns:animations="using:CommunityToolkit.WinUI.Animations"
     xmlns:cont2="using:HotPotPlayer.UI.Controls"
     xmlns:helper="using:HotPotPlayer.Pages.Helper"
+    xmlns:helper2="using:HotPotPlayer.Helpers"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d"
     >
@@ -47,7 +48,7 @@
                 <ColumnDefinition Width="*" />
             </Grid.ColumnDefinitions>
 
-            <cont2:ImageEx2 Source="{x:Bind helper:AlbumHelper.GetPrimaryJellyfinImage(Album.ImageTags, Album.Id), Mode=OneWay}" Style="{StaticResource LocalAlbumPopupImageStyle}" />
+            <cont2:ImageEx2 Source="{x:Bind helper2:BaseItemDtoHelper.GetPrimaryJellyfinImage(Album.ImageTags, Album.Id), Mode=OneWay}" Style="{StaticResource LocalAlbumPopupImageStyle}" />
             <StackPanel Grid.Column="1" Margin="16,0,0,0" >
                 <TextBlock Text="{x:Bind Album.Name, Mode=OneWay}" MaxLines="2" FontSize="32" TextWrapping="Wrap" TextTrimming="CharacterEllipsis" FontFamily="{ThemeResource MiSansMedium}">
 
@@ -58,6 +59,9 @@
                 <HyperlinkButton Content="{x:Bind Album.AlbumArtist, Mode=OneWay}" Padding="0,4" FontSize="18" Margin="0,4,0,0" Tag="{x:Bind Album, Mode=OneWay}" Click="{x:Bind helper:AlbumHelper.ArtistClick2}" FontFamily="{ThemeResource MiSansRegular}">
 
                 </HyperlinkButton>
+                <ScrollViewer Margin="0,4,0,0">
+                    <TextBlock Text="{x:Bind AlbumInfo.Overview, Mode=OneWay}" TextWrapping="Wrap" TextTrimming="CharacterEllipsis" FontFamily="{StaticResource MiSansRegular}" IsTextSelectionEnabled="True"/>
+                </ScrollViewer>
                 <Grid Margin="0,12,0,0">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="Auto"/>

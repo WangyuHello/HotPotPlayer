@@ -33,12 +33,17 @@ namespace HotPotPlayer.Pages.Helper
 
         internal static void AlbumAddToPlayList(string playList, AlbumItem selectedAlbum)
         {
-            LocalMusicService.AddAlbumToPlayList(playList, selectedAlbum);
+            JellyfinMusicService.AddAlbumToPlayList(playList, selectedAlbum);
         }
 
         internal static void MusicAddToPlayList(string playList, MusicItem music)
         {
-            LocalMusicService.AddMusicToPlayList(playList, music);
+            JellyfinMusicService.AddMusicToPlayList(playList, music);
+        }
+
+        internal static void MusicAddToPlayList(string playList, BaseItemDto music)
+        {
+
         }
 
         internal static void AlbumDetailClick(object sender, RoutedEventArgs e)
@@ -64,7 +69,7 @@ namespace HotPotPlayer.Pages.Helper
         internal static void AlbumPlay(object sender, RoutedEventArgs e)
         {
             var button = sender as Button;
-            var selectedAlbum = button.Tag as AlbumItem;
+            var selectedAlbum = button.Tag as BaseItemDto;
             MusicPlayer.PlayNext(selectedAlbum);
         }
 
@@ -286,7 +291,7 @@ namespace HotPotPlayer.Pages.Helper
                 i.Click += (s, e) => AddToNewPlayList(music);
                 sub.Items.Add(i);
 
-                foreach (var item in LocalMusicService.LocalPlayListList)
+                foreach (var item in JellyfinMusicService.LocalPlayListList)
                 {
                     i = new MenuFlyoutItem
                     {
@@ -377,7 +382,7 @@ namespace HotPotPlayer.Pages.Helper
                 };
                 sub.Items.Add(i);
 
-                foreach (var item in LocalMusicService.LocalPlayListList)
+                foreach (var item in JellyfinMusicService.LocalPlayListList)
                 {
                     i = new MenuFlyoutItem
                     {
@@ -392,21 +397,21 @@ namespace HotPotPlayer.Pages.Helper
                     Text = "删除",
                     Icon = new SymbolIcon { Symbol = Symbol.Clear },
                 };
-                i.Click += (s, e) => LocalMusicService.PlayListMusicDelete(music);
+                i.Click += (s, e) => JellyfinMusicService.PlayListMusicDelete(music);
                 flyout.Items.Add(i);
                 i = new MenuFlyoutItem
                 {
                     Text = "上移",
                     Icon = new SymbolIcon { Symbol = Symbol.Up },
                 };
-                i.Click += (s, e) => LocalMusicService.PlayListMusicUp(music);
+                i.Click += (s, e) => JellyfinMusicService.PlayListMusicUp(music);
                 flyout.Items.Add(i);
                 i = new MenuFlyoutItem
                 {
                     Text = "下移",
                     Icon = new FontIcon { FontFamily = (FontFamily)Application.Current.Resources["SegoeIcons"], Glyph = "\uE74B" },
                 };
-                i.Click += (s, e) => LocalMusicService.PlayListMusicDown(music);
+                i.Click += (s, e) => JellyfinMusicService.PlayListMusicDown(music);
                 flyout.Items.Add(i);
                 i = new MenuFlyoutItem
                 {
@@ -448,9 +453,14 @@ namespace HotPotPlayer.Pages.Helper
                 var title = page.Title.Text;
                 if (!string.IsNullOrEmpty(title))
                 {
-                    LocalMusicService.NewPlayList(title, music);
+                    JellyfinMusicService.NewPlayList(title, music);
                 }
             }
+        }
+
+        public static void AddToNewPlayList(BaseItemDto music)
+        {
+
         }
 
         public static void InitSplitButtonFlyout(SplitButton targetButton, AlbumItem album)
@@ -475,7 +485,7 @@ namespace HotPotPlayer.Pages.Helper
                 Icon = new SymbolIcon { Symbol = Symbol.Add },
             };
             flyout.Items.Add(i1);
-            foreach (var item in LocalMusicService.LocalPlayListList)
+            foreach (var item in JellyfinMusicService.LocalPlayListList)
             {
                 var i = new MenuFlyoutItem
                 {
@@ -491,17 +501,6 @@ namespace HotPotPlayer.Pages.Helper
         public static void SuppressTap(object sender, TappedRoutedEventArgs e)
         {
             e.Handled = true;
-        }
-
-        public static Uri GetPrimaryJellyfinImage(BaseItemDto_ImageTags tag, Guid? parentId)
-        {
-            var JellyfinMusicService = ((IComponentServiceLocator)Application.Current).JellyfinMusicService;
-            return JellyfinMusicService.GetPrimaryJellyfinImage(tag, parentId);
-        }
-
-        public static string GetJellyfinArtists(List<string> artists)
-        {
-            return string.Join(", ", artists);
         }
     }
 }

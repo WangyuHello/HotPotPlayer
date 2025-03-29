@@ -27,11 +27,12 @@ namespace HotPotPlayer.Pages.Helper
 
         public static void PlayScreenLike()
         {
-            if (MusicPlayer.CurrentPlaying is CloudMusicItem c)
-            {
-                var like = NetEaseMusicService.GetSongLiked(c);
-                //NetEaseMusicService.Like(c, !like);
-            }
+            // TODO cloudmusic
+            //if (MusicPlayer.CurrentPlaying is CloudMusicItem c)
+            //{
+            //    var like = NetEaseMusicService.GetSongLiked(c);
+            //    //NetEaseMusicService.Like(c, !like);
+            //}
         }
     }
 

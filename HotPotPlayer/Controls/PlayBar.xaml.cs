@@ -1,8 +1,10 @@
 ﻿using HotPotPlayer.Extensions;
+using HotPotPlayer.Helpers;
 using HotPotPlayer.Models;
 using HotPotPlayer.Models.CloudMusic;
 using HotPotPlayer.Pages.Helper;
 using HotPotPlayer.Services;
+using Jellyfin.Sdk.Generated.Models;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Controls.Primitives;
@@ -35,13 +37,13 @@ namespace HotPotPlayer.Controls
             PlaySlider.AddHandler(PointerPressedEvent, new PointerEventHandler(PlaySlider_OnPointerPressed), true);
         }
 
-        string GetSubtitle(MusicItem music)
+        string GetSubtitle(BaseItemDto music)
         {
             if (music == null)
             {
                 return string.Empty;
             }
-            return $"{music.GetArtists()} · {music.Album}";
+            return $"{BaseItemDtoHelper.GetJellyfinArtists(music.Artists)} · {music.Album}";
         }
 
         Symbol GetPlayButtonSymbol(bool isPlaying, bool hasError)
@@ -145,24 +147,24 @@ namespace HotPotPlayer.Controls
             var button = sender as Button;
             var flyout = new MenuFlyout();
 
-            if (MusicPlayer.CurrentPlaying is CloudMusicItem c)
+            if (false) //TODO cloudmusic
             {
-                var artists = c.Artists2;
-                foreach (var a in artists)
-                {
-                    var item = new MenuFlyoutItem
-                    {
-                        Text = a.Name,
-                        Icon = new SymbolIcon { Symbol = Symbol.Contact },
-                        Tag = a
-                    };
-                    item.Click += AlbumHelper.ArtistClick;
-                    flyout.Items.Add(item);
-                }
+                //var artists = c.Artists2;
+                //foreach (var a in artists)
+                //{
+                //    var item = new MenuFlyoutItem
+                //    {
+                //        Text = a.Name,
+                //        Icon = new SymbolIcon { Symbol = Symbol.Contact },
+                //        Tag = a
+                //    };
+                //    item.Click += AlbumHelper.ArtistClick;
+                //    flyout.Items.Add(item);
+                //}
             }
             else
             {
-                var artists = MusicPlayer.CurrentPlaying.GetArtists().GetArtists();
+                var artists = MusicPlayer.CurrentPlaying.Artists;
                 foreach (var a in artists)
                 {
                     var item = new MenuFlyoutItem
@@ -198,7 +200,7 @@ namespace HotPotPlayer.Controls
 
         private void Cover_SourceGotFromCache(ImageSource obj)
         {
-            CoverImage = MusicPlayer.CurrentPlaying.Cover;
+            CoverImage = JellyfinMusicService.GetPrimaryJellyfinImage(MusicPlayer.CurrentPlaying.ImageTags, MusicPlayer.CurrentPlaying.Id);
         }
     }
 }
