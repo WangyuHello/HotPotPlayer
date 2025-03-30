@@ -1,4 +1,6 @@
 ﻿using HotPotPlayer.Models;
+using HotPotPlayer.Pages.CloudMusicSub;
+using Jellyfin.Sdk.Generated.Models;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Controls.Primitives;
@@ -33,23 +35,77 @@ namespace HotPotPlayer.Pages.MusicSub
             this.InitializeComponent();
         }
 
-        private MusicItem _music;
-        public MusicItem Music
+        private BaseItemDto _music;
+        public BaseItemDto Music
         {
             get => _music;
             set => Set(ref _music, value);
         }
 
-        protected override void OnNavigatedTo(NavigationEventArgs e)
+        protected override async void OnNavigatedTo(NavigationEventArgs e)
         {
-            Music = e.Parameter as MusicItem;
+            var origin = e.Parameter as BaseItemDto;
+            Music = await JellyfinMusicService.GetMusicInfoAsync(origin);
             base.OnNavigatedTo(e);
         }
 
-        private async void OpenFileClick(object sender, RoutedEventArgs e)
+        private void OpenFileClick(object sender, RoutedEventArgs e)
         {
-            var path = Music.Source.Directory;
-            await Launcher.LaunchFolderPathAsync(path.FullName);
+            //var path = Music.Source.Directory;
+            //await Launcher.LaunchFolderPathAsync(path.FullName);
+        }
+
+        private string GetAlbumArtists(List<NameGuidPair> artists)
+        {
+            return string.Join(", ", artists.Select(a => a.Name));
+        }
+
+        private string GetArtists(List<string> artists)
+        {
+            return string.Join(", ", artists);
+        }
+
+        private string GetGenres(List<string> geners)
+        {
+            return string.Join(", ", geners);
+        }
+
+        private string GetSampleRate(List<MediaStream> streams)
+        {
+            var audioStream = streams.FirstOrDefault();
+            if (audioStream != null)
+            {
+                return audioStream.SampleRate.ToString();
+            }
+            return string.Empty;
+        }
+        private string GetBitDepth(List<MediaStream> streams)
+        {
+            var audioStream = streams.FirstOrDefault();
+            if (audioStream != null)
+            {
+                return audioStream.BitDepth.ToString();
+            }
+            return string.Empty;
+        }
+        private string GetBitRate(List<MediaStream> streams)
+        {
+            var audioStream = streams.FirstOrDefault();
+            if (audioStream != null)
+            {
+                return audioStream.BitRate.ToString();
+            }
+            return string.Empty;
+        }
+
+        private string GetFilePath(List<MediaSourceInfo> sources) 
+        { 
+            var file = sources.FirstOrDefault();
+            if (file != null) 
+            {
+                return file.Path;
+            }
+            return string.Empty;
         }
     }
 }

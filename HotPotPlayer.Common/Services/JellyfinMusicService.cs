@@ -277,6 +277,19 @@ namespace HotPotPlayer.Services
             return result;
         }
 
+        public async Task<BaseItemDto> GetMusicInfoAsync(BaseItemDto music)
+        {
+            var result = await JellyfinApiClient.Items[music.Id.Value].GetAsync(param =>
+            {
+                param.QueryParameters = new Jellyfin.Sdk.Generated.Items.Item.WithItemItemRequestBuilder.WithItemItemRequestBuilderGetQueryParameters
+                {
+                    UserId = userDto.Id,
+                };
+            }).ConfigureAwait(false);
+
+            return result;
+        }
+
         public async Task<BaseItemDto> GetAlbumInfoFromMusicAsync(BaseItemDto music)
         {
             var result = await JellyfinApiClient.Items[music.AlbumId.Value].GetAsync(param =>
