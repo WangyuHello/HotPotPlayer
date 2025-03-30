@@ -31,12 +31,17 @@ namespace HotPotPlayer.Pages.Helper
             MusicPlayer.AddToPlayList(selectedAlbum);
         }
 
-        internal static void AlbumAddToPlayList(string playList, AlbumItem selectedAlbum)
+        internal static void AlbumAddToPlayList(BaseItemDto playList, AlbumItem selectedAlbum)
         {
             JellyfinMusicService.AddAlbumToPlayList(playList, selectedAlbum);
         }
 
-        internal static void MusicAddToPlayList(string playList, MusicItem music)
+        internal static void MusicAddToPlayList(BaseItemDto playList, MusicItem music)
+        {
+            JellyfinMusicService.AddMusicToPlayList(playList, music);
+        }
+
+        internal static void MusicAddToPlayList(BaseItemDto playList, BaseItemDto music)
         {
             JellyfinMusicService.AddMusicToPlayList(playList, music);
         }
@@ -294,9 +299,9 @@ namespace HotPotPlayer.Pages.Helper
                 {
                     i = new MenuFlyoutItem
                     {
-                        Text = item.Title,
+                        Text = item.Name,
                     };
-                    i.Click += (s ,e) => MusicAddToPlayList(item.Title, music);
+                    i.Click += (s ,e) => MusicAddToPlayList(item, music);
                     sub.Items.Add(i);
                 }
                 flyout.Items.Add(sub);
@@ -341,7 +346,7 @@ namespace HotPotPlayer.Pages.Helper
         internal static void PlayListMusicClick(object sender, RoutedEventArgs e)
         {
             var button = (Button)sender;
-            var music = (MusicItem)button.Tag;
+            var music = (BaseItemDto)button.Tag;
 
             if (button.ContextFlyout == null)
             {
@@ -385,9 +390,9 @@ namespace HotPotPlayer.Pages.Helper
                 {
                     i = new MenuFlyoutItem
                     {
-                        Text = item.Title,
+                        Text = item.Name,
                     };
-                    i.Click += (s, e) => MusicAddToPlayList(item.Title, music);
+                    i.Click += (s, e) => MusicAddToPlayList(item, music);
                     sub.Items.Add(i);
                 }
                 flyout.Items.Add(sub);
@@ -488,10 +493,10 @@ namespace HotPotPlayer.Pages.Helper
             {
                 var i = new MenuFlyoutItem
                 {
-                    Text = item.Title,
+                    Text = item.Name,
                     Tag = item
                 };
-                i.Click += (s, a) => AlbumAddToPlayList(item.Title, album);
+                i.Click += (s, a) => AlbumAddToPlayList(item, album);
                 flyout.Items.Add(i);
             }
             targetButton.Flyout = flyout;

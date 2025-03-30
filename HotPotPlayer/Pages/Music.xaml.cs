@@ -49,7 +49,7 @@ namespace HotPotPlayer.Pages
         private BaseItemDto selectedAlbum;
 
         [ObservableProperty]
-        private PlayListItem selectedPlayList;
+        private BaseItemDto selectedPlayList;
 
         bool IsFirstNavigate = true;
 
@@ -106,7 +106,7 @@ namespace HotPotPlayer.Pages
 
         private void PlayListGridView_ItemClick(object sender, ItemClickEventArgs e)
         {
-            var playList = e.ClickedItem as PlayListItem;
+            var playList = e.ClickedItem as BaseItemDto;
             SelectedPlayList = playList;
 
             var ani = PlayListGridView.PrepareConnectedAnimation("forwardAnimation2", playList, "PlayListCardConnectedElement");

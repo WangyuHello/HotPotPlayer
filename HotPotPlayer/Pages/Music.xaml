@@ -59,7 +59,7 @@
 
         <StackPanel VerticalAlignment="Top" HorizontalAlignment="Right" Spacing="8" Orientation="Horizontal" Margin="0,16,24,0" Visibility="{x:Bind GetLoadingVisibility(JellyfinMusicService.State), Mode=OneWay}">
             <ProgressRing IsActive="True" Height="20" Width="20"/>
-            <TextBlock FontSize="14">加载种</TextBlock>
+            <TextBlock FontSize="14">加载中</TextBlock>
         </StackPanel>
 
         <Grid x:Name="AlbumPopupOverlay" Margin="-36,-28,0,0" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Visibility="Collapsed" Background="#00FFFFFF" Tapped="AlbumPopupOverlay_Tapped">

@@ -56,7 +56,7 @@ namespace HotPotPlayer.Pages.CloudMusicSub
         {
             var m = e.ClickedItem as CloudPlayListItem;
             SelectedPlayList = await NetEaseMusicService.GetPlayListAsync(m.PlId);
-            PlayListPopupOverlay.Visibility = Visibility.Visible;
+            //PlayListPopupOverlay.Visibility = Visibility.Visible;
         }
 
         private void PlayListPopupOverlay_Tapped(object sender, TappedRoutedEventArgs e)
@@ -64,7 +64,7 @@ namespace HotPotPlayer.Pages.CloudMusicSub
             //var anim = ConnectedAnimationService.GetForCurrentView().PrepareToAnimate("backwardsAnimation2", PlayListPopupTarget);
             //anim.Configuration = new BasicConnectedAnimationConfiguration();
             //await PlayListGridView.TryStartConnectedAnimationAsync(anim, SelectedPlayList, "PlayListCardConnectedElement");
-            PlayListPopupOverlay.Visibility = Visibility.Collapsed;
+            //PlayListPopupOverlay.Visibility = Visibility.Collapsed;
         }
     }
 }

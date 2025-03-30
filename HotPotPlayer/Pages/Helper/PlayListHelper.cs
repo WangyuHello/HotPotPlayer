@@ -38,9 +38,9 @@ namespace HotPotPlayer.Pages.Helper
                 {
                     i = new MenuFlyoutItem
                     {
-                        Text = item.Title,
+                        Text = item.Name,
                     };
-                    i.Click += (s, e) => AlbumHelper.MusicAddToPlayList(item.Title, music);
+                    i.Click += (s, e) => AlbumHelper.MusicAddToPlayList(item, music);
                     flyout.Items.Add(i);
                 }
             }

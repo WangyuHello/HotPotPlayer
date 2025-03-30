@@ -1,6 +1,8 @@
-﻿using HotPotPlayer.Models;
+﻿using CommunityToolkit.Mvvm.ComponentModel;
+using HotPotPlayer.Models;
 using HotPotPlayer.Models.CloudMusic;
 using HotPotPlayer.Services;
+using Jellyfin.Sdk.Generated.Models;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Controls.Primitives;
@@ -15,6 +17,7 @@ using System.IO;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices.WindowsRuntime;
+using System.Threading.Tasks;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
 
@@ -30,33 +33,43 @@ namespace HotPotPlayer.Controls
             this.InitializeComponent();
         }
 
-        public PlayListItem PlayList
+        public BaseItemDto PlayList
         {
-            get { return (PlayListItem)GetValue(PlayListProperty); }
+            get { return (BaseItemDto)GetValue(PlayListProperty); }
             set { SetValue(PlayListProperty, value); }
         }
 
         public static readonly DependencyProperty PlayListProperty =
-            DependencyProperty.Register("PlayList", typeof(PlayListItem), typeof(PlayListPopup), new PropertyMetadata(default(PlayListItem)));
+            DependencyProperty.Register("PlayList", typeof(BaseItemDto), typeof(PlayListPopup), new PropertyMetadata(default(BaseItemDto), PlayListChanged));
 
 
-        string GetDescription(PlayListItem p)
+        [ObservableProperty]
+        private List<BaseItemDto> playListMusicItems;
+
+        private static async void PlayListChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
-            if (p is CloudPlayListItem c)
-            {
-                return c.Description;
-            }
-            return string.Empty;
+            var newPlaylist = e.NewValue as BaseItemDto;
+            var @this = (PlayListPopup)d;
+            @this.PlayListMusicItems = await @this.JellyfinMusicService.GetPlayListMusicItemsAsync(newPlaylist);
+        }
+
+        string GetDescription(BaseItemDto p)
+        {
+            //if (p is CloudPlayListItem c)
+            //{
+            //    return c.Description;
+            //}
+            return p.Overview;
         }
         private void PlayListPlay(object sender, RoutedEventArgs e)
         {
-            MusicPlayer.PlayNext(PlayList);
+            MusicPlayer.PlayNext(PlayListMusicItems);
         }
 
         private void ListView_ItemClick(object sender, ItemClickEventArgs e)
         {
-            var music = e.ClickedItem as MusicItem;
-            MusicPlayer.PlayNext(music, PlayList);
+            var music = e.ClickedItem as BaseItemDto;
+            MusicPlayer.PlayNext(music, PlayListMusicItems);
         }
     }
 }

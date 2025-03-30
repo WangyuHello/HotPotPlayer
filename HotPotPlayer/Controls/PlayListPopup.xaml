@@ -5,9 +5,10 @@
     xmlns:base="using:HotPotPlayer"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    xmlns:animations="using:CommunityToolkit.WinUI.UI.Animations"
+    xmlns:animations="using:CommunityToolkit.WinUI.Animations"
     xmlns:cont2="using:HotPotPlayer.UI.Controls"
     xmlns:helper="using:HotPotPlayer.Pages.Helper"
+    xmlns:helper2="using:HotPotPlayer.Helpers"
     mc:Ignorable="d">
 
     <Grid VerticalAlignment="Center" HorizontalAlignment="Center" Width="800" MinHeight="460" MaxHeight="560" CornerRadius="8" Background="{StaticResource PopupBackground}" >
@@ -29,9 +30,9 @@
                 <RowDefinition Height="*" />
                 <RowDefinition Height="Auto" />
             </Grid.RowDefinitions>
-            
-            <cont2:ImageEx2 Grid.RowSpan="3" VerticalAlignment="Top" Source="{x:Bind PlayList.Cover, Mode=OneWay}" Style="{StaticResource LocalMusicImageStyle}"/>
-            <TextBlock Margin="16,0,0,0" Grid.Column="1" Text="{x:Bind PlayList.Title, Mode=OneWay}" MaxLines="2" FontSize="32" TextWrapping="Wrap" TextTrimming="CharacterEllipsis" IsTextSelectionEnabled="True" FontFamily="{ThemeResource MiSansMedium}"/>
+
+            <cont2:ImageEx2 Grid.RowSpan="3" VerticalAlignment="Top" Source="{x:Bind helper2:BaseItemDtoHelper.GetPrimaryJellyfinImage(PlayList.ImageTags, PlayList.Id), Mode=OneWay}" Style="{StaticResource LocalMusicImageStyle}"/>
+            <TextBlock Margin="16,0,0,0" Grid.Column="1" Text="{x:Bind PlayList.Name, Mode=OneWay}" MaxLines="2" FontSize="32" TextWrapping="Wrap" TextTrimming="CharacterEllipsis" IsTextSelectionEnabled="True" FontFamily="{ThemeResource MiSansMedium}"/>
             <ScrollViewer Margin="16,0,0,0" Grid.Column="1" Grid.Row="1">
                 <TextBlock Text="{x:Bind GetDescription(PlayList), Mode=OneWay}" TextWrapping="Wrap" TextTrimming="CharacterEllipsis" FontFamily="{StaticResource MiSansRegular}" IsTextSelectionEnabled="True"/>
             </ScrollViewer>
@@ -47,7 +48,7 @@
 
         <ListView 
             Grid.Row="2" 
-            ItemsSource="{x:Bind PlayList.MusicItems, Mode=OneWay}" 
+            ItemsSource="{x:Bind PlayListMusicItems, Mode=OneWay}" 
             ItemTemplateSelector="{StaticResource EvenOldMusicListInPlayListTemplate}" 
             Style="{StaticResource GeneralListViewStyle}"
             ItemClick="ListView_ItemClick"

@@ -39,9 +39,9 @@ namespace HotPotPlayer.Services
             get => _localAlbumGroup2 ??= new(_localAlbumGroup);
         }
 
-        private ObservableCollection<PlayListItem> _localPlayListList;
+        private ObservableCollection<BaseItemDto> _localPlayListList;
 
-        public ObservableCollection<PlayListItem> LocalPlayListList
+        public ObservableCollection<BaseItemDto> LocalPlayListList
         {
             get => _localPlayListList;
             set => Set(ref _localPlayListList, value);
@@ -108,7 +108,7 @@ namespace HotPotPlayer.Services
         }
 
         private UserDto userDto;
-        private BaseItemDto musicDto;
+        private BaseItemDto musicLibraryDto;
 
         private bool IsLogin = false;
         #endregion
@@ -122,18 +122,35 @@ namespace HotPotPlayer.Services
             }
 
             var views = await JellyfinApiClient.UserViews.GetAsync().ConfigureAwait(false);
-            musicDto = views.Items.FirstOrDefault(v => v.CollectionType == BaseItemDto_CollectionType.Music);
+            musicLibraryDto = views.Items.FirstOrDefault(v => v.CollectionType == BaseItemDto_CollectionType.Music);
 
-            var albumsResult = await JellyfinApiClient.Items.GetAsync(param => 
+            var albumsResult = await GetAlbums().ConfigureAwait(false);
+            var albumGroups = GroupAllAlbumByYear(albumsResult);
+
+            var playlistsResult = await GetPlayLists().ConfigureAwait(false);
+            UIQueue.TryEnqueue(() =>
+            {
+                foreach (var albumGroup in albumGroups)
+                {
+                    _localAlbumGroup.AddGroup(albumGroup);
+                }
+                LocalPlayListList = [.. playlistsResult];
+                State = LocalServiceState.InitComplete;
+            });
+        }
+
+        private async Task<BaseItemDtoQueryResult> GetAlbums()
+        {
+            var result = await JellyfinApiClient.Items.GetAsync(param =>
             {
                 param.QueryParameters = new ItemsRequestBuilder.ItemsRequestBuilderGetQueryParameters
                 {
                     UserId = userDto.Id,
-                    ParentId = musicDto.Id,
+                    ParentId = musicLibraryDto.Id,
                     SortBy = [ItemSortBy.ProductionYear, ItemSortBy.PremiereDate, ItemSortBy.SortName],
                     SortOrder = [SortOrder.Descending],
                     IncludeItemTypes = [BaseItemKind.MusicAlbum],
-                    Recursive =true,
+                    Recursive = true,
                     Fields = [ItemFields.PrimaryImageAspectRatio, ItemFields.SortName],
                     ImageTypeLimit = 1,
                     EnableImageTypes = [ImageType.Primary, ImageType.Backdrop, ImageType.Banner, ImageType.Thumb],
@@ -141,17 +158,26 @@ namespace HotPotPlayer.Services
                     //Limit = 100,
                 };
             }).ConfigureAwait(false);
+            return result;
+        }
 
-            var albumGroups = GroupAllAlbumByYear(albumsResult);
-            UIQueue.TryEnqueue(() =>
+        private async Task<List<BaseItemDto>> GetPlayLists()
+        {
+            var result = await JellyfinApiClient.Items.GetAsync(param =>
             {
-                foreach (var albumGroup in albumGroups)
+                param.QueryParameters = new ItemsRequestBuilder.ItemsRequestBuilderGetQueryParameters
                 {
-                    _localAlbumGroup.AddGroup(albumGroup);
-                }
-                LocalPlayListList = [];
-                State = LocalServiceState.InitComplete;
-            });
+                    UserId = userDto.Id,
+                    SortBy = [ItemSortBy.SortName],
+                    SortOrder = [SortOrder.Ascending],
+                    IncludeItemTypes = [BaseItemKind.Playlist],
+                    Recursive = true,
+                    Fields = [ItemFields.PrimaryImageAspectRatio, ItemFields.SortName, ItemFields.CanDelete],
+                    StartIndex = 0,
+                    //Limit = 100,
+                };
+            }).ConfigureAwait(false);
+            return result.Items;
         }
 
         static IEnumerable<IGrouping<int, BaseItemDto>> GroupAllAlbumByYear(BaseItemDtoQueryResult albums)
@@ -220,6 +246,21 @@ namespace HotPotPlayer.Services
                 };
             }).ConfigureAwait(false);
             
+            return result.Items;
+        }
+
+        public async Task<List<BaseItemDto>> GetPlayListMusicItemsAsync(BaseItemDto playlist)
+        {
+            var result = await JellyfinApiClient.Playlists[playlist.Id.Value].Items.GetAsync(param =>
+            {
+                param.QueryParameters = new Jellyfin.Sdk.Generated.Playlists.Item.Items.ItemsRequestBuilder.ItemsRequestBuilderGetQueryParameters
+                {
+                    UserId = userDto.Id,
+                    Fields = [ItemFields.ItemCounts, ItemFields.PrimaryImageAspectRatio, ItemFields.CanDelete, ItemFields.MediaSourceCount],
+                    EnableImageTypes = [ImageType.Primary, ImageType.Backdrop, ImageType.Banner, ImageType.Thumb]
+                };
+            }).ConfigureAwait(false);
+
             return result.Items;
         }
 
@@ -346,27 +387,32 @@ namespace HotPotPlayer.Services
             return null;
         }
 
-        public void AddAlbumToPlayList(string playList, AlbumItem album)
+        public void AddAlbumToPlayList(BaseItemDto playList, AlbumItem album)
         {
 
         }
 
-        public void AddMusicToPlayList(string playList, MusicItem music)
+        public void AddMusicToPlayList(BaseItemDto playList, MusicItem music)
         {
 
         }
 
-        public void PlayListMusicDelete(MusicItem music)
+        public void AddMusicToPlayList(BaseItemDto playList, BaseItemDto music)
         {
 
         }
 
-        public void PlayListMusicUp(MusicItem music)
+        public void PlayListMusicDelete(BaseItemDto music)
         {
 
         }
 
-        public void PlayListMusicDown(MusicItem music)
+        public void PlayListMusicUp(BaseItemDto music)
+        {
+
+        }
+
+        public void PlayListMusicDown(BaseItemDto music)
         {
 
         }

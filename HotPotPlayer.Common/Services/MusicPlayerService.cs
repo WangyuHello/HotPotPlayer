@@ -222,14 +222,18 @@ namespace HotPotPlayer.Services
 
         public async void PlayNext(BaseItemDto music)
         {
-            if (music.IsFolder.Value)
+            if (music.Type == BaseItemDto_Type.MusicAlbum)
             {
                 // Album
                 var albumItems = await App.JellyfinMusicService.GetAlbumMusicItemsAsync(music);
                 CurrentPlayList = [.. albumItems];
                 PlayNext(0);
             }
-            else 
+            else if (music.Type == BaseItemDto_Type.Playlist)
+            {
+
+            }
+            else
             {
                 // Single Music
                 CurrentPlayList = new ObservableCollection<BaseItemDto> { music };
@@ -239,22 +243,44 @@ namespace HotPotPlayer.Services
 
         public async void PlayNext(BaseItemDto music, BaseItemDto album)
         {
-            var albumItems = await App.JellyfinMusicService.GetAlbumMusicItemsAsync(album);
-            CurrentPlayList = [.. albumItems];
-            PlayNext(music.IndexNumber - 1);
+            if (music.Type == BaseItemDto_Type.Playlist)
+            {
+
+            }
+            else
+            {
+                var albumItems = await App.JellyfinMusicService.GetAlbumMusicItemsAsync(album);
+                CurrentPlayList = [.. albumItems];
+                PlayNext(music.IndexNumber - 1);
+            }
+        }
+
+        public void PlayNext(BaseItemDto music, IEnumerable<BaseItemDto> list)
+        {
+            CurrentPlayList = [.. list];
+            var index = CurrentPlayList.IndexOf(music);
+            PlayNext(index);
         }
 
         public void PlayNext(MusicItem music, IEnumerable<MusicItem> list)
         {
-            //CurrentPlayList = new ObservableCollection<MusicItem>(list);
-            //var index = CurrentPlayList.IndexOf(music);
-            //PlayNext(index);
+
+        }
+
+        public void PlayNext(int index, IEnumerable<BaseItemDto> list)
+        {
+            CurrentPlayList = new ObservableCollection<BaseItemDto>(list);
+            PlayNext(index);
         }
 
         public void PlayNext(int index, IEnumerable<MusicItem> list)
         {
-            //CurrentPlayList = new ObservableCollection<MusicItem>(list);
-            //PlayNext(index);
+
+        }
+
+        public void PlayNext(IEnumerable<BaseItemDto> list)
+        {
+            PlayNext(0, list);
         }
 
         public void PlayNextContinue(MusicItem music)

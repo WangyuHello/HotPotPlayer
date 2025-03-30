@@ -96,9 +96,9 @@ namespace HotPotPlayer.Pages.Helper
                     {
                         i = new MenuFlyoutItem
                         {
-                            Text = item.Title,
+                            Text = item.Name,
                         };
-                        i.Click += (s, e) => AlbumHelper.MusicAddToPlayList(item.Title, music);
+                        i.Click += (s, e) => AlbumHelper.MusicAddToPlayList(item, music);
                         sub.Items.Add(i);
                     }
                 }
@@ -127,7 +127,7 @@ namespace HotPotPlayer.Pages.Helper
         internal static void RightTapMusicInPlayListClick(object sender, RoutedEventArgs e)
         {
             var _element = (FrameworkElement)sender;
-            var music = (MusicItem)_element.DataContext;
+            var music = (BaseItemDto)_element.DataContext;
 
             if (_element.ContextFlyout == null)
             {
@@ -167,17 +167,17 @@ namespace HotPotPlayer.Pages.Helper
                 };
                 sub.Items.Add(i);
 
-                if (music is CloudMusicItem c)
+                if (false) // TODO cloudmusic
                 {
-                    foreach (var item in NetEaseMusicService.UserPlayLists)
-                    {
-                        i = new MenuFlyoutItem
-                        {
-                            Text = item.Title,
-                        };
-                        i.Click += (s, e) => NetEaseMusicService.AddMusicToPlayList(item, c);
-                        sub.Items.Add(i);
-                    }
+                    //foreach (var item in NetEaseMusicService.UserPlayLists)
+                    //{
+                    //    i = new MenuFlyoutItem
+                    //    {
+                    //        Text = item.Title,
+                    //    };
+                    //    i.Click += (s, e) => NetEaseMusicService.AddMusicToPlayList(item, c);
+                    //    sub.Items.Add(i);
+                    //}
                 }
                 else
                 {
@@ -185,9 +185,9 @@ namespace HotPotPlayer.Pages.Helper
                     {
                         i = new MenuFlyoutItem
                         {
-                            Text = item.Title,
+                            Text = item.Name,
                         };
-                        i.Click += (s, e) => AlbumHelper.MusicAddToPlayList(item.Title, music);
+                        i.Click += (s, e) => AlbumHelper.MusicAddToPlayList(item, music);
                         sub.Items.Add(i);
                     }
                 }
@@ -296,9 +296,9 @@ namespace HotPotPlayer.Pages.Helper
                     {
                         i = new MenuFlyoutItem
                         {
-                            Text = item.Title,
+                            Text = item.Name,
                         };
-                        i.Click += (s, e) => AlbumHelper.MusicAddToPlayList(item.Title, music);
+                        i.Click += (s, e) => AlbumHelper.MusicAddToPlayList(item, music);
                         sub.Items.Add(i);
                     }
                 }
@@ -386,9 +386,9 @@ namespace HotPotPlayer.Pages.Helper
                     {
                         i = new MenuFlyoutItem
                         {
-                            Text = item.Title,
+                            Text = item.Name,
                         };
-                        i.Click += (s, e) => AlbumHelper.MusicAddToPlayList(item.Title, music);
+                        i.Click += (s, e) => AlbumHelper.MusicAddToPlayList(item, music);
                         sub.Items.Add(i);
                     }
                 }
@@ -473,9 +473,9 @@ namespace HotPotPlayer.Pages.Helper
                     {
                         i = new MenuFlyoutItem
                         {
-                            Text = item.Title,
+                            Text = item.Name,
                         };
-                        i.Click += (s, e) => AlbumHelper.MusicAddToPlayList(item.Title, music);
+                        i.Click += (s, e) => AlbumHelper.MusicAddToPlayList(item, music);
                         sub.Items.Add(i);
                     }
                 }

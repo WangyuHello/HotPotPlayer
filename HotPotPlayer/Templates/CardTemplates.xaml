@@ -148,7 +148,7 @@
         </StackPanel>
     </DataTemplate>
 
-    <DataTemplate x:Key="PlayListCardViewTemplate" x:DataType="models:PlayListItem">
+    <DataTemplate x:Key="PlayListCardViewTemplate" x:DataType="jmodel:BaseItemDto">
         <StackPanel 
             Width="170"
             Spacing="8" 
@@ -162,20 +162,20 @@
             Background="White"
             >
             <cont2:ImageEx2 
-                Source="{x:Bind Cover}" 
+                Source="{x:Bind helper2:BaseItemDtoHelper.GetPrimaryJellyfinImage(ImageTags, Id)}" 
                 Style="{StaticResource LocalMusicImageStyle}" 
                 x:Phase="1"
                 />
             <TextBlock 
                 Margin="8,0" 
-                Text="{x:Bind Title}" 
+                Text="{x:Bind Name}" 
                 LineStackingStrategy="BaselineToBaseline" 
                 FontSize="18" 
                 TextTrimming="CharacterEllipsis" 
                 TextWrapping="Wrap" 
                 MaxLines="2"
                 Height="48"
-                ToolTipService.ToolTip="{x:Bind Title}" 
+                ToolTipService.ToolTip="{x:Bind Name}" 
                 FontFamily="{ThemeResource MiSansMedium}"
                 />
         </StackPanel>
