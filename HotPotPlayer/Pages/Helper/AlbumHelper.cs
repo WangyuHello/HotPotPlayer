@@ -129,7 +129,8 @@ namespace HotPotPlayer.Pages.Helper
                                 var item = new MenuFlyoutItem
                                 {
                                     Text = a.Name,
-                                    Icon = new SymbolIcon { Symbol = Symbol.Contact }
+                                    Icon = new SymbolIcon { Symbol = Symbol.Contact },
+                                    Tag= a.Id
                                 };
                                 item.Click += ArtistClick;
                                 flyout.Items.Add(item);
@@ -227,7 +228,7 @@ namespace HotPotPlayer.Pages.Helper
             else
             {
                 var music = button.Tag as BaseItemDto;
-                var artists = music.ArtistItems;
+                var artists = music.AlbumArtists;
                 if (artists.Count == 1)
                 {
                     App.NavigateTo("MusicSub.Artist", artists[0].Id);
@@ -240,7 +241,8 @@ namespace HotPotPlayer.Pages.Helper
                         var item = new MenuFlyoutItem
                         {
                             Text = a.Name,
-                            Icon = new SymbolIcon { Symbol = Symbol.Contact }
+                            Icon = new SymbolIcon { Symbol = Symbol.Contact },
+                            Tag = a.Id
                         };
                         item.Click += ArtistClick;
                         flyout.Items.Add(item);
