@@ -45,35 +45,36 @@ namespace HotPotPlayer
             return video.Folders.Select(f => f.Path).ToList();
         }
 
-        private List<string> _systemMusicLibrary;
-        private List<LibraryItem> _musicLibrary;
-        public override List<LibraryItem> MusicLibrary
+        private List<JellyfinServerItem> _jellyfinServers;
+        public override List<JellyfinServerItem> JellyfinServers
         {
             set
             {
-                _musicLibrary = value;
-                _systemMusicLibrary ??= GetSystemMusicLibrary();
-                var _mLib = _musicLibrary.Select(s => s.Path);
-                var r = _mLib.Except(_systemMusicLibrary).ToArray();
-                SetConfig("MusicLibrary", r);
+                _jellyfinServers = value;
+                // Current only support one server
+                SetConfig("JellyfinUrl", value[0].Url);
+                SetConfig("JellyfinUserName", value[0].UserName);
+                SetConfig("JellyfinPassword", value[0].PassWord);
             }
             get
             {
-                if (_musicLibrary == null)
+                if (_jellyfinServers == null)
                 {
-                    _musicLibrary = new List<LibraryItem>();
-                    _systemMusicLibrary ??= GetSystemMusicLibrary();
-                    if (_systemMusicLibrary != null)
+                    _jellyfinServers = [];
+                    var url = GetConfig<string>("JellyfinUrl");
+                    var username = GetConfig<string>("JellyfinUserName");
+                    var password = GetConfig<string>("JellyfinPassword");
+                    if (url != null)
                     {
-                        _musicLibrary.AddRange(_systemMusicLibrary.Select(s => new LibraryItem { Path = s, IsSystemLibrary = true }));
-                    }
-                    var add = GetConfigArray<string>("MusicLibrary");
-                    if (add != null)
-                    {
-                        _musicLibrary.AddRange(add.Select(s => new LibraryItem { Path = s, IsSystemLibrary = false }));
+                        _jellyfinServers.Add(new() 
+                        {
+                            Url = url,
+                            UserName = username,
+                            PassWord = password,
+                        });
                     }
                 }
-                return _musicLibrary;
+                return _jellyfinServers;
             }
         }
 

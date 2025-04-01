@@ -16,26 +16,11 @@ namespace HotPotPlayer
         public abstract string LocalFolder { get; }
         public abstract string DatabaseFolder { get; }
 
-        public abstract List<LibraryItem> MusicLibrary { get; set; }
+        public abstract List<JellyfinServerItem> JellyfinServers { get; set; }
         public abstract List<LibraryItem> VideoLibrary { get; set; }
 
         private List<LibraryItem> _musicPlayListDirectory;
-        public List<LibraryItem> MusicPlayListDirectory
-        {
-            get
-            {
-                _musicPlayListDirectory ??= MusicLibrary.Select(m =>
-                {
-                    var p = Path.Combine(m.Path, "Playlists");
-                    if (!Directory.Exists(p))
-                    {
-                        Directory.CreateDirectory(p);
-                    }
-                    return new LibraryItem { Path = p, IsSystemLibrary = m.IsSystemLibrary };
-                }).ToList();
-                return _musicPlayListDirectory;
-            }
-        }
+        public List<LibraryItem> MusicPlayListDirectory => _musicPlayListDirectory ??= new List<LibraryItem>();
 
         private JObject _settings;
         private JObject Settings
@@ -153,19 +138,7 @@ namespace HotPotPlayer
         public virtual string[] AudioSupportedExt => new[] { ".flac", ".wav", ".m4a", ".mp3", ".opus", ".ogg" };
         public virtual string[] VideoSupportedExt => new[] { ".mkv", ".mp4" };
 
-        public List<FileInfo> GetMusicFilesFromLibrary()
-        {
-            var libs = MusicLibrary.Select(s => s.Path);
-            List<FileInfo> files = new();
-            foreach (var lib in libs)
-            {
-                var di = new DirectoryInfo(lib);
-                if (!di.Exists) continue;
-                files.AddRange(di.GetFiles("*.*", SearchOption.AllDirectories).Where(f => AudioSupportedExt.Contains(f.Extension)));
-            }
-
-            return files;
-        }
+        public List<FileInfo> GetMusicFilesFromLibrary() => null;
 
         public List<FileInfo> GetMusicFilesFromDirectory(DirectoryInfo dir)
         {

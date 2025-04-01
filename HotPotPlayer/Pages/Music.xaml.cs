@@ -45,11 +45,23 @@ namespace HotPotPlayer.Pages
             InitializeComponent();
         }
 
+        private readonly ObservableGroupedCollection<int, BaseItemDto> _jellyfinAlbumGroup = new();
+        private ReadOnlyObservableGroupedCollection<int, BaseItemDto> JellyfinAlbumGroup => new(_jellyfinAlbumGroup);
+
+        [ObservableProperty]
+        private ObservableCollection<BaseItemDto> jellyfinPlayListList;
+
+        [ObservableProperty]
+        private ArtistCollection jellfinArtistList;
+
         [ObservableProperty]
         private BaseItemDto selectedAlbum;
 
         [ObservableProperty]
         private BaseItemDto selectedPlayList;
+
+        [ObservableProperty]
+        private LocalServiceState loadingState = LocalServiceState.Idle;
 
         bool IsFirstNavigate = true;
 
@@ -60,7 +72,15 @@ namespace HotPotPlayer.Pages
             if (IsFirstNavigate)
             {
                 IsFirstNavigate = false;
-                await JellyfinMusicService.LoadJellyfinMusicAsync();
+                LoadingState = LocalServiceState.Loading;
+                var albumsGroups = await JellyfinMusicService.GetJellyfinAlbumGroupsAsync();
+                foreach (var album in albumsGroups)
+                {
+                    _jellyfinAlbumGroup.AddGroup(album);
+                }
+                JellyfinPlayListList = [.. await JellyfinMusicService.GetJellyfinPlayListsAsync()];
+                JellfinArtistList = new ArtistCollection(JellyfinMusicService);
+                LoadingState = LocalServiceState.Complete;
             }
         }
 
@@ -118,6 +138,12 @@ namespace HotPotPlayer.Pages
             var container = (GridViewItem)PlayListGridView.ContainerFromItem(SelectedPlayList);
             var root = container.ContentTemplateRoot;
             root.Opacity = 0;
+        }
+
+        private void ArtistGridView_ItemClick(object sender, ItemClickEventArgs e)
+        {
+            var artist = e.ClickedItem as BaseItemDto;
+            App.NavigateTo("MusicSub.Artist", artist.Id);
         }
         Visibility GetLoadingVisibility(LocalServiceState state)
         {

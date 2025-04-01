@@ -48,6 +48,15 @@
         </Setter>
     </Style>
 
+    <Style x:Key="ArtistListCardViewWithFooterStyle" TargetType="GridView" BasedOn="{StaticResource CardGridViewStyle}">
+        <Setter Property="ItemTemplate" Value="{StaticResource ArtistListCardViewTemplate}"/>
+        <Setter Property="Footer">
+            <Setter.Value>
+                <Grid Height="100"/>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
     <Style x:Key="CardGridContainerStyle" TargetType="GridViewItem" >
         <Setter Property="IsHoldingEnabled" Value="True" />
         <Setter Property="FontFamily" Value="{ThemeResource ContentControlThemeFontFamily}" />

@@ -1,4 +1,5 @@
 ﻿using HotPotPlayer.Models;
+using HotPotPlayer.Pages.SettingSub;
 using HotPotPlayer.Services;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
@@ -50,34 +51,21 @@ namespace HotPotPlayer.Pages
             set => Set(ref _isVideoLibraryWarningVisible, value);
         }
 
-        private ObservableCollection<LibraryItem> _musicLibrary;
+        private ObservableCollection<JellyfinServerItem> _jellyfinServers;
 
-        public ObservableCollection<LibraryItem> MusicLibrary
+        public ObservableCollection<JellyfinServerItem> JellyfinServers
         {
-            get => _musicLibrary;
-            set => Set(ref _musicLibrary, value);
-        }
-
-        private ObservableCollection<LibraryItem> _videoLibrary;
-
-        public ObservableCollection<LibraryItem> VideoLibrary
-        {
-            get => _videoLibrary;
-            set => Set(ref _videoLibrary, value);
+            get => _jellyfinServers;
+            set => Set(ref _jellyfinServers, value);
         }
 
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
             base.OnNavigatedTo(e);
-            var musicLib = Config.MusicLibrary;
-            if (musicLib != null)
+            var jellyfinServers = Config.JellyfinServers;
+            if (jellyfinServers != null)
             {
-                MusicLibrary = new ObservableCollection<LibraryItem>(musicLib);
-            }
-            var videoLib = Config.VideoLibrary;
-            if (videoLib != null)
-            {
-                VideoLibrary = new ObservableCollection<LibraryItem>(videoLib);
+                JellyfinServers = [.. jellyfinServers];
             }
         }
 
@@ -134,84 +122,101 @@ namespace HotPotPlayer.Pages
             }
         }
 
-        private async void AddVideoLibrary(object sender, RoutedEventArgs e)
-        {
-            var folderPicker = new FolderPicker
-            {
-                SuggestedStartLocation = PickerLocationId.ComputerFolder
-            };
-            WinRT.Interop.InitializeWithWindow.Initialize(folderPicker, App.MainWindowHandle);
+        //private async void AddVideoLibrary(object sender, RoutedEventArgs e)
+        //{
+        //    var folderPicker = new FolderPicker
+        //    {
+        //        SuggestedStartLocation = PickerLocationId.ComputerFolder
+        //    };
+        //    WinRT.Interop.InitializeWithWindow.Initialize(folderPicker, App.MainWindowHandle);
 
-            var folder = await folderPicker.PickSingleFolderAsync();
-            if (folder != null)
+        //    var folder = await folderPicker.PickSingleFolderAsync();
+        //    if (folder != null)
+        //    {
+        //        var path = folder.Path;
+        //        if (VideoLibrary == null)
+        //        {
+        //            VideoLibrary = new ObservableCollection<LibraryItem>
+        //            {
+        //                new LibraryItem {Path = path}
+        //            };
+        //            Config.VideoLibrary = VideoLibrary.Select(s => s).ToList();
+        //        }
+        //        if (!VideoLibrary.Where(s => s.Path == path).Any())
+        //        {
+        //            VideoLibrary.Add(new LibraryItem { Path = path });
+        //            Config.VideoLibrary = VideoLibrary.Select(s => s).ToList();
+        //        }
+        //    }
+        //}
+
+        private async void AddJellyfinServer(object sender, RoutedEventArgs e)
+        {
+            ContentDialog dialog = new ContentDialog();
+
+            // XamlRoot must be set in the case of a ContentDialog running in a Desktop app
+            dialog.XamlRoot = App.XamlRoot;
+            dialog.Style = Application.Current.Resources["DefaultContentDialogStyle"] as Style;
+            dialog.Title = "添加Jellyfin服务器";
+            dialog.PrimaryButtonText = "保存";
+            dialog.CloseButtonText = "取消";
+            dialog.DefaultButton = ContentDialogButton.Primary;
+            dialog.Content = new AddJellyfinServerDialog();
+
+            var result = await dialog.ShowAsync();
+
+            if (result == ContentDialogResult.Primary)
             {
-                var path = folder.Path;
-                if (VideoLibrary == null)
-                {
-                    VideoLibrary = new ObservableCollection<LibraryItem>
-                    {
-                        new LibraryItem {Path = path}
-                    };
-                    Config.VideoLibrary = VideoLibrary.Select(s => s).ToList();
-                }
-                if (!VideoLibrary.Where(s => s.Path == path).Any())
-                {
-                    VideoLibrary.Add(new LibraryItem { Path = path });
-                    Config.VideoLibrary = VideoLibrary.Select(s => s).ToList();
-                }
+
             }
+            //var folderPicker = new FolderPicker
+            //{
+            //    SuggestedStartLocation = PickerLocationId.ComputerFolder
+            //};
+            //WinRT.Interop.InitializeWithWindow.Initialize(folderPicker, App.MainWindowHandle);
+
+            //var folder = await folderPicker.PickSingleFolderAsync();
+            //if (folder != null)
+            //{
+            //    var path = folder.Path;
+            //    if (MusicLibrary == null)
+            //    {
+            //        MusicLibrary = new ObservableCollection<LibraryItem>
+            //        {
+            //            new LibraryItem {Path = path}
+            //        };
+            //        Config.MusicLibrary = MusicLibrary.Select(s => s).ToList();
+            //    }
+            //    if (!MusicLibrary.Where(s => s.Path == path).Any())
+            //    {
+            //        MusicLibrary.Add(new LibraryItem { Path = path });
+            //        Config.MusicLibrary = MusicLibrary.Select(s => s).ToList();
+            //    }
+            //}
         }
 
-        private async void AddMusicLibrary(object sender, RoutedEventArgs e)
-        {
-            var folderPicker = new FolderPicker
-            {
-                SuggestedStartLocation = PickerLocationId.ComputerFolder
-            };
-            WinRT.Interop.InitializeWithWindow.Initialize(folderPicker, App.MainWindowHandle);
-
-            var folder = await folderPicker.PickSingleFolderAsync();
-            if (folder != null)
-            {
-                var path = folder.Path;
-                if (MusicLibrary == null)
-                {
-                    MusicLibrary = new ObservableCollection<LibraryItem>
-                    {
-                        new LibraryItem {Path = path}
-                    };
-                    Config.MusicLibrary = MusicLibrary.Select(s => s).ToList();
-                }
-                if (!MusicLibrary.Where(s => s.Path == path).Any())
-                {
-                    MusicLibrary.Add(new LibraryItem { Path = path });
-                    Config.MusicLibrary = MusicLibrary.Select(s => s).ToList();
-                }
-            }
-        }
-
-        private void MusicRemoveClick(object sender, RoutedEventArgs e)
+        private void JellyfinServerRemoveClick(object sender, RoutedEventArgs e)
         {
             var item = ((Button)sender).Tag as LibraryItem;
-            MusicLibrary.Remove(item);
-            Config.MusicLibrary = MusicLibrary.Select(s => s).ToList();
+            //MusicLibrary.Remove(item);
+            //Config.MusicLibrary = MusicLibrary.Select(s => s).ToList();
         }
 
-        private void VideoRemoveClick(object sender, RoutedEventArgs e)
-        {
-            var item = ((Button)sender).Tag as LibraryItem;
-            VideoLibrary.Remove(item);
-            Config.VideoLibrary = VideoLibrary.Select(s => s).ToList();
-        }
+        //private void VideoRemoveClick(object sender, RoutedEventArgs e)
+        //{
+        //    var item = ((Button)sender).Tag as LibraryItem;
+        //    VideoLibrary.Remove(item);
+        //    Config.VideoLibrary = VideoLibrary.Select(s => s).ToList();
+        //}
 
         private void ReloadVideoLibrary(object sender, RoutedEventArgs e)
         {
             LocalVideoService.StartLoadLocalVideo();
         }
 
-        private async void ReloadMusicLibrary(object sender, RoutedEventArgs e)
+        private void ReloadJellyfinServers(object sender, RoutedEventArgs e)
         {
-            await JellyfinMusicService.LoadJellyfinMusicAsync();
+            
         }
         public override RectangleF[] GetTitleBarDragArea()
         {

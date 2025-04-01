@@ -297,7 +297,7 @@ namespace HotPotPlayer.Pages.Helper
                 i.Click += (s, e) => AddToNewPlayList(music);
                 sub.Items.Add(i);
 
-                foreach (var item in JellyfinMusicService.LocalPlayListList)
+                foreach (var item in JellyfinMusicService.JellyfinPlayListList)
                 {
                     i = new MenuFlyoutItem
                     {
@@ -388,7 +388,7 @@ namespace HotPotPlayer.Pages.Helper
                 };
                 sub.Items.Add(i);
 
-                foreach (var item in JellyfinMusicService.LocalPlayListList)
+                foreach (var item in JellyfinMusicService.JellyfinPlayListList)
                 {
                     i = new MenuFlyoutItem
                     {
@@ -491,7 +491,7 @@ namespace HotPotPlayer.Pages.Helper
                 Icon = new SymbolIcon { Symbol = Symbol.Add },
             };
             flyout.Items.Add(i1);
-            foreach (var item in JellyfinMusicService.LocalPlayListList)
+            foreach (var item in JellyfinMusicService.JellyfinPlayListList)
             {
                 var i = new MenuFlyoutItem
                 {

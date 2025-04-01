@@ -97,6 +97,7 @@
     <None Remove="Pages\Music.xaml" />
     <None Remove="Pages\MusicSub\Info.xaml" />
     <None Remove="Pages\Setting.xaml" />
+    <None Remove="Pages\SettingSub\AddJellyfinServerDialog.xaml" />
     <None Remove="Pages\Video.xaml" />
     <None Remove="Pages\VideoPlayPage.xaml" />
     <None Remove="Styles\Buttons.xaml" />
@@ -463,6 +464,11 @@
   </ItemGroup>
   <ItemGroup>
     <Page Update="Controls\BilibiliSub\CoinFlyout.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+  </ItemGroup>
+  <ItemGroup>
+    <Page Update="Pages\SettingSub\AddJellyfinServerDialog.xaml">
       <Generator>MSBuild:Compile</Generator>
     </Page>
   </ItemGroup>

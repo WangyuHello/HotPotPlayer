@@ -2,6 +2,7 @@
 using HotPotPlayer.Bilibili.Models.User;
 using HotPotPlayer.Models;
 using Jellyfin.Sdk;
+using Jellyfin.Sdk.Generated.Artists;
 using Jellyfin.Sdk.Generated.Items;
 using Jellyfin.Sdk.Generated.Models;
 using Microsoft.UI.Dispatching;
@@ -32,20 +33,7 @@ namespace HotPotPlayer.Services
 
         #endregion
         #region Property
-        private ObservableGroupedCollection<int, BaseItemDto> _localAlbumGroup = [];
-        private ReadOnlyObservableGroupedCollection<int, BaseItemDto> _localAlbumGroup2;
-        public ReadOnlyObservableGroupedCollection<int, BaseItemDto> LocalAlbumGroup
-        {
-            get => _localAlbumGroup2 ??= new(_localAlbumGroup);
-        }
-
-        private ObservableCollection<BaseItemDto> _localPlayListList;
-
-        public ObservableCollection<BaseItemDto> LocalPlayListList
-        {
-            get => _localPlayListList;
-            set => Set(ref _localPlayListList, value);
-        }
+        public List<BaseItemDto> JellyfinPlayListList { get; set; }
         #endregion
         #region Field
         private string devideId;
@@ -113,9 +101,8 @@ namespace HotPotPlayer.Services
         private bool IsLogin = false;
         #endregion
 
-        public async Task LoadJellyfinMusicAsync()
+        public async Task<IEnumerable<IGrouping<int, BaseItemDto>>> GetJellyfinAlbumGroupsAsync()
         {
-            State = LocalServiceState.Loading;
             if (!IsLogin)
             {
                 await JellyfinLoginAsync();
@@ -127,16 +114,7 @@ namespace HotPotPlayer.Services
             var albumsResult = await GetAlbums().ConfigureAwait(false);
             var albumGroups = GroupAllAlbumByYear(albumsResult);
 
-            var playlistsResult = await GetPlayLists().ConfigureAwait(false);
-            UIQueue.TryEnqueue(() =>
-            {
-                foreach (var albumGroup in albumGroups)
-                {
-                    _localAlbumGroup.AddGroup(albumGroup);
-                }
-                LocalPlayListList = [.. playlistsResult];
-                State = LocalServiceState.InitComplete;
-            });
+            return albumGroups;
         }
 
         private async Task<BaseItemDtoQueryResult> GetAlbums()
@@ -161,7 +139,7 @@ namespace HotPotPlayer.Services
             return result;
         }
 
-        private async Task<List<BaseItemDto>> GetPlayLists()
+        public async Task<List<BaseItemDto>> GetJellyfinPlayListsAsync()
         {
             var result = await JellyfinApiClient.Items.GetAsync(param =>
             {
@@ -177,7 +155,28 @@ namespace HotPotPlayer.Services
                     //Limit = 100,
                 };
             }).ConfigureAwait(false);
+            JellyfinPlayListList = result.Items;
             return result.Items;
+        }
+
+        public async Task<(List<BaseItemDto> list, int totalCount)> GetJellyfinArtistListAsync(int startIndex = 0, int limit = 50)
+        {
+            var result = await JellyfinApiClient.Artists.GetAsync(param =>
+            {
+                param.QueryParameters = new ArtistsRequestBuilder.ArtistsRequestBuilderGetQueryParameters
+                {
+                    UserId = userDto.Id,
+                    ParentId = musicLibraryDto.Id,
+                    SortBy = [ItemSortBy.SortName],
+                    SortOrder = [SortOrder.Ascending],
+                    Fields = [ItemFields.PrimaryImageAspectRatio, ItemFields.SortName],
+                    ImageTypeLimit = 1,
+                    StartIndex = startIndex,
+                    EnableImageTypes = [ImageType.Primary, ImageType.Backdrop, ImageType.Banner, ImageType.Thumb],
+                    Limit = limit,
+                };
+            }).ConfigureAwait(false);
+            return (result.Items, result.TotalRecordCount.Value);
         }
 
         static IEnumerable<IGrouping<int, BaseItemDto>> GroupAllAlbumByYear(BaseItemDtoQueryResult albums)

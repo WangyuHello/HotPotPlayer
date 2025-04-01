@@ -22,7 +22,7 @@
     Background="White">
 
     <base:PageBase.Resources>
-        <CollectionViewSource x:Name="LocalAlbumGroupView" Source="{x:Bind JellyfinMusicService.LocalAlbumGroup}" IsSourceGrouped="True" />
+        <CollectionViewSource x:Name="LocalAlbumGroupView" Source="{x:Bind JellyfinAlbumGroup}" IsSourceGrouped="True" />
     </base:PageBase.Resources>
 
     <Grid Padding="36,28,0,0" SizeChanged="Root_SizeChanged">
@@ -46,18 +46,41 @@
                     </SemanticZoom.ZoomedOutView>
                 </SemanticZoom>
             </PivotItem>
+            <PivotItem Header="建议" Margin="0">
+
+            </PivotItem>
+            <PivotItem Header="专辑艺术家" Margin="0">
+
+            </PivotItem>
+            <PivotItem Header="艺术家" Margin="0">
+                <GridView
+                    ItemsSource="{x:Bind JellfinArtistList, Mode=OneWay}"
+                    IncrementalLoadingTrigger="Edge"
+                    IncrementalLoadingThreshold="1"
+                    ItemClick="ArtistGridView_ItemClick"
+                    Style="{StaticResource ArtistListCardViewWithFooterStyle}" 
+                    >
+                    
+                </GridView>
+            </PivotItem>
             <PivotItem Header="播放列表" Margin="0" >
                 <GridView 
                     x:Name="PlayListGridView" 
-                    ItemsSource="{x:Bind JellyfinMusicService.LocalPlayListList, Mode=OneWay}" 
+                    ItemsSource="{x:Bind JellyfinPlayListList, Mode=OneWay}" 
                     Style="{StaticResource PlayListCardViewWithFooterStyle}" 
                     ItemClick="PlayListGridView_ItemClick"
                     >
                 </GridView>
             </PivotItem>
+            <PivotItem Header="歌曲" Margin="0">
+
+            </PivotItem>
+            <PivotItem Header="类型" Margin="0">
+
+            </PivotItem>
         </Pivot>
 
-        <StackPanel VerticalAlignment="Top" HorizontalAlignment="Right" Spacing="8" Orientation="Horizontal" Margin="0,16,24,0" Visibility="{x:Bind GetLoadingVisibility(JellyfinMusicService.State), Mode=OneWay}">
+        <StackPanel VerticalAlignment="Top" HorizontalAlignment="Right" Spacing="8" Orientation="Horizontal" Margin="0,16,24,0" Visibility="{x:Bind GetLoadingVisibility(LoadingState), Mode=OneWay}">
             <ProgressRing IsActive="True" Height="20" Width="20"/>
             <TextBlock FontSize="14">加载中</TextBlock>
         </StackPanel>

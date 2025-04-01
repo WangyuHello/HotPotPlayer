@@ -12,7 +12,7 @@
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
 
     <base:PageBase.Resources>
-        <DataTemplate x:Key="MusicLibraryListTemplate" x:DataType="model:LibraryItem">
+        <DataTemplate x:Key="JellyfinServerListTemplate" x:DataType="model:JellyfinServerItem">
             <Grid HorizontalAlignment="Stretch">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="Auto" />
@@ -20,16 +20,13 @@
                     <ColumnDefinition Width="*" />
                     <ColumnDefinition Width="Auto" />
                 </Grid.ColumnDefinitions>
-                <TextBlock Text="{x:Bind Path}" FontSize="14" VerticalAlignment="Center"/>
-                <Border Grid.Column="1" Margin="8,0,0,-2" Visibility="{x:Bind IsRemovableDisk}" VerticalAlignment="Center" BorderBrush="Black" BorderThickness="1" CornerRadius="4" Padding="4,0.8,4,2">
-                    <TextBlock Text="{x:Bind RemovableDiskType}" />
-                </Border>
-                <Button Grid.Column="3" Visibility="{x:Bind GetRemoveVisible}" Tag="{x:Bind }" Click="MusicRemoveClick">
+                <TextBlock Text="{x:Bind Url}" FontSize="14" VerticalAlignment="Center"/>
+                <Button Grid.Column="3" Tag="{x:Bind }" Click="JellyfinServerRemoveClick">
                     <SymbolIcon Symbol="Clear" />
                 </Button>
             </Grid>
         </DataTemplate>
-        <DataTemplate x:Key="VideoLibraryListTemplate" x:DataType="model:LibraryItem">
+        <!--<DataTemplate x:Key="VideoLibraryListTemplate" x:DataType="model:LibraryItem">
             <Grid HorizontalAlignment="Stretch">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="Auto" />
@@ -45,9 +42,9 @@
                     <SymbolIcon Symbol="Clear" />
                 </Button>
             </Grid>
-        </DataTemplate>
+        </DataTemplate>-->
         
-        <Style x:Key="LibraryListContainerStyle" TargetType="ListViewItem">
+        <Style x:Key="ServerListContainerStyle" TargetType="ListViewItem">
             <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
             <Setter Property="VerticalContentAlignment" Value="Stretch"/>
             <Setter Property="Padding" Value="4" />
@@ -75,7 +72,7 @@
             </InfoBar>-->
         </StackPanel>
         <StackPanel Grid.Row="2" Margin="36,0,36,0">
-            <TextBlock Margin="0,12" FontSize="18">库</TextBlock>
+            <TextBlock Margin="0,12" FontSize="18">Jellyfin</TextBlock>
             <Expander HorizontalAlignment="Stretch" HorizontalContentAlignment="Stretch">
                 <Expander.Header>
                     <Grid>
@@ -87,41 +84,20 @@
                             <ColumnDefinition Width="Auto" />
                         </Grid.ColumnDefinitions>
                         <FontIcon FontFamily="{ThemeResource SegoeIcons}" Glyph="&#xE8B7;" />
-                        <TextBlock Grid.Column="1" Margin="12,0" VerticalAlignment="Center">音乐库位置</TextBlock>
-                        <Button Grid.Column="3" Click="ReloadMusicLibrary">
+                        <TextBlock Grid.Column="1" Margin="12,0" VerticalAlignment="Center">服务器</TextBlock>
+                        <Button Grid.Column="3" Click="ReloadJellyfinServers">
                             <SymbolIcon Symbol="Refresh"/>
                         </Button>
-                        <Button Grid.Column="4" Click="AddMusicLibrary">
-                            <SymbolIcon Symbol="NewFolder"/>
+                        <Button Grid.Column="4" Click="AddJellyfinServer">
+                            <FontIcon FontFamily="Segoe Fluent Icons" Glyph="&#xE836;" />
                         </Button>
                     </Grid>
                 </Expander.Header>
                 <Expander.Content>
-                    <ListView ItemsSource="{x:Bind MusicLibrary, Mode=OneWay}" SelectionMode="None" ItemTemplate="{StaticResource MusicLibraryListTemplate}" ItemContainerStyle="{StaticResource LibraryListContainerStyle}"/>
-                </Expander.Content>
-            </Expander>
-            <Expander HorizontalAlignment="Stretch" Margin="0,8,0,8" HorizontalContentAlignment="Stretch">
-                <Expander.Header>
-                    <Grid>
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="Auto" />
-                            <ColumnDefinition Width="Auto" />
-                            <ColumnDefinition Width="*" />
-                            <ColumnDefinition Width="Auto" />
-                            <ColumnDefinition Width="Auto" />
-                        </Grid.ColumnDefinitions>
-                        <FontIcon FontFamily="{ThemeResource SegoeIcons}" Glyph="&#xE8B7;" />
-                        <TextBlock Grid.Column="1" Margin="12,0" VerticalAlignment="Center">视频库位置</TextBlock>
-                        <Button Grid.Column="3" Click="ReloadVideoLibrary">
-                            <SymbolIcon Symbol="Refresh"/>
-                        </Button>
-                        <Button Grid.Column="4" Click="AddVideoLibrary">
-                            <SymbolIcon Symbol="NewFolder"/>
-                        </Button>
-                    </Grid>
-                </Expander.Header>
-                <Expander.Content>
-                    <ListView ItemsSource="{x:Bind VideoLibrary, Mode=OneWay}" SelectionMode="None" ItemTemplate="{StaticResource VideoLibraryListTemplate}" ItemContainerStyle="{StaticResource LibraryListContainerStyle}"/>
+                    <ListView ItemsSource="{x:Bind JellyfinServers, Mode=OneWay}" 
+                              SelectionMode="None" 
+                              ItemTemplate="{StaticResource JellyfinServerListTemplate}" 
+                              ItemContainerStyle="{StaticResource ServerListContainerStyle}"/>
                 </Expander.Content>
             </Expander>
             <TextBlock Margin="0,12" FontSize="18">调试</TextBlock>

@@ -1,4 +1,5 @@
 ﻿using Microsoft.UI.Xaml;
+using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Hosting;
 using Microsoft.UI.Xaml.Media;
 using System;
@@ -26,8 +27,26 @@ namespace HotPotPlayer.Templates
             pointerEnteredAnimation.InsertKeyFrame(1.0f, new Vector3(1.1f));
             var pointerExitedAnimation = compositor.CreateVector3KeyFrameAnimation();
             pointerExitedAnimation.InsertKeyFrame(1.0f, new Vector3(1.0f));
-            root.PointerEntered += (sender, args) => rootVisual.StartAnimation("Scale", pointerEnteredAnimation);
-            root.PointerExited += (sender, args) => rootVisual.StartAnimation("Scale", pointerExitedAnimation);
+            root.PointerEntered += (sender, args) =>
+            {
+                rootVisual.StartAnimation("Scale", pointerEnteredAnimation);
+                var root2 = (UIElement)sender;
+                if (root2 is Grid)
+                {
+                    var hidden = VisualTreeHelper.GetChild(root, 1) as UIElement;
+                    hidden.Visibility = Visibility.Visible;
+                }
+            };
+            root.PointerExited += (sender, args) =>
+            {
+                rootVisual.StartAnimation("Scale", pointerExitedAnimation);
+                var root2 = (UIElement)sender;
+                if (root2 is Grid)
+                {
+                    var hidden = VisualTreeHelper.GetChild(root, 1) as UIElement;
+                    hidden.Visibility = Visibility.Collapsed;
+                }
+            };
         }
 
         private void Root_Loaded2(object sender, RoutedEventArgs e)

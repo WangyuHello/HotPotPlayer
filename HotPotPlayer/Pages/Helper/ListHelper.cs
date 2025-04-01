@@ -92,7 +92,7 @@ namespace HotPotPlayer.Pages.Helper
                 }
                 else
                 {
-                    foreach (var item in JellyfinMusicService.LocalPlayListList)
+                    foreach (var item in JellyfinMusicService.JellyfinPlayListList)
                     {
                         i = new MenuFlyoutItem
                         {
@@ -181,7 +181,7 @@ namespace HotPotPlayer.Pages.Helper
                 }
                 else
                 {
-                    foreach (var item in JellyfinMusicService.LocalPlayListList)
+                    foreach (var item in JellyfinMusicService.JellyfinPlayListList)
                     {
                         i = new MenuFlyoutItem
                         {
@@ -292,7 +292,7 @@ namespace HotPotPlayer.Pages.Helper
                 }
                 else
                 {
-                    foreach (var item in JellyfinMusicService.LocalPlayListList)
+                    foreach (var item in JellyfinMusicService.JellyfinPlayListList)
                     {
                         i = new MenuFlyoutItem
                         {
@@ -382,7 +382,7 @@ namespace HotPotPlayer.Pages.Helper
                 }
                 else
                 {
-                    foreach (var item in JellyfinMusicService.LocalPlayListList)
+                    foreach (var item in JellyfinMusicService.JellyfinPlayListList)
                     {
                         i = new MenuFlyoutItem
                         {
@@ -469,7 +469,7 @@ namespace HotPotPlayer.Pages.Helper
                 }
                 else
                 {
-                    foreach (var item in JellyfinMusicService.LocalPlayListList)
+                    foreach (var item in JellyfinMusicService.JellyfinPlayListList)
                     {
                         i = new MenuFlyoutItem
                         {
