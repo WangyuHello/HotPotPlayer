@@ -32,7 +32,10 @@
                 <ColumnDefinition Width="*" />
             </Grid.ColumnDefinitions>
 
-            <cont:ImageEx2 Source="{x:Bind helper2:BaseItemDtoHelper.GetPrimaryJellyfinImage(SelectedAlbum.ImageTags, SelectedAlbum.Id), Mode=OneWay}" Style="{StaticResource LocalAlbumImageStyle}" />
+            <cont:ImageEx2 
+                
+                Source="{x:Bind helper2:BaseItemDtoHelper.GetPrimaryJellyfinImage(SelectedAlbum.ImageTags, SelectedAlbum.Id), Mode=OneWay}" 
+                Style="{StaticResource LocalAlbumImageStyle}" />
             <StackPanel Grid.Column="1" Margin="16,0,0,0" >
                 <TextBlock Text="{x:Bind SelectedAlbum.Name, Mode=OneWay}" MaxLines="2" FontSize="32" TextWrapping="Wrap" FontWeight="Medium" TextTrimming="CharacterEllipsis" />
                 <TextBlock Text="{x:Bind SelectedAlbum.ProductionYear, Mode=OneWay}" FontSize="18" Margin="0,4,0,0"/>

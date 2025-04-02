@@ -61,5 +61,12 @@ namespace HotPotPlayer.Controls
             var music = e.ClickedItem as BaseItemDto;
             MusicPlayer.PlayNext(music, Album);
         }
+
+        bool coverOpened = false;
+        private void Cover_Tapped(object sender, TappedRoutedEventArgs e)
+        {
+            CoverHeight.Height = new GridLength(coverOpened ? 200 : 320);
+            coverOpened = !coverOpened;
+        }
     }
 }

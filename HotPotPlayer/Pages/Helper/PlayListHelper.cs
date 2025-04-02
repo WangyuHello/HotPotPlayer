@@ -2,6 +2,7 @@
 using HotPotPlayer.Models;
 using HotPotPlayer.Models.CloudMusic;
 using HotPotPlayer.Services;
+using Jellyfin.Sdk.Generated.Models;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using System;
@@ -46,6 +47,13 @@ namespace HotPotPlayer.Pages.Helper
             }
             button.Flyout = flyout;
             button.Flyout.ShowAt(button);
+        }
+        
+        public static async void PlayListPlay(object sender, RoutedEventArgs e)
+        {
+            var playList = ((Control)sender).Tag as BaseItemDto;
+            var playListMusicItems = await App.JellyfinMusicService.GetPlayListMusicItemsAsync(playList);
+            App.MusicPlayer.PlayNext(playListMusicItems);
         }
     }
 }

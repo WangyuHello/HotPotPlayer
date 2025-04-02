@@ -217,6 +217,11 @@ namespace HotPotPlayer.Services
             return GetPrimaryJellyfinImageBase(tag, parentId, 100);
         }
 
+        public Uri GetPrimaryJellyfinImageVerySmall(BaseItemDto_ImageTags tag, Guid? parentId)
+        {
+            return GetPrimaryJellyfinImageBase(tag, parentId, 32);
+        }
+
         public async Task JellyfinLoginAsync()
         {
             var systemInfo = await JellyfinApiClient.System.Info.Public.GetAsync();
@@ -261,6 +266,19 @@ namespace HotPotPlayer.Services
             }).ConfigureAwait(false);
 
             return result.Items;
+        }
+
+        public async Task<BaseItemDto> GetPlayListInfoAsync(BaseItemDto playlist)
+        {
+            var result = await JellyfinApiClient.Items[playlist.Id.Value].GetAsync(param =>
+            {
+                param.QueryParameters = new Jellyfin.Sdk.Generated.Items.Item.WithItemItemRequestBuilder.WithItemItemRequestBuilderGetQueryParameters
+                {
+                    UserId = userDto.Id,
+                };
+            }).ConfigureAwait(false);
+
+            return result;
         }
 
         public async Task<BaseItemDto> GetAlbumInfoAsync(BaseItemDto album)
@@ -442,6 +460,7 @@ namespace HotPotPlayer.Services
         public override void Dispose()
         {
             JellyfinApiClient.Dispose();
+            httpClient.Dispose();
             base.Dispose();
         }
     }

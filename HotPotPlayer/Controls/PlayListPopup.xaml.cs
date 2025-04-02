@@ -42,6 +42,8 @@ namespace HotPotPlayer.Controls
         public static readonly DependencyProperty PlayListProperty =
             DependencyProperty.Register("PlayList", typeof(BaseItemDto), typeof(PlayListPopup), new PropertyMetadata(default(BaseItemDto), PlayListChanged));
 
+        [ObservableProperty]
+        private BaseItemDto playListInfo;
 
         [ObservableProperty]
         private List<BaseItemDto> playListMusicItems;
@@ -50,6 +52,7 @@ namespace HotPotPlayer.Controls
         {
             var newPlaylist = e.NewValue as BaseItemDto;
             var @this = (PlayListPopup)d;
+            @this.PlayListInfo = await @this.JellyfinMusicService.GetPlayListInfoAsync(newPlaylist);
             @this.PlayListMusicItems = await @this.JellyfinMusicService.GetPlayListMusicItemsAsync(newPlaylist);
         }
 
@@ -70,6 +73,13 @@ namespace HotPotPlayer.Controls
         {
             var music = e.ClickedItem as BaseItemDto;
             MusicPlayer.PlayNext(music, PlayListMusicItems);
+        }
+
+        bool coverOpened = false;
+        private void Cover_Tapped(object sender, TappedRoutedEventArgs e)
+        {
+            CoverHeight.Height = new GridLength(coverOpened ? 200 : 320);
+            coverOpened = !coverOpened;
         }
     }
 }

@@ -126,11 +126,12 @@
         <Setter Property="IsCacheEnabled" Value="True" />
         <Setter Property="EnableLazyLoading" Value="True" />
         <Setter Property="HorizontalAlignment" Value="Center" />
-        <Setter Property="VerticalAlignment" Value="Center" />
-        <Setter Property="DecodePixelWidth" Value="200" />
-        <Setter Property="DecodePixelHeight" Value="200" />
-        <Setter Property="Width" Value="200" />
-        <Setter Property="Height" Value="200" />
+        <Setter Property="VerticalAlignment" Value="Top" />
+        <Setter Property="DecodePixelWidth" Value="320" />
+        <Setter Property="DecodePixelHeight" Value="320" />
+        <Setter Property="Width" Value="320" />
+        <Setter Property="Height" Value="320" />
+        <Setter Property="Stretch" Value="UniformToFill" />
     </Style>
 
     <Style x:Key="LocalVideoImageStyle" TargetType="cont:ImageEx2" BasedOn="{StaticResource ImageEx2BaseStyle}">

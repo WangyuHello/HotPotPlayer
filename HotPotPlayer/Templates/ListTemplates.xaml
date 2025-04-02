@@ -59,7 +59,7 @@
                         <ColumnDefinition Width="38" />
                         <ColumnDefinition Width="Auto" />
                     </Grid.ColumnDefinitions>
-                    <TextBlock Text="{x:Bind IndexNumber}" VerticalAlignment="Center"/>
+                    <TextBlock Text="{x:Bind IndexNumber}" VerticalAlignment="Center" FontFamily="{ThemeResource MiSansMedium}"/>
                     <TextBlock Grid.Column="1" Text="{x:Bind Name}" TextTrimming="CharacterEllipsis" VerticalAlignment="Center" />
                     <HyperlinkButton Grid.Column="2" Content="{x:Bind helper2:BaseItemDtoHelper.GetJellyfinArtists(Artists)}" VerticalAlignment="Center" Click="{x:Bind helper:AlbumHelper.ArtistClick}" Tag="{x:Bind }"  FontFamily="{ThemeResource MiSansRegular}"/>
                     <TextBlock Grid.Column="3" Text="{x:Bind helper2:BaseItemDtoHelper.GetJellyfinDuration(RunTimeTicks)}" VerticalAlignment="Center" />
@@ -80,7 +80,7 @@
                         <ColumnDefinition Width="38" />
                         <ColumnDefinition Width="Auto" />
                     </Grid.ColumnDefinitions>
-                    <TextBlock Text="{x:Bind IndexNumber}" VerticalAlignment="Center" />
+                    <TextBlock Text="{x:Bind IndexNumber}" VerticalAlignment="Center" FontFamily="{ThemeResource MiSansMedium}"/>
                     <TextBlock Grid.Column="1" Text="{x:Bind Name}" TextTrimming="CharacterEllipsis" VerticalAlignment="Center" />
                     <HyperlinkButton Grid.Column="2" Content="{x:Bind helper2:BaseItemDtoHelper.GetJellyfinArtists(Artists)}" VerticalAlignment="Center" Click="{x:Bind helper:AlbumHelper.ArtistClick}" Tag="{x:Bind }"  FontFamily="{ThemeResource MiSansRegular}"/>
                     <TextBlock Grid.Column="3" Text="{x:Bind helper2:BaseItemDtoHelper.GetJellyfinDuration(RunTimeTicks)}" VerticalAlignment="Center" />
@@ -95,20 +95,28 @@
     <sel:EvenOldTemplateSelector x:Key="EvenOldMusicListInPlayListTemplate" >
         <sel:EvenOldTemplateSelector.EvenTemplate>
             <DataTemplate x:DataType="jmodel:BaseItemDto">
-                <Grid Background="#40F4F7FE" Padding="{StaticResource ListItemPadding}"
+                <Grid Background="#40F4F7FE" Padding="8"
+                      CornerRadius="4"
                       RightTapped="{x:Bind helper:ListHelper.RightTapMusicInPlayListClick}">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="*" />
+                        <RowDefinition Height="*" />
+                    </Grid.RowDefinitions>
                     <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="24" />
+                        <ColumnDefinition Width="Auto" />
                         <ColumnDefinition Width="*" />
-                        <ColumnDefinition Width="180" />
-                        <ColumnDefinition Width="220" />
-                        <ColumnDefinition Width="38" />
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="48" />
                         <ColumnDefinition Width="Auto" />
                     </Grid.ColumnDefinitions>
-                    <TextBlock Grid.Column="0" Text="{x:Bind Name}" TextTrimming="CharacterEllipsis" VerticalAlignment="Center" FontFamily="{ThemeResource MiSansRegular}"/>
-                    <HyperlinkButton Grid.Column="1" Content="{x:Bind helper2:BaseItemDtoHelper.GetJellyfinArtists(Artists)}" VerticalAlignment="Center" Click="{x:Bind helper:AlbumHelper.ArtistClick}" Tag="{x:Bind }" FontFamily="{ThemeResource MiSansRegular}"/>
-                    <HyperlinkButton Grid.Column="2" Content="{x:Bind Album}" VerticalAlignment="Center" Click="{x:Bind helper:AlbumHelper.AlbumInfoClick}" Tag="{x:Bind }" FontFamily="{ThemeResource MiSansRegular}"/>
-                    <TextBlock Grid.Column="3" Text="{x:Bind helper2:BaseItemDtoHelper.GetJellyfinDuration(RunTimeTicks)}" VerticalAlignment="Center" FontFamily="{ThemeResource MiSansRegular}"/>
-                    <Button Grid.Column="4" Style="{StaticResource TransparentButton}" Margin="16,0,0,0" CornerRadius="4" Padding="4" Tag="{x:Bind }" Click="{x:Bind helper:ListHelper.RightTapMusicInPlayListClick}">
+                    <TextBlock Grid.RowSpan="2" Text="{Binding RelativeSource={RelativeSource Mode=TemplatedParent}, Converter={StaticResource IndexConverter}}" FontSize="12" HorizontalAlignment="Center" VerticalAlignment="Center" FontFamily="{ThemeResource MiSansBold}"/>
+                    <cont2:ImageEx2 Grid.RowSpan="2" VerticalAlignment="Center" Margin="4,0,8,0" Grid.Column="1" Source="{x:Bind helper2:BaseItemDtoHelper.GetPrimaryJellyfinImageVerySmall(ImageTags, Id)}" Style="{StaticResource LocalMusicImageStyle}" Height="36" Width="36" CornerRadius="4" EnableLazyLoading="True"/>
+                    <TextBlock Grid.Column="2" VerticalAlignment="Bottom" FontSize="14" TextTrimming="CharacterEllipsis" Text="{x:Bind Name}" FontFamily="{ThemeResource MiSansMedium}" ToolTipService.ToolTip="{x:Bind Name}"/>
+                    <HyperlinkButton Grid.Row="1" Grid.Column="2" Padding="0" Content="{x:Bind helper2:BaseItemDtoHelper.GetJellyfinArtists(Artists)}" VerticalAlignment="Top" Click="{x:Bind helper:AlbumHelper.ArtistClick}" Tag="{x:Bind }" FontFamily="{ThemeResource MiSansRegular}" Foreground="Gray"/>
+                    <HyperlinkButton Grid.RowSpan="2" Grid.Column="3" Margin="0,0,8,0" Content="{x:Bind Album}" VerticalAlignment="Center" Click="{x:Bind helper:AlbumHelper.AlbumInfoClick}" Tag="{x:Bind }" FontFamily="{ThemeResource MiSansRegular}"/>
+                    <TextBlock Grid.RowSpan="2" Grid.Column="4" Text="{x:Bind helper2:BaseItemDtoHelper.GetJellyfinDuration(RunTimeTicks)}" VerticalAlignment="Center" FontFamily="{ThemeResource MiSansRegular}"/>
+                    <Button Grid.RowSpan="2" Grid.Column="5" Style="{StaticResource TransparentButton}" Margin="4,0,4,0" CornerRadius="4" Padding="4" Tag="{x:Bind }" Click="{x:Bind helper:ListHelper.RightTapMusicInPlayListClick}">
                         <SymbolIcon Symbol="More" />
                     </Button>
                 </Grid>
@@ -116,20 +124,28 @@
         </sel:EvenOldTemplateSelector.EvenTemplate>
         <sel:EvenOldTemplateSelector.OddTemplate>
             <DataTemplate x:DataType="jmodel:BaseItemDto">
-                <Grid Padding="{StaticResource ListItemPadding}"
-                    RightTapped="{x:Bind helper:ListHelper.RightTapMusicInPlayListClick}">
+                <Grid Padding="8"
+                      CornerRadius="4"
+                      RightTapped="{x:Bind helper:ListHelper.RightTapMusicInPlayListClick}">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="*" />
+                        <RowDefinition Height="*" />
+                    </Grid.RowDefinitions>
                     <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="24" />
+                        <ColumnDefinition Width="Auto" />
                         <ColumnDefinition Width="*" />
-                        <ColumnDefinition Width="180" />
-                        <ColumnDefinition Width="220" />
-                        <ColumnDefinition Width="38" />
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="48" />
                         <ColumnDefinition Width="Auto" />
                     </Grid.ColumnDefinitions>
-                    <TextBlock Grid.Column="0" Text="{x:Bind Name}" TextTrimming="CharacterEllipsis" VerticalAlignment="Center" FontFamily="{ThemeResource MiSansRegular}"/>
-                    <HyperlinkButton Grid.Column="1" Margin="0,0,16,0" Content="{x:Bind helper2:BaseItemDtoHelper.GetJellyfinArtists(Artists)}" VerticalAlignment="Center" Click="{x:Bind helper:AlbumHelper.ArtistClick}" Tag="{x:Bind }" FontFamily="{ThemeResource MiSansRegular}"/>
-                    <HyperlinkButton Grid.Column="2" Margin="0,0,16,0" Content="{x:Bind Album}" VerticalAlignment="Center" Click="{x:Bind helper:AlbumHelper.AlbumInfoClick}" Tag="{x:Bind }" FontFamily="{ThemeResource MiSansRegular}"/>
-                    <TextBlock Grid.Column="3" Text="{x:Bind helper2:BaseItemDtoHelper.GetJellyfinDuration(RunTimeTicks)}" VerticalAlignment="Center" FontFamily="{ThemeResource MiSansRegular}"/>
-                    <Button Grid.Column="4" Style="{StaticResource TransparentButton}" Margin="16,0,0,0" CornerRadius="4" Padding="4" Tag="{x:Bind }" Click="{x:Bind helper:ListHelper.RightTapMusicInPlayListClick}">
+                    <TextBlock Grid.RowSpan="2" Text="{Binding RelativeSource={RelativeSource Mode=TemplatedParent}, Converter={StaticResource IndexConverter}}" FontSize="12" HorizontalAlignment="Center" VerticalAlignment="Center" FontFamily="{ThemeResource MiSansBold}"/>
+                    <cont2:ImageEx2 Grid.RowSpan="2" VerticalAlignment="Center" Margin="4,0,8,0" Grid.Column="1" Source="{x:Bind helper2:BaseItemDtoHelper.GetPrimaryJellyfinImageVerySmall(ImageTags, Id)}" Style="{StaticResource LocalMusicImageStyle}" Height="36" Width="36" CornerRadius="4" EnableLazyLoading="True"/>
+                    <TextBlock Grid.Column="2" VerticalAlignment="Bottom" FontSize="14" TextTrimming="CharacterEllipsis" Text="{x:Bind Name}" FontFamily="{ThemeResource MiSansMedium}" ToolTipService.ToolTip="{x:Bind Name}"/>
+                    <HyperlinkButton Grid.Row="1" Grid.Column="2" Padding="0" Content="{x:Bind helper2:BaseItemDtoHelper.GetJellyfinArtists(Artists)}" VerticalAlignment="Top" Click="{x:Bind helper:AlbumHelper.ArtistClick}" Tag="{x:Bind }" FontFamily="{ThemeResource MiSansRegular}" Foreground="Gray"/>
+                    <HyperlinkButton Grid.RowSpan="2" Grid.Column="3" Margin="0,0,8,0" Content="{x:Bind Album}" VerticalAlignment="Center" Click="{x:Bind helper:AlbumHelper.AlbumInfoClick}" Tag="{x:Bind }" FontFamily="{ThemeResource MiSansRegular}"/>
+                    <TextBlock Grid.RowSpan="2" Grid.Column="4" Text="{x:Bind helper2:BaseItemDtoHelper.GetJellyfinDuration(RunTimeTicks)}" VerticalAlignment="Center" FontFamily="{ThemeResource MiSansRegular}"/>
+                    <Button Grid.RowSpan="2" Grid.Column="5" Style="{StaticResource TransparentButton}" Margin="4,0,4,0" CornerRadius="4" Padding="4" Tag="{x:Bind }" Click="{x:Bind helper:ListHelper.RightTapMusicInPlayListClick}">
                         <SymbolIcon Symbol="More" />
                     </Button>
                 </Grid>
@@ -398,6 +414,12 @@
     <DataTemplate x:Key="TagWrapTemplate" x:DataType="x:String">
         <Grid BorderBrush="Gray" BorderThickness="1" CornerRadius="10" Padding="8,0">
             <TextBlock Text="{x:Bind }" FontFamily="{StaticResource MiSansRegular}"/>
+        </Grid>
+    </DataTemplate>
+
+    <DataTemplate x:Key="GenreWrapTemplate" x:DataType="jmodel:NameGuidPair">
+        <Grid BorderBrush="Gray" BorderThickness="1" CornerRadius="10" Padding="8,0">
+            <TextBlock Text="{x:Bind Name}" FontFamily="{StaticResource MiSansRegular}"/>
         </Grid>
     </DataTemplate>
 

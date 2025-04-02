@@ -150,6 +150,11 @@ namespace HotPotPlayer.Pages
             return state == LocalServiceState.Loading ? Visibility.Visible : Visibility.Collapsed;
         }
 
+        Visibility GetAlbumListVisibility(LocalServiceState state)
+        {
+            return state == LocalServiceState.Complete ? Visibility.Visible : Visibility.Collapsed;
+        }
+
         public override RectangleF[] GetTitleBarDragArea()
         {
             return

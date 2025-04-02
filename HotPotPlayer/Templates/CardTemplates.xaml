@@ -175,36 +175,61 @@
     </DataTemplate>
 
     <DataTemplate x:Key="PlayListCardViewTemplate" x:DataType="jmodel:BaseItemDto">
-        <StackPanel 
-            Width="170"
-            Spacing="8" 
-            Padding="0,0,0,12" 
-            x:Name="PlayListCardConnectedElement"
-            BorderBrush="{ThemeResource ButtonBorderBrush}"
-            BorderThickness="{ThemeResource ButtonBorderThemeThickness}"
-            CornerRadius="4"
-            ui:VisualExtensions.NormalizedCenterPoint="0.5"
-            Loaded="Root_Loaded"
-            Background="White"
-            >
-            <cont2:ImageEx2 
-                Source="{x:Bind helper2:BaseItemDtoHelper.GetPrimaryJellyfinImage(ImageTags, Id)}" 
-                Style="{StaticResource LocalMusicImageStyle}" 
-                x:Phase="1"
-                />
-            <TextBlock 
-                Margin="8,0" 
-                Text="{x:Bind Name}" 
-                LineStackingStrategy="BaselineToBaseline" 
-                FontSize="18" 
-                TextTrimming="CharacterEllipsis" 
-                TextWrapping="Wrap" 
-                MaxLines="2"
-                Height="48"
-                ToolTipService.ToolTip="{x:Bind Name}" 
-                FontFamily="{ThemeResource MiSansMedium}"
-                />
-        </StackPanel>
+        <Grid Loaded="Root_Loaded"
+              Width="170"
+              Padding="0,0,0,12" 
+              x:Name="PlayListCardConnectedElement"
+              BorderBrush="{ThemeResource ButtonBorderBrush}"
+              BorderThickness="{ThemeResource ButtonBorderThemeThickness}"
+              CornerRadius="4"
+              ui:VisualExtensions.NormalizedCenterPoint="0.5"
+              Background="White"
+              >
+            <StackPanel Spacing="8" >
+                <cont2:ImageEx2 
+                    Source="{x:Bind helper2:BaseItemDtoHelper.GetPrimaryJellyfinImage(ImageTags, Id)}" 
+                    Style="{StaticResource LocalMusicImageStyle}" 
+                    x:Phase="1"
+                    />
+                <TextBlock 
+                    Margin="8,0" 
+                    Text="{x:Bind Name}" 
+                    LineStackingStrategy="BaselineToBaseline" 
+                    FontSize="18" 
+                    TextTrimming="CharacterEllipsis" 
+                    TextWrapping="Wrap" 
+                    MaxLines="2"
+                    Height="48"
+                    ToolTipService.ToolTip="{x:Bind Name}" 
+                    FontFamily="{ThemeResource MiSansMedium}"
+                    />
+            </StackPanel>
+            <Grid Visibility="Collapsed">
+                <Button Style="{StaticResource TransparentButton}"
+                        HorizontalAlignment="Center"
+                        Padding="12"
+                        Margin="0,-70,0,0"
+                        CornerRadius="32"
+                        Background="#99FFFFFF"
+                        Tag="{x:Bind }"
+                        Click="{x:Bind helper:PlayListHelper.PlayListPlay}">
+                    <FontIcon FontFamily="Segoe Fluent Icons" Glyph="&#xE768;" FontSize="24"/>
+                </Button>
+                <StackPanel 
+                    Margin="0,0,8,0"
+                    HorizontalAlignment="Right" 
+                    VerticalAlignment="Bottom" 
+                    Orientation="Horizontal"
+                    Spacing="8">
+                    <Button Style="{StaticResource TransparentButton}" Foreground="Gray" >
+                        <FontIcon FontFamily="Segoe Fluent Icons" Glyph="&#xE734;" FontSize="18"/>
+                    </Button>
+                    <Button Style="{StaticResource TransparentButton}" Foreground="Gray" >
+                        <FontIcon FontFamily="Segoe Fluent Icons" Glyph="&#xE712;" FontSize="18"/>
+                    </Button>
+                </StackPanel>
+            </Grid>
+        </Grid>
     </DataTemplate>
 
     <DataTemplate x:Key="ArtistListCardViewTemplate" x:DataType="jmodel:BaseItemDto">

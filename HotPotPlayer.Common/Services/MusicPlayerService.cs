@@ -684,6 +684,7 @@ namespace HotPotPlayer.Services
         public override void Dispose()
         {
             _playerStarter?.Dispose();
+            _outputDevice?.Stop();
             _outputDevice?.Dispose();
             _audioStream?.Dispose();
             _playerTimer?.Dispose();
