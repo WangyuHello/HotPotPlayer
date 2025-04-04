@@ -40,21 +40,25 @@ namespace HotPotPlayer.Controls
         }
 
         public static readonly DependencyProperty AlbumProperty =
-            DependencyProperty.Register("Album", typeof(BaseItemDto), typeof(AlbumPopup), new PropertyMetadata(default(BaseItemDto), AlbumChanged));
+            DependencyProperty.Register("Album", typeof(BaseItemDto), typeof(AlbumPopup), new PropertyMetadata(default(BaseItemDto)));
 
-        [ObservableProperty]
-        private List<BaseItemDto> albumMusicItems;
-
-        [ObservableProperty]
-        private BaseItemDto albumInfo;
-
-        private static async void AlbumChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        public List<BaseItemDto> AlbumMusicItems
         {
-            var @this = (AlbumPopup)d;
-            @this.AlbumMusicItems = await @this.JellyfinMusicService.GetAlbumMusicItemsAsync(@this.Album);
-            @this.AlbumInfo = await @this.JellyfinMusicService.GetAlbumInfoAsync(@this.Album);
-            //AlbumHelper.InitSplitButtonFlyout(@this.AlbumSplitButton, @this.Album);
+            get { return (List<BaseItemDto>)GetValue(AlbumMusicItemsProperty); }
+            set { SetValue(AlbumMusicItemsProperty, value); }
         }
+
+        public static readonly DependencyProperty AlbumMusicItemsProperty =
+            DependencyProperty.Register("AlbumMusicItems", typeof(List<BaseItemDto>), typeof(AlbumPopup), new PropertyMetadata(default(List<BaseItemDto>)));
+
+        public BaseItemDto AlbumInfo
+        {
+            get { return (BaseItemDto)GetValue(AlbumInfoProperty); }
+            set { SetValue(AlbumInfoProperty, value); }
+        }
+
+        public static readonly DependencyProperty AlbumInfoProperty =
+            DependencyProperty.Register("AlbumInfo", typeof(BaseItemDto), typeof(AlbumPopup), new PropertyMetadata(default(BaseItemDto)));
 
         private void ListView_ItemClick(object sender, ItemClickEventArgs e)
         {

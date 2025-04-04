@@ -40,21 +40,25 @@ namespace HotPotPlayer.Controls
         }
 
         public static readonly DependencyProperty PlayListProperty =
-            DependencyProperty.Register("PlayList", typeof(BaseItemDto), typeof(PlayListPopup), new PropertyMetadata(default(BaseItemDto), PlayListChanged));
+            DependencyProperty.Register("PlayList", typeof(BaseItemDto), typeof(PlayListPopup), new PropertyMetadata(default(BaseItemDto)));
 
-        [ObservableProperty]
-        private BaseItemDto playListInfo;
-
-        [ObservableProperty]
-        private List<BaseItemDto> playListMusicItems;
-
-        private static async void PlayListChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        public BaseItemDto PlayListInfo
         {
-            var newPlaylist = e.NewValue as BaseItemDto;
-            var @this = (PlayListPopup)d;
-            @this.PlayListInfo = await @this.JellyfinMusicService.GetPlayListInfoAsync(newPlaylist);
-            @this.PlayListMusicItems = await @this.JellyfinMusicService.GetPlayListMusicItemsAsync(newPlaylist);
+            get { return (BaseItemDto)GetValue(PlayListInfoProperty); }
+            set { SetValue(PlayListInfoProperty, value); }
         }
+
+        public static readonly DependencyProperty PlayListInfoProperty =
+            DependencyProperty.Register("PlayListInfo", typeof(BaseItemDto), typeof(PlayListPopup), new PropertyMetadata(default(BaseItemDto)));
+
+        public List<BaseItemDto> PlayListMusicItems
+        {
+            get { return (List<BaseItemDto>)GetValue(PlayListMusicItemsProperty); }
+            set { SetValue(PlayListMusicItemsProperty, value); }
+        }
+
+        public static readonly DependencyProperty PlayListMusicItemsProperty =
+            DependencyProperty.Register("PlayListMusicItems", typeof(List<BaseItemDto>), typeof(PlayListPopup), new PropertyMetadata(default(List<BaseItemDto>)));
 
         string GetDescription(BaseItemDto p)
         {

@@ -58,7 +58,19 @@ namespace HotPotPlayer.Pages
         private BaseItemDto selectedAlbum;
 
         [ObservableProperty]
+        private BaseItemDto selectedAlbumInfo;
+
+        [ObservableProperty]
+        private List<BaseItemDto> selectedAlbumMusicItems;
+
+        [ObservableProperty]
         private BaseItemDto selectedPlayList;
+
+        [ObservableProperty]
+        private BaseItemDto selectedPlayListInfo;
+
+        [ObservableProperty]
+        private List<BaseItemDto> selectedPlayListMusicItems;
 
         [ObservableProperty]
         private LocalServiceState loadingState = LocalServiceState.Idle;
@@ -108,9 +120,14 @@ namespace HotPotPlayer.Pages
             root.Opacity = 1;
         }
 
-        private void AlbumGridView_ItemClick(object sender, ItemClickEventArgs e)
+        private async void AlbumGridView_ItemClick(object sender, ItemClickEventArgs e)
         {
             var album = e.ClickedItem as BaseItemDto;
+            if (album != SelectedAlbum) 
+            {
+                SelectedAlbumMusicItems = await JellyfinMusicService.GetAlbumMusicItemsAsync(album);
+                SelectedAlbumInfo = await JellyfinMusicService.GetAlbumInfoAsync(album);
+            }
             SelectedAlbum = album;
 
             var ani = AlbumGridView.PrepareConnectedAnimation("forwardAnimation", album, "AlbumCardConnectedElement");
@@ -124,9 +141,14 @@ namespace HotPotPlayer.Pages
             root.Opacity = 0;
         }
 
-        private void PlayListGridView_ItemClick(object sender, ItemClickEventArgs e)
+        private async void PlayListGridView_ItemClick(object sender, ItemClickEventArgs e)
         {
             var playList = e.ClickedItem as BaseItemDto;
+            if (playList != SelectedPlayList)
+            {
+                SelectedPlayListInfo = await JellyfinMusicService.GetPlayListInfoAsync(playList);
+                SelectedPlayListMusicItems = await JellyfinMusicService.GetPlayListMusicItemsAsync(playList);
+            }
             SelectedPlayList = playList;
 
             var ani = PlayListGridView.PrepareConnectedAnimation("forwardAnimation2", playList, "PlayListCardConnectedElement");
