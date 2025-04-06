@@ -557,7 +557,6 @@ namespace HotPotPlayer.Services
 
                 _mpv.LoadPlaylist(CurrentPlayList.Select(App.JellyfinMusicService.GetMusicStream), true);
                 _mpv.PlaylistPlayIndex(index);
-                _mpv.Resume();
                 e.Result = ValueTuple.Create(index, false);
 
                 _smtc ??= InitSmtc();
@@ -620,6 +619,7 @@ namespace HotPotPlayer.Services
 
         private void MediaLoaded(object sender, EventArgs e)
         {
+            _mpv.Resume();
             UIQueue.TryEnqueue(() =>
             {
                 IsPlaying = true;
