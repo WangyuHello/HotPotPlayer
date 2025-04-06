@@ -536,7 +536,7 @@ namespace HotPotPlayer.Services
                 //_outputDevice.PlaybackStopped += OnPlaybackStopped;
                 if (_mpv == null)
                 {
-                    _mpv = new MpvPlayer(App.MainWindowHandle, @"NativeLibs\mpv-2.dll")
+                    _mpv = new MpvPlayer(@"NativeLibs\libmpv-2.dll")
                     {
                         AutoPlay = false,
                         Volume = Volume,
@@ -544,6 +544,7 @@ namespace HotPotPlayer.Services
                         Loop = false,
                         LoopPlaylist = false,
                     };
+                    _mpv.API.SetPropertyString("audio-display", "no");
                     _mpv.MediaResumed += MediaResumed;
                     _mpv.MediaPaused += MediaPaused;
                     _mpv.MediaLoaded += MediaLoaded;
