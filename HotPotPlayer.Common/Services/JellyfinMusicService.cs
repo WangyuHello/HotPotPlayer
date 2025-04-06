@@ -6,7 +6,6 @@ using Jellyfin.Sdk.Generated.Artists;
 using Jellyfin.Sdk.Generated.Items;
 using Jellyfin.Sdk.Generated.Models;
 using Microsoft.UI.Dispatching;
-using NAudio.CoreAudioApi.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;

@@ -4,8 +4,6 @@ using Jellyfin.Sdk.Generated.Models;
 using Microsoft.UI.Dispatching;
 using Mpv.NET.API;
 using Mpv.NET.Player;
-using NAudio.Wave;
-using NAudio.Wave.SampleProviders;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -196,11 +194,11 @@ namespace HotPotPlayer.Services
         {
             var smtc = SystemMediaTransportControlsInterop.GetForWindow(Config.MainWindowHandle);
             smtc.IsEnabled = true;
-            smtc.ButtonPressed += systemMediaControls_ButtonPressed;
-            smtc.PlaybackRateChangeRequested += systemMediaControls_PlaybackRateChangeRequested;
-            smtc.PlaybackPositionChangeRequested += systemMediaControls_PlaybackPositionChangeRequested;
-            smtc.AutoRepeatModeChangeRequested += systemMediaControls_AutoRepeatModeChangeRequested;
-            smtc.PropertyChanged += systemMediaControls_PropertyChanged;
+            smtc.ButtonPressed += SystemMediaControls_ButtonPressed;
+            smtc.PlaybackRateChangeRequested += SystemMediaControls_PlaybackRateChangeRequested;
+            smtc.PlaybackPositionChangeRequested += SystemMediaControls_PlaybackPositionChangeRequested;
+            smtc.AutoRepeatModeChangeRequested += SystemMediaControls_AutoRepeatModeChangeRequested;
+            smtc.PropertyChanged += SystemMediaControls_PropertyChanged;
             smtc.IsPlayEnabled = true;
             smtc.IsPauseEnabled = true;
             smtc.IsStopEnabled = true;
@@ -793,11 +791,12 @@ namespace HotPotPlayer.Services
                 _mpv.MediaEndedSeeking -= MediaEndedSeeking;
             }
             _mpv?.Dispose();
+            GC.SuppressFinalize(this);
         }
 
         readonly BackgroundWorker _playerStarter;
 
-        private void systemMediaControls_PropertyChanged(SystemMediaTransportControls sender, SystemMediaTransportControlsPropertyChangedEventArgs args)
+        private void SystemMediaControls_PropertyChanged(SystemMediaTransportControls sender, SystemMediaTransportControlsPropertyChangedEventArgs args)
         {
             if (args.Property == SystemMediaTransportControlsProperty.SoundLevel)
             {
@@ -814,7 +813,7 @@ namespace HotPotPlayer.Services
             }
         }
 
-        private void systemMediaControls_AutoRepeatModeChangeRequested(SystemMediaTransportControls sender, AutoRepeatModeChangeRequestedEventArgs args)
+        private void SystemMediaControls_AutoRepeatModeChangeRequested(SystemMediaTransportControls sender, AutoRepeatModeChangeRequestedEventArgs args)
         {
             switch (args.RequestedAutoRepeatMode)
             {
@@ -846,7 +845,7 @@ namespace HotPotPlayer.Services
             SMTC.UpdateTimelineProperties(timelineProperties);
         }
 
-        private void systemMediaControls_PlaybackPositionChangeRequested(SystemMediaTransportControls sender, PlaybackPositionChangeRequestedEventArgs args)
+        private void SystemMediaControls_PlaybackPositionChangeRequested(SystemMediaTransportControls sender, PlaybackPositionChangeRequestedEventArgs args)
         {
             if (args.RequestedPlaybackPosition.Duration() <= (CurrentPlayingDuration ?? TimeSpan.Zero) &&
             args.RequestedPlaybackPosition.Duration().TotalSeconds >= 0)
@@ -859,7 +858,7 @@ namespace HotPotPlayer.Services
             }
         }
 
-        private void systemMediaControls_PlaybackRateChangeRequested(SystemMediaTransportControls sender, PlaybackRateChangeRequestedEventArgs args)
+        private void SystemMediaControls_PlaybackRateChangeRequested(SystemMediaTransportControls sender, PlaybackRateChangeRequestedEventArgs args)
         {
             if (args.RequestedPlaybackRate >= 0 && args.RequestedPlaybackRate <= 2)
             {
@@ -867,28 +866,28 @@ namespace HotPotPlayer.Services
             }
         }
 
-        private void systemMediaControls_ButtonPressed(SystemMediaTransportControls sender, SystemMediaTransportControlsButtonPressedEventArgs args)
+        private void SystemMediaControls_ButtonPressed(SystemMediaTransportControls sender, SystemMediaTransportControlsButtonPressedEventArgs args)
         {
             switch (args.Button)
             {
                 case SystemMediaTransportControlsButton.Play:
-                    UIQueue.TryEnqueue(() => PlayOrPause());
+                    UIQueue.TryEnqueue(PlayOrPause);
                     break;
 
                 case SystemMediaTransportControlsButton.Pause:
-                    UIQueue.TryEnqueue(() => PlayOrPause());
+                    UIQueue.TryEnqueue(PlayOrPause);
                     break;
 
                 case SystemMediaTransportControlsButton.Stop:
-                    UIQueue.TryEnqueue(() => PlayOrPause());
+                    UIQueue.TryEnqueue(PlayOrPause);
                     break;
 
                 case SystemMediaTransportControlsButton.Next:
-                    UIQueue.TryEnqueue(() => PlayNext());
+                    UIQueue.TryEnqueue(PlayNext);
                     break;
 
                 case SystemMediaTransportControlsButton.Previous:
-                    UIQueue.TryEnqueue(() => PlayPrevious());
+                    UIQueue.TryEnqueue(PlayPrevious);
                     break;
             }
         }

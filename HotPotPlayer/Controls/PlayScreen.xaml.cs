@@ -173,7 +173,7 @@ namespace HotPotPlayer.Controls
             return m.UserData.IsFavorite.Value;
         }
 
-        private async void OpenFolder_Click(object sender, RoutedEventArgs e)
+        private void OpenFolder_Click(object sender, RoutedEventArgs e)
         {
             //DirectoryInfo path = MusicPlayer.CurrentPlaying?.Source?.Directory;
             //if (path != null)

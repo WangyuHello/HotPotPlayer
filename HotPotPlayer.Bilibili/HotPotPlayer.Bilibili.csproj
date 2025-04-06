@@ -11,17 +11,17 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Google.Protobuf" Version="3.21.12" />
-    <PackageReference Include="Grpc.Core" Version="2.46.5" />
-    <PackageReference Include="Grpc.Tools" Version="2.51.0">
+    <PackageReference Include="Google.Protobuf" Version="3.30.2" />
+    <PackageReference Include="Grpc.Core" Version="2.46.6" />
+    <PackageReference Include="Grpc.Tools" Version="2.71.0">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
-	<PackageReference Include="Grpc.Net.Client" Version="2.50.0" />
+	<PackageReference Include="Grpc.Net.Client" Version="2.70.0" />
 	<PackageReference Include="HttpClientFactoryLite" Version="0.4.0" />
-	<PackageReference Include="Microsoft.AspNetCore.WebUtilities" Version="2.2.0" />
-	<PackageReference Include="Microsoft.Extensions.Caching.Memory" Version="6.0.1" />
-	<PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
+	<PackageReference Include="Microsoft.AspNetCore.WebUtilities" Version="9.0.3" />
+	<PackageReference Include="Microsoft.Extensions.Caching.Memory" Version="10.0.0-preview.2.25163.2" />
+	<PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
 	<PackageReference Include="PCLCrypto" Version="2.1.40-alpha" />
   </ItemGroup>
 

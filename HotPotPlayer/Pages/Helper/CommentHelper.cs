@@ -19,7 +19,7 @@ namespace HotPotPlayer.Pages.Helper
 {
     public class CommentHelper: HelperBase
     {
-        public async static void ShowCommentFloor(object sender, RoutedEventArgs e)
+        public static void ShowCommentFloor(object sender, RoutedEventArgs e)
         {
             
             var element = sender as FrameworkElement;
