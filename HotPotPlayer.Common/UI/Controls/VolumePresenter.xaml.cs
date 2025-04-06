@@ -26,29 +26,28 @@ namespace HotPotPlayer.UI.Controls
             this.InitializeComponent();
         }
 
-        public float? Volume
+        public int? Volume
         {
-            get { return (float)GetValue(VolumeProperty); }
+            get { return (int?)GetValue(VolumeProperty); }
             set { SetValue(VolumeProperty, value); }
         }
 
         public static readonly DependencyProperty VolumeProperty =
-            DependencyProperty.Register("Volume", typeof(float?), typeof(VolumePresenter), new PropertyMetadata(0.0f));
+            DependencyProperty.Register("Volume", typeof(int?), typeof(VolumePresenter), new PropertyMetadata(0.0f));
 
            
         string GetVolumeText(float? v)
         {
-            var v2 = (int)(v*100);
-            return v2 + "%";
+            return v + "%";
         }
 
-        Vector3 GetVolumeTranslation(float? v)
+        Vector3 GetVolumeTranslation(int? v)
         {
             if (v == null)
             {
                 return Vector3.Zero;
             }
-            var x = -72 * (1 - (float)v);
+            var x = -72 * (100 - (float)v) / 100;
             return new Vector3(x, 0, 0);
         }
 
@@ -58,19 +57,19 @@ namespace HotPotPlayer.UI.Controls
         readonly string[] volIcons = new [] { "\uE198", "\uE992", "\uE993", "\uE994", "\uE995" };
         readonly string[] volIconsHeadPhone = new[] { "\uE198", "\uED30", "\uED31", "\uED32", "\uED33" };
 
-        string GetVolumeIcon(float? v)
+        string GetVolumeIcon(int? v)
         {
             if (v == null)
             {
                 return volIcons[0];
             }
-            var v2 = (int)(v * 100);
+            var v2 = v;
             return v2 switch
             {
                 0 => volIcons[0],
-                (> 0) and ( <= 25) => volIcons[1],
-                (> 25) and ( <= 50) => volIcons[2],
-                (> 50) and ( <= 75) => volIcons[3],
+                (> 0) and (<= 25) => volIcons[1],
+                (> 25) and (<= 50) => volIcons[2],
+                (> 50) and (<= 75) => volIcons[3],
                 _ => volIcons[4],
             };
         }

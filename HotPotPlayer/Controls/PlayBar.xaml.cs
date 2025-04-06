@@ -61,7 +61,11 @@ namespace HotPotPlayer.Controls
             {
                 return 0;
             }
-            return 100 * current.Ticks / ((TimeSpan)total).Ticks;
+            else if(total.Value.Ticks == 0)
+            {
+                return 0;
+            }
+                return 100 * current.Ticks / ((TimeSpan)total).Ticks;
         }
 
         string GetDuration(TimeSpan? duration)
