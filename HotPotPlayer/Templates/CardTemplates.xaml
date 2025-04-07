@@ -13,6 +13,10 @@
     xmlns:biliext="using:HotPotPlayer.Bilibili.Extensions"
     xmlns:cont2="using:HotPotPlayer.UI.Controls"
     xmlns:ui="using:CommunityToolkit.WinUI"
+    xmlns:media="using:CommunityToolkit.WinUI.Media"
+    xmlns:ani="using:CommunityToolkit.WinUI.Animations"
+    xmlns:behaviors="using:CommunityToolkit.WinUI.Behaviors"
+    xmlns:interactivity="using:Microsoft.Xaml.Interactivity"
     xmlns:conv="using:HotPotPlayer.UI.Converters"
     xmlns:helper="using:HotPotPlayer.Pages.Helper"
     xmlns:helper2="using:HotPotPlayer.Helpers"
@@ -30,7 +34,6 @@
             BorderThickness="{ThemeResource ButtonBorderThemeThickness}"
             CornerRadius="4"
             ui:VisualExtensions.NormalizedCenterPoint="0.5"
-            Loaded="Root_Loaded"
             Background="White"
             >
             <cont2:ImageEx2 
@@ -64,7 +67,7 @@
     </DataTemplate>
 
     <DataTemplate x:Key="AlbumCardViewTemplate" x:DataType="jmodel:BaseItemDto">
-        <Grid Loaded="Root_Loaded"
+        <Grid
             Width="170"
             Padding="0,0,0,12" 
             x:Name="AlbumCardConnectedElement"
@@ -102,7 +105,7 @@
                     FontFamily="{ThemeResource MiSansRegular}"
             />
             </StackPanel>
-            <Grid Visibility="Collapsed">
+            <Grid x:Name="HiddenContent" Visibility="Collapsed">
                 <Button Style="{StaticResource TransparentButton}"
                         HorizontalAlignment="Center"
                         Padding="12"
@@ -114,11 +117,13 @@
                     <FontIcon FontFamily="Segoe Fluent Icons" Glyph="&#xE768;" FontSize="24"/>
                 </Button>
                 <StackPanel 
-                Margin="0,0,8,0"
-                HorizontalAlignment="Right" 
-                VerticalAlignment="Bottom" 
-                Orientation="Horizontal"
-                Spacing="8"
+                    Margin="0,0,8,0"
+                    Padding="8,0,0,0"
+                    HorizontalAlignment="Right" 
+                    VerticalAlignment="Bottom" 
+                    Orientation="Horizontal"
+                    Spacing="8"
+                    Background="White"
                 >
                     <Button Style="{StaticResource TransparentButton}" Foreground="Gray" >
                         <FontIcon FontFamily="Segoe Fluent Icons" Glyph="&#xE734;" FontSize="18"/>
@@ -128,6 +133,33 @@
                     </Button>
                 </StackPanel>
             </Grid>
+
+            <!--<ui:Effects.Shadow>
+                <media:AttachedCardShadow Offset="4" CornerRadius="0"/>
+            </ui:Effects.Shadow>-->
+            <ani:Explicit.Animations>
+                <ani:AnimationSet x:Name="ScaleEnterAnimation" >
+                    <!--<ani:OffsetDropShadowAnimation To="12"/>-->
+                    <ani:ScaleAnimation To="1.1" Duration="0:0:0.3"/>
+                </ani:AnimationSet>
+
+                <ani:AnimationSet x:Name="ScaleExitAnimation">
+                    <!--<ani:OffsetDropShadowAnimation To="4"/>-->
+                    <ani:ScaleAnimation To="1.0" Duration="0:0:0.3"/>
+                </ani:AnimationSet>
+            </ani:Explicit.Animations>
+            <interactivity:Interaction.Behaviors>
+                <interactivity:EventTriggerBehavior EventName="PointerEntered">
+                    <!--<behaviors:StartAnimationAction Animation="{x:Bind ShadowEnterAnimation}"/>-->
+                    <behaviors:StartAnimationAction Animation="{Binding ElementName=ScaleEnterAnimation}"/>
+                    <interactivity:ChangePropertyAction TargetObject="{Binding ElementName=HiddenContent}" PropertyName="Visibility" Value="Visible" />
+                </interactivity:EventTriggerBehavior>
+                <interactivity:EventTriggerBehavior EventName="PointerExited">
+                    <!--<behaviors:StartAnimationAction Animation="{x:Bind ShadowExitAnimation}"/>-->
+                    <behaviors:StartAnimationAction Animation="{Binding ElementName=ScaleExitAnimation}"/>
+                    <interactivity:ChangePropertyAction TargetObject="{Binding ElementName=HiddenContent}" PropertyName="Visibility" Value="Collapsed" />
+                </interactivity:EventTriggerBehavior>
+            </interactivity:Interaction.Behaviors>
         </Grid>
     </DataTemplate>
 
@@ -141,7 +173,6 @@
             BorderThickness="{ThemeResource ButtonBorderThemeThickness}"
             CornerRadius="4"
             ui:VisualExtensions.NormalizedCenterPoint="0.5"
-            Loaded="Root_Loaded"
             Background="White"
             >
             <cont2:ImageEx2 
@@ -171,11 +202,35 @@
                 x:Phase="1" 
                 FontFamily="{ThemeResource MiSansRegular}"
                 />
+
+            <ani:Explicit.Animations>
+                <ani:AnimationSet x:Name="ScaleEnterAnimation" >
+                    <!--<ani:OffsetDropShadowAnimation To="12"/>-->
+                    <ani:ScaleAnimation To="1.1" Duration="0:0:0.3"/>
+                </ani:AnimationSet>
+
+                <ani:AnimationSet x:Name="ScaleExitAnimation">
+                    <!--<ani:OffsetDropShadowAnimation To="4"/>-->
+                    <ani:ScaleAnimation To="1.0" Duration="0:0:0.3"/>
+                </ani:AnimationSet>
+            </ani:Explicit.Animations>
+            <interactivity:Interaction.Behaviors>
+                <interactivity:EventTriggerBehavior EventName="PointerEntered">
+                    <!--<behaviors:StartAnimationAction Animation="{x:Bind ShadowEnterAnimation}"/>-->
+                    <behaviors:StartAnimationAction Animation="{Binding ElementName=ScaleEnterAnimation}"/>
+                    <!--<interactivity:ChangePropertyAction TargetObject="{Binding ElementName=HiddenContent}" PropertyName="Visibility" Value="Visible" />-->
+                </interactivity:EventTriggerBehavior>
+                <interactivity:EventTriggerBehavior EventName="PointerExited">
+                    <!--<behaviors:StartAnimationAction Animation="{x:Bind ShadowExitAnimation}"/>-->
+                    <behaviors:StartAnimationAction Animation="{Binding ElementName=ScaleExitAnimation}"/>
+                    <!--<interactivity:ChangePropertyAction TargetObject="{Binding ElementName=HiddenContent}" PropertyName="Visibility" Value="Collapsed" />-->
+                </interactivity:EventTriggerBehavior>
+            </interactivity:Interaction.Behaviors>
         </StackPanel>
     </DataTemplate>
 
     <DataTemplate x:Key="PlayListCardViewTemplate" x:DataType="jmodel:BaseItemDto">
-        <Grid Loaded="Root_Loaded"
+        <Grid
               Width="170"
               Padding="0,0,0,12" 
               x:Name="PlayListCardConnectedElement"
@@ -204,7 +259,7 @@
                     FontFamily="{ThemeResource MiSansMedium}"
                     />
             </StackPanel>
-            <Grid Visibility="Collapsed">
+            <Grid x:Name="HiddenContent" Visibility="Collapsed">
                 <Button Style="{StaticResource TransparentButton}"
                         HorizontalAlignment="Center"
                         Padding="12"
@@ -229,6 +284,30 @@
                     </Button>
                 </StackPanel>
             </Grid>
+
+            <ani:Explicit.Animations>
+                <ani:AnimationSet x:Name="ScaleEnterAnimation" >
+                    <!--<ani:OffsetDropShadowAnimation To="12"/>-->
+                    <ani:ScaleAnimation To="1.1" Duration="0:0:0.3"/>
+                </ani:AnimationSet>
+
+                <ani:AnimationSet x:Name="ScaleExitAnimation">
+                    <!--<ani:OffsetDropShadowAnimation To="4"/>-->
+                    <ani:ScaleAnimation To="1.0" Duration="0:0:0.3"/>
+                </ani:AnimationSet>
+            </ani:Explicit.Animations>
+            <interactivity:Interaction.Behaviors>
+                <interactivity:EventTriggerBehavior EventName="PointerEntered">
+                    <!--<behaviors:StartAnimationAction Animation="{x:Bind ShadowEnterAnimation}"/>-->
+                    <behaviors:StartAnimationAction Animation="{Binding ElementName=ScaleEnterAnimation}"/>
+                    <interactivity:ChangePropertyAction TargetObject="{Binding ElementName=HiddenContent}" PropertyName="Visibility" Value="Visible" />
+                </interactivity:EventTriggerBehavior>
+                <interactivity:EventTriggerBehavior EventName="PointerExited">
+                    <!--<behaviors:StartAnimationAction Animation="{x:Bind ShadowExitAnimation}"/>-->
+                    <behaviors:StartAnimationAction Animation="{Binding ElementName=ScaleExitAnimation}"/>
+                    <interactivity:ChangePropertyAction TargetObject="{Binding ElementName=HiddenContent}" PropertyName="Visibility" Value="Collapsed" />
+                </interactivity:EventTriggerBehavior>
+            </interactivity:Interaction.Behaviors>
         </Grid>
     </DataTemplate>
 
@@ -276,7 +355,6 @@
             BorderThickness="{ThemeResource ButtonBorderThemeThickness}"
             CornerRadius="4"
             ui:VisualExtensions.NormalizedCenterPoint="0.5"
-            Loaded="Root_Loaded"
             Background="White"
             >
             <cont2:ImageEx2 
@@ -313,7 +391,6 @@
             BorderThickness="{ThemeResource ButtonBorderThemeThickness}"
             CornerRadius="6"
             ui:VisualExtensions.NormalizedCenterPoint="0.5"
-            Loaded="Root_Loaded"
             Background="White"
             >
             <cont2:ImageEx2 
@@ -415,7 +492,6 @@
             BorderThickness="{ThemeResource ButtonBorderThemeThickness}"
             CornerRadius="4"
             ui:VisualExtensions.NormalizedCenterPoint="0.5"
-            Loaded="Root_Loaded2"
             Background="White"
             >
             <cont2:ImageEx2 
@@ -467,6 +543,24 @@
                 <TextBlock Text="{x:Bind Up.Name}" Foreground="Gray" FontFamily="{ThemeResource MiSansRegular}" />
                 <TextBlock Margin="12,0" Text="{x:Bind GetUpDateTime()}" Foreground="Gray" FontFamily="{ThemeResource MiSansRegular}" />
             </StackPanel>
+
+            <ani:Explicit.Animations>
+                <ani:AnimationSet x:Name="ScaleEnterAnimation" >
+                    <ani:ScaleAnimation To="1.05" Duration="0:0:0.3"/>
+                </ani:AnimationSet>
+
+                <ani:AnimationSet x:Name="ScaleExitAnimation">
+                    <ani:ScaleAnimation To="1.0" Duration="0:0:0.3"/>
+                </ani:AnimationSet>
+            </ani:Explicit.Animations>
+            <interactivity:Interaction.Behaviors>
+                <interactivity:EventTriggerBehavior EventName="PointerEntered">
+                    <behaviors:StartAnimationAction Animation="{Binding ElementName=ScaleEnterAnimation}"/>
+                </interactivity:EventTriggerBehavior>
+                <interactivity:EventTriggerBehavior EventName="PointerExited">
+                    <behaviors:StartAnimationAction Animation="{Binding ElementName=ScaleExitAnimation}"/>
+                </interactivity:EventTriggerBehavior>
+            </interactivity:Interaction.Behaviors>
         </StackPanel>
     </DataTemplate>
 
@@ -478,7 +572,6 @@
             BorderThickness="{ThemeResource ButtonBorderThemeThickness}"
             CornerRadius="4"
             ui:VisualExtensions.NormalizedCenterPoint="0.5"
-            Loaded="Root_Loaded2"
             Background="White"
             >
             <cont2:ImageEx2 
@@ -527,6 +620,24 @@
             <StackPanel Orientation="Horizontal" Padding="8,0" Margin="0,0,0,8">
                 <TextBlock Text="{x:Bind GetUpDateTime()}" Foreground="Gray" FontFamily="{ThemeResource MiSansRegular}" />
             </StackPanel>
+
+            <ani:Explicit.Animations>
+                <ani:AnimationSet x:Name="ScaleEnterAnimation" >
+                    <ani:ScaleAnimation To="1.05" Duration="0:0:0.3"/>
+                </ani:AnimationSet>
+
+                <ani:AnimationSet x:Name="ScaleExitAnimation">
+                    <ani:ScaleAnimation To="1.0" Duration="0:0:0.3"/>
+                </ani:AnimationSet>
+            </ani:Explicit.Animations>
+            <interactivity:Interaction.Behaviors>
+                <interactivity:EventTriggerBehavior EventName="PointerEntered">
+                    <behaviors:StartAnimationAction Animation="{Binding ElementName=ScaleEnterAnimation}"/>
+                </interactivity:EventTriggerBehavior>
+                <interactivity:EventTriggerBehavior EventName="PointerExited">
+                    <behaviors:StartAnimationAction Animation="{Binding ElementName=ScaleExitAnimation}"/>
+                </interactivity:EventTriggerBehavior>
+            </interactivity:Interaction.Behaviors>
         </StackPanel>
     </DataTemplate>
 
@@ -539,7 +650,6 @@
             BorderThickness="{ThemeResource ButtonBorderThemeThickness}"
             CornerRadius="4"
             ui:VisualExtensions.NormalizedCenterPoint="0.5"
-            Loaded="Root_Loaded"
             Background="White"
             >
             <cont2:ImageEx2 
@@ -603,7 +713,6 @@
             BorderThickness="{ThemeResource ButtonBorderThemeThickness}"
             CornerRadius="4"
             ui:VisualExtensions.NormalizedCenterPoint="0.5"
-            Loaded="Root_Loaded"
             Background="White"
             >
             <cont2:ImageEx2 
@@ -634,7 +743,6 @@
             BorderThickness="0.5"
             CornerRadius="6"
             ui:VisualExtensions.NormalizedCenterPoint="0.5"
-            Loaded="Root_Loaded"
             Background="White"
             >
             <Grid Width="160" Height="160">
@@ -672,7 +780,6 @@
             Padding="0,0,0,8"
             x:Name="CloudArtistCardConnectedElement"
             ui:VisualExtensions.NormalizedCenterPoint="0.5"
-            Loaded="Root_Loaded"
             Background="White"
             >
             <cont2:ImageEx2 
@@ -704,7 +811,7 @@
     <conv:GridIndexConverter x:Key="GridIndexConverter" />
 
     <DataTemplate x:Key="CloudMusicCardViewTemplate" x:DataType="models:MusicItem">
-        <Grid Padding="8" Background="White" CornerRadius="4" ui:VisualExtensions.NormalizedCenterPoint="0.5" Loaded="Root_Loaded2">
+        <Grid Padding="8" Background="White" CornerRadius="4" ui:VisualExtensions.NormalizedCenterPoint="0.5">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="24" />
                 <ColumnDefinition Width="Auto" />
@@ -723,11 +830,29 @@
             <ToggleButton x:Name="B" Grid.Column="6" Style="{StaticResource LikeButton}" IsChecked="{x:Bind IsLike}" Margin="16,0,8,0" VerticalAlignment="Center" Click="{x:Bind helper:LikeHelper.Like}" >
                 <FontIcon FontFamily="{ThemeResource SegoeIcons}" Glyph="{Binding ElementName=B, Path=IsChecked, Converter={StaticResource LikeGlyphConverter}}" FontWeight="Bold" FontSize="16" VerticalAlignment="Center"/>
             </ToggleButton>
+
+            <ani:Explicit.Animations>
+                <ani:AnimationSet x:Name="ScaleEnterAnimation" >
+                    <ani:ScaleAnimation To="1.05" Duration="0:0:0.3"/>
+                </ani:AnimationSet>
+
+                <ani:AnimationSet x:Name="ScaleExitAnimation">
+                    <ani:ScaleAnimation To="1.0" Duration="0:0:0.3"/>
+                </ani:AnimationSet>
+            </ani:Explicit.Animations>
+            <interactivity:Interaction.Behaviors>
+                <interactivity:EventTriggerBehavior EventName="PointerEntered">
+                    <behaviors:StartAnimationAction Animation="{Binding ElementName=ScaleEnterAnimation}"/>
+                </interactivity:EventTriggerBehavior>
+                <interactivity:EventTriggerBehavior EventName="PointerExited">
+                    <behaviors:StartAnimationAction Animation="{Binding ElementName=ScaleExitAnimation}"/>
+                </interactivity:EventTriggerBehavior>
+            </interactivity:Interaction.Behaviors>
         </Grid>
     </DataTemplate>
 
     <DataTemplate x:Key="CloudMusicCardViewInArtistTemplate" x:DataType="models:MusicItem">
-        <Grid Padding="8" Background="White" CornerRadius="4" ui:VisualExtensions.NormalizedCenterPoint="0.5" Loaded="Root_Loaded2" RightTapped="{x:Bind helper:ListHelper.RightTapMusicInListClick}">
+        <Grid Padding="8" Background="White" CornerRadius="4" ui:VisualExtensions.NormalizedCenterPoint="0.5" RightTapped="{x:Bind helper:ListHelper.RightTapMusicInListClick}">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="24" />
                 <ColumnDefinition Width="Auto" />
@@ -748,6 +873,24 @@
             <Button Grid.Column="7" Style="{StaticResource TransparentButton}" Margin="16,0,0,0" CornerRadius="4" Padding="4" Tag="{x:Bind }" Click="{x:Bind helper:ListHelper.RightTapMusicInListClick}">
                 <SymbolIcon Symbol="More" />
             </Button>
+
+            <ani:Explicit.Animations>
+                <ani:AnimationSet x:Name="ScaleEnterAnimation" >
+                    <ani:ScaleAnimation To="1.05" Duration="0:0:0.3"/>
+                </ani:AnimationSet>
+
+                <ani:AnimationSet x:Name="ScaleExitAnimation">
+                    <ani:ScaleAnimation To="1.0" Duration="0:0:0.3"/>
+                </ani:AnimationSet>
+            </ani:Explicit.Animations>
+            <interactivity:Interaction.Behaviors>
+                <interactivity:EventTriggerBehavior EventName="PointerEntered">
+                    <behaviors:StartAnimationAction Animation="{Binding ElementName=ScaleEnterAnimation}"/>
+                </interactivity:EventTriggerBehavior>
+                <interactivity:EventTriggerBehavior EventName="PointerExited">
+                    <behaviors:StartAnimationAction Animation="{Binding ElementName=ScaleExitAnimation}"/>
+                </interactivity:EventTriggerBehavior>
+            </interactivity:Interaction.Behaviors>
         </Grid>
     </DataTemplate>
 
@@ -757,7 +900,6 @@
             Padding="0,0,0,0"
             x:Name="CloudSimiSongCardConnectedElement"
             ui:VisualExtensions.NormalizedCenterPoint="0.5"
-            Loaded="Root_Loaded"
             >
             <cont2:ImageEx2 
                 Source="{x:Bind Cover}" 
@@ -776,7 +918,6 @@
             Padding="0,0,0,0"
             x:Name="CloudSimiSongCardConnectedElement"
             ui:VisualExtensions.NormalizedCenterPoint="0.5"
-            Loaded="Root_Loaded"
             >
             <cont2:ImageEx2 
                 Source="{x:Bind helper2:BaseItemDtoHelper.GetPrimaryJellyfinImageSmall(ImageTags, Id)}" 
@@ -786,6 +927,24 @@
                 CornerRadius="6"
                 ToolTipService.ToolTip="{x:Bind Name}" 
                 />
+
+            <ani:Explicit.Animations>
+                <ani:AnimationSet x:Name="ScaleEnterAnimation" >
+                    <ani:ScaleAnimation To="1.1" Duration="0:0:0.3"/>
+                </ani:AnimationSet>
+
+                <ani:AnimationSet x:Name="ScaleExitAnimation">
+                    <ani:ScaleAnimation To="1.0" Duration="0:0:0.3"/>
+                </ani:AnimationSet>
+            </ani:Explicit.Animations>
+            <interactivity:Interaction.Behaviors>
+                <interactivity:EventTriggerBehavior EventName="PointerEntered">
+                    <behaviors:StartAnimationAction Animation="{Binding ElementName=ScaleEnterAnimation}"/>
+                </interactivity:EventTriggerBehavior>
+                <interactivity:EventTriggerBehavior EventName="PointerExited">
+                    <behaviors:StartAnimationAction Animation="{Binding ElementName=ScaleExitAnimation}"/>
+                </interactivity:EventTriggerBehavior>
+            </interactivity:Interaction.Behaviors>
         </StackPanel>
     </DataTemplate>
 
@@ -796,7 +955,6 @@
             Padding="8,8,8,8"
             x:Name="CloudSearchHotTemplateConnectedElement"
             ui:VisualExtensions.NormalizedCenterPoint="0.5"
-            Loaded="Root_Loaded"
             CornerRadius="4"
             >
             <TextBlock Text="{Binding RelativeSource={RelativeSource Mode=TemplatedParent}, Converter={StaticResource GridIndexConverter}}" FontFamily="{ThemeResource MiSansRegular}" />
@@ -813,7 +971,6 @@
             BorderThickness="{ThemeResource ButtonBorderThemeThickness}"
             CornerRadius="4"
             ui:VisualExtensions.NormalizedCenterPoint="0.5"
-            Loaded="Root_Loaded"
             Background="White"
             >
             <cont2:ImageEx2 

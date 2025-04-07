@@ -16,6 +16,7 @@
     xmlns:tplt="using:HotPotPlayer.Templates"
     xmlns:animations="using:CommunityToolkit.WinUI.Animations"
     xmlns:collection="using:CommunityToolkit.Common.Collections"
+    xmlns:media="using:CommunityToolkit.WinUI.Media"
     xmlns:cont3="using:HotPotPlayer.Controls"
     mc:Ignorable="d"
     NavigationCacheMode="Enabled"
@@ -88,6 +89,30 @@
             <ProgressRing IsActive="True" Height="20" Width="20"/>
             <TextBlock FontSize="14">加载中</TextBlock>
         </StackPanel>
+
+        <!--<CommandBar HorizontalAlignment="Right"
+                    VerticalAlignment="Top"
+                    Margin="0,0,12,0"
+                    Background="#09000000" 
+                    IsOpen="False" 
+                    DefaultLabelPosition="Right">
+            <AppBarButton Icon="Refresh" Label="刷新"/>
+            <AppBarButton Icon="Share" Label="分享"/>
+            <CommandBar.SecondaryCommands>
+                <AppBarButton Icon="Setting" Label="Settings">
+                    <AppBarButton.KeyboardAccelerators>
+                        <KeyboardAccelerator Modifiers="Control" Key="I" />
+                    </AppBarButton.KeyboardAccelerators>
+                </AppBarButton>
+            </CommandBar.SecondaryCommands>
+            <ui:Effects.Shadow>
+                <media:AttachedCardShadow 
+                    CornerRadius="4"
+                    BlurRadius="8"
+                    Color="Gray"
+                    Offset="4,4" />
+            </ui:Effects.Shadow>
+        </CommandBar>-->
 
         <Grid x:Name="AlbumPopupOverlay" Margin="-36,-28,0,0" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Visibility="Collapsed" Background="#50000000" Tapped="AlbumPopupOverlay_Tapped">
             <animations:Implicit.HideAnimations>

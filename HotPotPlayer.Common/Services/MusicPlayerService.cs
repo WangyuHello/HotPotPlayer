@@ -917,7 +917,11 @@ namespace HotPotPlayer.Services
                 updater.Type = MediaPlaybackType.Music;
                 updater.MusicProperties.Artist = BaseItemDtoHelper.GetJellyfinArtists(music.Artists);
                 updater.MusicProperties.Title = music.Name;
-                updater.Thumbnail = RandomAccessStreamReference.CreateFromUri(App.JellyfinMusicService.GetPrimaryJellyfinImageSmall(music.ImageTags, music.Id));
+                var uri = App.JellyfinMusicService.GetPrimaryJellyfinImageSmall(music.ImageTags, music.Id);
+                if (uri != null)
+                {
+                    updater.Thumbnail = RandomAccessStreamReference.CreateFromUri(uri);
+                }
             }
 
             SMTC.DisplayUpdater.Update();

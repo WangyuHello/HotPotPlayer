@@ -1,4 +1,5 @@
-﻿using Microsoft.UI.Xaml;
+﻿using CommunityToolkit.WinUI.Animations;
+using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Hosting;
 using Microsoft.UI.Xaml.Media;
@@ -16,67 +17,6 @@ namespace HotPotPlayer.Templates
         public CardTemplates()
         {
             InitializeComponent();
-        }
-
-        private void Root_Loaded(object sender, RoutedEventArgs e)
-        {
-            var root = (UIElement)sender;
-            var rootVisual = ElementCompositionPreview.GetElementVisual(root);
-            var compositor = rootVisual.Compositor;
-            var pointerEnteredAnimation = compositor.CreateVector3KeyFrameAnimation();
-            pointerEnteredAnimation.InsertKeyFrame(1.0f, new Vector3(1.1f));
-            var pointerExitedAnimation = compositor.CreateVector3KeyFrameAnimation();
-            pointerExitedAnimation.InsertKeyFrame(1.0f, new Vector3(1.0f));
-            root.PointerEntered += (sender, args) =>
-            {
-                rootVisual.StartAnimation("Scale", pointerEnteredAnimation);
-                var root2 = (UIElement)sender;
-                if (root2 is Grid)
-                {
-                    var hidden = VisualTreeHelper.GetChild(root, 1) as UIElement;
-                    hidden.Visibility = Visibility.Visible;
-                }
-            };
-            root.PointerExited += (sender, args) =>
-            {
-                rootVisual.StartAnimation("Scale", pointerExitedAnimation);
-                var root2 = (UIElement)sender;
-                if (root2 is Grid)
-                {
-                    var hidden = VisualTreeHelper.GetChild(root, 1) as UIElement;
-                    hidden.Visibility = Visibility.Collapsed;
-                }
-            };
-        }
-
-        private void Root_Loaded2(object sender, RoutedEventArgs e)
-        {
-            var root = (UIElement)sender;
-            var rootVisual = ElementCompositionPreview.GetElementVisual(root);
-            var compositor = rootVisual.Compositor;
-            var pointerEnteredAnimation = compositor.CreateVector3KeyFrameAnimation();
-            pointerEnteredAnimation.InsertKeyFrame(1.0f, new Vector3(1.05f));
-            var pointerExitedAnimation = compositor.CreateVector3KeyFrameAnimation();
-            pointerExitedAnimation.InsertKeyFrame(1.0f, new Vector3(1.0f));
-            root.PointerEntered += (sender, args) => rootVisual.StartAnimation("Scale", pointerEnteredAnimation);
-            root.PointerExited += (sender, args) => rootVisual.StartAnimation("Scale", pointerExitedAnimation);
-        }
-
-        private TChild FindVisualChild<TChild>(DependencyObject obj) where TChild : DependencyObject
-        {
-            for (int i = 0; i < VisualTreeHelper.GetChildrenCount(obj); i++)
-            {
-                DependencyObject child = VisualTreeHelper.GetChild(obj, i);
-                if (child != null && child is TChild found)
-                    return found;
-                else
-                {
-                    TChild childOfChild = FindVisualChild<TChild>(child);
-                    if (childOfChild != null)
-                        return childOfChild;
-                }
-            }
-            return null;
         }
     }
 }
