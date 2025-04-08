@@ -1,6 +1,7 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using HotPotPlayer.Models;
 using HotPotPlayer.Services;
+using Microsoft.UI.Dispatching;
 using Microsoft.UI.Windowing;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
@@ -23,16 +24,18 @@ namespace HotPotPlayer
         public ConfigBase Config => ((IComponentServiceLocator)Application.Current).Config;
 
         public NetEaseMusicService NetEaseMusicService => ((IComponentServiceLocator)Application.Current).NetEaseMusicService;
-
         public JellyfinMusicService JellyfinMusicService => ((IComponentServiceLocator)Application.Current).JellyfinMusicService;
         public LocalVideoService LocalVideoService => ((IComponentServiceLocator)Application.Current).LocalVideoService;
+        public BiliBiliService BiliBiliService => ((IComponentServiceLocator)Application.Current).BiliBiliService;
 
         public MusicPlayerService MusicPlayer => ((IComponentServiceLocator)Application.Current).MusicPlayer;
-        public VideoPlayerService VideoPlayerService => ((IComponentServiceLocator)Application.Current).VideoPlayerService;
-        public BiliBiliService BiliBiliService => ((IComponentServiceLocator)Application.Current).BiliBiliService;
+        public VideoPlayerService VideoPlayer => ((IComponentServiceLocator)Application.Current).VideoPlayer;
 
         public AppWindow AppWindow => ((IComponentServiceLocator)Application.Current).AppWindow;
         public Window MainWindow => ((IComponentServiceLocator)Application.Current).MainWindow;
+
+        DispatcherQueue _uiQueue;
+        protected DispatcherQueue UIQueue => _uiQueue ??= DispatcherQueue.GetForCurrentThread();
 
         public void NavigateTo(string name, object parameter = null, NavigationTransitionInfo trans = null)
         {

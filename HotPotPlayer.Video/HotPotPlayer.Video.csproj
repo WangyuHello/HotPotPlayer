@@ -6,12 +6,14 @@
     <RuntimeIdentifiers>win-x86;win-x64;win-arm64</RuntimeIdentifiers>
     <UseWinUI>true</UseWinUI>
     <Platforms>x86;x64;arm64</Platforms>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
   <ItemGroup>
     <None Remove="UI\Controls\DanmakuRenderer.xaml" />
     <None Remove="UI\Controls\InfoViewer.xaml" />
     <None Remove="UI\Controls\PbpViewer.xaml" />
     <None Remove="UI\Controls\VideoControl.xaml" />
+    <None Remove="UI\Controls\VideoHost.xaml" />
     <None Remove="UI\Controls\VideoPlayListBar.xaml" />
   </ItemGroup>
     
@@ -57,6 +59,12 @@
 
   <ItemGroup>
     <Service Include="{508349b6-6b84-4df5-91f0-309beebad82d}" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Page Update="UI\Controls\VideoHost.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
   </ItemGroup>
 
 </Project>

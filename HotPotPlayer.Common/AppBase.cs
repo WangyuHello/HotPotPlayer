@@ -40,7 +40,7 @@ namespace HotPotPlayer
         public MusicPlayerService MusicPlayer => musicPlayer ??= new MusicPlayerService(Config, UIQueue, this);
 
         VideoPlayerService videoPlayerService;
-        public VideoPlayerService VideoPlayerService => videoPlayerService ??= new VideoPlayerService(Config, UIQueue, this);
+        public VideoPlayerService VideoPlayer => videoPlayerService ??= new VideoPlayerService(Config, UIQueue, this);
 
         BiliBiliService bilibiliService;
         public BiliBiliService BiliBiliService => bilibiliService ??= new BiliBiliService(Config, UIQueue, this);

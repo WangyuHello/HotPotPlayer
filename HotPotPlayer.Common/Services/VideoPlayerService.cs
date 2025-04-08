@@ -1,4 +1,5 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
+using HotPotPlayer.Models;
 using Microsoft.UI.Dispatching;
 using System;
 using System.Collections.Generic;
@@ -20,6 +21,20 @@ namespace HotPotPlayer.Services
         {
             get => isVideoPagePresent;
             set => Set(ref isVideoPagePresent, value);
+        }
+
+        public event Action<VideoHostGeometry> OnVideoGeometryInit;
+        public event Action<IntPtr> OnSwapchainInited;
+        public IntPtr SwapChain { get; set; }
+
+        public void UpdatePanelScale(float scaleX, float scaleY)
+        {
+
+        }
+
+        public void UpdatePanelSize(int width, int height)
+        {
+
         }
     }
 }

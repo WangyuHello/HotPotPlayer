@@ -51,7 +51,6 @@ namespace HotPotPlayer.Video.UI.Controls
         public VideoControl()
         {
             this.InitializeComponent();
-            UIQueue = DispatcherQueue.GetForCurrentThread();
             PlaySlider.AddHandler(PointerReleasedEvent, new PointerEventHandler(PlaySlider_OnPointerReleased), true);
             PlaySlider.AddHandler(PointerPressedEvent, new PointerEventHandler(PlaySlider_OnPointerPressed), true);
 
@@ -309,7 +308,6 @@ namespace HotPotPlayer.Video.UI.Controls
         ID3D11Device _device;
         IntPtr _swapChain1Ptr;
         IDXGISwapChain1 _swapChain1;
-        readonly DispatcherQueue UIQueue;
         bool _swapChainLoaded;
         object _criticalLock = new object();
         object _criticalLock2 = new object();
@@ -599,11 +597,5 @@ namespace HotPotPlayer.Video.UI.Controls
 
     }
 
-    [ComImport, Guid("63aad0b8-7c24-40ff-85a8-640d944cc325"), InterfaceType(ComInterfaceType.InterfaceIsIUnknown)]
-    public interface ISwapChainPanelNative
-    {
-        [PreserveSig]
-        HRESULT SetSwapChain(IDXGISwapChain1 swapChain);
-    }
 
 }

@@ -21,7 +21,7 @@ namespace HotPotPlayer
         public JellyfinMusicService JellyfinMusicService { get; }
         public LocalVideoService LocalVideoService { get; }
         public MusicPlayerService MusicPlayer { get; }
-        public VideoPlayerService VideoPlayerService { get; }
+        public VideoPlayerService VideoPlayer { get; }
         public BiliBiliService BiliBiliService { get; }
 
 

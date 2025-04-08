@@ -26,14 +26,12 @@ namespace HotPotPlayer
         public ConfigBase Config => ((IComponentServiceLocator)Application.Current).Config;
 
         public NetEaseMusicService NetEaseMusicService => ((IComponentServiceLocator)Application.Current).NetEaseMusicService;
-
         public JellyfinMusicService JellyfinMusicService => ((IComponentServiceLocator)Application.Current).JellyfinMusicService;
         public LocalVideoService LocalVideoService => ((IComponentServiceLocator)Application.Current).LocalVideoService;
+        public BiliBiliService BiliBiliService => ((IComponentServiceLocator)Application.Current).BiliBiliService;
 
         public MusicPlayerService MusicPlayer => ((IComponentServiceLocator)Application.Current).MusicPlayer;
-
-        public VideoPlayerService VideoPlayerService => ((IComponentServiceLocator)Application.Current).VideoPlayerService;
-        public BiliBiliService BiliBiliService => ((IComponentServiceLocator)Application.Current).BiliBiliService;
+        public VideoPlayerService VideoPlayer => ((IComponentServiceLocator)Application.Current).VideoPlayer;
 
         public void NavigateTo(string name, object parameter = null, NavigationTransitionInfo trans = null)
         {
