@@ -22,18 +22,16 @@ namespace HotPotPlayer.Services
         SingleLoop,
         Shuffle
     }
+    public enum PlayerState
+    {
+        Idle,
+        Playing,
+        Error
+    }
 
     public class MusicPlayerService: ServiceBaseWithConfig
     {
-        public enum PlayerState 
-        {   
-            Idle,
-            Playing,
-            Error
-        }
-
         private PlayerState _state;
-
         public PlayerState State
         {
             get => _state;
@@ -41,7 +39,6 @@ namespace HotPotPlayer.Services
         }
 
         private BaseItemDto _currentPlaying;
-
         public BaseItemDto CurrentPlaying
         {
             get => _currentPlaying;
@@ -126,7 +123,6 @@ namespace HotPotPlayer.Services
         }
 
         private bool _isPlayListBarVisible;
-
         public bool IsPlayListBarVisible
         {
             get => _isPlayListBarVisible;
@@ -543,6 +539,7 @@ namespace HotPotPlayer.Services
                         LoopPlaylist = false,
                     };
                     _mpv.API.SetPropertyString("audio-display", "no");
+                    //_mpv.API.SetPropertyString("d3d11-composition", "yes");
                     _mpv.API.SetPropertyString("replaygain", "album");
                     _mpv.MediaResumed += MediaResumed;
                     _mpv.MediaPaused += MediaPaused;

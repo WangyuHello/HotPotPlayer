@@ -20,7 +20,6 @@ using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Navigation;
 using Mpv.NET.API;
-using Mpv.NET.API.Structs;
 using Mpv.NET.Player;
 using System;
 using System.Collections;

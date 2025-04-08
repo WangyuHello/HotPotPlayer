@@ -7,6 +7,7 @@ using Microsoft.UI.Xaml.Data;
 using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Navigation;
+using Mpv.NET.API;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
@@ -75,18 +76,18 @@ namespace HotPotPlayer.Video.UI.Controls
             {
                 _isSwapchainInited = false;
             }
-            VideoPlayer.OnSwapchainInited += VideoPlayer_OnSwapchainInited;
-            VideoPlayer.OnVideoGeometryInit += VideoPlayer_OnVideoGeometryInit;
+            VideoPlayer.SwapChainInited += VideoPlayer_SwapchainInited;
+            VideoPlayer.VideoGeometryInit += VideoPlayer_VideoGeometryInit;
         }
 
         private void UserControlBase_Unloaded(object sender, RoutedEventArgs e)
         {
-            VideoPlayer.OnSwapchainInited -= VideoPlayer_OnSwapchainInited;
-            VideoPlayer.OnVideoGeometryInit -= VideoPlayer_OnVideoGeometryInit;
+            VideoPlayer.SwapChainInited -= VideoPlayer_SwapchainInited;
+            VideoPlayer.VideoGeometryInit -= VideoPlayer_VideoGeometryInit;
             _isSwapchainInited = false;
         }
 
-        private void VideoPlayer_OnSwapchainInited(nint ptr)
+        private void VideoPlayer_SwapchainInited(object sender, nint ptr)
         {
             var swapchain1 = (IDXGISwapChain1)Marshal.GetObjectForIUnknown(ptr);
             var nativepanel = Host.As<ISwapChainPanelNative>();
@@ -97,13 +98,13 @@ namespace HotPotPlayer.Video.UI.Controls
             });
         }
 
-        private void VideoPlayer_OnVideoGeometryInit(VideoHostGeometry geo)
+        private void VideoPlayer_VideoGeometryInit(object sender, MpvVideoGeometryInitEventArgs args)
         {
-            geo.Width = _currentWidth;
-            geo.Height = _currentHeight;
-            geo.ScaleX = _currentScaleX;
-            geo.ScaleY = _currentScaleY;
-            geo.Bounds = _currentWindowBounds;
+            args.Width = _currentWidth;
+            args.Height = _currentHeight;
+            args.ScaleX = _currentScaleX;
+            args.ScaleY = _currentScaleY;
+            args.Bounds = _currentWindowBounds;
         }
     }
 

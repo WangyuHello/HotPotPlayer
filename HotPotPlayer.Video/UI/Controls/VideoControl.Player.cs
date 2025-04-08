@@ -20,7 +20,7 @@ namespace HotPotPlayer.Video.UI.Controls
     {
         void InitMpv(bool isFullPageHost)
         {
-            _mpv = new MpvPlayer(App.MainWindowHandle, @"NativeLibs\mpv-2.dll", _currentWidth, _currentHeight, _currentScaleX, _currentScaleY, _currentWindowBounds)
+            _mpv = new MpvPlayer(App.MainWindowHandle, @"NativeLibs\mpv-2.dll")
             {
                 AutoPlay = true,
                 Volume = 100,
@@ -28,7 +28,6 @@ namespace HotPotPlayer.Video.UI.Controls
                 Loop = false,
                 LoopPlaylist = isFullPageHost,
             };
-            _mpv.SetD3DInitCallback(D3DInitCallback);
             _mpv.MediaResumed += MediaResumed;
             _mpv.MediaPaused += MediaPaused;
             _mpv.MediaLoaded += MediaLoaded;
