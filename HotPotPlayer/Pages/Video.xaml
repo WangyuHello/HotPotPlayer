@@ -6,10 +6,10 @@
     xmlns:local="using:HotPotPlayer.Pages"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:models="using:HotPotPlayer.Models"
-    xmlns:controls="using:CommunityToolkit.WinUI.UI.Controls"
+    xmlns:controls="using:CommunityToolkit.WinUI.Helpers"
     xmlns:muxdata="using:Microsoft.UI.Xaml.Data"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    xmlns:animations="using:CommunityToolkit.WinUI.UI.Animations"
+    xmlns:animations="using:CommunityToolkit.WinUI.Animations"
     xmlns:helper="using:HotPotPlayer.Pages.Helper"
     mc:Ignorable="d"
     NavigationCacheMode="Enabled"
@@ -18,58 +18,21 @@
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
 
     <base:PageBase.Resources>
-        <CollectionViewSource x:Name="LocalSingleVideosGroups" Source="{x:Bind VideoService.LocalVideoGroup}" IsSourceGrouped="True" />
-        <CollectionViewSource x:Name="LocalSeriesGroups" Source="{x:Bind VideoService.LocalSeriesGroup}" IsSourceGrouped="True" />
+
     </base:PageBase.Resources>
 
     <Grid Background="White" Padding="36,28,0,0" SizeChanged="Root_SizeChanged">
         <Pivot HeaderTemplate="{StaticResource GeneralPivotHeaderTemplate}">
-            <PivotItem Header="视频列表" Margin="0">
-                <SemanticZoom>
-                    <SemanticZoom.ZoomedInView>
-                        <GridView 
-                            ItemsSource="{x:Bind LocalSingleVideosGroups.View}" 
-                            Style="{StaticResource VideoCardViewStyle}"
-                            ItemClick="{x:Bind helper:ListHelper.PlayVideo}"
-                            >
-                            <GridView.GroupStyle>
-                                <GroupStyle HeaderTemplate="{StaticResource GeneralZoomedInGroupHeaderTemplate}" />
-                            </GridView.GroupStyle>
-                            <GridView.Footer>
-                                <Grid Height="100"/>
-                            </GridView.Footer>
-                        </GridView>
-                    </SemanticZoom.ZoomedInView>
-                    <SemanticZoom.ZoomedOutView>
-                        <GridView ItemsSource="{x:Bind LocalSingleVideosGroups.View.CollectionGroups}" SelectionMode="None" ItemTemplate="{StaticResource GeneralZoomedOutTemplate}" Padding="24" VerticalAlignment="Center"/>
-                    </SemanticZoom.ZoomedOutView>
-                </SemanticZoom>
-            </PivotItem>
             <PivotItem Header="番剧" Margin="0">
-                <SemanticZoom>
-                    <SemanticZoom.ZoomedInView>
-                        <GridView x:Name="SeriesGridView" 
-                                  ItemsSource="{x:Bind LocalSeriesGroups.View}" 
-                                  Style="{StaticResource SeriesCardViewStyle}" >
-                            <GridView.GroupStyle>
-                                <GroupStyle HeaderTemplate="{StaticResource GeneralZoomedInGroupHeaderTemplate}" />
-                            </GridView.GroupStyle>
-                            <GridView.Footer>
-                                <Grid Height="100"/>
-                            </GridView.Footer>
-                        </GridView>
-                    </SemanticZoom.ZoomedInView>
-                    <SemanticZoom.ZoomedOutView>
-                        <GridView ItemsSource="{x:Bind LocalSeriesGroups.View.CollectionGroups}" Style="{StaticResource GeneralZoomOutGridViewStyle}" />
-                    </SemanticZoom.ZoomedOutView>
-                </SemanticZoom>
+                <GridView x:Name="SeriesGridView" 
+                            ItemsSource="{x:Bind JellyfinBangumiList, Mode=OneWay}" 
+                            Style="{StaticResource SeriesCardViewStyle}" >
+                    <GridView.Footer>
+                        <Grid Height="100"/>
+                    </GridView.Footer>
+                </GridView>
             </PivotItem>
         </Pivot>
-
-        <StackPanel VerticalAlignment="Top" HorizontalAlignment="Right" Spacing="8" Orientation="Horizontal" Margin="0,16,24,0" Visibility="{x:Bind GetLoadingVisibility(VideoService.State), Mode=OneWay}">
-            <ProgressRing IsActive="True" Height="20" Width="20"/>
-            <TextBlock FontSize="14">正在扫描视频库</TextBlock>
-        </StackPanel>
 
         <!--<Grid x:Name="SeriesOverlayPopup" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Visibility="Collapsed" Background="#00000000" Tapped="SeriesOverlayPopup_Tapped">
             <Grid x:Name="SeriesOverlayTarget" Margin="0,-60,0,0" VerticalAlignment="Center" HorizontalAlignment="Center" Width="640" MinHeight="460" MaxHeight="560" CornerRadius="8" Background="{StaticResource PopupBackground}" Tapped="SeriesOverlayTarget_Tapped">

@@ -127,7 +127,7 @@ namespace HotPotPlayer.Pages.BilibiliSub
                 bvid = videoContent.Bvid;
                 var url = await BiliBiliService.GetVideoUrlAsync(bvid, aid, cid);
                 var videoItem = BiliBiliVideoItem.FromRaw(url, Video);
-                Source = new VideoPlayInfo { VideoItems = new List<BiliBiliVideoItem> { videoItem }, Index = 0, ImmediateLoad = immediateLoad };
+                //Source = new VideoPlayInfo { VideoItems = new List<BiliBiliVideoItem> { videoItem }, Index = 0, ImmediateLoad = immediateLoad };
             }
             else if (para is VideoContent videoContent)
             {
@@ -137,7 +137,7 @@ namespace HotPotPlayer.Pages.BilibiliSub
                 bvid = videoContent.Bvid;
                 var url = await BiliBiliService.GetVideoUrlAsync(bvid, aid, cid);
                 var videoItem = BiliBiliVideoItem.FromRaw(url, Video);
-                Source = new VideoPlayInfo { VideoItems = new List<BiliBiliVideoItem> { videoItem }, Index = 0, ImmediateLoad = immediateLoad };
+                //Source = new VideoPlayInfo { VideoItems = new List<BiliBiliVideoItem> { videoItem }, Index = 0, ImmediateLoad = immediateLoad };
             }
             else if (para is RecommendVideoItem h)
             {
@@ -146,7 +146,7 @@ namespace HotPotPlayer.Pages.BilibiliSub
                 bvid = h.Bvid;
                 var url = await BiliBiliService.GetVideoUrlAsync(bvid, aid, cid);
                 var videoItem = BiliBiliVideoItem.FromRaw(url, h);
-                Source = new VideoPlayInfo { VideoItems = new List<BiliBiliVideoItem> { videoItem }, Index = 0, ImmediateLoad = immediateLoad };
+                //Source = new VideoPlayInfo { VideoItems = new List<BiliBiliVideoItem> { videoItem }, Index = 0, ImmediateLoad = immediateLoad };
                 Video = (await BiliBiliService.API.GetVideoInfo(bvid)).Data;
             }
 

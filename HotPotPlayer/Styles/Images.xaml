@@ -120,6 +120,9 @@
         <Setter Property="VerticalAlignment" Value="Center" />
         <Setter Property="Width" Value="170" />
         <Setter Property="Height" Value="250" />
+        <Setter Property="DecodePixelWidth" Value="170" />
+        <Setter Property="DecodePixelHeight" Value="250" />
+        <Setter Property="Stretch" Value="UniformToFill" />
     </Style>
 
     <Style x:Key="LocalAlbumPopupImageStyle" TargetType="cont:ImageEx2" BasedOn="{StaticResource ImageEx2BaseStyle}">

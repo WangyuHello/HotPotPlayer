@@ -96,6 +96,7 @@ namespace HotPotPlayer.Services
 
         private UserDto userDto;
         private BaseItemDto musicLibraryDto;
+        private BaseItemDto bangumiLibraryDto;
 
         private bool IsLogin = false;
         #endregion
@@ -107,13 +108,18 @@ namespace HotPotPlayer.Services
                 await JellyfinLoginAsync();
             }
 
-            var views = await JellyfinApiClient.UserViews.GetAsync().ConfigureAwait(false);
-            musicLibraryDto = views.Items.FirstOrDefault(v => v.CollectionType == BaseItemDto_CollectionType.Music);
-
             var albumsResult = await GetAlbums().ConfigureAwait(false);
             var albumGroups = GroupAllAlbumByYear(albumsResult);
 
             return albumGroups;
+        }
+
+        private async Task GetViews()
+        {
+            var views = await JellyfinApiClient.UserViews.GetAsync().ConfigureAwait(false);
+            musicLibraryDto = views.Items.FirstOrDefault(v => v.CollectionType == BaseItemDto_CollectionType.Music);
+
+            bangumiLibraryDto = views.Items.FirstOrDefault(v => v.Name=="动漫");
         }
 
         private async Task<BaseItemDtoQueryResult> GetAlbums()
@@ -158,7 +164,7 @@ namespace HotPotPlayer.Services
             return result.Items;
         }
 
-        public async Task<(List<BaseItemDto> list, int totalCount)> GetJellyfinArtistListAsync(int startIndex = 0, int limit = 50)
+        public async Task<List<BaseItemDto>> GetJellyfinArtistListAsync(int startIndex = 0, int limit = 50)
         {
             var result = await JellyfinApiClient.Artists.GetAsync(param =>
             {
@@ -175,7 +181,31 @@ namespace HotPotPlayer.Services
                     Limit = limit,
                 };
             }).ConfigureAwait(false);
-            return (result.Items, result.TotalRecordCount.Value);
+            return result.Items;
+        }
+
+        public async Task<List<BaseItemDto>> GetJellyfinVideoListAsync(int startIndex = 0, int limit = 50)
+        {
+            if (!IsLogin)
+            {
+                await JellyfinLoginAsync();
+            }
+
+            var result = await JellyfinApiClient.Items.GetAsync(param =>
+            {
+                param.QueryParameters = new ItemsRequestBuilder.ItemsRequestBuilderGetQueryParameters
+                {
+                    UserId = userDto.Id,
+                    ParentId = bangumiLibraryDto.Id,
+                    SortBy = [ItemSortBy.ProductionYear, ItemSortBy.PremiereDate, ItemSortBy.SortName],
+                    SortOrder = [SortOrder.Descending],
+                    Fields = [ItemFields.PrimaryImageAspectRatio, ItemFields.SortName, ItemFields.Path, ItemFields.ChildCount, ItemFields.MediaSourceCount, ],
+                    ImageTypeLimit = 1,
+                    StartIndex = startIndex,
+                    Limit = limit,
+                };
+            }).ConfigureAwait(false);
+            return result.Items;
         }
 
         static IEnumerable<IGrouping<int, BaseItemDto>> GroupAllAlbumByYear(BaseItemDtoQueryResult albums)
@@ -234,6 +264,8 @@ namespace HotPotPlayer.Services
             SdkClientSettings.SetAccessToken(authenticationResult.AccessToken);
             userDto = authenticationResult.User;
             IsLogin = true;
+
+            await GetViews().ConfigureAwait(false);
         }
 
         public async Task<List<BaseItemDto>> GetAlbumMusicItemsAsync(BaseItemDto album)
@@ -389,6 +421,50 @@ namespace HotPotPlayer.Services
             var url_temp = uri.ToString();
             url_temp = url_temp + "&api_key=" + SdkClientSettings.AccessToken;
             return url_temp;
+        }
+
+        public string GetVideoStream(BaseItemDto video)
+        {
+            var req = JellyfinApiClient.Videos[video.Id.Value].Stream.ToGetRequestInformation(param =>
+            {
+                param.QueryParameters = new Jellyfin.Sdk.Generated.Videos.Item.StreamNamespace.StreamRequestBuilder.StreamRequestBuilderGetQueryParameters
+                {
+                    Static = true,
+                    DeviceId = DevideId,
+                    MediaSourceId = video.Id.Value.ToString()
+                };
+            });
+            var uri = JellyfinApiClient.BuildUri(req);
+            var url_temp = uri.ToString();
+            url_temp = url_temp + "&api_key=" + SdkClientSettings.AccessToken;
+            return url_temp;
+        }
+
+        public async Task<List<BaseItemDto>> GetSeasons(BaseItemDto bangumi)
+        {
+            var result = await JellyfinApiClient.Shows[bangumi.Id.Value].Seasons.GetAsync(param =>
+            {
+                param.QueryParameters = new Jellyfin.Sdk.Generated.Shows.Item.Seasons.SeasonsRequestBuilder.SeasonsRequestBuilderGetQueryParameters
+                {
+                    UserId = userDto.Id,
+                    Fields = [ItemFields.ItemCounts, ItemFields.PrimaryImageAspectRatio, ItemFields.CanDelete, ItemFields.MediaSourceCount]
+                };
+            }).ConfigureAwait(false);
+            return result.Items;
+        }
+
+        public async Task<List<BaseItemDto>> GetEpisodes(BaseItemDto season)
+        {
+            var result = await JellyfinApiClient.Shows[season.Id.Value].Episodes.GetAsync(param =>
+            {
+                param.QueryParameters = new Jellyfin.Sdk.Generated.Shows.Item.Episodes.EpisodesRequestBuilder.EpisodesRequestBuilderGetQueryParameters
+                {
+                    UserId = userDto.Id,
+                    SeasonId = season.Id,
+                    Fields = [ItemFields.ItemCounts, ItemFields.PrimaryImageAspectRatio, ItemFields.CanDelete, ItemFields.MediaSourceCount, ItemFields.Overview]
+                };
+            }).ConfigureAwait(false);
+            return result.Items;
         }
 
         sealed class PlayListItemComparer : EqualityComparer<PlayListItemDb>

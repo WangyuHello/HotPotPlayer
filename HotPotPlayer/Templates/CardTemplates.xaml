@@ -703,35 +703,96 @@
         </StackPanel>
     </DataTemplate>
 
-    <DataTemplate x:Key="SeriesCardViewTemplate" x:DataType="models:SeriesItem">
-        <StackPanel 
-            Width="300"
-            Spacing="8" 
-            Padding="0,0,0,12" 
-            x:Name="SeriesCardConnectedElement"
-            BorderBrush="{ThemeResource ButtonBorderBrush}"
-            BorderThickness="{ThemeResource ButtonBorderThemeThickness}"
-            CornerRadius="4"
-            ui:VisualExtensions.NormalizedCenterPoint="0.5"
-            Background="White"
-            >
-            <cont2:ImageEx2 
-                Source="{x:Bind Cover}" 
-                Style="{StaticResource SeriesImageStyle}" 
+    <DataTemplate x:Key="SeriesCardViewTemplate" x:DataType="jmodel:BaseItemDto">
+        <Grid Width="170"
+              Padding="0,0,0,12" 
+              x:Name="SeriesCardConnectedElement"
+              BorderBrush="{ThemeResource ButtonBorderBrush}"
+              BorderThickness="{ThemeResource ButtonBorderThemeThickness}"
+              CornerRadius="4"
+              ui:VisualExtensions.NormalizedCenterPoint="0.5"
+              Background="White"
+              >
+            <StackPanel Spacing="8" >
+                <cont2:ImageEx2 
+                    Source="{x:Bind helper2:BaseItemDtoHelper.GetPrimaryJellyfinImage(ImageTags, Id)}" 
+                    Style="{StaticResource SeriesImageStyle}" 
                 />
-            <TextBlock 
-                Margin="8,0" 
-                Text="{x:Bind Title}" 
-                LineStackingStrategy="BaselineToBaseline" 
-                FontSize="14" 
-                MaxLines="2" 
-                TextTrimming="CharacterEllipsis" 
-                TextWrapping="Wrap" 
-                Height="40" 
-                ToolTipService.ToolTip="{x:Bind Title}" 
-                FontFamily="{ThemeResource MiSansMedium}"
+                <TextBlock 
+                    Margin="8,0" 
+                    Text="{x:Bind Name}" 
+                    LineStackingStrategy="BaselineToBaseline" 
+                    FontSize="14" 
+                    MaxLines="2" 
+                    TextTrimming="CharacterEllipsis" 
+                    TextWrapping="Wrap" 
+                    Height="40" 
+                    ToolTipService.ToolTip="{x:Bind Name}" 
+                    FontFamily="{ThemeResource MiSansMedium}"
                 />
-        </StackPanel>
+                <TextBlock 
+                    Margin="8,0" 
+                    Text="{x:Bind ProductionYear}" 
+                    LineStackingStrategy="BaselineToBaseline" 
+                    FontSize="14" 
+                    MaxLines="2" 
+                    TextTrimming="CharacterEllipsis" 
+                    TextWrapping="Wrap" 
+                    ToolTipService.ToolTip="{x:Bind ProductionYear}" 
+                    FontFamily="{ThemeResource MiSansNormal}"
+                />
+
+            </StackPanel>
+
+            <Grid x:Name="HiddenContent" Visibility="Collapsed">
+                <Button Style="{StaticResource TransparentButton}"
+                        HorizontalAlignment="Center"
+                        Padding="12"
+                        Margin="0,-70,0,0"
+                        CornerRadius="32"
+                        Background="#99FFFFFF"
+                        Tag="{x:Bind }"
+                        Click="{x:Bind helper:BangumiHelper.SeriesPlay}">
+                    <FontIcon FontFamily="Segoe Fluent Icons" Glyph="&#xE768;" FontSize="24"/>
+                </Button>
+                <StackPanel 
+                    Margin="0,0,8,0"
+                    Padding="8,0,0,0"
+                    HorizontalAlignment="Right" 
+                    VerticalAlignment="Bottom" 
+                    Orientation="Horizontal"
+                    Spacing="8"
+                    Background="White"
+                >
+                    <Button Style="{StaticResource TransparentButton}" Foreground="Gray" >
+                        <FontIcon FontFamily="Segoe Fluent Icons" Glyph="&#xE734;" FontSize="18"/>
+                    </Button>
+                    <Button Style="{StaticResource TransparentButton}" Foreground="Gray" >
+                        <FontIcon FontFamily="Segoe Fluent Icons" Glyph="&#xE712;" FontSize="18"/>
+                    </Button>
+                </StackPanel>
+            </Grid>
+            <ani:Explicit.Animations>
+                <ani:AnimationSet x:Name="ScaleEnterAnimation" >
+                    <ani:ScaleAnimation To="1.05" Duration="0:0:0.3"/>
+                </ani:AnimationSet>
+
+                <ani:AnimationSet x:Name="ScaleExitAnimation">
+                    <ani:ScaleAnimation To="1.0" Duration="0:0:0.3"/>
+                </ani:AnimationSet>
+            </ani:Explicit.Animations>
+            <interactivity:Interaction.Behaviors>
+                <interactivity:EventTriggerBehavior EventName="PointerEntered">
+                    <behaviors:StartAnimationAction Animation="{Binding ElementName=ScaleEnterAnimation}"/>
+                    <interactivity:ChangePropertyAction TargetObject="{Binding ElementName=HiddenContent}" PropertyName="Visibility" Value="Visible" />
+                </interactivity:EventTriggerBehavior>
+                <interactivity:EventTriggerBehavior EventName="PointerExited">
+                    <behaviors:StartAnimationAction Animation="{Binding ElementName=ScaleExitAnimation}"/>
+                    <interactivity:ChangePropertyAction TargetObject="{Binding ElementName=HiddenContent}" PropertyName="Visibility" Value="Collapsed" />
+                </interactivity:EventTriggerBehavior>
+            </interactivity:Interaction.Behaviors>
+        </Grid>
+
     </DataTemplate>
 
     <DataTemplate x:Key="CloudPlayListCardViewTemplate" x:DataType="modelsC:CloudPlayListItem">

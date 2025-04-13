@@ -140,7 +140,6 @@ namespace HotPotPlayer.Controls
             MusicPlayer.PlayNext();
         }
 
-
         private void PlayModeButtonClick(object sender, RoutedEventArgs e)
         {
             MusicPlayer.TogglePlayMode();

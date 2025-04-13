@@ -31,7 +31,7 @@ namespace HotPotPlayer.Pages.Helper
         public static void PlayVideo(object sender, ItemClickEventArgs e)
         {
             var video = e.ClickedItem as VideoItem;
-            App.PlayVideo(video);
+            //App.PlayVideo(video);
         }
 
         internal static void RightTapMusicInListClick(object sender, RoutedEventArgs e)

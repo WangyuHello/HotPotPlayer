@@ -1,6 +1,7 @@
 ﻿using HotPotPlayer.Helpers;
 using HotPotPlayer.Models;
 using HotPotPlayer.Services;
+using Jellyfin.Sdk.Generated.Models;
 using Microsoft.UI.Dispatching;
 using Microsoft.UI.Windowing;
 using Microsoft.UI.Xaml;
@@ -70,7 +71,6 @@ namespace HotPotPlayer
         public abstract Window MainWindow { get; }
 
         public abstract void PlayVideo(string bvid);
-        public abstract void PlayVideo(VideoItem file);
-        public abstract void PlayVideos(IEnumerable<VideoItem> videos, int index);
+        public abstract void PlayVideos(BaseItemDto singleOrSeries, int index);
     }
 }

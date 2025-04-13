@@ -22,6 +22,7 @@ using Microsoft.UI.Xaml.Media.Animation;
 using HotPotPlayer.Services;
 using HotPotPlayer.Extensions;
 using System.Drawing;
+using CommunityToolkit.Mvvm.ComponentModel;
 
 // To learn more about WinUI, the WinUI project structure,
 // and more about our project templates, see: http://aka.ms/winui-project-info.
@@ -45,10 +46,8 @@ namespace HotPotPlayer.Pages
             set => Set(ref _selectedSeries, value);
         }
 
-        private void PlayVideo(VideoItem video)
-        {
-            App.PlayVideo(video);
-        }
+        [ObservableProperty]
+        private BangumiCollection jellyfinBangumiList;
 
         //private void SeriesClick(object sender, RoutedEventArgs e)
         //{
@@ -63,14 +62,6 @@ namespace HotPotPlayer.Pages
         //    SeriesOverlayPopup.Visibility = Visibility.Visible;
         //}
 
-        private void SeriesPopupListClick(object sender, RoutedEventArgs e)
-        {
-            var video = ((Button)sender).Tag as VideoItem;
-            App.PlayVideo(video);
-        }
-
-        LocalVideoService VideoService => ((App)Application.Current).LocalVideoService;
-
         bool IsFirstNavigate = true;
 
         protected override void OnNavigatedTo(NavigationEventArgs e)
@@ -79,13 +70,8 @@ namespace HotPotPlayer.Pages
             if (IsFirstNavigate)
             {
                 IsFirstNavigate = false;
-                VideoService.StartLoadLocalVideo();
+                JellyfinBangumiList = new BangumiCollection(JellyfinMusicService);
             }
-        }
-
-        Visibility GetLoadingVisibility(LocalServiceState state)
-        {
-            return state == LocalServiceState.Loading ? Visibility.Visible : Visibility.Collapsed;
         }
 
         private void SeriesOverlayTarget_Tapped(object sender, TappedRoutedEventArgs e)
@@ -100,6 +86,7 @@ namespace HotPotPlayer.Pages
         //    await SeriesGridView.TryStartConnectedAnimationAsync(anim, SelectedSeries, "SeriesConnectedElement");
         //    SeriesOverlayPopup.Visibility = Visibility.Collapsed;
         //}
+
         public override RectangleF[] GetTitleBarDragArea()
         {
             return new RectangleF[]

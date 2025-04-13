@@ -83,7 +83,7 @@ namespace HotPotPlayer
                     var videoFiles = app.Config.GetVideoFilesFromDirectory(dir);
                     var names = videoFiles.Select(s => s.Name).ToList();
                     var index = names.IndexOf(initMedia.Name);
-                    app.PlayVideos(videoFiles.Select(v => v.ToVideoItemLight()), index);
+                    //app.PlayVideos(videoFiles.Select(v => v.ToVideoItemLight()), index);
                 }
             }
         }

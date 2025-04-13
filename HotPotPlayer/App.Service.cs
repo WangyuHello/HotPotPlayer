@@ -4,6 +4,7 @@ using HotPotPlayer.Pages.BilibiliSub;
 using HotPotPlayer.Services;
 using HotPotPlayer.Video;
 using HotPotPlayer.Video.Models;
+using Jellyfin.Sdk.Generated.Models;
 using Microsoft.UI;
 using Microsoft.UI.Windowing;
 using Microsoft.UI.Xaml;
@@ -25,14 +26,9 @@ namespace HotPotPlayer
     {
         public FileInfo InitMediaFile { get; set; }
 
-        public override void PlayVideo(VideoItem file)
+        public override void PlayVideos(BaseItemDto singleOrSeries, int index)
         {
-            PlayVideos(new List<VideoItem>() { file },  0);
-        }
-
-        public override void PlayVideos(IEnumerable<VideoItem> videos, int index)
-        {
-            MainWindow.NavigateToVideo(new VideoPlayInfo { VideoItems = videos, Index = index });
+            MainWindow.NavigateToVideo(new VideoPlayInfo { SingleOrSeries = singleOrSeries, Index = index });
         }
 
         public override void ShowToast(ToastInfo toast)

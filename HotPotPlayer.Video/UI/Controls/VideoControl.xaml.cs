@@ -329,7 +329,7 @@ namespace HotPotPlayer.Video.UI.Controls
 
         private void OnSourceChanged(VideoPlayInfo info)
         {
-            currentPlayList = new ObservableCollection<VideoItem>(info.VideoItems);
+            //currentPlayList = new ObservableCollection<VideoItem>(info.VideoItems);
             currentPlayIndex = info.Index;
             StartPlay(immediateInit: info.ImmediateLoad);
         }

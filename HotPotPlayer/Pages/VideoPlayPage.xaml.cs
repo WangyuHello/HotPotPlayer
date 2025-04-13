@@ -12,6 +12,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
+using System.Threading.Tasks;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
 
@@ -51,7 +52,14 @@ namespace HotPotPlayer.Pages
         {
             base.VideoPlayer.IsVideoPagePresent = false;
             base.OnNavigatingFrom(e);
-            VideoPlayer.Close();
+            base.VideoPlayer.Stop();
         }
+
+        private async void OnVideoHostLoaded(object sender, RoutedEventArgs e)
+        {
+            await Task.Delay(TimeSpan.FromSeconds(1));
+            base.VideoPlayer.PlayNext(Source.SingleOrSeries);
+        }
+
     }
 }

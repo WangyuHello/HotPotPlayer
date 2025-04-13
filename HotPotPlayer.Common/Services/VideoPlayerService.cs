@@ -172,9 +172,14 @@ namespace HotPotPlayer.Services
         bool _isVideoSwitching;
         readonly BackgroundWorker _playerStarter;
 
-        public void PlayNext(BaseItemDto video)
+        public async void PlayNext(BaseItemDto video)
         {
-
+            //TODO
+            var seasons = await App.JellyfinMusicService.GetSeasons(video);
+            var season = seasons.FirstOrDefault();
+            var episodes = await App.JellyfinMusicService.GetEpisodes(season);
+            CurrentPlayList = [ .. episodes];
+            PlayNext(0);
         }
 
         public void PlayNext(int? index)
@@ -260,6 +265,11 @@ namespace HotPotPlayer.Services
         public async void PlayTo(TimeSpan to)
         {
             await _mpv.SeekAsync(to);
+        }
+
+        public void Stop()
+        {
+            _mpv.Stop();
         }
 
         public void TogglePlayMode()
@@ -369,24 +379,24 @@ namespace HotPotPlayer.Services
 
             try
             {
-                //_outputDevice?.Dispose();
-                //_outputDevice = new WaveOutEvent { DeviceNumber = -1 };
-                //_outputDevice.PlaybackStopped += OnPlaybackStopped;
                 if (_mpv == null)
                 {
                     _mpv = new MpvPlayer(@"NativeLibs\libmpv-2.dll")
                     {
                         AutoPlay = false,
                         Volume = Volume,
-                        LogLevel = MpvLogLevel.None,
+                        LogLevel = MpvLogLevel.Debug,
                         Loop = false,
                         LoopPlaylist = false,
                     };
-                    _mpv.API.SetPropertyString("vo", "gpu-next");
+                    _mpv.API.SetPropertyDouble("display-fps-override", 120d);
+                    _mpv.API.SetPropertyString("gpu-debug", "yes");
+                    //_mpv.API.SetPropertyString("vo", "gpu-next");
+                    _mpv.API.SetPropertyString("vo", "gpu");
                     _mpv.API.SetPropertyString("gpu-context", "d3d11");
                     _mpv.API.SetPropertyString("hwdec", "d3d11va");
                     _mpv.API.SetPropertyString("d3d11-composition", "yes");
-                    _mpv.API.SetPropertyString("target-colorspace-hint", "yes"); //HDR passthrough
+                    //_mpv.API.SetPropertyString("target-colorspace-hint", "yes"); //HDR passthrough
                     _mpv.MediaResumed += MediaResumed;
                     _mpv.MediaPaused += MediaPaused;
                     _mpv.MediaLoaded += MediaLoaded;
@@ -398,7 +408,8 @@ namespace HotPotPlayer.Services
                     _mpv.API.VideoGeometryInit += VideoGeometryInit;
                     _mpv.API.SwapChainInited += OnSwapChainInited;
                 }
-                //_mpv.LoadPlaylist(CurrentPlayList.Select(App.JellyfinMusicService.GetMusicStream), true);
+                _mpv.LoadPlaylist(CurrentPlayList.Select(App.JellyfinMusicService.GetVideoStream), true);
+                //_mpv.LoadPlaylist([@"Z:\视频\【4K HDR】HDR下原始森林的精彩瞬间，这宽容度，带劲了.mp4"], true);
                 _mpv.PlaylistPlayIndex(index);
                 e.Result = ValueTuple.Create(index, false);
 
