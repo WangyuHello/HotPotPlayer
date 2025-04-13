@@ -70,10 +70,12 @@
     <None Remove="Controls\ImageEx2.xaml" />
     <None Remove="Controls\LyricPanel.xaml" />
     <None Remove="Controls\MainSidebar.xaml" />
+    <None Remove="Controls\MoviePopup.xaml" />
     <None Remove="Controls\NewPlayListDialog.xaml" />
     <None Remove="Controls\PlayBar.xaml" />
     <None Remove="Controls\PlayListPopup.xaml" />
     <None Remove="Controls\PlayScreen.xaml" />
+    <None Remove="Controls\SeriesPopup.xaml" />
     <None Remove="Controls\Toast.xaml" />
     <None Remove="Pages\Album.xaml" />
     <None Remove="Pages\Artist.xaml" />
@@ -419,6 +421,16 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Remove="Pages\BilibiliSub\User.xaml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Page Update="Controls\MoviePopup.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+  </ItemGroup>
+  <ItemGroup>
+    <Page Update="Controls\SeriesPopup.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
   </ItemGroup>
   <ItemGroup>
     <Page Update="Pages\BilibiliSub\Search.xaml">

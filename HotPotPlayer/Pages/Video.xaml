@@ -14,6 +14,7 @@
     mc:Ignorable="d"
     NavigationCacheMode="Enabled"
     xmlns:cont2="using:HotPotPlayer.UI.Controls"
+    xmlns:cont3="using:HotPotPlayer.Controls"
     xmlns:collection="using:CommunityToolkit.Common.Collections"
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
 
@@ -22,17 +23,66 @@
     </base:PageBase.Resources>
 
     <Grid Background="White" Padding="36,28,0,0" SizeChanged="Root_SizeChanged">
-        <Pivot HeaderTemplate="{StaticResource GeneralPivotHeaderTemplate}">
-            <PivotItem Header="番剧" Margin="0">
-                <GridView x:Name="SeriesGridView" 
-                            ItemsSource="{x:Bind JellyfinBangumiList, Mode=OneWay}" 
-                            Style="{StaticResource SeriesCardViewStyle}" >
-                    <GridView.Footer>
-                        <Grid Height="100"/>
-                    </GridView.Footer>
-                </GridView>
-            </PivotItem>
-        </Pivot>
+        <SelectorBar x:Name="VideoSelector" SelectionChanged="VideoSelector_SelectionChanged" />
+
+
+        <GridView x:Name="VideoGridView"
+                  Margin="0,68,0,0"
+                  ItemsSource="{x:Bind SelectedVideoList, Mode=OneWay}" 
+                  ItemClick="SeriesClick"
+                  Style="{StaticResource SeriesCardViewStyle}" >
+            <GridView.Footer>
+                <Grid Height="100"/>
+            </GridView.Footer>
+        </GridView>
+
+        <Grid x:Name="SeriesPopupOverlay" Margin="-36,-28,0,0" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Visibility="Collapsed" Background="#50000000" Tapped="SeriesPopupOverlay_Tapped">
+            <animations:Implicit.HideAnimations>
+                <animations:OpacityAnimation Duration="0:0:0.45" From="1" To="0" />
+            </animations:Implicit.HideAnimations>
+
+
+            <animations:Implicit.ShowAnimations>
+                <animations:OpacityAnimation Duration="0:0:0.45" From="0" To="1" />
+            </animations:Implicit.ShowAnimations>
+
+            <cont3:SeriesPopup x:Name="SeriesPopupTarget" 
+                              Margin="0,-32,0,0" 
+                              Tapped="{x:Bind helper:AlbumHelper.SuppressTap}">
+                <animations:Implicit.HideAnimations>
+                    <animations:OpacityAnimation Duration="0:0:0.45" From="1" To="0" />
+                </animations:Implicit.HideAnimations>
+
+                <animations:Implicit.ShowAnimations>
+                    <animations:OpacityAnimation Duration="0:0:0.01" From="0" To="1" />
+                </animations:Implicit.ShowAnimations>
+            </cont3:SeriesPopup>
+        </Grid>
+
+        <Grid x:Name="MoviePopupOverlay" Margin="-36,-28,0,0" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Visibility="Collapsed" Background="#50000000" Tapped="MoviePopupOverlay_Tapped">
+            <animations:Implicit.HideAnimations>
+                <animations:OpacityAnimation Duration="0:0:0.45" From="1" To="0" />
+            </animations:Implicit.HideAnimations>
+
+
+            <animations:Implicit.ShowAnimations>
+                <animations:OpacityAnimation Duration="0:0:0.45" From="0" To="1" />
+            </animations:Implicit.ShowAnimations>
+
+            <cont3:MoviePopup x:Name="MoviePopupTarget" 
+                              Margin="0,-32,0,0" 
+                              Movie="{x:Bind SelectedSeries, Mode=OneWay}"
+                              MovieInfo="{x:Bind SelectedSeriesInfo, Mode=OneWay}"
+                              Tapped="{x:Bind helper:AlbumHelper.SuppressTap}">
+                <animations:Implicit.HideAnimations>
+                    <animations:OpacityAnimation Duration="0:0:0.45" From="1" To="0" />
+                </animations:Implicit.HideAnimations>
+
+                <animations:Implicit.ShowAnimations>
+                    <animations:OpacityAnimation Duration="0:0:0.01" From="0" To="1" />
+                </animations:Implicit.ShowAnimations>
+            </cont3:MoviePopup>
+        </Grid>
 
         <!--<Grid x:Name="SeriesOverlayPopup" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Visibility="Collapsed" Background="#00000000" Tapped="SeriesOverlayPopup_Tapped">
             <Grid x:Name="SeriesOverlayTarget" Margin="0,-60,0,0" VerticalAlignment="Center" HorizontalAlignment="Center" Width="640" MinHeight="460" MaxHeight="560" CornerRadius="8" Background="{StaticResource PopupBackground}" Tapped="SeriesOverlayTarget_Tapped">

@@ -96,7 +96,7 @@ namespace HotPotPlayer.Services
 
         private UserDto userDto;
         private BaseItemDto musicLibraryDto;
-        private BaseItemDto bangumiLibraryDto;
+        public List<BaseItemDto> VideoLibraryDto { get; set; }
 
         private bool IsLogin = false;
         #endregion
@@ -119,7 +119,19 @@ namespace HotPotPlayer.Services
             var views = await JellyfinApiClient.UserViews.GetAsync().ConfigureAwait(false);
             musicLibraryDto = views.Items.FirstOrDefault(v => v.CollectionType == BaseItemDto_CollectionType.Music);
 
-            bangumiLibraryDto = views.Items.FirstOrDefault(v => v.Name=="动漫");
+            VideoLibraryDto = views.Items.Where(v => v.CollectionType == null || 
+                                                v.CollectionType == BaseItemDto_CollectionType.Movies || 
+                                                v.CollectionType == BaseItemDto_CollectionType.Tvshows).ToList();
+        }
+
+        public async Task<List<BaseItemDto>> GetVideoViews()
+        {
+            if (!IsLogin)
+            {
+                await JellyfinLoginAsync();
+            }
+
+            return VideoLibraryDto;
         }
 
         private async Task<BaseItemDtoQueryResult> GetAlbums()
@@ -184,7 +196,7 @@ namespace HotPotPlayer.Services
             return result.Items;
         }
 
-        public async Task<List<BaseItemDto>> GetJellyfinVideoListAsync(int startIndex = 0, int limit = 50)
+        public async Task<List<BaseItemDto>> GetJellyfinVideoListAsync(BaseItemDto library, int startIndex = 0, int limit = 50)
         {
             if (!IsLogin)
             {
@@ -196,7 +208,7 @@ namespace HotPotPlayer.Services
                 param.QueryParameters = new ItemsRequestBuilder.ItemsRequestBuilderGetQueryParameters
                 {
                     UserId = userDto.Id,
-                    ParentId = bangumiLibraryDto.Id,
+                    ParentId = library.Id,
                     SortBy = [ItemSortBy.ProductionYear, ItemSortBy.PremiereDate, ItemSortBy.SortName],
                     SortOrder = [SortOrder.Descending],
                     Fields = [ItemFields.PrimaryImageAspectRatio, ItemFields.SortName, ItemFields.Path, ItemFields.ChildCount, ItemFields.MediaSourceCount, ],
@@ -214,9 +226,9 @@ namespace HotPotPlayer.Services
             return r;
         }
 
-        private Uri GetPrimaryJellyfinImageBase(BaseItemDto_ImageTags tag, Guid? parentId, int widthHeigh)
+        private Uri GetPrimaryJellyfinImageBase(BaseItemDto_ImageTags tag, Guid? parentId, int widthHeigh, string tagStr = "Primary")
         {
-            if (!tag.AdditionalData.TryGetValue("Primary", out object value)) return null;
+            if (!tag.AdditionalData.TryGetValue(tagStr, out object value)) return null;
             var requestInformation = JellyfinApiClient.Items[parentId.Value].Images[ImageType.Primary.ToString()].ToGetRequestInformation(param =>
             {
                 param.QueryParameters = new Jellyfin.Sdk.Generated.Items.Item.Images.Item.WithImageTypeItemRequestBuilder.WithImageTypeItemRequestBuilderGetQueryParameters
@@ -249,6 +261,15 @@ namespace HotPotPlayer.Services
         public Uri GetPrimaryJellyfinImageVerySmall(BaseItemDto_ImageTags tag, Guid? parentId)
         {
             return GetPrimaryJellyfinImageBase(tag, parentId, 32);
+        }
+
+        public Uri GetArtJellyfinImage(BaseItemDto_ImageTags tag, Guid? parentId)
+        {
+            return GetPrimaryJellyfinImageBase(tag, parentId, 300, "Art");
+        }
+        public Uri GetBannerJellyfinImage(BaseItemDto_ImageTags tag, Guid? parentId)
+        {
+            return GetPrimaryJellyfinImageBase(tag, parentId, 300, "Banner");
         }
 
         public async Task JellyfinLoginAsync()
@@ -312,9 +333,9 @@ namespace HotPotPlayer.Services
             return result;
         }
 
-        public async Task<BaseItemDto> GetAlbumInfoAsync(BaseItemDto album)
+        public async Task<BaseItemDto> GetItemInfoAsync(BaseItemDto item)
         {
-            var result = await JellyfinApiClient.Items[album.Id.Value].GetAsync(param =>
+            var result = await JellyfinApiClient.Items[item.Id.Value].GetAsync(param =>
             {
                 param.QueryParameters = new Jellyfin.Sdk.Generated.Items.Item.WithItemItemRequestBuilder.WithItemItemRequestBuilderGetQueryParameters
                 {

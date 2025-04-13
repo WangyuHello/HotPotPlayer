@@ -126,7 +126,7 @@ namespace HotPotPlayer.Pages
             if (album != SelectedAlbum) 
             {
                 SelectedAlbumMusicItems = await JellyfinMusicService.GetAlbumMusicItemsAsync(album);
-                SelectedAlbumInfo = await JellyfinMusicService.GetAlbumInfoAsync(album);
+                SelectedAlbumInfo = await JellyfinMusicService.GetItemInfoAsync(album);
             }
             SelectedAlbum = album;
 

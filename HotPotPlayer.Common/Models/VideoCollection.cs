@@ -12,8 +12,9 @@ using Windows.Foundation;
 
 namespace HotPotPlayer.Models
 {
-    public class BangumiCollection(JellyfinMusicService service) : ObservableCollection<BaseItemDto>, ISupportIncrementalLoading
+    public class VideoCollection(JellyfinMusicService service, BaseItemDto library) : ObservableCollection<BaseItemDto>, ISupportIncrementalLoading
     {
+        readonly BaseItemDto _library = library;
         readonly JellyfinMusicService _service = service;
         int _pageNum;
         const int _perPageItem = 50;
@@ -24,7 +25,7 @@ namespace HotPotPlayer.Models
         {
             return AsyncInfo.Run(async (token) =>
             {
-                var list = await _service.GetJellyfinVideoListAsync(_pageNum * _perPageItem, _perPageItem);
+                var list = await _service.GetJellyfinVideoListAsync(_library, _pageNum * _perPageItem, _perPageItem);
                 _pageNum++;
                 if (list == null || list.Count < _perPageItem)
                 {
