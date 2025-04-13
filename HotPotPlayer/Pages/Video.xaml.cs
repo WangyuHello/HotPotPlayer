@@ -52,9 +52,6 @@ namespace HotPotPlayer.Pages
         [ObservableProperty]
         private BaseItemDto selectedSeries;
 
-        [ObservableProperty]
-        private BaseItemDto selectedSeriesInfo;
-
         bool IsFirstNavigate = true;
 
         protected override async void OnNavigatedTo(NavigationEventArgs e)
@@ -90,13 +87,9 @@ namespace HotPotPlayer.Pages
             SelectedVideoList = videoLists[currentSelectedIndex];
         }
 
-        private async void SeriesClick(object sender, ItemClickEventArgs e)
+        private void SeriesClick(object sender, ItemClickEventArgs e)
         {
             var series = e.ClickedItem as BaseItemDto;
-            if (series != SelectedSeries)
-            {
-                SelectedSeriesInfo = await JellyfinMusicService.GetItemInfoAsync(series);
-            }
             SelectedSeries = series;
 
             bool isFolder = series.IsFolder.Value;

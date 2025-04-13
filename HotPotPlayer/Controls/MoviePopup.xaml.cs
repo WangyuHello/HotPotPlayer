@@ -1,4 +1,5 @@
-﻿using Jellyfin.Sdk.Generated.Models;
+﻿using CommunityToolkit.Mvvm.ComponentModel;
+using Jellyfin.Sdk.Generated.Models;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Controls.Primitives;
@@ -11,6 +12,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
+using System.Threading.Tasks;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
 
@@ -33,17 +35,17 @@ namespace HotPotPlayer.Controls
         }
 
         public static readonly DependencyProperty MovieProperty =
-            DependencyProperty.Register("Movie", typeof(BaseItemDto), typeof(MoviePopup), new PropertyMetadata(default(BaseItemDto)));
+            DependencyProperty.Register("Movie", typeof(BaseItemDto), typeof(MoviePopup), new PropertyMetadata(default(BaseItemDto), MovieChanged));
 
-        public BaseItemDto MovieInfo
+        [ObservableProperty]
+        private BaseItemDto movieInfo;
+
+        private static async void MovieChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
-            get { return (BaseItemDto)GetValue(MovieInfoProperty); }
-            set { SetValue(MovieInfoProperty, value); }
+            var @this = (MoviePopup)d;
+            var movie = e.NewValue as BaseItemDto;
+            @this.MovieInfo = await @this.JellyfinMusicService.GetItemInfoAsync(movie);
         }
-
-        public static readonly DependencyProperty MovieInfoProperty =
-            DependencyProperty.Register("MovieInfo", typeof(BaseItemDto), typeof(MoviePopup), new PropertyMetadata(default(BaseItemDto)));
-
 
     }
 }

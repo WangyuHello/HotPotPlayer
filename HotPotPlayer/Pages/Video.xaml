@@ -25,7 +25,6 @@
     <Grid Background="White" Padding="36,28,0,0" SizeChanged="Root_SizeChanged">
         <SelectorBar x:Name="VideoSelector" SelectionChanged="VideoSelector_SelectionChanged" />
 
-
         <GridView x:Name="VideoGridView"
                   Margin="0,68,0,0"
                   ItemsSource="{x:Bind SelectedVideoList, Mode=OneWay}" 
@@ -47,8 +46,9 @@
             </animations:Implicit.ShowAnimations>
 
             <cont3:SeriesPopup x:Name="SeriesPopupTarget" 
-                              Margin="0,-32,0,0" 
-                              Tapped="{x:Bind helper:AlbumHelper.SuppressTap}">
+                               Series="{x:Bind SelectedSeries, Mode=OneWay}"
+                               Margin="0,-32,0,0" 
+                               Tapped="{x:Bind helper:AlbumHelper.SuppressTap}">
                 <animations:Implicit.HideAnimations>
                     <animations:OpacityAnimation Duration="0:0:0.45" From="1" To="0" />
                 </animations:Implicit.HideAnimations>
@@ -72,7 +72,6 @@
             <cont3:MoviePopup x:Name="MoviePopupTarget" 
                               Margin="0,-32,0,0" 
                               Movie="{x:Bind SelectedSeries, Mode=OneWay}"
-                              MovieInfo="{x:Bind SelectedSeriesInfo, Mode=OneWay}"
                               Tapped="{x:Bind helper:AlbumHelper.SuppressTap}">
                 <animations:Implicit.HideAnimations>
                     <animations:OpacityAnimation Duration="0:0:0.45" From="1" To="0" />

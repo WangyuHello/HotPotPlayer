@@ -198,6 +198,63 @@
         </sel:EvenOldTemplateSelector.OddTemplate>
     </sel:EvenOldTemplateSelector>
 
+    <sel:EvenOldTemplateSelector x:Key="EvenOldVideoListTemplate" >
+        <sel:EvenOldTemplateSelector.EvenTemplate>
+            <DataTemplate x:DataType="jmodel:BaseItemDto">
+                <Grid Background="#40F4F7FE" Padding="8"
+                  CornerRadius="4">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="*" />
+                        <RowDefinition Height="*" />
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="24" />
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="48" />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
+                    <TextBlock Grid.RowSpan="2" Text="{Binding RelativeSource={RelativeSource Mode=TemplatedParent}, Converter={StaticResource IndexConverter}}" FontSize="12" HorizontalAlignment="Center" VerticalAlignment="Center" FontFamily="{ThemeResource MiSansBold}"/>
+                    <cont2:ImageEx2 Grid.RowSpan="2" VerticalAlignment="Center" Margin="4,0,8,0" Grid.Column="1" Source="{x:Bind helper2:BaseItemDtoHelper.GetPrimaryJellyfinImage(ImageTags, Id)}" Style="{StaticResource LocalMusicImageStyle}" Height="81" Width="144" CornerRadius="4" EnableLazyLoading="True"/>
+                    <TextBlock Grid.Column="2" VerticalAlignment="Bottom" FontSize="18" TextTrimming="CharacterEllipsis" Text="{x:Bind Name}" FontFamily="{ThemeResource MiSansMedium}" ToolTipService.ToolTip="{x:Bind Name}"/>
+                    <TextBlock Grid.Row="1" Grid.Column="2" Grid.ColumnSpan="2" VerticalAlignment="Top" FontSize="14" MaxLines="2" TextWrapping="Wrap" TextTrimming="CharacterEllipsis" Text="{x:Bind Overview}" Foreground="Gray" FontFamily="{ThemeResource MiSansRegular}" ToolTipService.ToolTip="{x:Bind Overview}"/>
+                    <TextBlock Grid.RowSpan="2" Grid.Column="4" Text="{x:Bind helper2:BaseItemDtoHelper.GetJellyfinDuration(RunTimeTicks)}" VerticalAlignment="Center" FontFamily="{ThemeResource MiSansRegular}"/>
+                    <Button Grid.RowSpan="2" Grid.Column="5" Style="{StaticResource TransparentButton}" Margin="4,0,4,0" CornerRadius="4" Padding="4" Tag="{x:Bind }" >
+                        <SymbolIcon Symbol="More" />
+                    </Button>
+                </Grid>
+            </DataTemplate>
+        </sel:EvenOldTemplateSelector.EvenTemplate>
+        <sel:EvenOldTemplateSelector.OddTemplate>
+            <DataTemplate x:DataType="jmodel:BaseItemDto">
+                <Grid Padding="8"
+                  CornerRadius="4">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="*" />
+                        <RowDefinition Height="*" />
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="24" />
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="48" />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
+                    <TextBlock Grid.RowSpan="2" Text="{Binding RelativeSource={RelativeSource Mode=TemplatedParent}, Converter={StaticResource IndexConverter}}" FontSize="12" HorizontalAlignment="Center" VerticalAlignment="Center" FontFamily="{ThemeResource MiSansBold}"/>
+                    <cont2:ImageEx2 Grid.RowSpan="2" VerticalAlignment="Center" Margin="4,0,8,0" Grid.Column="1" Source="{x:Bind helper2:BaseItemDtoHelper.GetPrimaryJellyfinImage(ImageTags, Id)}" Style="{StaticResource LocalMusicImageStyle}" Height="81" Width="144" CornerRadius="4" EnableLazyLoading="True"/>
+                    <TextBlock Grid.Column="2" VerticalAlignment="Bottom" FontSize="18" TextTrimming="CharacterEllipsis" Text="{x:Bind Name}" FontFamily="{ThemeResource MiSansMedium}" ToolTipService.ToolTip="{x:Bind Name}"/>
+                    <TextBlock Grid.Row="1" Grid.Column="2" Grid.ColumnSpan="2" VerticalAlignment="Top" FontSize="14" MaxLines="2" TextWrapping="Wrap" TextTrimming="CharacterEllipsis" Text="{x:Bind Overview}" Foreground="Gray" FontFamily="{ThemeResource MiSansRegular}" ToolTipService.ToolTip="{x:Bind Overview}"/>
+                    <TextBlock Grid.RowSpan="2" Grid.Column="4" Text="{x:Bind helper2:BaseItemDtoHelper.GetJellyfinDuration(RunTimeTicks)}" VerticalAlignment="Center" FontFamily="{ThemeResource MiSansRegular}"/>
+                    <Button Grid.RowSpan="2" Grid.Column="5" Style="{StaticResource TransparentButton}" Margin="4,0,4,0" CornerRadius="4" Padding="4" Tag="{x:Bind }" >
+                        <SymbolIcon Symbol="More" />
+                    </Button>
+                </Grid>
+            </DataTemplate>
+        </sel:EvenOldTemplateSelector.OddTemplate>
+    </sel:EvenOldTemplateSelector>
+
     <conv:IndexConverter x:Key="TopListIndexConverter" />
     
     <DataTemplate x:Key="TopListTemplate" x:DataType="modelsC:TopListTrack">
