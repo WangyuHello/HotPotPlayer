@@ -4,6 +4,7 @@ using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Controls.Primitives;
 using Microsoft.UI.Xaml.Data;
+using Microsoft.UI.Xaml.Hosting;
 using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Navigation;
@@ -13,6 +14,7 @@ using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
 using System.Threading.Tasks;
+using System.Xml.Linq;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
 
@@ -84,6 +86,23 @@ namespace HotPotPlayer.Controls
         private void ListView_ItemClick(object sender, ItemClickEventArgs e)
         {
             var video = e.ClickedItem as BaseItemDto;
+        }
+
+        private void Backdrop_Tapped(object sender, TappedRoutedEventArgs e)
+        {
+            var backdropVisual = ElementCompositionPreview.GetElementVisual(Backdrop);
+            var mainInfoVisual = ElementCompositionPreview.GetElementVisual(MainInfo);
+
+            if (mainInfoVisual.Offset.Y < 210f)
+            {
+                backdropVisual.Offset = new System.Numerics.Vector3(0, 0, 0);
+                mainInfoVisual.Offset = new System.Numerics.Vector3(0, 484f, 0);
+            }
+            else
+            {
+                backdropVisual.Offset = new System.Numerics.Vector3(0, -142f, 0);
+                mainInfoVisual.Offset = new System.Numerics.Vector3(0, 200f, 0);
+            }
         }
     }
 }

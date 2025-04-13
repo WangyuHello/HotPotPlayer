@@ -9,39 +9,47 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:cont2="using:HotPotPlayer.UI.Controls"
     xmlns:winui="using:Microsoft.UI.Xaml.Controls"
+    xmlns:animations="using:CommunityToolkit.WinUI.Animations"
     xmlns:controls="using:CommunityToolkit.WinUI.Controls"
+    xmlns:ui="using:CommunityToolkit.WinUI"
     mc:Ignorable="d">
 
     <Grid Width="860" 
           Height="760"
-            CornerRadius="8"
-            VerticalAlignment="Center" 
-            HorizontalAlignment="Center" 
-            Background="{StaticResource PopupBackground}"
-            BorderThickness="{ThemeResource ButtonBorderThemeThickness}" 
-            BorderBrush="{ThemeResource ButtonBorderBrush}">
-        <Grid.RowDefinitions>
-            <RowDefinition Height="200" />
-            <RowDefinition Height="*" />
-        </Grid.RowDefinitions>
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="292" />
-            <ColumnDefinition Width="*" />
-        </Grid.ColumnDefinitions>
+          CornerRadius="8"
+          VerticalAlignment="Center" 
+          HorizontalAlignment="Center" 
+          Background="{StaticResource PopupBackground}"
+          BorderThickness="{ThemeResource ButtonBorderThemeThickness}" 
+          BorderBrush="{ThemeResource ButtonBorderBrush}">
 
         <cont2:ImageEx2 
-                Grid.ColumnSpan="2"
-                Source="{x:Bind JellyfinMusicService.GetBackdropJellyfinImage(SeriesInfo.BackdropImageTags, Series.Id), Mode=OneWay}" 
-                Style="{StaticResource LocalAlbumPopupImageStyle}" 
-                Width="860"
-                Height="200"
-                Stretch="UniformToFill"
-                VerticalAlignment="Center"
-                />
+            x:Name="Backdrop"
+            Grid.ColumnSpan="2"
+            Source="{x:Bind JellyfinMusicService.GetBackdropJellyfinImage(SeriesInfo.BackdropImageTags, Series.Id), Mode=OneWay}" 
+            Style="{StaticResource LocalAlbumPopupImageStyle}" 
+            Width="860"
+            Height="484"
+            Tapped="Backdrop_Tapped"
+            Stretch="UniformToFill"
+            Margin="0,-142,0,0"
+            VerticalAlignment="Top">
 
-        <StackPanel Grid.Row="1"
-            >
-            <cont2:ImageEx2 
+            <animations:Implicit.Animations>
+                <animations:OffsetAnimation Duration="0:0:0.7" EasingMode="EaseOut"/>
+            </animations:Implicit.Animations>
+        </cont2:ImageEx2>
+
+        <Grid Margin="0,200,0,0" 
+              x:Name="MainInfo"
+              Background="{StaticResource PopupBackground}">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="292" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+
+            <StackPanel>
+                <cont2:ImageEx2 
                 x:Name="Cover"
                 Source="{x:Bind JellyfinMusicService.GetPrimaryJellyfinImageLarge(Series.ImageTags, Series.Id), Mode=OneWay}" 
                 Style="{StaticResource LocalAlbumPopupImageStyle}" 
@@ -51,57 +59,57 @@
                 Stretch="UniformToFill"
                 />
 
-            <winui:ItemsRepeater
+                <winui:ItemsRepeater
                      Margin="16,0,8,0"
                      ItemsSource="{x:Bind SeriesInfo.Tags, Mode=OneWay}" 
                      ItemTemplate="{StaticResource JellyfinTagTemplate}">
-                <winui:ItemsRepeater.Layout>
-                    <controls:WrapLayout VerticalSpacing="4" HorizontalSpacing="8"/>
-                </winui:ItemsRepeater.Layout>
-            </winui:ItemsRepeater>
-        </StackPanel>
+                    <winui:ItemsRepeater.Layout>
+                        <controls:WrapLayout VerticalSpacing="4" HorizontalSpacing="8"/>
+                    </winui:ItemsRepeater.Layout>
+                </winui:ItemsRepeater>
+            </StackPanel>
 
 
-        <Grid Grid.Column="1" Grid.Row="1">
-            <Grid.RowDefinitions>
-                <RowDefinition Height="Auto" />
-                <RowDefinition Height="Auto" />
-                <RowDefinition Height="Auto" />
-                <RowDefinition Height="Auto" />
-                <RowDefinition Height="*" />
-            </Grid.RowDefinitions>
+            <Grid Grid.Column="1" >
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="*" />
+                </Grid.RowDefinitions>
 
-            <TextBlock Text="{x:Bind Series.Name, Mode=OneWay}" 
+                <TextBlock Text="{x:Bind Series.Name, Mode=OneWay}" 
                        Margin="0,16,16,0"
                        FontSize="32"
                        TextWrapping="Wrap"
                        MaxLines="2"
                        FontFamily="{ThemeResource MiSansMedium}"/>
 
-            <StackPanel Grid.Row="1" Orientation="Horizontal" Spacing="8">
-                <TextBlock VerticalAlignment="Center" Text="{x:Bind SeriesInfo.ProductionYear, Mode=OneWay}" FontFamily="{ThemeResource MiSansRegular}"/>
-                <Border Background="#30000000" CornerRadius="4" Padding="6,4">
-                    <TextBlock Foreground="White" Text="{x:Bind SeriesInfo.OfficialRating, Mode=OneWay}" FontFamily="{ThemeResource MiSansRegular}"/>
-                </Border>
-                <StackPanel Orientation="Horizontal" Spacing="2" VerticalAlignment="Center">
-                    <FontIcon Foreground="Orange" FontFamily="Segoe Fluent Icons" Glyph="&#xE735;" VerticalAlignment="Center"/>
-                    <TextBlock VerticalAlignment="Center" Text="{x:Bind SeriesInfo.CommunityRating, Mode=OneWay}" FontFamily="{ThemeResource MiSansRegular}"/>
+                <StackPanel Grid.Row="1" Orientation="Horizontal" Spacing="8">
+                    <TextBlock VerticalAlignment="Center" Text="{x:Bind SeriesInfo.ProductionYear, Mode=OneWay}" FontFamily="{ThemeResource MiSansRegular}"/>
+                    <Border Background="#30000000" CornerRadius="4" Padding="6,4">
+                        <TextBlock Foreground="White" Text="{x:Bind SeriesInfo.OfficialRating, Mode=OneWay}" FontFamily="{ThemeResource MiSansRegular}"/>
+                    </Border>
+                    <StackPanel Orientation="Horizontal" Spacing="2" VerticalAlignment="Center">
+                        <FontIcon Foreground="Orange" FontFamily="Segoe Fluent Icons" Glyph="&#xE735;" VerticalAlignment="Center"/>
+                        <TextBlock VerticalAlignment="Center" Text="{x:Bind SeriesInfo.CommunityRating, Mode=OneWay}" FontFamily="{ThemeResource MiSansRegular}"/>
+                    </StackPanel>
                 </StackPanel>
-            </StackPanel>
-            
-            <ScrollViewer Grid.Row="2" Margin="0,8,16,0">
-                <TextBlock Text="{x:Bind SeriesInfo.Overview, Mode=OneWay}" 
+
+                <ScrollViewer Grid.Row="2" Margin="0,8,16,0">
+                    <TextBlock Text="{x:Bind SeriesInfo.Overview, Mode=OneWay}" 
                            MaxLines="4"
                            TextWrapping="Wrap" 
                            TextTrimming="CharacterEllipsis" 
                            FontFamily="{StaticResource MiSansRegular}" 
                            IsTextSelectionEnabled="True"
                            ToolTipService.ToolTip="{x:Bind SeriesInfo.Overview, Mode=OneWay}"/>
-            </ScrollViewer>
+                </ScrollViewer>
 
-            <SelectorBar Grid.Row="3" Margin="-4,0,0,0" x:Name="SeasonSelector" SelectionChanged="SeasonSelector_SelectionChanged" />
+                <SelectorBar Grid.Row="3" Margin="-4,0,0,0" x:Name="SeasonSelector" SelectionChanged="SeasonSelector_SelectionChanged" />
 
-            <ListView 
+                <ListView 
                 Background="White"
                 Grid.Row="4" 
                 ItemsSource="{x:Bind SelectedSeasonVideoItems, Mode=OneWay}" 
@@ -110,7 +118,12 @@
                 ItemClick="ListView_ItemClick"
                 >
 
-            </ListView>
+                </ListView>
+            </Grid>
+
+            <animations:Implicit.Animations>
+                <animations:OffsetAnimation Duration="0:0:0.7" EasingMode="EaseOut"/>
+            </animations:Implicit.Animations>
         </Grid>
     </Grid>
 </base:UserControlBase>
