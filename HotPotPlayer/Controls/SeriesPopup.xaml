@@ -13,8 +13,7 @@
     mc:Ignorable="d">
 
     <Grid Width="860" 
-            MinHeight="560" 
-            MaxHeight="760" 
+          Height="760"
             CornerRadius="8"
             VerticalAlignment="Center" 
             HorizontalAlignment="Center" 
