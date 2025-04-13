@@ -44,6 +44,8 @@ namespace HotPotPlayer.Controls
         {
             var @this = (MoviePopup)d;
             var movie = e.NewValue as BaseItemDto;
+            if (movie.IsFolder.Value) return;
+
             @this.MovieInfo = await @this.JellyfinMusicService.GetItemInfoAsync(movie);
         }
 

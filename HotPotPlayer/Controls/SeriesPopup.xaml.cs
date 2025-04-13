@@ -50,6 +50,7 @@ namespace HotPotPlayer.Controls
         {
             var @this = (SeriesPopup)d;
             var series = e.NewValue as BaseItemDto;
+            if (!series.IsFolder.Value) return;
 
             @this.SeriesInfo = await @this.JellyfinMusicService.GetItemInfoAsync(series);
             @this.Seasons = await @this.JellyfinMusicService.GetSeasons(series);

@@ -480,6 +480,12 @@
         </Grid>
     </DataTemplate>
 
+    <DataTemplate x:Key="JellyfinTagTemplate" x:DataType="x:String">
+        <Grid BorderBrush="Gray" BorderThickness="1" CornerRadius="10" Padding="8,0">
+            <TextBlock Text="{x:Bind}" FontFamily="{StaticResource MiSansRegular}"/>
+        </Grid>
+    </DataTemplate>
+
     <DataTemplate x:Key="ArtistWrapTemplate" x:DataType="modelsC:CloudArtistItem">
         <Grid BorderBrush="Gray" BorderThickness="1" CornerRadius="12" Padding="0,0">
             <Grid.ColumnDefinitions>

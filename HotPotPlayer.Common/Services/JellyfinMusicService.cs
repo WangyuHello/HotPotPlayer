@@ -14,6 +14,7 @@ using System.Linq;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Threading.Tasks;
+using TagLib.Matroska;
 using SortOrder = Jellyfin.Sdk.Generated.Models.SortOrder;
 
 namespace HotPotPlayer.Services
@@ -270,6 +271,22 @@ namespace HotPotPlayer.Services
         public Uri GetBannerJellyfinImage(BaseItemDto_ImageTags tag, Guid? parentId)
         {
             return GetPrimaryJellyfinImageBase(tag, parentId, 300, "Banner");
+        }
+        public Uri GetBackdropJellyfinImage(List<string> tag, Guid? parentId)
+        {
+            if (tag == null || tag.Count == 0) return null;
+            var requestInformation = JellyfinApiClient.Items[parentId.Value].Images[ImageType.Backdrop.ToString()].ToGetRequestInformation(param =>
+            {
+                param.QueryParameters = new Jellyfin.Sdk.Generated.Items.Item.Images.Item.WithImageTypeItemRequestBuilder.WithImageTypeItemRequestBuilderGetQueryParameters
+                {
+                    Tag = tag[0],
+                    FillHeight = 1000,
+                    FillWidth = 1000,
+                    Quality = 96
+                };
+            });
+            var uri = JellyfinApiClient.BuildUri(requestInformation);
+            return uri;
         }
 
         public async Task JellyfinLoginAsync()

@@ -8,6 +8,8 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:cont2="using:HotPotPlayer.UI.Controls"
+    xmlns:winui="using:Microsoft.UI.Xaml.Controls"
+    xmlns:controls="using:CommunityToolkit.WinUI.Controls"
     mc:Ignorable="d">
 
     <Grid Width="860" 
@@ -24,31 +26,46 @@
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="300" />
+            <ColumnDefinition Width="292" />
             <ColumnDefinition Width="*" />
         </Grid.ColumnDefinitions>
 
         <cont2:ImageEx2 
                 Grid.ColumnSpan="2"
-                Source="{x:Bind JellyfinMusicService.GetBannerJellyfinImage(SeriesInfo.ImageTags, Series.Id), Mode=OneWay}" 
+                Source="{x:Bind JellyfinMusicService.GetBackdropJellyfinImage(SeriesInfo.BackdropImageTags, Series.Id), Mode=OneWay}" 
                 Style="{StaticResource LocalAlbumPopupImageStyle}" 
                 Width="860"
                 Height="200"
                 Stretch="UniformToFill"
+                VerticalAlignment="Center"
                 />
 
-        <cont2:ImageEx2 
-                Grid.Row="1"
+        <StackPanel Grid.Row="1"
+            >
+            <cont2:ImageEx2 
                 x:Name="Cover"
-                Source="{x:Bind JellyfinMusicService.GetPrimaryJellyfinImage(Series.ImageTags, Series.Id), Mode=OneWay}" 
+                Source="{x:Bind JellyfinMusicService.GetPrimaryJellyfinImageLarge(Series.ImageTags, Series.Id), Mode=OneWay}" 
                 Style="{StaticResource LocalAlbumPopupImageStyle}" 
-                Width="300"
-                Height="480"
+                Margin="16,16,16,8"
+                Width="260"
+                Height="380"
                 Stretch="UniformToFill"
                 />
 
+            <winui:ItemsRepeater
+                     Margin="16,0,8,0"
+                     ItemsSource="{x:Bind SeriesInfo.Tags, Mode=OneWay}" 
+                     ItemTemplate="{StaticResource JellyfinTagTemplate}">
+                <winui:ItemsRepeater.Layout>
+                    <controls:WrapLayout VerticalSpacing="4" HorizontalSpacing="8"/>
+                </winui:ItemsRepeater.Layout>
+            </winui:ItemsRepeater>
+        </StackPanel>
+
+
         <Grid Grid.Column="1" Grid.Row="1">
             <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
                 <RowDefinition Height="Auto" />
                 <RowDefinition Height="Auto" />
                 <RowDefinition Height="Auto" />
@@ -56,23 +73,38 @@
             </Grid.RowDefinitions>
 
             <TextBlock Text="{x:Bind Series.Name, Mode=OneWay}" 
+                       Margin="0,16,16,0"
                        FontSize="32"
+                       TextWrapping="Wrap"
+                       MaxLines="2"
                        FontFamily="{ThemeResource MiSansMedium}"/>
 
-            <ScrollViewer Grid.Row="1" >
+            <StackPanel Grid.Row="1" Orientation="Horizontal" Spacing="8">
+                <TextBlock VerticalAlignment="Center" Text="{x:Bind SeriesInfo.ProductionYear, Mode=OneWay}" FontFamily="{ThemeResource MiSansRegular}"/>
+                <Border Background="#30000000" CornerRadius="4" Padding="6,4">
+                    <TextBlock Foreground="White" Text="{x:Bind SeriesInfo.OfficialRating, Mode=OneWay}" FontFamily="{ThemeResource MiSansRegular}"/>
+                </Border>
+                <StackPanel Orientation="Horizontal" Spacing="2" VerticalAlignment="Center">
+                    <FontIcon Foreground="Orange" FontFamily="Segoe Fluent Icons" Glyph="&#xE735;" VerticalAlignment="Center"/>
+                    <TextBlock VerticalAlignment="Center" Text="{x:Bind SeriesInfo.CommunityRating, Mode=OneWay}" FontFamily="{ThemeResource MiSansRegular}"/>
+                </StackPanel>
+            </StackPanel>
+            
+            <ScrollViewer Grid.Row="2" Margin="0,8,16,0">
                 <TextBlock Text="{x:Bind SeriesInfo.Overview, Mode=OneWay}" 
                            MaxLines="4"
                            TextWrapping="Wrap" 
                            TextTrimming="CharacterEllipsis" 
                            FontFamily="{StaticResource MiSansRegular}" 
-                           IsTextSelectionEnabled="True"/>
+                           IsTextSelectionEnabled="True"
+                           ToolTipService.ToolTip="{x:Bind SeriesInfo.Overview, Mode=OneWay}"/>
             </ScrollViewer>
 
-            <SelectorBar Grid.Row="2" x:Name="SeasonSelector" SelectionChanged="SeasonSelector_SelectionChanged" />
+            <SelectorBar Grid.Row="3" Margin="-4,0,0,0" x:Name="SeasonSelector" SelectionChanged="SeasonSelector_SelectionChanged" />
 
             <ListView 
                 Background="White"
-                Grid.Row="3" 
+                Grid.Row="4" 
                 ItemsSource="{x:Bind SelectedSeasonVideoItems, Mode=OneWay}" 
                 ItemTemplateSelector="{StaticResource EvenOldVideoListTemplate}"
                 Style="{StaticResource GeneralListViewStyle}"
