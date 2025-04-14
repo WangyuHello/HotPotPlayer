@@ -572,9 +572,8 @@ namespace HotPotPlayer.Services
 
         public override void Dispose()
         {
-            JellyfinApiClient.Dispose();
-            httpClient.Dispose();
-            base.Dispose();
+            //JellyfinApiClient.Dispose();
+            //httpClient.Dispose();
         }
     }
 }

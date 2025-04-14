@@ -33,6 +33,10 @@
             <GridView.Footer>
                 <Grid Height="100"/>
             </GridView.Footer>
+            <GridView.ItemContainerTransitions>
+                <TransitionCollection>
+                </TransitionCollection>
+            </GridView.ItemContainerTransitions>
         </GridView>
 
         <Grid x:Name="SeriesPopupOverlay" Margin="-36,-28,0,0" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Visibility="Collapsed" Background="#50000000" Tapped="SeriesPopupOverlay_Tapped">

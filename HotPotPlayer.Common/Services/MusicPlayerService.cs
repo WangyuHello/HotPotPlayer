@@ -772,23 +772,22 @@ namespace HotPotPlayer.Services
 
         public override void Dispose()
         {
-            _playerStarter?.Dispose();
+            //_playerStarter?.Dispose();
             //_outputDevice?.Stop();
             //_outputDevice?.Dispose();
             //_audioStream?.Dispose();
-            _playerTimer?.Dispose();
+            //_playerTimer?.Dispose();
             _mpv?.Stop();
-            if (_mpv != null)
-            {
-                _mpv.MediaPaused -= MediaPaused;
-                _mpv.MediaResumed -= MediaResumed;
-                _mpv.MediaLoaded -= MediaLoaded;
-                _mpv.MediaFinished -= MediaFinished;
-                _mpv.MediaStartedSeeking -= MediaStartedSeeking;
-                _mpv.MediaEndedSeeking -= MediaEndedSeeking;
-            }
-            _mpv?.Dispose();
-            GC.SuppressFinalize(this);
+            //if (_mpv != null)
+            //{
+            //    _mpv.MediaPaused -= MediaPaused;
+            //    _mpv.MediaResumed -= MediaResumed;
+            //    _mpv.MediaLoaded -= MediaLoaded;
+            //    _mpv.MediaFinished -= MediaFinished;
+            //    _mpv.MediaStartedSeeking -= MediaStartedSeeking;
+            //    _mpv.MediaEndedSeeking -= MediaEndedSeeking;
+            //}
+            //_mpv?.Dispose();
         }
 
         readonly BackgroundWorker _playerStarter;

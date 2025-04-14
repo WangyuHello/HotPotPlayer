@@ -48,6 +48,9 @@ namespace HotPotPlayer.Controls
         [ObservableProperty]
         private List<BaseItemDto> selectedSeasonVideoItems;
 
+        [ObservableProperty]
+        private bool isBackdropExpanded;
+
         private static async void SeriesChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
             var @this = (SeriesPopup)d;
@@ -88,12 +91,29 @@ namespace HotPotPlayer.Controls
             var video = e.ClickedItem as BaseItemDto;
         }
 
+        private void BackdropExpand_Click(object sender, RoutedEventArgs e)
+        {
+            IsBackdropExpanded = !IsBackdropExpanded;
+            SetBackdropOffset(IsBackdropExpanded);
+        }
+
         private void Backdrop_Tapped(object sender, TappedRoutedEventArgs e)
+        {
+            IsBackdropExpanded = !IsBackdropExpanded;
+            SetBackdropOffset(IsBackdropExpanded);
+        }
+
+        private string GetBackdropExpandIcon(bool isBackdropExpanded)
+        {
+            return IsBackdropExpanded ? "\uE70E" : "\uE70D";
+        }
+
+        private void SetBackdropOffset(bool isBackdropExpanded)
         {
             var backdropVisual = ElementCompositionPreview.GetElementVisual(Backdrop);
             var mainInfoVisual = ElementCompositionPreview.GetElementVisual(MainInfo);
 
-            if (mainInfoVisual.Offset.Y < 210f)
+            if (isBackdropExpanded)
             {
                 backdropVisual.Offset = new System.Numerics.Vector3(0, 0, 0);
                 mainInfoVisual.Offset = new System.Numerics.Vector3(0, 484f, 0);
