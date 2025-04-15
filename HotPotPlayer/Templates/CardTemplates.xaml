@@ -114,7 +114,7 @@
                         Background="#99FFFFFF"
                         Tag="{x:Bind }"
                         Click="{x:Bind helper:AlbumHelper.AlbumPlay}">
-                    <FontIcon FontFamily="Segoe Fluent Icons" Glyph="&#xE768;" FontSize="24"/>
+                    <FontIcon FontFamily="{ThemeResource SegoeIcons}" Glyph="&#xE768;" FontSize="24"/>
                 </Button>
                 <StackPanel 
                     Margin="0,0,8,0"
@@ -126,10 +126,10 @@
                     Background="White"
                 >
                     <Button Style="{StaticResource TransparentButton}" Foreground="Gray" >
-                        <FontIcon FontFamily="Segoe Fluent Icons" Glyph="&#xE734;" FontSize="18"/>
+                        <FontIcon FontFamily="{ThemeResource SegoeIcons}" Glyph="&#xE734;" FontSize="18"/>
                     </Button>
                     <Button Style="{StaticResource TransparentButton}" Foreground="Gray" >
-                        <FontIcon FontFamily="Segoe Fluent Icons" Glyph="&#xE712;" FontSize="18"/>
+                        <FontIcon FontFamily="{ThemeResource SegoeIcons}" Glyph="&#xE712;" FontSize="18"/>
                     </Button>
                 </StackPanel>
             </Grid>
@@ -268,7 +268,7 @@
                         Background="#99FFFFFF"
                         Tag="{x:Bind }"
                         Click="{x:Bind helper:PlayListHelper.PlayListPlay}">
-                    <FontIcon FontFamily="Segoe Fluent Icons" Glyph="&#xE768;" FontSize="24"/>
+                    <FontIcon FontFamily="{ThemeResource SegoeIcons}" Glyph="&#xE768;" FontSize="24"/>
                 </Button>
                 <StackPanel 
                     Margin="0,0,8,0"
@@ -277,10 +277,10 @@
                     Orientation="Horizontal"
                     Spacing="8">
                     <Button Style="{StaticResource TransparentButton}" Foreground="Gray" >
-                        <FontIcon FontFamily="Segoe Fluent Icons" Glyph="&#xE734;" FontSize="18"/>
+                        <FontIcon FontFamily="{ThemeResource SegoeIcons}" Glyph="&#xE734;" FontSize="18"/>
                     </Button>
                     <Button Style="{StaticResource TransparentButton}" Foreground="Gray" >
-                        <FontIcon FontFamily="Segoe Fluent Icons" Glyph="&#xE712;" FontSize="18"/>
+                        <FontIcon FontFamily="{ThemeResource SegoeIcons}" Glyph="&#xE712;" FontSize="18"/>
                     </Button>
                 </StackPanel>
             </Grid>
@@ -323,7 +323,7 @@
             Background="White"
             >
             <Grid Background="#0f000000">
-                <FontIcon FontFamily="Segoe Fluent Icons" Glyph="&#xE77B;" FontSize="32" Foreground="Gray"/>
+                <FontIcon FontFamily="{ThemeResource SegoeIcons}" Glyph="&#xE77B;" FontSize="32" Foreground="Gray"/>
                 <cont2:ImageEx2 
                     Source="{x:Bind helper2:BaseItemDtoHelper.GetPrimaryJellyfinImage(ImageTags, Id)}" 
                     Style="{StaticResource LocalMusicImageStyle}"
@@ -753,7 +753,7 @@
                         Background="#99FFFFFF"
                         Tag="{x:Bind }"
                         Click="{x:Bind helper:BangumiHelper.SeriesPlay}">
-                    <FontIcon FontFamily="Segoe Fluent Icons" Glyph="&#xE768;" FontSize="24"/>
+                    <FontIcon FontFamily="{ThemeResource SegoeIcons}" Glyph="&#xE768;" FontSize="24"/>
                 </Button>
                 <StackPanel 
                     Margin="0,0,8,0"
@@ -765,10 +765,10 @@
                     Background="White"
                 >
                     <Button Style="{StaticResource TransparentButton}" Foreground="Gray" >
-                        <FontIcon FontFamily="Segoe Fluent Icons" Glyph="&#xE734;" FontSize="18"/>
+                        <FontIcon FontFamily="{ThemeResource SegoeIcons}" Glyph="&#xE734;" FontSize="18"/>
                     </Button>
                     <Button Style="{StaticResource TransparentButton}" Foreground="Gray" >
-                        <FontIcon FontFamily="Segoe Fluent Icons" Glyph="&#xE712;" FontSize="18"/>
+                        <FontIcon FontFamily="{ThemeResource SegoeIcons}" Glyph="&#xE712;" FontSize="18"/>
                     </Button>
                 </StackPanel>
             </Grid>

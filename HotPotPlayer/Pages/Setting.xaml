@@ -89,7 +89,7 @@
                             <SymbolIcon Symbol="Refresh"/>
                         </Button>
                         <Button Grid.Column="4" Click="AddJellyfinServer">
-                            <FontIcon FontFamily="Segoe Fluent Icons" Glyph="&#xE836;" />
+                            <FontIcon FontFamily="{ThemeResource SegoeIcons}" Glyph="&#xE836;" />
                         </Button>
                     </Grid>
                 </Expander.Header>

@@ -92,7 +92,7 @@
                         <TextBlock Foreground="White" Text="{x:Bind SeriesInfo.OfficialRating, Mode=OneWay}" FontFamily="{ThemeResource MiSansRegular}"/>
                     </Border>
                     <StackPanel Orientation="Horizontal" Spacing="2" VerticalAlignment="Center">
-                        <FontIcon Foreground="Orange" FontFamily="Segoe Fluent Icons" Glyph="&#xE735;" VerticalAlignment="Center"/>
+                        <FontIcon Foreground="Orange" FontFamily="{ThemeResource SegoeIcons}" Glyph="&#xE735;" VerticalAlignment="Center"/>
                         <TextBlock VerticalAlignment="Center" Text="{x:Bind SeriesInfo.CommunityRating, Mode=OneWay}" FontFamily="{ThemeResource MiSansRegular}"/>
                     </StackPanel>
                 </StackPanel>
@@ -133,7 +133,7 @@
                     CornerRadius="16"
                     Click="BackdropExpand_Click"
                     >
-                <FontIcon FontFamily="Segoe Fluent Icons" Glyph="{x:Bind GetBackdropExpandIcon(IsBackdropExpanded), Mode=OneWay}" />
+                <FontIcon FontFamily="{ThemeResource SegoeIcons}" Glyph="{x:Bind GetBackdropExpandIcon(IsBackdropExpanded), Mode=OneWay}" />
             </Button>
 
             <!--<animations:Implicit.ShowAnimations>
