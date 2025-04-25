@@ -137,6 +137,15 @@ namespace HotPotPlayer.Video.UI.Controls
         [ObservableProperty]
         private bool isFullScreen;
 
+        private bool isVideoInfoOn;
+        public bool IsVideoInfoOn
+        {
+            get => isVideoInfoOn;
+            set => Set(ref isVideoInfoOn, value, nv =>
+            {
+                VideoPlayer.Command("script-binding", "stats/display-stats-toggle");
+            });
+        }
 
         public string Title
         {

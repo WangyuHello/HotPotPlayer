@@ -95,9 +95,21 @@
                         </Flyout>
                     </Button.Flyout>
                 </Button>
-                <!--<Button Margin="8,0,0,0" Style="{StaticResource VideoPlayOtherButton}" >
+                <Button Margin="8,0,0,0" Style="{StaticResource VideoPlayOtherButton}" >
                     <FontIcon FontFamily="{ThemeResource SegoeIcons}" Glyph="&#xE946;" />
-                </Button>-->
+                    <Button.Flyout>
+                        <Flyout Placement="Bottom">
+                            <Grid Margin="0,-4,0,-4" >
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="Auto" />
+                                </Grid.ColumnDefinitions>
+                                <TextBlock Text="视频信息" FontFamily="{ThemeResource MiSansMedium}" VerticalAlignment="Center" />
+                                <ToggleSwitch Grid.Column="1" OnContent="" OffContent="" Margin="16,0,-114,0" HorizontalAlignment="Right" IsOn="{x:Bind IsVideoInfoOn, Mode=TwoWay}"/>
+                            </Grid>
+                        </Flyout>
+                    </Button.Flyout>
+                </Button>
                 <Button Margin="8,0,0,0" Style="{StaticResource VideoPlayOtherButton}" Click="ToggleFullScreenClick" >
                     <FontIcon FontFamily="{ThemeResource SegoeIcons}" Glyph="{x:Bind GetFullScreenIcon(IsFullScreen), Mode=OneWay}" />
                 </Button>

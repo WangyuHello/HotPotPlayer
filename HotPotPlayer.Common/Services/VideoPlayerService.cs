@@ -301,6 +301,11 @@ namespace HotPotPlayer.Services
             };
         }
 
+        public void Command(params string[] args)
+        {
+            _mpv?.API.Command(args);
+        }
+
         private void PlayerTimerElapsed(object sender, ElapsedEventArgs e)
         {
             var time = _mpv.Position;
