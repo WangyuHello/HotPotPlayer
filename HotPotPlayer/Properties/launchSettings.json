@@ -1,11 +1,12 @@
 {
   "profiles": {
     "Normal": {
-      "commandName": "MsixPackage"
+      "commandName": "MsixPackage",
+      "nativeDebugging": false
     },
     "VideoInit": {
       "commandName": "MsixPackage",
-      "commandLineArgs": "\"Z:\\视频\\【Animenz】シルシ（印记）- 刀剑神域 II ED3 钢琴版.mp4\""
+      "commandLineArgs": "\"Z:\\视频\\【4K HDR】三星HDR演示片QLED Q HDR 1500.mp4\""
     },
     "MpdInit": {
       "commandName": "MsixPackage",

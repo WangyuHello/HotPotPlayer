@@ -1,8 +1,10 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using DirectN;
+using Google.Protobuf.WellKnownTypes;
 using HotPotPlayer.Models;
 using HotPotPlayer.Services;
 using Microsoft.UI.Dispatching;
+using Microsoft.UI.Windowing;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Controls.Primitives;
@@ -13,6 +15,7 @@ using Microsoft.UI.Xaml.Navigation;
 using Mpv.NET.API;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Drawing;
 using System.IO;
 using System.Linq;
@@ -33,8 +36,12 @@ namespace HotPotPlayer.Video.UI.Controls
         public VideoHost()
         {
             this.InitializeComponent();
+            PlaySlider.AddHandler(PointerReleasedEvent, new PointerEventHandler(PlaySlider_OnPointerReleased), true);
+            PlaySlider.AddHandler(PointerPressedEvent, new PointerEventHandler(PlaySlider_OnPointerPressed), true);
             _uiQueue = DispatcherQueue.GetForCurrentThread();
         }
+
+        public event Action OnToggleFullScreen;
 
         private DispatcherQueue _uiQueue;
 
@@ -50,26 +57,32 @@ namespace HotPotPlayer.Video.UI.Controls
 
         private void Host_CompositionScaleChanged(SwapChainPanel sender, object args)
         {
-            _currentScaleX = Host.CompositionScaleX;
-            _currentScaleY = Host.CompositionScaleY;
-            _currentWidth = (int)Math.Ceiling(Host.CompositionScaleX * Host.ActualWidth);
-            _currentHeight = (int)Math.Ceiling(Host.CompositionScaleY * Host.ActualHeight);
-            //if (_isSwapchainInited)
-            //{
-            //    VideoPlayer.UpdatePanelScale(_currentScaleX, _currentScaleY);
-            //    VideoPlayer.UpdatePanelSize(_currentWidth, _currentHeight);
-            //}
+            if (Host.CompositionScaleX != 0)
+            {
+                _currentScaleX = Host.CompositionScaleX;
+                _currentWidth = (int)Math.Ceiling(Host.CompositionScaleX * Host.ActualWidth);
+            }
+            if (Host.CompositionScaleY != 0)
+            {
+                _currentScaleY = Host.CompositionScaleY;
+                _currentHeight = (int)Math.Ceiling(Host.CompositionScaleY * Host.ActualHeight);
+            }
+            if (_isSwapchainInited)
+            {
+                VideoPlayer.UpdatePanelScale(_currentScaleX, _currentScaleY);
+                VideoPlayer.UpdatePanelSize(_currentWidth, _currentHeight);
+            }
         }
 
         private void Host_SizeChanged(object sender, SizeChangedEventArgs e)
         {
             _currentWidth = (int)Math.Ceiling(Host.CompositionScaleX * Host.ActualWidth);
             _currentHeight = (int)Math.Ceiling(Host.CompositionScaleY * Host.ActualHeight);
-            _currentWindowBounds = new System.Drawing.Rectangle { X = (int)App.Bounds.Left, Y = (int)App.Bounds.Right, Width = 640, Height = 480 };
-            //if (_isSwapchainInited)
-            //{
-            //    VideoPlayer.UpdatePanelSize(_currentWidth, _currentHeight);
-            //}
+            _currentWindowBounds = new Rectangle { X = (int)App.Bounds.Left, Y = (int)App.Bounds.Right, Width = 640, Height = 480 };
+            if (_isSwapchainInited)
+            {
+                VideoPlayer.UpdatePanelSize(_currentWidth, _currentHeight);
+            }
         }
 
         private void UserControlBase_Loaded(object sender, RoutedEventArgs e)
@@ -85,6 +98,7 @@ namespace HotPotPlayer.Video.UI.Controls
             {
                 _isSwapchainInited = false;
             }
+            GetScalingFactor(out _currentScaleX, out _currentScaleY);
             VideoPlayer.SwapChainInited += VideoPlayer_SwapchainInited;
             VideoPlayer.VideoGeometryInit += VideoPlayer_VideoGeometryInit;
         }
@@ -114,6 +128,7 @@ namespace HotPotPlayer.Video.UI.Controls
             args.ScaleX = _currentScaleX;
             args.ScaleY = _currentScaleY;
             args.Bounds = _currentWindowBounds;
+            Debug.WriteLine($"{_currentWidth} {_currentHeight} {_currentScaleX} {_currentScaleY}");
         }
 
         [ObservableProperty]
@@ -153,6 +168,38 @@ namespace HotPotPlayer.Video.UI.Controls
             VideoPlayer.TogglePlayMode();
         }
 
+
+        private void ToggleFullScreenClick(object sender, RoutedEventArgs e)
+        {
+            IsFullScreen = !IsFullScreen;
+            OnToggleFullScreen?.Invoke();
+            AppWindow.SetPresenter(IsFullScreen ? AppWindowPresenterKind.FullScreen : AppWindowPresenterKind.Default);
+        }
+
+        private void PlaySlider_OnPointerPressed(object sender, PointerRoutedEventArgs e)
+        {
+            VideoPlayer.SuppressCurrentTimeTrigger = true;
+        }
+
+        private void PlaySlider_OnPointerReleased(object sender, PointerRoutedEventArgs e)
+        {
+            VideoPlayer.SuppressCurrentTimeTrigger = false;
+            TimeSpan to = GetToTime();
+            VideoPlayer.PlayTo(to);
+        }
+
+        private TimeSpan GetToTime()
+        {
+            if (VideoPlayer.CurrentPlayingDuration == null)
+            {
+                return TimeSpan.Zero;
+            }
+            var percent100 = (int)PlaySlider.Value;
+            var v = percent100 * ((TimeSpan)VideoPlayer.CurrentPlayingDuration).Ticks / 100;
+            var to = TimeSpan.FromTicks(v);
+            return to;
+        }
+
         string GetFullScreenIcon(bool isFullScreen)
         {
             return isFullScreen ? "\uE1D8" : "\uE1D9";
@@ -180,6 +227,10 @@ namespace HotPotPlayer.Video.UI.Controls
         double GetSliderValue(TimeSpan current, TimeSpan? total)
         {
             if (total == null)
+            {
+                return 0;
+            }
+            if (total.Value.Ticks == 0)
             {
                 return 0;
             }
@@ -214,6 +265,22 @@ namespace HotPotPlayer.Video.UI.Controls
             App.NavigateBack();
         }
 
-    }
+        private const int MDT_EFFECTIVE_DPI = 0;
 
+        private void GetScalingFactor(out float scaleX, out float scaleY)
+        {
+            IntPtr monitor = MonitorFromWindow(App.MainWindowHandle, 2); // Get the primary monitor
+            uint dpiX, dpiY;
+            GetDpiForMonitor(monitor, MDT_EFFECTIVE_DPI, out dpiX, out dpiY);
+
+            scaleX = dpiX / 96.0f;
+            scaleY = dpiY / 96.0f;
+        }
+
+        [DllImport("User32.dll")]
+        private static extern IntPtr MonitorFromWindow(IntPtr hwnd, int flags);
+
+        [DllImport("Shcore.dll")]
+        private static extern int GetDpiForMonitor(IntPtr hmonitor, int dpiType, out uint dpiX, out uint dpiY);
+    }
 }

@@ -12,6 +12,7 @@ namespace HotPotPlayer.Video.Models
     public record VideoPlayInfo
     {
         public BaseItemDto SingleOrSeries { get; set; }
+        public List<FileInfo> Files { get; set; }
         public int Index { get; set; }
         public bool ImmediateLoad { get; set; }
     }

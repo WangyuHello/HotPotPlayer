@@ -8,6 +8,7 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -172,14 +173,31 @@ namespace HotPotPlayer.Services
         bool _isVideoSwitching;
         readonly BackgroundWorker _playerStarter;
 
+        public float ScaleX { get; set; }
+        public float ScaleY { get; set; }
+
         public async void PlayNext(BaseItemDto video)
         {
-            //TODO
-            var seasons = await App.JellyfinMusicService.GetSeasons(video);
-            var season = seasons.FirstOrDefault();
-            var episodes = await App.JellyfinMusicService.GetEpisodes(season);
-            CurrentPlayList = [ .. episodes];
+            if (video.IsFolder.Value)
+            {
+
+                var seasons = await App.JellyfinMusicService.GetSeasons(video);
+                var season = seasons.FirstOrDefault();
+                var episodes = await App.JellyfinMusicService.GetEpisodes(season);
+                CurrentPlayList = [ .. episodes];
+            }
+            else
+            {
+                CurrentPlayList = [ video ];
+            }
             PlayNext(0);
+        }
+
+        public void PlayNext(List<FileInfo> files, int index)
+        {
+            var fakeDtos = files.Select(f => new BaseItemDto { Path = f.FullName });
+            CurrentPlayList = [ .. fakeDtos];
+            PlayNext(index);
         }
 
         public void PlayNext(int? index)
@@ -381,16 +399,16 @@ namespace HotPotPlayer.Services
             {
                 if (_mpv == null)
                 {
-                    _mpv = new MpvPlayer(@"NativeLibs\libmpv-2.dll")
+                    _mpv = new MpvPlayer(@"NativeLibs\mpv-2.dll")
                     {
                         AutoPlay = false,
                         Volume = Volume,
-                        LogLevel = MpvLogLevel.Debug,
+                        LogLevel = MpvLogLevel.None,
                         Loop = false,
                         LoopPlaylist = false,
                     };
-                    _mpv.API.SetPropertyDouble("display-fps-override", 120d);
-                    _mpv.API.SetPropertyString("gpu-debug", "yes");
+                    //_mpv.API.SetPropertyDouble("display-fps-override", 120d);
+                    //_mpv.API.SetPropertyString("gpu-debug", "yes");
                     //_mpv.API.SetPropertyString("vo", "gpu-next");
                     _mpv.API.SetPropertyString("vo", "gpu");
                     _mpv.API.SetPropertyString("gpu-context", "d3d11");
@@ -408,8 +426,18 @@ namespace HotPotPlayer.Services
                     _mpv.API.VideoGeometryInit += VideoGeometryInit;
                     _mpv.API.SwapChainInited += OnSwapChainInited;
                 }
-                _mpv.LoadPlaylist(CurrentPlayList.Select(App.JellyfinMusicService.GetVideoStream), true);
-                //_mpv.LoadPlaylist([@"Z:\视频\【4K HDR】HDR下原始森林的精彩瞬间，这宽容度，带劲了.mp4"], true);
+                var lists = CurrentPlayList.Select(v =>
+                {
+                    if (v.Path != null)
+                    {
+                        return v.Path;
+                    }
+                    else
+                    {
+                        return App.JellyfinMusicService.GetVideoStream(v);
+                    }
+                });
+                _mpv.LoadPlaylist(lists, true);
                 _mpv.PlaylistPlayIndex(index);
                 e.Result = ValueTuple.Create(index, false);
 
@@ -469,6 +497,23 @@ namespace HotPotPlayer.Services
         public void UpdatePanelSize(int width, int height)
         {
             _mpv.API.SetPanelSize(width, height);
+        }
+
+        public void ShutDown()
+        {
+            _mpv?.Stop();
+            if (_mpv != null)
+            {
+                _mpv.MediaPaused -= MediaPaused;
+                _mpv.MediaResumed -= MediaResumed;
+                _mpv.MediaLoaded -= MediaLoaded;
+                _mpv.MediaFinished -= MediaFinished;
+                _mpv.MediaStartedSeeking -= MediaStartedSeeking;
+                _mpv.MediaEndedSeeking -= MediaEndedSeeking;
+            }
+            _mpv?.Dispose();
+            _mpv = null;
+            SwapChain = 0;
         }
 
         public override void Dispose()

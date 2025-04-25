@@ -16,7 +16,7 @@
     mc:Ignorable="d">
 
     <base:UserControlBase.Resources>
-        <convs:SliderThumbConverter x:Key="SliderThumbConverter" TotalTime="{x:Bind VideoPlayer.CurrentPlayingDuration}"/>
+        <convs:SliderThumbConverter x:Key="SliderThumbConverter" TotalTime="{x:Bind VideoPlayer.CurrentPlayingDuration, Mode=OneWay}"/>
         <convs:SliderVolumeIntConverter x:Key="SliderVolumeConverter" />
         <convs:ColorConverter x:Key="ColorConverter" />
         <convs:ClipConverter x:Key="ClipConverter" />
@@ -67,46 +67,46 @@
                     <TextBlock VerticalAlignment="Center" Text="Test" FontFamily="{ThemeResource MiSansRegular}" FontSize="13" Foreground="White"/>
                 </Border>
                 <Button Click="PlayButtonClick" Style="{StaticResource VideoPlayOtherButton}">
-                    <FontIcon FontFamily="{ThemeResource SegoeIcons}" Glyph="{x:Bind GetPlayButtonIcon(VideoPlayer.IsPlaying, x:False)}" />
+                    <FontIcon FontFamily="{ThemeResource SegoeIcons}" Glyph="{x:Bind GetPlayButtonIcon(VideoPlayer.IsPlaying, VideoPlayer.HasError), Mode=OneWay}" />
                 </Button>
                 <Button Style="{StaticResource VideoPlayOtherButton}" Click="PlayNextButtonClick">
                     <FontIcon FontFamily="{ThemeResource SegoeIcons}" Glyph="&#xF8AD;" />
                 </Button>
                 <Button Style="{StaticResource VideoPlayOtherButton}" Click="PlayModeButtonClick">
-                    <FontIcon FontFamily="{ThemeResource SegoeIcons}" Glyph="{x:Bind GetPlayModeIcon(VideoPlayer.PlayMode)}" />
+                    <FontIcon FontFamily="{ThemeResource SegoeIcons}" Glyph="{x:Bind GetPlayModeIcon(VideoPlayer.PlayMode), Mode=OneWay}" />
                 </Button>
             </StackPanel>
 
-            <Slider x:Name="PlaySlider" Margin="8,0" Grid.Column="1" Translation="0,2,0" Style="{StaticResource VideoPlaySliderStyle}" Value="{x:Bind GetSliderValue(VideoPlayer.CurrentTime, VideoPlayer.CurrentPlayingDuration)}" ThumbToolTipValueConverter="{StaticResource SliderThumbConverter}" >
+            <Slider x:Name="PlaySlider" Margin="8,0" Grid.Column="1" Translation="0,2,0" Style="{StaticResource VideoPlaySliderStyle}" Value="{x:Bind GetSliderValue(VideoPlayer.CurrentTime, VideoPlayer.CurrentPlayingDuration), Mode=OneWay}" ThumbToolTipValueConverter="{StaticResource SliderThumbConverter}" >
             </Slider>
 
             <StackPanel Grid.Column="2" Orientation="Horizontal" Spacing="0">
-                <TextBlock VerticalAlignment="Center" Text="{x:Bind GetDuration(VideoPlayer.CurrentTime)}" FontSize="13" Foreground="#b2b2b2"/>
+                <TextBlock VerticalAlignment="Center" Text="{x:Bind GetDuration(VideoPlayer.CurrentTime), Mode=OneWay}" FontSize="13" Foreground="#b2b2b2"/>
                 <TextBlock Margin="0,0,2,0" Text="/" VerticalAlignment="Center" FontFamily="{ThemeResource MiSansRegular}" FontSize="13" Foreground="#b2b2b2"/>
-                <TextBlock VerticalAlignment="Center" Text="{x:Bind GetDuration(VideoPlayer.CurrentPlayingDuration)}" FontSize="13" Foreground="#b2b2b2"/>
+                <TextBlock VerticalAlignment="Center" Text="{x:Bind GetDuration(VideoPlayer.CurrentPlayingDuration), Mode=OneWay}" FontSize="13" Foreground="#b2b2b2"/>
             </StackPanel>
 
             <StackPanel Margin="16,0,0,0" Grid.Column="3" Orientation="Horizontal" >
                 <Button Style="{StaticResource VolumeButton}">
-                    <local:VolumeIntPresenter Volume="{x:Bind VideoPlayer.Volume}"/>
+                    <local:VolumeIntPresenter Volume="{x:Bind VideoPlayer.Volume, Mode=OneWay}"/>
                     <Button.Flyout>
                         <Flyout FlyoutPresenterStyle="{StaticResource VolumePopupStyle}">
                             <Slider Margin="0,2,0,0" Value="{x:Bind VideoPlayer.Volume, Mode=TwoWay, Converter={StaticResource SliderVolumeConverter}}" IsThumbToolTipEnabled="False"/>
                         </Flyout>
                     </Button.Flyout>
                 </Button>
-                <Button Margin="8,0,0,0" Style="{StaticResource VideoPlayOtherButton}">
+                <!--<Button Margin="8,0,0,0" Style="{StaticResource VideoPlayOtherButton}" >
                     <FontIcon FontFamily="{ThemeResource SegoeIcons}" Glyph="&#xE946;" />
-                </Button>
-                <Button Margin="8,0,0,0" Style="{StaticResource VideoPlayOtherButton}" >
-                    <FontIcon FontFamily="{ThemeResource SegoeIcons}" Glyph="{x:Bind GetFullScreenIcon(IsFullScreen)}" />
+                </Button>-->
+                <Button Margin="8,0,0,0" Style="{StaticResource VideoPlayOtherButton}" Click="ToggleFullScreenClick" >
+                    <FontIcon FontFamily="{ThemeResource SegoeIcons}" Glyph="{x:Bind GetFullScreenIcon(IsFullScreen), Mode=OneWay}" />
                 </Button>
                 <Button Margin="8,0,0,0" Style="{StaticResource VideoPlayOtherButton}" >
                     <FontIcon FontFamily="{ThemeResource SegoeIcons}" Glyph="&#xE762;" />
                 </Button>
-                <Button Margin="8,0,0,0" Style="{StaticResource VideoPlayOtherButton}" >
+                <!--<Button Margin="8,0,0,0" Style="{StaticResource VideoPlayOtherButton}" >
                     <FontIcon FontFamily="{ThemeResource SegoeIcons}" Glyph="{x:Bind GetFullPageIcon(IsFullPage)}" />
-                </Button>
+                </Button>-->
             </StackPanel>
         </Grid>
 

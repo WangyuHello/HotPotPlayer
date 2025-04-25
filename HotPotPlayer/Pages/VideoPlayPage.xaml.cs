@@ -53,12 +53,20 @@ namespace HotPotPlayer.Pages
             base.VideoPlayer.IsVideoPagePresent = false;
             base.OnNavigatingFrom(e);
             base.VideoPlayer.Stop();
+            base.VideoPlayer.ShutDown();
         }
 
-        private async void OnVideoHostLoaded(object sender, RoutedEventArgs e)
+        private void OnVideoHostLoaded(object sender, RoutedEventArgs e)
         {
-            await Task.Delay(TimeSpan.FromSeconds(1));
-            base.VideoPlayer.PlayNext(Source.SingleOrSeries);
+            //await Task.Delay(TimeSpan.FromSeconds(1));
+            if(Source.SingleOrSeries != null)
+            {
+                base.VideoPlayer.PlayNext(Source.SingleOrSeries);
+            }
+            else if (Source.Files != null)
+            {
+                base.VideoPlayer.PlayNext(Source.Files, Source.Index);
+            }
         }
 
     }

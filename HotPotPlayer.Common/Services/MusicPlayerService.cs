@@ -530,7 +530,7 @@ namespace HotPotPlayer.Services
                 //_outputDevice.PlaybackStopped += OnPlaybackStopped;
                 if (_mpv == null)
                 {
-                    _mpv = new MpvPlayer(@"NativeLibs\libmpv-2.dll")
+                    _mpv = new MpvPlayer(@"NativeLibs\mpv-2.dll")
                     {
                         AutoPlay = false,
                         Volume = Volume,

@@ -9,7 +9,6 @@ namespace HotPotPlayer.Video.UI.Controls
     public partial interface ISwapChainPanelNative
     {
         [PreserveSig]
-        [return: MarshalAs(UnmanagedType.Error)]
-        HRESULT SetSwapChain(IDXGISwapChain1 swapChain);
+        int SetSwapChain(IDXGISwapChain1 swapChain);
     }
 }
