@@ -84,6 +84,7 @@ namespace HotPotPlayer.Video.UI.Controls
             _currentWindowBounds = new Rectangle { X = (int)App.Bounds.Left, Y = (int)App.Bounds.Right, Width = 640, Height = 480 };
             if (_isSwapchainInited)
             {
+                VideoPlayer.UpdatePanelBounds(_currentWindowBounds);
                 VideoPlayer.UpdatePanelSize(_currentWidth, _currentHeight);
             }
         }
@@ -407,8 +408,11 @@ namespace HotPotPlayer.Video.UI.Controls
                 _isSwapchainInited = false;
                 _swapChainPanelNative = Host.As<ISwapChainPanelNative>();
                 _swapChainPanelNative.SetSwapChain(null);
-                VideoPlayer.Stop();
-                VideoPlayer.ShutDown();
+                Task.Run(() =>
+                {
+                    VideoPlayer.Stop();
+                    VideoPlayer.ShutDown();
+                });
             }
             else
             {
