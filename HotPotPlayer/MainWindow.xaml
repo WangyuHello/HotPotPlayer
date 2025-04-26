@@ -6,6 +6,7 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
     xmlns:controls="using:HotPotPlayer.Controls"
+    xmlns:pages="using:HotPotPlayer.Pages"
     xmlns:animations="using:CommunityToolkit.WinUI.Animations"
     xmlns:ui="using:CommunityToolkit.WinUI"
     xmlns:animatedvisuals="using:Microsoft.UI.Xaml.Controls.AnimatedVisuals"
@@ -72,6 +73,10 @@
                 <animations:TranslationAnimation Duration="0:0:0.8" From="0,0,0" To="0,80,0" />
             </animations:Implicit.HideAnimations>
         </controls:PlayBar>
+
+        <pages:VideoPlay x:Name="VideoPlay" Visibility="{x:Bind VideoPlayerService.IsVideoPlayVisible, Mode=OneWay}">
+            
+        </pages:VideoPlay>
 
         <controls:Toast x:Name="Toast" VerticalAlignment="Top" HorizontalAlignment="Stretch" MaxWidth="480" Margin="240,40" Visibility="{x:Bind ToastVisible, Mode=OneWay}">
             <animations:Implicit.ShowAnimations>

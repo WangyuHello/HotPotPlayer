@@ -26,13 +26,19 @@ namespace HotPotPlayer
     {
         public FileInfo InitMediaFile { get; set; }
 
-        public override void PlayVideos(BaseItemDto singleOrSeries, int index)
+        public override async void PlayVideos(BaseItemDto singleOrSeries, int index)
         {
-            MainWindow.NavigateToVideo(new VideoPlayInfo { SingleOrSeries = singleOrSeries, Index = index });
+            //MainWindow.NavigateToVideo(new VideoPlayInfo { SingleOrSeries = singleOrSeries, Index = index });
+            VideoPlayer.IsVideoPlayVisible = true;
+            await Task.Delay(TimeSpan.FromSeconds(1));
+            VideoPlayer.PlayNext(singleOrSeries);
         }
-        public override void PlayVideos(List<BaseItemDto> list, int index)
+        public override async void PlayVideos(List<BaseItemDto> list, int index)
         {
-            MainWindow.NavigateToVideo(new VideoPlayInfo { List = list, Index = index });
+            //MainWindow.NavigateToVideo(new VideoPlayInfo { List = list, Index = index });
+            VideoPlayer.IsVideoPlayVisible = true;
+            await Task.Delay(TimeSpan.FromSeconds(1));
+            VideoPlayer.PlayNext(list, index);
         }
 
         public override void PlayVideos(List<FileInfo> list, int index)

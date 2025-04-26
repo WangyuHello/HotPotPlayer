@@ -114,11 +114,11 @@ namespace HotPotPlayer.Services
             set => Set(ref _hasError, value);
         }
 
-        private bool _isPlayListBarVisible;
-        public bool IsPlayListBarVisible
+        private bool _isVideoPlayVisible;
+        public bool IsVideoPlayVisible
         {
-            get => _isPlayListBarVisible;
-            set => Set(ref _isPlayListBarVisible, value);
+            get => _isVideoPlayVisible;
+            set => Set(ref _isVideoPlayVisible, value);
         }
 
         public int Volume

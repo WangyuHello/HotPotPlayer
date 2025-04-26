@@ -401,7 +401,20 @@ namespace HotPotPlayer.Video.UI.Controls
 
         private void NavigateBackClick(object sender, RoutedEventArgs e)
         {
-            App.NavigateBack();
+            if (VideoPlayer.IsVideoPlayVisible)
+            {
+                // Fake page, do not need navigation
+                _isSwapchainInited = false;
+                _swapChainPanelNative = Host.As<ISwapChainPanelNative>();
+                _swapChainPanelNative.SetSwapChain(null);
+                VideoPlayer.Stop();
+                VideoPlayer.ShutDown();
+                VideoPlayer.IsVideoPlayVisible = false;
+            }
+            else
+            {
+                App.NavigateBack();
+            }
         }
 
         private const int MDT_EFFECTIVE_DPI = 0;

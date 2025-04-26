@@ -59,15 +59,7 @@ namespace HotPotPlayer.Pages
         private async void OnVideoHostLoaded(object sender, RoutedEventArgs e)
         {
             await Task.Delay(TimeSpan.FromSeconds(1));
-            if (Source.SingleOrSeries != null)
-            {
-                base.VideoPlayer.PlayNext(Source.SingleOrSeries);
-            }
-            else if (Source.List != null)
-            {
-                base.VideoPlayer.PlayNext(Source.List, Source.Index);
-            }
-            else if (Source.Files != null)
+            if (Source != null && Source.Files != null)
             {
                 base.VideoPlayer.PlayNext(Source.Files, Source.Index);
             }
