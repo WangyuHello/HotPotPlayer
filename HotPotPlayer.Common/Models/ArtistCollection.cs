@@ -26,10 +26,19 @@ namespace HotPotPlayer.Models
             {
                 var list = await _service.GetJellyfinArtistListAsync(_pageNum * _perPageItem, _perPageItem);
                 _pageNum++;
-                if (list == null || list.Count < _perPageItem)
+                if (list == null)
                 {
                     _hasMore = false;
-                    return new LoadMoreItemsResult() { Count = list == null ? 0 : (uint)list.Count };
+                    return new LoadMoreItemsResult() { Count = 0 };
+                }
+                else if (list.Count < _perPageItem)
+                {
+                    _hasMore = false;
+                    foreach (var item in list)
+                    {
+                        Add(item);
+                    }
+                    return new LoadMoreItemsResult() { Count = (uint)list.Count };
                 }
                 else
                 {
