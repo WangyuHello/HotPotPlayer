@@ -30,6 +30,7 @@ namespace HotPotPlayer
         {
             //MainWindow.NavigateToVideo(new VideoPlayInfo { SingleOrSeries = singleOrSeries, Index = index });
             VideoPlayer.IsVideoPlayVisible = true;
+            VideoPlayer.IsSmallWindow = false;
             VideoPlayer.State = PlayerState.Loading;
             await Task.Delay(TimeSpan.FromMilliseconds(500));
             VideoPlayer.PlayNext(singleOrSeries);
@@ -38,6 +39,7 @@ namespace HotPotPlayer
         {
             //MainWindow.NavigateToVideo(new VideoPlayInfo { List = list, Index = index });
             VideoPlayer.IsVideoPlayVisible = true;
+            VideoPlayer.IsSmallWindow = false;
             VideoPlayer.State = PlayerState.Loading;
             await Task.Delay(TimeSpan.FromMilliseconds(500));
             VideoPlayer.PlayNext(list, index);

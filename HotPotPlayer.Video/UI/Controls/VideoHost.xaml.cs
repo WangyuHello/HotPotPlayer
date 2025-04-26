@@ -60,16 +60,11 @@ namespace HotPotPlayer.Video.UI.Controls
 
         private void Host_CompositionScaleChanged(SwapChainPanel sender, object args)
         {
-            if (Host.CompositionScaleX != 0)
-            {
-                _currentScaleX = Host.CompositionScaleX;
-                _currentWidth = (int)Math.Ceiling(Host.CompositionScaleX * Host.ActualWidth);
-            }
-            if (Host.CompositionScaleY != 0)
-            {
-                _currentScaleY = Host.CompositionScaleY;
-                _currentHeight = (int)Math.Ceiling(Host.CompositionScaleY * Host.ActualHeight);
-            }
+            if (Host.CompositionScaleX == 0 || Host.CompositionScaleY == 0) return;
+            _currentScaleX = Host.CompositionScaleX;
+            _currentWidth = (int)Math.Ceiling(Host.CompositionScaleX * Host.ActualWidth);
+            _currentScaleY = Host.CompositionScaleY;
+            _currentHeight = (int)Math.Ceiling(Host.CompositionScaleY * Host.ActualHeight);
             if (_isSwapchainInited)
             {
                 VideoPlayer.UpdatePanelScale(_currentScaleX, _currentScaleY);
@@ -79,6 +74,7 @@ namespace HotPotPlayer.Video.UI.Controls
 
         private void Host_SizeChanged(object sender, SizeChangedEventArgs e)
         {
+            if (Host.ActualWidth == 0 || Host.ActualHeight == 0) return;
             _currentWidth = (int)Math.Ceiling(Host.CompositionScaleX * Host.ActualWidth);
             _currentHeight = (int)Math.Ceiling(Host.CompositionScaleY * Host.ActualHeight);
             _currentWindowBounds = new Rectangle { X = (int)App.Bounds.Left, Y = (int)App.Bounds.Right, Width = 640, Height = 480 };
