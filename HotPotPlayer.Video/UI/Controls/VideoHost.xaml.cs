@@ -345,6 +345,11 @@ namespace HotPotPlayer.Video.UI.Controls
             return (playBarVisible && isFullPage) ? Visibility.Visible : Visibility.Collapsed;
         }
 
+        private Visibility GetLoadingVisible(Services.PlayerState state, bool swapchainInited)
+        {
+            return (!swapchainInited && (state == Services.PlayerState.Loading)) ? Visibility.Visible : Visibility.Collapsed;
+        }
+
         private void Grid_PointerEntered(object sender, PointerRoutedEventArgs e)
         {
             if (!_isSwapchainInited) { return; }

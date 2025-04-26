@@ -42,6 +42,8 @@
     <Grid PointerEntered="Grid_PointerEntered" 
           PointerMoved="Grid_PointerMoved" 
           ui:UIElementExtensions.ClipToBounds="True">
+        
+        <!--SwapChainHost-->
         <SwapChainPanel x:Name="Host" 
                         CompositionScaleChanged="Host_CompositionScaleChanged" 
                         SizeChanged="Host_SizeChanged" 
@@ -145,6 +147,7 @@
             <TextBlock Margin="8,0" Grid.Column="1" Foreground="White" VerticalAlignment="Center" Text="{x:Bind VideoPlayer.CurrentPlaying.Name}" FontFamily="{ThemeResource MiSansRegular}" FontSize="14"/>
         </Grid>
 
+        <!--PlayListBar-->
         <vcont:VideoPlayListBar Visibility="{x:Bind IsPlayListBarVisible, Mode=OneWay}" 
                                 CurrentPlayList="{x:Bind VideoPlayer.CurrentPlayList, Mode=OneWay}" 
                                 CurrentPlayIndex="{x:Bind VideoPlayer.CurrentPlayingIndex, Mode=OneWay}" 
@@ -157,5 +160,21 @@
                 <animations:TranslationAnimation Duration="0:0:0.4" From="0,0,0" To="400,0,0" />
             </animations:Implicit.HideAnimations>
         </vcont:VideoPlayListBar>
+
+        <!--Progress-->
+        <ProgressRing IsActive="True" 
+                      Width="64" 
+                      Height="64" 
+                      ui:VisualExtensions.NormalizedCenterPoint="0.5"
+                      Visibility="{x:Bind GetLoadingVisible(VideoPlayer.State, _isSwapchainInited)}">
+            <animations:Implicit.ShowAnimations>
+                <animations:ScaleAnimation Duration="0:0:0.1" From="2,2,2" To="1,1,1" />
+                <animations:OpacityAnimation Duration="0:0:0.1" From="0" To="1" />
+            </animations:Implicit.ShowAnimations>
+            <animations:Implicit.HideAnimations>
+                <animations:ScaleAnimation Duration="0:0:0.4" From="1,1,1" To="2,2,2" />
+                <animations:OpacityAnimation Duration="0:0:0.3" From="1" To="0" />
+            </animations:Implicit.HideAnimations>
+        </ProgressRing>
     </Grid>
 </base:UserControlBase>

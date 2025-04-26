@@ -30,14 +30,16 @@ namespace HotPotPlayer
         {
             //MainWindow.NavigateToVideo(new VideoPlayInfo { SingleOrSeries = singleOrSeries, Index = index });
             VideoPlayer.IsVideoPlayVisible = true;
-            await Task.Delay(TimeSpan.FromSeconds(1));
+            VideoPlayer.State = PlayerState.Loading;
+            await Task.Delay(TimeSpan.FromMilliseconds(500));
             VideoPlayer.PlayNext(singleOrSeries);
         }
         public override async void PlayVideos(List<BaseItemDto> list, int index)
         {
             //MainWindow.NavigateToVideo(new VideoPlayInfo { List = list, Index = index });
             VideoPlayer.IsVideoPlayVisible = true;
-            await Task.Delay(TimeSpan.FromSeconds(1));
+            VideoPlayer.State = PlayerState.Loading;
+            await Task.Delay(TimeSpan.FromMilliseconds(500));
             VideoPlayer.PlayNext(list, index);
         }
 

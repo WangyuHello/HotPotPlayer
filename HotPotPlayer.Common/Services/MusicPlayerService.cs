@@ -26,7 +26,8 @@ namespace HotPotPlayer.Services
     {
         Idle,
         Playing,
-        Error
+        Error,
+        Loading
     }
 
     public class MusicPlayerService: ServiceBaseWithConfig
@@ -395,6 +396,7 @@ namespace HotPotPlayer.Services
                 _playerTimer.Stop();
                 CurrentTime = TimeSpan.Zero;
                 IsPlaying = false;
+                State = PlayerState.Loading;
                 _playerStarter.RunWorkerAsync(index);
             }
         }
@@ -718,6 +720,7 @@ namespace HotPotPlayer.Services
                 {
                     HasError = false;
                     IsPlaying = true;
+                    State = PlayerState.Playing;
                     var music = CurrentPlayList[index];
                     //music.IsIntercept = intercept;
                     CurrentPlaying = music;
@@ -729,11 +732,16 @@ namespace HotPotPlayer.Services
                 {
                     App?.ShowToast(new ToastInfo { Text = "播放错误 " + _playException.Message });
                     HasError = true;
+                    State = PlayerState.Error;
                     if (index2 != CurrentPlayList.Count - 1)
                     {
                         CurrentPlayingIndex = index2;
                         PlayNext();
                     }
+                }
+                else
+                {
+                    State = PlayerState.Idle;
                 }
             }
             catch (Exception)
