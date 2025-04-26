@@ -121,6 +121,7 @@ namespace HotPotPlayer.Video.UI.Controls
                 _swapChainPanelNative = Host.As<ISwapChainPanelNative>();
                 _swapChainPanelNative.SetSwapChain(_swapchain);
                 _isSwapchainInited = true;
+                PlayBarVisible = true;
             });
         }
 
@@ -355,6 +356,7 @@ namespace HotPotPlayer.Video.UI.Controls
 
         private void Grid_PointerEntered(object sender, PointerRoutedEventArgs e)
         {
+            if (!_isSwapchainInited) { return; }
             PlayBarVisible = true;
         }
 
@@ -370,6 +372,7 @@ namespace HotPotPlayer.Video.UI.Controls
 
         private void Grid_PointerMoved(object sender, PointerRoutedEventArgs e)
         {
+            if (!_isSwapchainInited) { return; }
             PlayBarVisible = true;
         }
 
@@ -404,12 +407,12 @@ namespace HotPotPlayer.Video.UI.Controls
             if (VideoPlayer.IsVideoPlayVisible)
             {
                 // Fake page, do not need navigation
+                VideoPlayer.IsVideoPlayVisible = false;
                 _isSwapchainInited = false;
                 _swapChainPanelNative = Host.As<ISwapChainPanelNative>();
                 _swapChainPanelNative.SetSwapChain(null);
                 VideoPlayer.Stop();
                 VideoPlayer.ShutDown();
-                VideoPlayer.IsVideoPlayVisible = false;
             }
             else
             {
