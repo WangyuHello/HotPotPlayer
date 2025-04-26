@@ -1,6 +1,4 @@
 ﻿using System;
-using CommunityToolkit.WinUI;
-using Microsoft.UI.Composition;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Media.Imaging;
@@ -48,20 +46,14 @@ namespace HotPotPlayer.UI.Controls
         public static readonly DependencyProperty LazyLoadingThresholdProperty = DependencyProperty.Register(nameof(LazyLoadingThreshold), typeof(double), typeof(ImageEx2Base), new PropertyMetadata(default(double), LazyLoadingThresholdChanged));
 
         /// <summary>
-        /// Returns a mask that represents the alpha channel of an image as a <see cref="CompositionBrush"/>
-        /// </summary>
-        /// <returns><see cref="CompositionBrush"/></returns>
-        public abstract CompositionBrush GetAlphaMask();
-
-        /// <summary>
         /// Event raised if the image failed loading.
         /// </summary>
-        public event ImageExFailedEventHandler ImageExFailed;
+        public event ImageEx2FailedEventHandler ImageExFailed;
 
         /// <summary>
         /// Event raised when the image is successfully loaded and opened.
         /// </summary>
-        public event ImageExOpenedEventHandler ImageExOpened;
+        public event ImageEx2OpenedEventHandler ImageExOpened;
 
         /// <summary>
         /// Event raised when the control is initialized.
@@ -162,9 +154,5 @@ namespace HotPotPlayer.UI.Controls
                 control.InvalidateLazyLoading();
             }
         }
-
-        public delegate void ImageExFailedEventHandler(object sender, ImageExFailedEventArgs e);
-
-        public delegate void ImageExOpenedEventHandler(object sender, ImageExOpenedEventArgs e);
     }
 }

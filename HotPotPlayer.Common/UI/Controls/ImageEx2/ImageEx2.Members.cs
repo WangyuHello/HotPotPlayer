@@ -27,17 +27,6 @@ namespace HotPotPlayer.UI.Controls
             set { SetValue(NineGridProperty, value); }
         }
 
-        /// <inheritdoc/>
-        public override CompositionBrush GetAlphaMask()
-        {
-            if (IsInitialized && Image is Image image)
-            {
-                return image.GetAlphaMask();
-            }
-
-            return null;
-        }
-
         /// <summary>
         /// Returns the image as a <see cref="CastingSource"/>.
         /// </summary>

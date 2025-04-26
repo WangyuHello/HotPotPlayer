@@ -388,7 +388,7 @@ namespace HotPotPlayer.Helpers
             }
 
             var folder = await GetCacheFolderAsync().ConfigureAwait(false);
-            var baseFile = await folder.TryGetItemAsync(fileName).AsTask().ConfigureAwait(false) as StorageFile;
+            var baseFile = (await folder.TryGetItemAsync(fileName)) as StorageFile;
 
             bool downloadDataFile = baseFile == null || await IsFileOutOfDateAsync(baseFile, CacheDuration).ConfigureAwait(false);
 

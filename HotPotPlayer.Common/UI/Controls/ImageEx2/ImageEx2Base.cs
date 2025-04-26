@@ -1,13 +1,39 @@
-﻿using System;
-using System.Linq;
-using Windows.Foundation;
+﻿using CommunityToolkit.WinUI;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Media;
-using CommunityToolkit.WinUI;
+using System;
+using System.Diagnostics.Contracts;
+using System.Linq;
+using System.Runtime.CompilerServices;
+using Windows.Foundation;
 
 namespace HotPotPlayer.UI.Controls
 {
+    public static class Extensions
+    {
+        /// <summary>
+        /// Determines if a rectangle intersects with another rectangle.
+        /// </summary>
+        /// <param name="rect1">The first rectangle to test.</param>
+        /// <param name="rect2">The second rectangle to test.</param>
+        /// <returns>This method returns <see langword="true"/> if there is any intersection, otherwise <see langword="false"/>.</returns>
+        [Pure]
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static bool IntersectsWith(this Rect rect1, Rect rect2)
+        {
+            if (rect1.IsEmpty || rect2.IsEmpty)
+            {
+                return false;
+            }
+
+            return (rect1.Left <= rect2.Right) &&
+                   (rect1.Right >= rect2.Left) &&
+                   (rect1.Top <= rect2.Bottom) &&
+                   (rect1.Bottom >= rect2.Top);
+        }
+    }
+
     /// <summary>
     /// Base Code for ImageEx
     /// </summary>
@@ -16,7 +42,7 @@ namespace HotPotPlayer.UI.Controls
     [TemplateVisualState(Name = UnloadedState, GroupName = CommonGroup)]
     [TemplateVisualState(Name = FailedState, GroupName = CommonGroup)]
     [TemplatePart(Name = PartImage, Type = typeof(object))]
-    public abstract partial class ImageEx2Base : Control, IAlphaMaskProvider
+    public abstract partial class ImageEx2Base : Control
     {
         private bool _isInViewport;
 
@@ -55,15 +81,10 @@ namespace HotPotPlayer.UI.Controls
         /// </summary>
         protected object Image { get; private set; }
 
-        /// <inheritdoc/>
-        public bool WaitUntilLoaded => true;
-
         /// <summary>
         /// Initializes a new instance of the <see cref="ImageExBase"/> class.
         /// </summary>
-        public ImageEx2Base()
-        {
-        }
+        public ImageEx2Base() { }
 
         /// <summary>
         /// Attach image opened event handler
@@ -167,7 +188,7 @@ namespace HotPotPlayer.UI.Controls
         protected virtual void OnImageOpened(object sender, RoutedEventArgs e)
         {
             VisualStateManager.GoToState(this, LoadedState, true);
-            ImageExOpened?.Invoke(this, new ImageExOpenedEventArgs());
+            ImageExOpened?.Invoke(this, new ImageEx2OpenedEventArgs());
         }
 
         /// <summary>
@@ -178,7 +199,7 @@ namespace HotPotPlayer.UI.Controls
         protected virtual void OnImageFailed(object sender, ExceptionRoutedEventArgs e)
         {
             VisualStateManager.GoToState(this, FailedState, true);
-            ImageExFailed?.Invoke(this, new ImageExFailedEventArgs(new Exception(e.ErrorMessage)));
+            ImageExFailed?.Invoke(this, new ImageEx2FailedEventArgs(new Exception(e.ErrorMessage)));
         }
 
         private void ImageExBase_LayoutUpdated(object sender, object e)
@@ -236,19 +257,6 @@ namespace HotPotPlayer.UI.Controls
             {
                 _isInViewport = false;
             }
-        }
-    }
-
-    public class ImageExOpenedEventArgs: EventArgs
-    {
-
-    }
-
-    public class ImageExFailedEventArgs : EventArgs
-    {
-        public ImageExFailedEventArgs(Exception exception)
-        {
-
         }
     }
 }

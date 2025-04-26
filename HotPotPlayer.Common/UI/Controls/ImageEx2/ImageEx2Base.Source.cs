@@ -38,9 +38,7 @@ namespace HotPotPlayer.UI.Controls
 
         private static void SourceChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
-            var control = d as ImageEx2Base;
-
-            if (control == null)
+            if (d is not ImageEx2Base control)
             {
                 return;
             }
@@ -89,7 +87,7 @@ namespace HotPotPlayer.UI.Controls
             else if (source is BitmapSource { PixelHeight: > 0, PixelWidth: > 0 })
             {
                 VisualStateManager.GoToState(this, LoadedState, true);
-                ImageExOpened?.Invoke(this, new ImageExOpenedEventArgs());
+                ImageExOpened?.Invoke(this, new ImageEx2OpenedEventArgs());
             }
         }
 
@@ -113,11 +111,9 @@ namespace HotPotPlayer.UI.Controls
 
             VisualStateManager.GoToState(this, LoadingState, true);
 
-            var imageSource = source as ImageSource;
-            if (imageSource != null)
+            if (source is ImageSource imageSource)
             {
                 AttachSource(imageSource);
-
                 return;
             }
 
@@ -128,7 +124,7 @@ namespace HotPotPlayer.UI.Controls
                 if (!Uri.TryCreate(url, UriKind.RelativeOrAbsolute, out uri))
                 {
                     VisualStateManager.GoToState(this, FailedState, true);
-                    ImageExFailed?.Invoke(this, new ImageExFailedEventArgs(new UriFormatException("Invalid uri specified.")));
+                    ImageExFailed?.Invoke(this, new ImageEx2FailedEventArgs(new UriFormatException("Invalid uri specified.")));
                     return;
                 }
             }
@@ -149,7 +145,7 @@ namespace HotPotPlayer.UI.Controls
             catch (Exception e)
             {
                 VisualStateManager.GoToState(this, FailedState, true);
-                ImageExFailed?.Invoke(this, new ImageExFailedEventArgs(e));
+                ImageExFailed?.Invoke(this, new ImageEx2FailedEventArgs(e));
             }
         }
 
