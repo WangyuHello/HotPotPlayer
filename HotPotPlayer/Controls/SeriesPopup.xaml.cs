@@ -89,7 +89,8 @@ namespace HotPotPlayer.Controls
         private void ListView_ItemClick(object sender, ItemClickEventArgs e)
         {
             var video = e.ClickedItem as BaseItemDto;
-            App.PlayVideos(video, 0);
+            var index = SelectedSeasonVideoItems.IndexOf(video);
+            App.PlayVideos(SelectedSeasonVideoItems, index);
         }
 
         private void BackdropExpand_Click(object sender, RoutedEventArgs e)

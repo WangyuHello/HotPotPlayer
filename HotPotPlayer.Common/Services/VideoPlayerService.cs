@@ -193,11 +193,26 @@ namespace HotPotPlayer.Services
             PlayNext(0);
         }
 
+        public void PlayNext(List<BaseItemDto> files, int index)
+        {
+            CurrentPlayList = [.. files];
+            PlayNext(index);
+        }
+
         public void PlayNext(List<FileInfo> files, int index)
         {
             var fakeDtos = files.Select(f => new BaseItemDto { Path = f.FullName });
             CurrentPlayList = [ .. fakeDtos];
             PlayNext(index);
+        }
+
+        public void PlayNextInCurrentList(BaseItemDto v)
+        {
+            var i = CurrentPlayList.IndexOf(v);
+            if (i != CurrentPlayingIndex)
+            {
+                PlayNext(i);
+            }
         }
 
         public void PlayNext(int? index)

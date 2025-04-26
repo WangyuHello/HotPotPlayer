@@ -2,6 +2,7 @@
 // Licensed under the MIT License. See LICENSE in the project root for license information.
 
 using HotPotPlayer.Models;
+using Jellyfin.Sdk.Generated.Models;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Controls.Primitives;
@@ -30,14 +31,14 @@ namespace HotPotPlayer.Video.UI.Controls
             this.InitializeComponent();
         }
 
-        public ObservableCollection<VideoItem> CurrentPlayList
+        public ObservableCollection<BaseItemDto> CurrentPlayList
         {
-            get { return (ObservableCollection<VideoItem>)GetValue(CurrentPlayListProperty); }
+            get { return (ObservableCollection<BaseItemDto>)GetValue(CurrentPlayListProperty); }
             set { SetValue(CurrentPlayListProperty, value); }
         }
 
         public static readonly DependencyProperty CurrentPlayListProperty =
-            DependencyProperty.Register("CurrentPlayList", typeof(ObservableCollection<VideoItem>), typeof(VideoPlayListBar), new PropertyMetadata(default(ObservableCollection<VideoItem>)));
+            DependencyProperty.Register("CurrentPlayList", typeof(ObservableCollection<BaseItemDto>), typeof(VideoPlayListBar), new PropertyMetadata(default(ObservableCollection<BaseItemDto>)));
 
 
         public int CurrentPlayIndex
@@ -51,6 +52,7 @@ namespace HotPotPlayer.Video.UI.Controls
 
 
         public event Action OnDismiss;
+        public event ItemClickEventHandler PlayListItemClicked;
 
         private void RootTapped(object sender, TappedRoutedEventArgs e)
         {
@@ -67,5 +69,9 @@ namespace HotPotPlayer.Video.UI.Controls
             e.Handled = true;
         }
 
+        private void PlayList_ItemClick(object sender, ItemClickEventArgs e)
+        {
+            PlayListItemClicked?.Invoke(sender, e);
+        }
     }
 }

@@ -30,6 +30,10 @@ namespace HotPotPlayer
         {
             MainWindow.NavigateToVideo(new VideoPlayInfo { SingleOrSeries = singleOrSeries, Index = index });
         }
+        public override void PlayVideos(List<BaseItemDto> list, int index)
+        {
+            MainWindow.NavigateToVideo(new VideoPlayInfo { List = list, Index = index });
+        }
 
         public override void PlayVideos(List<FileInfo> list, int index)
         {

@@ -1,8 +1,10 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using DirectN;
 using Google.Protobuf.WellKnownTypes;
+using HotPotPlayer.Extensions;
 using HotPotPlayer.Models;
 using HotPotPlayer.Services;
+using Jellyfin.Sdk.Generated.Models;
 using Microsoft.UI.Dispatching;
 using Microsoft.UI.Windowing;
 using Microsoft.UI.Xaml;
@@ -147,6 +149,20 @@ namespace HotPotPlayer.Video.UI.Controls
             });
         }
 
+        private bool isPlayListBarVisible;
+        public bool IsPlayListBarVisible
+        {
+            get => isPlayListBarVisible;
+            set
+            {
+                if (isPlayListBarVisible != value)
+                {
+                    Set(ref isPlayListBarVisible, value);
+                    AppWindow.SetTitleBarForegroundColor(isPlayListBarVisible);
+                }
+            }
+        }
+
         public string Title
         {
             get { return (string)GetValue(TitleProperty); }
@@ -156,6 +172,14 @@ namespace HotPotPlayer.Video.UI.Controls
         public static readonly DependencyProperty TitleProperty =
             DependencyProperty.Register("Title", typeof(string), typeof(VideoHost), new PropertyMetadata(default(string)));
 
+        public bool IsFullPageHost
+        {
+            get { return (bool)GetValue(IsFullPageHostProperty); }
+            set { SetValue(IsFullPageHostProperty, value); }
+        }
+
+        public static readonly DependencyProperty IsFullPageHostProperty =
+            DependencyProperty.Register("IsFullPageHost", typeof(bool), typeof(VideoHost), new PropertyMetadata(true));
 
         private void PlayButtonClick(object sender, RoutedEventArgs e)
         {
@@ -185,6 +209,11 @@ namespace HotPotPlayer.Video.UI.Controls
             AppWindow.SetPresenter(IsFullScreen ? AppWindowPresenterKind.FullScreen : AppWindowPresenterKind.Default);
         }
 
+        private void TogglePlayListBarVisibilityClick(object sender, RoutedEventArgs e)
+        {
+            IsPlayListBarVisible = !IsPlayListBarVisible;
+        }
+
         private void PlaySlider_OnPointerPressed(object sender, PointerRoutedEventArgs e)
         {
             VideoPlayer.SuppressCurrentTimeTrigger = true;
@@ -195,6 +224,12 @@ namespace HotPotPlayer.Video.UI.Controls
             VideoPlayer.SuppressCurrentTimeTrigger = false;
             TimeSpan to = GetToTime();
             VideoPlayer.PlayTo(to);
+        }
+
+        private void VideoPlayListBar_PlayListItemClicked(object sender, ItemClickEventArgs e)
+        {
+            var v = e.ClickedItem as BaseItemDto;
+            VideoPlayer.PlayNextInCurrentList(v);
         }
 
         private TimeSpan GetToTime()
@@ -267,6 +302,21 @@ namespace HotPotPlayer.Video.UI.Controls
                 return "\uE106";
             }
             return isPlaying ? "\uE103" : "\uF5B0";
+        }
+
+        private Visibility GetTogglePlayListBarVisibility(bool isFullPageHost)
+        {
+            return isFullPageHost ? Visibility.Visible : Visibility.Collapsed;
+        }
+
+        private Visibility GetToggleFullPageVisibility(bool isFullPageHost)
+        {
+            return isFullPageHost ? Visibility.Collapsed : Visibility.Visible;
+        }
+
+        private void VideoPlayListBar_OnDismiss()
+        {
+            IsPlayListBarVisible = false;
         }
 
         private void NavigateBackClick(object sender, RoutedEventArgs e)

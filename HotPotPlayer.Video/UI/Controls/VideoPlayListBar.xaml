@@ -9,13 +9,14 @@
     xmlns:io="using:System.IO"
     xmlns:model="using:HotPotPlayer.Models"
     xmlns:control="using:HotPotPlayer.UI.Controls"
+    xmlns:jmodel="using:Jellyfin.Sdk.Generated.Models"
     xmlns:sel="using:HotPotPlayer.UI.Templates.Selectors"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d">
 
     <base:UserControlBase.Resources>
-        <DataTemplate x:Key="PlayListBarListTemplate" x:DataType="model:VideoItem">
+        <DataTemplate x:Key="PlayListBarListTemplate" x:DataType="jmodel:BaseItemDto">
             <Grid>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="32" />
@@ -24,7 +25,7 @@
                     <ColumnDefinition Width="Auto" />
                 </Grid.ColumnDefinitions>
                 <Grid Grid.Column="1" Margin="0,0,8,0">
-                    <TextBlock Foreground="White" Text="{x:Bind Title}" VerticalAlignment="Center" FontSize="14" TextTrimming="CharacterEllipsis" FontFamily="{ThemeResource MiSansRegular}"/>
+                    <TextBlock Foreground="White" Text="{x:Bind Name}" VerticalAlignment="Center" FontSize="14" TextTrimming="CharacterEllipsis" FontFamily="{ThemeResource MiSansRegular}"/>
                 </Grid>
                 <Button Grid.Column="3" Foreground="White" Style="{StaticResource TransparentWhiteButton}" Margin="8,0,0,0" Padding="4" CornerRadius="8" Tag="{x:Bind }" >
                     <SymbolIcon Symbol="More" />
@@ -32,7 +33,7 @@
             </Grid>
         </DataTemplate>
 
-        <DataTemplate x:Key="PlayListBarListSelectedTemplate" x:DataType="model:VideoItem">
+        <DataTemplate x:Key="PlayListBarListSelectedTemplate" x:DataType="jmodel:BaseItemDto">
             <Grid >
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="32" />
@@ -42,7 +43,7 @@
                 </Grid.ColumnDefinitions>
                 <FontIcon FontFamily="{ThemeResource SegoeIcons}" Glyph="&#xE013;" VerticalAlignment="Center" HorizontalAlignment="Center" Foreground="White"/>
                 <Grid Grid.Column="1" Margin="0,0,8,0">
-                    <TextBlock Foreground="White" Text="{x:Bind Title}" VerticalAlignment="Center" FontSize="14" TextTrimming="CharacterEllipsis" FontFamily="{ThemeResource MiSansRegular}"/>
+                    <TextBlock Foreground="White" Text="{x:Bind Name}" VerticalAlignment="Center" FontSize="14" TextTrimming="CharacterEllipsis" FontFamily="{ThemeResource MiSansRegular}"/>
                 </Grid>
                 <Button Grid.Column="3" Foreground="White" Style="{StaticResource TransparentWhiteButton}" Margin="8,0,0,0" Padding="4" CornerRadius="8" Tag="{x:Bind }" >
                     <SymbolIcon Symbol="More" />
@@ -83,7 +84,15 @@
                 </Button>
             </Grid>
 
-            <ListView x:Name="PlayList" Grid.Row="1" SelectionMode="Single" ItemsSource="{x:Bind CurrentPlayList, Mode=OneWay}" ItemTemplateSelector="{StaticResource PlayListBarListTemplateSelector}" ItemContainerStyle="{StaticResource PlayListBarListContainerStyle}" SelectedIndex="{x:Bind CurrentPlayIndex, Mode=TwoWay}" IsItemClickEnabled="True" >
+            <ListView x:Name="PlayList" 
+                      Grid.Row="1" 
+                      SelectionMode="Single" 
+                      ItemsSource="{x:Bind CurrentPlayList, Mode=OneWay}" 
+                      ItemTemplateSelector="{StaticResource PlayListBarListTemplateSelector}" 
+                      ItemContainerStyle="{StaticResource PlayListBarListContainerStyle}" 
+                      SelectedIndex="{x:Bind CurrentPlayIndex, Mode=OneWay}"
+                      ItemClick="PlayList_ItemClick"
+                      IsItemClickEnabled="True" >
                 <ListView.Footer>
                     <Grid Height="100"/>
                 </ListView.Footer>

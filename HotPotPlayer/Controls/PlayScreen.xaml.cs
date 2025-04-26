@@ -1,4 +1,4 @@
-﻿using DirectN;
+﻿using DirectN.Extensions.Utilities;
 using HotPotPlayer.Interop;
 using HotPotPlayer.Models;
 using HotPotPlayer.Models.CloudMusic;

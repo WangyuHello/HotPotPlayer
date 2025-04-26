@@ -166,14 +166,14 @@
             <TextBlock Margin="8,0" Grid.Column="1" Foreground="White" VerticalAlignment="Center" Text="{x:Bind Title}" FontFamily="{ThemeResource MiSansRegular}" FontSize="14"/>
         </Grid>
 
-        <vcont:VideoPlayListBar Visibility="{x:Bind IsPlayListBarVisible}" CurrentPlayList="{x:Bind CurrentPlayList}" CurrentPlayIndex="{x:Bind CurrentPlayIndex,Mode=TwoWay}" OnDismiss="VideoPlayListBar_OnDismiss">
+        <!--<vcont:VideoPlayListBar Visibility="{x:Bind IsPlayListBarVisible}" CurrentPlayList="{x:Bind CurrentPlayList}" CurrentPlayIndex="{x:Bind CurrentPlayIndex,Mode=TwoWay}" OnDismiss="VideoPlayListBar_OnDismiss">
             <animations:Implicit.ShowAnimations>
                 <animations:TranslationAnimation Duration="0:0:0.4" From="400,0,0" To="0,0,0" EasingMode="EaseOut"/>
             </animations:Implicit.ShowAnimations>
             <animations:Implicit.HideAnimations>
                 <animations:TranslationAnimation Duration="0:0:0.4" From="0,0,0" To="400,0,0" />
             </animations:Implicit.HideAnimations>
-        </vcont:VideoPlayListBar>
+        </vcont:VideoPlayListBar>-->
     </Grid>
     
 

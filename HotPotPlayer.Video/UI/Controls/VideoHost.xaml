@@ -113,12 +113,12 @@
                 <Button Margin="8,0,0,0" Style="{StaticResource VideoPlayOtherButton}" Click="ToggleFullScreenClick" >
                     <FontIcon FontFamily="{ThemeResource SegoeIcons}" Glyph="{x:Bind GetFullScreenIcon(IsFullScreen), Mode=OneWay}" />
                 </Button>
-                <Button Margin="8,0,0,0" Style="{StaticResource VideoPlayOtherButton}" >
+                <Button Margin="8,0,0,0" Style="{StaticResource VideoPlayOtherButton}" Click="TogglePlayListBarVisibilityClick" Visibility="{x:Bind GetTogglePlayListBarVisibility(IsFullPageHost)}">
                     <FontIcon FontFamily="{ThemeResource SegoeIcons}" Glyph="&#xE762;" />
                 </Button>
-                <!--<Button Margin="8,0,0,0" Style="{StaticResource VideoPlayOtherButton}" >
+                <Button Margin="8,0,0,0" Style="{StaticResource VideoPlayOtherButton}" Visibility="{x:Bind GetToggleFullPageVisibility(IsFullPageHost)}">
                     <FontIcon FontFamily="{ThemeResource SegoeIcons}" Glyph="{x:Bind GetFullPageIcon(IsFullPage)}" />
-                </Button>-->
+                </Button>
             </StackPanel>
         </Grid>
 
@@ -143,13 +143,17 @@
             <TextBlock Margin="8,0" Grid.Column="1" Foreground="White" VerticalAlignment="Center" Text="{x:Bind Title}" FontFamily="{ThemeResource MiSansRegular}" FontSize="14"/>
         </Grid>
 
-        <!--<vcont:VideoPlayListBar Visibility="{x:Bind IsPlayListBarVisible}" CurrentPlayList="{x:Bind CurrentPlayList}" CurrentPlayIndex="{x:Bind CurrentPlayIndex,Mode=TwoWay}" OnDismiss="VideoPlayListBar_OnDismiss">
+        <vcont:VideoPlayListBar Visibility="{x:Bind IsPlayListBarVisible, Mode=OneWay}" 
+                                CurrentPlayList="{x:Bind VideoPlayer.CurrentPlayList, Mode=OneWay}" 
+                                CurrentPlayIndex="{x:Bind VideoPlayer.CurrentPlayingIndex, Mode=OneWay}" 
+                                PlayListItemClicked="VideoPlayListBar_PlayListItemClicked"
+                                OnDismiss="VideoPlayListBar_OnDismiss">
             <animations:Implicit.ShowAnimations>
                 <animations:TranslationAnimation Duration="0:0:0.4" From="400,0,0" To="0,0,0" EasingMode="EaseOut"/>
             </animations:Implicit.ShowAnimations>
             <animations:Implicit.HideAnimations>
                 <animations:TranslationAnimation Duration="0:0:0.4" From="0,0,0" To="400,0,0" />
             </animations:Implicit.HideAnimations>
-        </vcont:VideoPlayListBar>-->
+        </vcont:VideoPlayListBar>
     </Grid>
 </base:UserControlBase>

@@ -72,6 +72,7 @@ namespace HotPotPlayer
 
         public abstract void PlayVideo(string bvid);
         public abstract void PlayVideos(BaseItemDto singleOrSeries, int index);
+        public abstract void PlayVideos(List<BaseItemDto> list, int index);
         public abstract void PlayVideos(List<FileInfo> list, int index);
     }
 }
