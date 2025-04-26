@@ -50,7 +50,15 @@
                         />
 
         <!--PlayBar-->
-        <Grid Background="#e0424047" CornerRadius="8" VerticalAlignment="Bottom" HorizontalAlignment="Stretch" MaxWidth="840" Margin="16,0,16,16" Padding="8,6" Visibility="{x:Bind PlayBarVisible, Mode=OneWay}" PointerEntered="PlayBar_PointerEntered" PointerExited="PlayBar_PointerExited">
+        <Grid Background="#e0424047" 
+              CornerRadius="8" 
+              VerticalAlignment="Bottom" 
+              HorizontalAlignment="Stretch" 
+              MaxWidth="840" 
+              Margin="16,0,16,16" 
+              Padding="8,6" 
+              Visibility="{x:Bind GetPlayBarVisible(PlayBarVisible, VideoPlayer.IsSmallWindow), Mode=OneWay}" 
+              PointerEntered="PlayBar_PointerEntered" PointerExited="PlayBar_PointerExited">
 
             <animations:Implicit.ShowAnimations>
                 <animations:TranslationAnimation Duration="0:0:1" From="0,100,0" To="0,0,0" EasingMode="EaseOut"/>
@@ -127,7 +135,12 @@
         </Grid>
 
         <!--Title-->
-        <Grid VerticalAlignment="Top" Padding="8,8" Background="#e0424047" Visibility="{x:Bind GetTitleBarVisible(PlayBarVisible, IsFullPage), Mode=OneWay}" PointerEntered="PlayBar_PointerEntered" PointerExited="PlayBar_PointerExited">
+        <Grid VerticalAlignment="Top" 
+              Padding="8,8" 
+              Background="#e0424047" 
+              Visibility="{x:Bind GetTitleBarVisible(PlayBarVisible, IsFullPage, VideoPlayer.IsSmallWindow), Mode=OneWay}" 
+              PointerEntered="PlayBar_PointerEntered" 
+              PointerExited="PlayBar_PointerExited">
             <animations:Implicit.ShowAnimations>
                 <animations:TranslationAnimation Duration="0:0:1" From="0,-50,0" To="0,0,0" EasingMode="EaseOut"/>
             </animations:Implicit.ShowAnimations>
@@ -138,13 +151,21 @@
 
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="Auto" />
                 <ColumnDefinition Width="*" />
                 <ColumnDefinition Width="Auto" />
             </Grid.ColumnDefinitions>
             <Button Style="{StaticResource VideoPlayOtherButton}" Click="NavigateBackClick">
                 <SymbolIcon Symbol="Back" />
             </Button>
-            <TextBlock Margin="8,0" Grid.Column="1" Foreground="White" VerticalAlignment="Center" Text="{x:Bind VideoPlayer.CurrentPlaying.Name}" FontFamily="{ThemeResource MiSansRegular}" FontSize="14"/>
+            <Button Grid.Column="1" Style="{StaticResource VideoPlayOtherButton}" Click="ToggleSmallWindowClick">
+                <FontIcon FontFamily="{ThemeResource SegoeIcons}" Glyph="&#xE66C;" />
+            </Button>
+            <TextBlock Margin="8,0" Grid.Column="2" Foreground="White" VerticalAlignment="Center" Text="{x:Bind VideoPlayer.CurrentPlaying.Name}" FontFamily="{ThemeResource MiSansRegular}" FontSize="14"/>
+
+            <Button Grid.Column="3" Click="PlayButtonClick" Style="{StaticResource VideoPlayOtherButton}" Visibility="{x:Bind VideoPlayer.IsSmallWindow}">
+                <FontIcon FontFamily="{ThemeResource SegoeIcons}" Glyph="{x:Bind GetPlayButtonIcon(VideoPlayer.IsPlaying, VideoPlayer.HasError), Mode=OneWay}" />
+            </Button>
         </Grid>
 
         <!--PlayListBar-->

@@ -171,6 +171,13 @@ namespace HotPotPlayer.Services
             set => Set(ref isVideoPagePresent, value);
         }
 
+        private bool isSmallWindow;
+        public bool IsSmallWindow
+        {
+            get => isSmallWindow;
+            set => Set(ref isSmallWindow, value);
+        }
+
         public event EventHandler<MpvVideoGeometryInitEventArgs> VideoGeometryInit;
         public event EventHandler<IntPtr> SwapChainInited;
         public IntPtr SwapChain { get; set; }

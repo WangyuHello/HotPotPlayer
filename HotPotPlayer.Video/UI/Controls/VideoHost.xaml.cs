@@ -341,7 +341,12 @@ namespace HotPotPlayer.Video.UI.Controls
             IsPlayListBarVisible = false;
         }
 
-        public Visibility GetTitleBarVisible(bool playBarVisible, bool isFullPage)
+        public Visibility GetPlayBarVisible(bool playBarVisible, bool isSmallWindow)
+        {
+            return (playBarVisible & !isSmallWindow) ? Visibility.Visible : Visibility.Collapsed;
+        }
+
+        public Visibility GetTitleBarVisible(bool playBarVisible, bool isFullPage, bool isSmallWindow)
         {
             return (playBarVisible && isFullPage) ? Visibility.Visible : Visibility.Collapsed;
         }
@@ -418,6 +423,11 @@ namespace HotPotPlayer.Video.UI.Controls
             {
                 App.NavigateBack();
             }
+        }
+
+        private void ToggleSmallWindowClick(object sender, RoutedEventArgs e)
+        {
+            VideoPlayer.IsSmallWindow = !VideoPlayer.IsSmallWindow;
         }
 
         private const int MDT_EFFECTIVE_DPI = 0;

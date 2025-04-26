@@ -106,6 +106,33 @@ namespace HotPotPlayer
             return isPlayScreenVisible ? new Thickness(24, 0, 24, 8) : new Thickness(80+100, 0, 24+100, 16);
         }
 
+        Thickness GetVideoPlayMargin(bool isSmallWindow)
+        {
+            return isSmallWindow ? new Thickness(0, 0, 16, 16) : new Thickness(0,0,0,0);
+        }
+
+        const double _smallWindowWidth = 400;
+
+        double GetVideoPlayWidth(bool isSmallWindow)
+        {
+            return isSmallWindow ? _smallWindowWidth : double.NaN;
+        }
+
+        double GetVideoPlayHeight(bool isSmallWindow)
+        {
+            return isSmallWindow ? (_smallWindowWidth * 9)/16 : double.NaN;
+        }
+
+        HorizontalAlignment GetVideoPlayHorizontalAlignment(bool isSmallWindow)
+        {
+            return isSmallWindow ? HorizontalAlignment.Right : HorizontalAlignment.Stretch;
+        }
+
+        VerticalAlignment GetVideoPlayVerticalAlignment(bool isSmallWindow)
+        {
+            return isSmallWindow ? VerticalAlignment.Bottom : VerticalAlignment.Stretch;
+        }
+
         //private void Tray_TrayIconLeftMouseDown(object sender, EventArgs e)
         //{
         //    this.Show();
