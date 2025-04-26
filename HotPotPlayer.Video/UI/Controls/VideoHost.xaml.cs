@@ -46,6 +46,7 @@ namespace HotPotPlayer.Video.UI.Controls
         public event Action OnToggleFullScreen;
 
         private DispatcherQueue _uiQueue;
+        DispatcherTimer _inActiveTimer;
 
         int _currentWidth;
         int _currentHeight;
@@ -134,9 +135,6 @@ namespace HotPotPlayer.Video.UI.Controls
         }
 
         [ObservableProperty]
-        private bool isFullPage;
-
-        [ObservableProperty]
         private bool isFullScreen;
 
         private bool isVideoInfoOn;
@@ -163,6 +161,28 @@ namespace HotPotPlayer.Video.UI.Controls
             }
         }
 
+        private bool playBarVisible;
+
+        public bool PlayBarVisible
+        {
+            get => playBarVisible;
+            set
+            {
+                Set(ref playBarVisible, value, newV =>
+                {
+                    ShowCursor(newV ? 1 : 0);
+                    if (newV == true)
+                    {
+                        _inActiveTimer ??= InitInActiveTimer();
+                        _inActiveTimer.Start();
+                    }
+                });
+            }
+        }
+
+        [DllImport("user32.dll", EntryPoint = "ShowCursor", CharSet = CharSet.Auto)]
+        public extern static void ShowCursor(int status);
+
         public string Title
         {
             get { return (string)GetValue(TitleProperty); }
@@ -171,6 +191,15 @@ namespace HotPotPlayer.Video.UI.Controls
 
         public static readonly DependencyProperty TitleProperty =
             DependencyProperty.Register("Title", typeof(string), typeof(VideoHost), new PropertyMetadata(default(string)));
+
+        public bool IsFullPage
+        {
+            get { return (bool)GetValue(IsFullPageProperty); }
+            set { SetValue(IsFullPageProperty, value); }
+        }
+
+        public static readonly DependencyProperty IsFullPageProperty =
+            DependencyProperty.Register("IsFullPage", typeof(bool), typeof(VideoControl), new PropertyMetadata(true));
 
         public bool IsFullPageHost
         {
@@ -317,6 +346,57 @@ namespace HotPotPlayer.Video.UI.Controls
         private void VideoPlayListBar_OnDismiss()
         {
             IsPlayListBarVisible = false;
+        }
+
+        public Visibility GetTitleBarVisible(bool playBarVisible, bool isFullPage)
+        {
+            return (playBarVisible && isFullPage) ? Visibility.Visible : Visibility.Collapsed;
+        }
+
+        private void Grid_PointerEntered(object sender, PointerRoutedEventArgs e)
+        {
+            PlayBarVisible = true;
+        }
+
+        private void PlayBar_PointerEntered(object sender, PointerRoutedEventArgs e)
+        {
+            StopInactiveTimer();
+        }
+
+        private void PlayBar_PointerExited(object sender, PointerRoutedEventArgs e)
+        {
+            StartInactiveTimer();
+        }
+
+        private void Grid_PointerMoved(object sender, PointerRoutedEventArgs e)
+        {
+            PlayBarVisible = true;
+        }
+
+        void StopInactiveTimer()
+        {
+            _inActiveTimer?.Stop();
+        }
+
+        void StartInactiveTimer()
+        {
+            _inActiveTimer?.Start();
+        }
+
+        DispatcherTimer InitInActiveTimer()
+        {
+            var t = new DispatcherTimer
+            {
+                Interval = TimeSpan.FromSeconds(5)
+            };
+            t.Tick += InActiveTimerTick;
+            return t;
+        }
+
+        private void InActiveTimerTick(object sender, object e)
+        {
+            _inActiveTimer.Stop();
+            PlayBarVisible = false;
         }
 
         private void NavigateBackClick(object sender, RoutedEventArgs e)

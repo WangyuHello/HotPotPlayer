@@ -13,6 +13,7 @@
     xmlns:vcont="using:HotPotPlayer.Video.UI.Controls"
     Loaded="UserControlBase_Loaded"
     Unloaded="UserControlBase_Unloaded"
+    x:DefaultBindMode="OneWay"
     mc:Ignorable="d">
 
     <base:UserControlBase.Resources>
@@ -38,7 +39,8 @@
 
     </base:UserControlBase.Resources>
 
-    <Grid 
+    <Grid PointerEntered="Grid_PointerEntered" 
+          PointerMoved="Grid_PointerMoved" 
           ui:UIElementExtensions.ClipToBounds="True">
         <SwapChainPanel x:Name="Host" 
                         CompositionScaleChanged="Host_CompositionScaleChanged" 
@@ -46,7 +48,7 @@
                         />
 
         <!--PlayBar-->
-        <Grid Background="#e0424047" CornerRadius="8" VerticalAlignment="Bottom" HorizontalAlignment="Stretch" MaxWidth="840" Margin="16,0,16,16" Padding="8,6" Visibility="Visible">
+        <Grid Background="#e0424047" CornerRadius="8" VerticalAlignment="Bottom" HorizontalAlignment="Stretch" MaxWidth="840" Margin="16,0,16,16" Padding="8,6" Visibility="{x:Bind PlayBarVisible, Mode=OneWay}" PointerEntered="PlayBar_PointerEntered" PointerExited="PlayBar_PointerExited">
 
             <animations:Implicit.ShowAnimations>
                 <animations:TranslationAnimation Duration="0:0:1" From="0,100,0" To="0,0,0" EasingMode="EaseOut"/>
@@ -123,7 +125,7 @@
         </Grid>
 
         <!--Title-->
-        <Grid VerticalAlignment="Top" Padding="8,8" Background="#e0424047" Visibility="Visible">
+        <Grid VerticalAlignment="Top" Padding="8,8" Background="#e0424047" Visibility="{x:Bind GetTitleBarVisible(PlayBarVisible, IsFullPage), Mode=OneWay}" PointerEntered="PlayBar_PointerEntered" PointerExited="PlayBar_PointerExited">
             <animations:Implicit.ShowAnimations>
                 <animations:TranslationAnimation Duration="0:0:1" From="0,-50,0" To="0,0,0" EasingMode="EaseOut"/>
             </animations:Implicit.ShowAnimations>
