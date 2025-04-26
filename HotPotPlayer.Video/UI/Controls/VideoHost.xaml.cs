@@ -184,15 +184,6 @@ namespace HotPotPlayer.Video.UI.Controls
         [DllImport("user32.dll", EntryPoint = "ShowCursor", CharSet = CharSet.Auto)]
         public extern static void ShowCursor(int status);
 
-        public string Title
-        {
-            get { return (string)GetValue(TitleProperty); }
-            set { SetValue(TitleProperty, value); }
-        }
-
-        public static readonly DependencyProperty TitleProperty =
-            DependencyProperty.Register("Title", typeof(string), typeof(VideoHost), new PropertyMetadata(default(string)));
-
         public bool IsFullPage
         {
             get { return (bool)GetValue(IsFullPageProperty); }

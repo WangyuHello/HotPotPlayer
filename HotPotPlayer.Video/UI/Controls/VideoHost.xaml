@@ -142,7 +142,7 @@
             <Button Style="{StaticResource VideoPlayOtherButton}" Click="NavigateBackClick">
                 <SymbolIcon Symbol="Back" />
             </Button>
-            <TextBlock Margin="8,0" Grid.Column="1" Foreground="White" VerticalAlignment="Center" Text="{x:Bind Title}" FontFamily="{ThemeResource MiSansRegular}" FontSize="14"/>
+            <TextBlock Margin="8,0" Grid.Column="1" Foreground="White" VerticalAlignment="Center" Text="{x:Bind VideoPlayer.CurrentPlaying.Name}" FontFamily="{ThemeResource MiSansRegular}" FontSize="14"/>
         </Grid>
 
         <vcont:VideoPlayListBar Visibility="{x:Bind IsPlayListBarVisible, Mode=OneWay}" 
