@@ -106,31 +106,72 @@ namespace HotPotPlayer
             return isPlayScreenVisible ? new Thickness(24, 0, 24, 8) : new Thickness(80+100, 0, 24+100, 16);
         }
 
-        Thickness GetVideoPlayMargin(bool isSmallWindow)
+        Thickness GetVideoPlayMargin(VideoPlayVisualState state)
         {
-            return isSmallWindow ? new Thickness(0, 0, 16, 16) : new Thickness(0,0,0,0);
+            return state switch
+            {
+                VideoPlayVisualState.TinyHidden => new Thickness(4, 0, 0, 4),
+                VideoPlayVisualState.FullHost => new Thickness(0, 0, 0, 0),
+                VideoPlayVisualState.FullWindow => new Thickness(0, 0, 0, 0),
+                VideoPlayVisualState.FullScreen => new Thickness(0, 0, 0, 0),
+                VideoPlayVisualState.SmallHost => new Thickness(0, 0, 16, 16),
+                _ => new Thickness(0, 0, 0, 0),
+            };
         }
 
         const double _smallWindowWidth = 400;
+        const double _tinyWindowWidth = 0;
 
-        double GetVideoPlayWidth(bool isSmallWindow)
+        double GetVideoPlayWidth(VideoPlayVisualState state)
         {
-            return isSmallWindow ? _smallWindowWidth : double.NaN;
+            return state switch
+            {
+                VideoPlayVisualState.TinyHidden => _tinyWindowWidth,
+                VideoPlayVisualState.FullHost => double.NaN,
+                VideoPlayVisualState.FullWindow => double.NaN,
+                VideoPlayVisualState.FullScreen => double.NaN,
+                VideoPlayVisualState.SmallHost => _smallWindowWidth,
+                _ => double.NaN,
+            };
         }
 
-        double GetVideoPlayHeight(bool isSmallWindow)
+        double GetVideoPlayHeight(VideoPlayVisualState state)
         {
-            return isSmallWindow ? (_smallWindowWidth * 9)/16 : double.NaN;
+            return state switch
+            {
+                VideoPlayVisualState.TinyHidden => (_tinyWindowWidth*9)/16,
+                VideoPlayVisualState.FullHost => double.NaN,
+                VideoPlayVisualState.FullWindow => double.NaN,
+                VideoPlayVisualState.FullScreen => double.NaN,
+                VideoPlayVisualState.SmallHost => (_smallWindowWidth*9)/16,
+                _ => double.NaN,
+            };
         }
 
-        HorizontalAlignment GetVideoPlayHorizontalAlignment(bool isSmallWindow)
+        HorizontalAlignment GetVideoPlayHorizontalAlignment(VideoPlayVisualState state)
         {
-            return isSmallWindow ? HorizontalAlignment.Right : HorizontalAlignment.Stretch;
+            return state switch
+            {
+                VideoPlayVisualState.TinyHidden => HorizontalAlignment.Left,
+                VideoPlayVisualState.FullHost => HorizontalAlignment.Stretch,
+                VideoPlayVisualState.FullWindow => HorizontalAlignment.Stretch,
+                VideoPlayVisualState.FullScreen => HorizontalAlignment.Stretch,
+                VideoPlayVisualState.SmallHost => HorizontalAlignment.Right,
+                _ => HorizontalAlignment.Stretch,
+            };
         }
 
-        VerticalAlignment GetVideoPlayVerticalAlignment(bool isSmallWindow)
+        VerticalAlignment GetVideoPlayVerticalAlignment(VideoPlayVisualState state)
         {
-            return isSmallWindow ? VerticalAlignment.Bottom : VerticalAlignment.Stretch;
+            return state switch
+            {
+                VideoPlayVisualState.TinyHidden => VerticalAlignment.Bottom,
+                VideoPlayVisualState.FullHost => VerticalAlignment.Stretch,
+                VideoPlayVisualState.FullWindow => VerticalAlignment.Stretch,
+                VideoPlayVisualState.FullScreen => VerticalAlignment.Stretch,
+                VideoPlayVisualState.SmallHost => VerticalAlignment.Bottom,
+                _ => VerticalAlignment.Stretch,
+            };
         }
 
         //private void Tray_TrayIconLeftMouseDown(object sender, EventArgs e)

@@ -200,7 +200,7 @@ namespace HotPotPlayer.Pages.BilibiliSub
                 await BiliBiliService.API.Report(aid, cid, (int)VideoPlayer.CurrentTime.TotalSeconds);
             }
 
-            base.VideoPlayer.IsVideoPagePresent = false;
+            base.VideoPlayer.VisualState = Services.VideoPlayVisualState.TinyHidden;
             IsFullScreen = false;
             if (VideoPlayer.IsPlaying)
             {
@@ -260,7 +260,7 @@ namespace HotPotPlayer.Pages.BilibiliSub
             
             if (!IsIndependentWindowHost)
             {
-                base.VideoPlayer.IsVideoPagePresent = IsFullPage;
+                base.VideoPlayer.VisualState = Services.VideoPlayVisualState.TinyHidden;
             }
         }
 
@@ -277,7 +277,7 @@ namespace HotPotPlayer.Pages.BilibiliSub
             }
             if (!IsIndependentWindowHost)
             {
-                base.VideoPlayer.IsVideoPagePresent = IsFullPage;
+                base.VideoPlayer.VisualState = Services.VideoPlayVisualState.TinyHidden;
             }
         }
 

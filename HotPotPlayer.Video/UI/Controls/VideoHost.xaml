@@ -57,7 +57,7 @@
               MaxWidth="840" 
               Margin="16,0,16,16" 
               Padding="8,6" 
-              Visibility="{x:Bind GetPlayBarVisible(PlayBarVisible, VideoPlayer.IsSmallWindow), Mode=OneWay}" 
+              Visibility="{x:Bind GetPlayBarVisible(PlayBarVisible, VideoPlayer.VisualState), Mode=OneWay}" 
               PointerEntered="PlayBar_PointerEntered" PointerExited="PlayBar_PointerExited">
 
             <animations:Implicit.ShowAnimations>
@@ -138,7 +138,7 @@
         <Grid VerticalAlignment="Top" 
               Padding="8,8" 
               Background="#e0424047" 
-              Visibility="{x:Bind GetTitleBarVisible(PlayBarVisible, IsFullPage, VideoPlayer.IsSmallWindow), Mode=OneWay}" 
+              Visibility="{x:Bind GetTitleBarVisible(PlayBarVisible, VideoPlayer.VisualState), Mode=OneWay}" 
               PointerEntered="PlayBar_PointerEntered" 
               PointerExited="PlayBar_PointerExited">
             <animations:Implicit.ShowAnimations>
@@ -163,7 +163,7 @@
             </Button>
             <TextBlock Margin="8,0" Grid.Column="2" Foreground="White" VerticalAlignment="Center" Text="{x:Bind VideoPlayer.CurrentPlaying.Name}" FontFamily="{ThemeResource MiSansRegular}" FontSize="14"/>
 
-            <Button Grid.Column="3" Click="PlayButtonClick" Style="{StaticResource VideoPlayOtherButton}" Visibility="{x:Bind VideoPlayer.IsSmallWindow}">
+            <Button Grid.Column="3" Click="PlayButtonClick" Style="{StaticResource VideoPlayOtherButton}" Visibility="{x:Bind GetTitleBarPlayButtonVisible(VideoPlayer.VisualState)}">
                 <FontIcon FontFamily="{ThemeResource SegoeIcons}" Glyph="{x:Bind GetPlayButtonIcon(VideoPlayer.IsPlaying, VideoPlayer.HasError), Mode=OneWay}" />
             </Button>
         </Grid>

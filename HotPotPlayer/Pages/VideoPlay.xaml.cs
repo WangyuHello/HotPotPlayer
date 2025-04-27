@@ -1,4 +1,5 @@
-﻿using HotPotPlayer.Video;
+﻿using HotPotPlayer.Services;
+using HotPotPlayer.Video;
 using HotPotPlayer.Video.Models;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
@@ -42,7 +43,7 @@ namespace HotPotPlayer.Pages
 
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
-            base.VideoPlayer.IsVideoPagePresent = true;
+            base.VideoPlayer.VisualState = VideoPlayVisualState.FullWindow;
             base.OnNavigatedTo(e);
             var source = (VideoPlayInfo)e.Parameter;
             Source = source;
@@ -50,7 +51,6 @@ namespace HotPotPlayer.Pages
 
         protected override void OnNavigatingFrom(NavigatingCancelEventArgs e)
         {
-            base.VideoPlayer.IsVideoPagePresent = false;
             base.OnNavigatingFrom(e);
             base.VideoPlayer.Stop();
             base.VideoPlayer.ShutDown();

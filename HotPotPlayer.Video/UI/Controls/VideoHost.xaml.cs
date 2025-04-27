@@ -337,14 +337,28 @@ namespace HotPotPlayer.Video.UI.Controls
             IsPlayListBarVisible = false;
         }
 
-        public Visibility GetPlayBarVisible(bool playBarVisible, bool isSmallWindow)
+        public Visibility GetPlayBarVisible(bool playBarVisible, VideoPlayVisualState state)
         {
-            return (playBarVisible & !isSmallWindow) ? Visibility.Visible : Visibility.Collapsed;
+            return (playBarVisible && (state == VideoPlayVisualState.FullHost || 
+                state == VideoPlayVisualState.FullWindow ||
+                state == VideoPlayVisualState.FullScreen)) ? Visibility.Visible : Visibility.Collapsed;
         }
 
-        public Visibility GetTitleBarVisible(bool playBarVisible, bool isFullPage, bool isSmallWindow)
+        public Visibility GetTitleBarVisible(bool playBarVisible, VideoPlayVisualState state)
         {
-            return (playBarVisible && isFullPage) ? Visibility.Visible : Visibility.Collapsed;
+            return (playBarVisible && (state == VideoPlayVisualState.FullHost ||
+                state == VideoPlayVisualState.FullWindow ||
+                state == VideoPlayVisualState.FullScreen ||
+                state == VideoPlayVisualState.SmallHost)) ? Visibility.Visible : Visibility.Collapsed;
+        }
+
+        public Visibility GetTitleBarPlayButtonVisible(VideoPlayVisualState state)
+        {
+            return state switch
+            {
+                VideoPlayVisualState.SmallHost => Visibility.Visible,
+                _ => Visibility.Collapsed,
+            };
         }
 
         private Visibility GetLoadingVisible(Services.PlayerState state, bool swapchainInited)
@@ -402,28 +416,28 @@ namespace HotPotPlayer.Video.UI.Controls
 
         private void NavigateBackClick(object sender, RoutedEventArgs e)
         {
-            if (VideoPlayer.IsVideoPlayVisible)
+            // Fake page, do not need navigation
+            VideoPlayer.VisualState = VideoPlayVisualState.TinyHidden;
+            //_isSwapchainInited = false;
+            //_swapChainPanelNative = Host.As<ISwapChainPanelNative>();
+            //_swapChainPanelNative.SetSwapChain(null);
+            Task.Run(() =>
             {
-                // Fake page, do not need navigation
-                VideoPlayer.IsVideoPlayVisible = false;
-                _isSwapchainInited = false;
-                _swapChainPanelNative = Host.As<ISwapChainPanelNative>();
-                _swapChainPanelNative.SetSwapChain(null);
-                Task.Run(() =>
-                {
-                    VideoPlayer.Stop();
-                    VideoPlayer.ShutDown();
-                });
-            }
-            else
-            {
-                App.NavigateBack();
-            }
+                VideoPlayer.Pause();
+                //VideoPlayer.ShutDown();
+            });
         }
 
         private void ToggleSmallWindowClick(object sender, RoutedEventArgs e)
         {
-            VideoPlayer.IsSmallWindow = !VideoPlayer.IsSmallWindow;
+            if(VideoPlayer.VisualState == VideoPlayVisualState.SmallHost)
+            {
+                VideoPlayer.VisualState = VideoPlayVisualState.FullHost;
+            }
+            else
+            {
+                VideoPlayer.VisualState = VideoPlayVisualState.SmallHost;
+            }
         }
 
         private const int MDT_EFFECTIVE_DPI = 0;

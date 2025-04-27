@@ -1,4 +1,5 @@
 ﻿using HotPotPlayer.Pages.BilibiliSub;
+using HotPotPlayer.Services;
 using HotPotPlayer.Video;
 using HotPotPlayer.Video.Models;
 using Microsoft.UI.Xaml;
@@ -120,9 +121,9 @@ namespace HotPotPlayer
             SelectedPageName = "VideoPlay";
         }
 
-        public GridLength GetMainSideBarWidth(bool isVideoPlaying)
+        public GridLength GetMainSideBarWidth(VideoPlayVisualState state)
         {
-            return new GridLength(isVideoPlaying ? 0 : 60);
+            return new GridLength(state != VideoPlayVisualState.TinyHidden ? 0 : 60);
         }
 
         public string GetSavePageName()

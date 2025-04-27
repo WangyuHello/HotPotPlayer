@@ -22,8 +22,18 @@ using Windows.Media;
 
 namespace HotPotPlayer.Services
 {
+    public enum VideoPlayVisualState
+    {
+        TinyHidden,
+        FullHost,
+        FullWindow,
+        FullScreen,
+        SmallHost
+    }
+
     public partial class VideoPlayerService : ServiceBaseWithConfig
     {
+
         public VideoPlayerService(ConfigBase config, DispatcherQueue uiThread = null, AppBase app = null) : base(config, uiThread, app)
         {
             _playerStarter = new BackgroundWorker
@@ -119,13 +129,6 @@ namespace HotPotPlayer.Services
             set => Set(ref _hasError, value);
         }
 
-        private bool _isVideoPlayVisible;
-        public bool IsVideoPlayVisible
-        {
-            get => _isVideoPlayVisible;
-            set => Set(ref _isVideoPlayVisible, value);
-        }
-
         public int Volume
         {
             get
@@ -164,18 +167,11 @@ namespace HotPotPlayer.Services
             set => Set(ref _playMode, value);
         }
 
-        private bool isVideoPagePresent;
-        public bool IsVideoPagePresent
+        private VideoPlayVisualState visualState;
+        public VideoPlayVisualState VisualState
         {
-            get => isVideoPagePresent;
-            set => Set(ref isVideoPagePresent, value);
-        }
-
-        private bool isSmallWindow;
-        public bool IsSmallWindow
-        {
-            get => isSmallWindow;
-            set => Set(ref isSmallWindow, value);
+            get => visualState;
+            set => Set(ref visualState, value);
         }
 
         public event EventHandler<MpvVideoGeometryInitEventArgs> VideoGeometryInit;
@@ -255,7 +251,10 @@ namespace HotPotPlayer.Services
                 }
                 CurrentTime = TimeSpan.Zero;
                 IsPlaying = false;
+
+                VisualState = VideoPlayVisualState.FullWindow;
                 State = PlayerState.Loading;
+
                 _playerStarter.RunWorkerAsync(index);
             }
         }
@@ -326,6 +325,11 @@ namespace HotPotPlayer.Services
         public void Stop()
         {
             _mpv.Stop();
+        }
+
+        public void Pause()
+        {
+            _mpv.Pause();
         }
 
         public void TogglePlayMode()
@@ -480,6 +484,7 @@ namespace HotPotPlayer.Services
                         return App.JellyfinMusicService.GetVideoStream(v);
                     }
                 });
+                if (SwapChain == IntPtr.Zero) Task.Delay(TimeSpan.FromMilliseconds(1000)).Wait();
                 _mpv.LoadPlaylist(lists, true);
                 _mpv.PlaylistPlayIndex(index);
                 e.Result = ValueTuple.Create(index, false);
