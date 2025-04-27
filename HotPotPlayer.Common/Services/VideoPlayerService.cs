@@ -233,7 +233,7 @@ namespace HotPotPlayer.Services
             }
         }
 
-        public void PlayNext(int? index)
+        public async void PlayNext(int? index)
         {
             if (index == null)
             {
@@ -255,6 +255,10 @@ namespace HotPotPlayer.Services
                 VisualState = VideoPlayVisualState.FullWindow;
                 State = PlayerState.Loading;
 
+                if (SwapChain == IntPtr.Zero)
+                {
+                    await Task.Delay(1000);
+                }
                 _playerStarter.RunWorkerAsync(index);
             }
         }
@@ -484,7 +488,6 @@ namespace HotPotPlayer.Services
                         return App.JellyfinMusicService.GetVideoStream(v);
                     }
                 });
-                if (SwapChain == IntPtr.Zero) Task.Delay(TimeSpan.FromMilliseconds(1000)).Wait();
                 _mpv.LoadPlaylist(lists, true);
                 _mpv.PlaylistPlayIndex(index);
                 e.Result = ValueTuple.Create(index, false);
