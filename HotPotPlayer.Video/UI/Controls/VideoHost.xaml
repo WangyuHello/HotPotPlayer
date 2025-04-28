@@ -116,8 +116,14 @@
                                     <ColumnDefinition Width="*" />
                                     <ColumnDefinition Width="Auto" />
                                 </Grid.ColumnDefinitions>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto" />
+                                    <RowDefinition Height="Auto" />
+                                </Grid.RowDefinitions>
                                 <TextBlock Text="视频信息" FontFamily="{ThemeResource MiSansMedium}" VerticalAlignment="Center" />
                                 <ToggleSwitch Grid.Column="1" OnContent="" OffContent="" Margin="16,0,-114,0" HorizontalAlignment="Right" IsOn="{x:Bind IsVideoInfoOn, Mode=TwoWay}"/>
+                                <TextBlock Text="字幕" Grid.Row="1" FontFamily="{ThemeResource MiSansMedium}" VerticalAlignment="Center" />
+                                <ComboBox Grid.Row="1" Grid.Column="1" Width="120"/>
                             </Grid>
                         </Flyout>
                     </Button.Flyout>
