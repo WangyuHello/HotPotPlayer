@@ -198,6 +198,8 @@ namespace HotPotPlayer.Services
         {
             if (video.IsFolder.Value)
             {
+                VisualState = VideoPlayVisualState.FullWindow;
+                State = PlayerState.Loading;
 
                 var seasons = await App.JellyfinMusicService.GetSeasons(video);
                 var season = seasons.FirstOrDefault();
@@ -479,7 +481,7 @@ namespace HotPotPlayer.Services
                 }
                 var lists = CurrentPlayList.Select(v =>
                 {
-                    if (v.Path != null)
+                    if (v.Path != null && v.Id == null)
                     {
                         return v.Path;
                     }
