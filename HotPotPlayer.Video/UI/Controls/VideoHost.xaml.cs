@@ -361,9 +361,9 @@ namespace HotPotPlayer.Video.UI.Controls
             };
         }
 
-        private Visibility GetLoadingVisible(Services.PlayerState state, bool swapchainInited)
+        private Visibility GetLoadingVisible(Services.PlayerState state)
         {
-            return (!swapchainInited && (state == Services.PlayerState.Loading)) ? Visibility.Visible : Visibility.Collapsed;
+            return (state == Services.PlayerState.Loading) ? Visibility.Visible : Visibility.Collapsed;
         }
 
         private void Grid_PointerEntered(object sender, PointerRoutedEventArgs e)

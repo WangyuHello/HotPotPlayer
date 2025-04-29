@@ -193,7 +193,7 @@
                       Width="64" 
                       Height="64" 
                       ui:VisualExtensions.NormalizedCenterPoint="0.5"
-                      Visibility="{x:Bind GetLoadingVisible(VideoPlayer.State, _isSwapchainInited)}">
+                      Visibility="{x:Bind GetLoadingVisible(VideoPlayer.State)}">
             <animations:Implicit.ShowAnimations>
                 <animations:ScaleAnimation Duration="0:0:0.1" From="2,2,2" To="1,1,1" />
                 <animations:OpacityAnimation Duration="0:0:0.1" From="0" To="1" />
