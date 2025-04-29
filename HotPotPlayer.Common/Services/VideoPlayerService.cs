@@ -176,6 +176,7 @@ namespace HotPotPlayer.Services
 
         public event EventHandler<MpvVideoGeometryInitEventArgs> VideoGeometryInit;
         public event EventHandler<IntPtr> SwapChainInited;
+        public event Action OnMediaLoaded;
         public IntPtr SwapChain { get; set; }
         MpvPlayer _mpv;
         bool _isVideoSwitching;
@@ -354,6 +355,16 @@ namespace HotPotPlayer.Services
             _mpv?.API.Command(args);
         }
 
+        public void SetPropertyString(string key, string value)
+        {
+            _mpv?.API.SetPropertyString(key, value);
+        }
+
+        public void SetPropertyLong(string  key, long value)
+        {
+            _mpv?.API.SetPropertyLong(key, value);
+        }
+
         private void PlayerTimerElapsed(object sender, ElapsedEventArgs e)
         {
             var time = _mpv.Position;
@@ -492,8 +503,10 @@ namespace HotPotPlayer.Services
                 });
                 _mpv.LoadPlaylist(lists, true);
                 _mpv.PlaylistPlayIndex(index);
-                e.Result = ValueTuple.Create(index, false);
 
+                var videoInfo = App.JellyfinMusicService.GetItemInfoAsync(CurrentPlayList[index]).Result;
+
+                e.Result = ValueTuple.Create(index, videoInfo, false);
                 //_smtc ??= InitSmtc();
                 //UpdateMstcInfo((int)e.Argument);
             }
@@ -515,16 +528,17 @@ namespace HotPotPlayer.Services
         {
             try
             {
-                if (e.Result is (int index, bool intercept))
+                if (e.Result is (int index, BaseItemDto info, bool intercept))
                 {
                     HasError = false;
                     IsPlaying = true;
                     State = PlayerState.Playing;
-                    var video = CurrentPlayList[index];
+                    //var video = CurrentPlayList[index];
                     //music.IsIntercept = intercept;
-                    CurrentPlaying = video;
+                    CurrentPlaying = info;
                     CurrentPlayingIndex = index;
                     RaisePropertyChanged(nameof(Volume));
+                    OnMediaLoaded?.Invoke();
                 }
                 else if (e.Result is (int index2, Exception _playException))
                 {

@@ -372,6 +372,22 @@ namespace HotPotPlayer.Video.UI.Controls
             PlayBarVisible = true;
         }
 
+        List<string> _tempSubtitleList;
+        private List<string> GetSubtitleList(List<MediaStream> mediaStreams)
+        {
+            _tempSubtitleList = new List<string>
+            {
+                "关闭"
+            };
+            _tempSubtitleList.AddRange(mediaStreams.Where(m => m.IsTextSubtitleStream.Value).Select(m => m.DisplayTitle));
+            return _tempSubtitleList;
+        }
+
+        private int GetSubtitleSelectedIndex(List<MediaStream> mediaStreams)
+        {
+            return _tempSubtitleList.Count == 1 ? 0 : 1; ;
+        }
+
         private void PlayBar_PointerEntered(object sender, PointerRoutedEventArgs e)
         {
             StopInactiveTimer();
@@ -457,5 +473,23 @@ namespace HotPotPlayer.Video.UI.Controls
 
         [DllImport("Shcore.dll")]
         private static extern int GetDpiForMonitor(IntPtr hmonitor, int dpiType, out uint dpiX, out uint dpiY);
+
+        private void Subtitle_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            var box = sender as ComboBox;
+            var i = box.SelectedIndex;
+            if (i == -1)
+            {
+
+            }
+            else if (i == 0) 
+            {
+                VideoPlayer.SetPropertyString("sid", "no");
+            }
+            else
+            {
+                VideoPlayer.SetPropertyString("sid", "auto");
+            }
+        }
     }
 }

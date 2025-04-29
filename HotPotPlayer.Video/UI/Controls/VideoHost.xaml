@@ -123,7 +123,10 @@
                                 <TextBlock Text="视频信息" FontFamily="{ThemeResource MiSansMedium}" VerticalAlignment="Center" />
                                 <ToggleSwitch Grid.Column="1" OnContent="" OffContent="" Margin="16,0,-114,0" HorizontalAlignment="Right" IsOn="{x:Bind IsVideoInfoOn, Mode=TwoWay}"/>
                                 <TextBlock Text="字幕" Grid.Row="1" FontFamily="{ThemeResource MiSansMedium}" VerticalAlignment="Center" />
-                                <ComboBox Grid.Row="1" Grid.Column="1" Width="120"/>
+                                <ComboBox ItemsSource="{x:Bind GetSubtitleList(VideoPlayer.CurrentPlaying.MediaStreams)}" 
+                                          SelectedIndex="{x:Bind GetSubtitleSelectedIndex(VideoPlayer.CurrentPlaying.MediaStreams)}" 
+                                          SelectionChanged="Subtitle_SelectionChanged"
+                                          Grid.Row="1" Grid.Column="1" MinWidth="160"/>
                             </Grid>
                         </Flyout>
                     </Button.Flyout>
