@@ -80,6 +80,7 @@
             <StackPanel Spacing="8">
                 <cont2:ImageEx2 
                     Source="{x:Bind helper2:BaseItemDtoHelper.GetPrimaryJellyfinImage(ImageTags, Id)}" 
+                    PlaceholderSource="{x:Bind helper2:BaseItemDtoHelper.GetPrimaryJellyfinImageBlur(ImageBlurHashes)}"
                     Style="{StaticResource LocalMusicImageStyle}" 
                     x:Phase="2" 
                 />
@@ -716,6 +717,7 @@
             <StackPanel Spacing="8" >
                 <cont2:ImageEx2 
                     Source="{x:Bind helper2:BaseItemDtoHelper.GetPrimaryJellyfinImage(ImageTags, Id)}" 
+                    PlaceholderSource="{x:Bind helper2:BaseItemDtoHelper.GetPrimaryJellyfinImageBlur(ImageBlurHashes)}"
                     Style="{StaticResource SeriesImageStyle}" 
                 />
                 <TextBlock 

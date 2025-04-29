@@ -1,4 +1,5 @@
 ﻿using CommunityToolkit.Mvvm.Collections;
+using DirectN;
 using HotPotPlayer.Bilibili.Models.User;
 using HotPotPlayer.Models;
 using Jellyfin.Sdk;
@@ -287,6 +288,19 @@ namespace HotPotPlayer.Services
             });
             var uri = JellyfinApiClient.BuildUri(requestInformation);
             return uri;
+        }
+
+        public string GetPrimaryJellyfinImageBlur(BaseItemDto_ImageBlurHashes blurs)
+        {
+            if (blurs.Primary == null)
+            {
+                return null;
+            }
+            if (blurs.Primary.AdditionalData == null)
+            {
+                return null;
+            }
+            return blurs.Primary.AdditionalData.First().Value.ToString();
         }
 
         public async Task JellyfinLoginAsync()

@@ -26,6 +26,12 @@ namespace HotPotPlayer.Helpers
             return JellyfinMusicService.GetPrimaryJellyfinImageVerySmall(tag, parentId);
         }
 
+        public static string GetPrimaryJellyfinImageBlur(BaseItemDto_ImageBlurHashes blurs)
+        {
+            var JellyfinMusicService = ((IComponentServiceLocator)Application.Current).JellyfinMusicService;
+            return JellyfinMusicService.GetPrimaryJellyfinImageBlur(blurs);
+        }
+
         public static string GetJellyfinArtists(List<string> artists)
         {
             return string.Join(", ", artists);

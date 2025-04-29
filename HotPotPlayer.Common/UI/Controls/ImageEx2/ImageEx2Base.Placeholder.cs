@@ -1,8 +1,17 @@
-﻿using System;
+﻿using Blurhash;
 using Microsoft.UI.Composition;
 using Microsoft.UI.Xaml;
+using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Media.Imaging;
+using SixLabors.ImageSharp.PixelFormats;
+using System;
+using System.Drawing.Blurhash;
+using System.Drawing.Imaging;
+using System.IO;
+using System.Runtime.InteropServices.WindowsRuntime;
+using System.Threading.Tasks;
+using Windows.Storage.Streams;
 
 namespace HotPotPlayer.UI.Controls
 {
@@ -16,9 +25,9 @@ namespace HotPotPlayer.UI.Controls
         /// </summary>
         public static readonly DependencyProperty PlaceholderSourceProperty = DependencyProperty.Register(
             nameof(PlaceholderSource),
-            typeof(ImageSource),
+            typeof(object),
             typeof(ImageEx2Base),
-            new PropertyMetadata(default(ImageSource), PlaceholderSourceChanged));
+            new PropertyMetadata(default(object), PlaceholderSourceChanged));
 
         /// <summary>
         /// Identifies the <see cref="PlaceholderStretch"/> dependency property.
@@ -35,9 +44,9 @@ namespace HotPotPlayer.UI.Controls
         /// <value>
         /// The placeholder source.
         /// </value>
-        public ImageSource PlaceholderSource
+        public object PlaceholderSource
         {
-            get { return (ImageSource)GetValue(PlaceholderSourceProperty); }
+            get { return (object)GetValue(PlaceholderSourceProperty); }
             set { SetValue(PlaceholderSourceProperty, value); }
         }
 
@@ -53,8 +62,45 @@ namespace HotPotPlayer.UI.Controls
         /// Invoked when Placeholder source has changed
         /// </summary>
         /// <param name="e">Event args</param>
-        protected virtual void OnPlaceholderSourceChanged(DependencyPropertyChangedEventArgs e)
+        protected virtual async void OnPlaceholderSourceChanged(DependencyPropertyChangedEventArgs e)
         {
+            if(PlaceholderImage is Image image)
+            {
+                if (e.NewValue is ImageSource s)
+                {
+                    image.Source = s;
+                }
+                else if (e.NewValue is string blur)
+                {
+                    var width = DecodePixelWidth;
+                    var height = DecodePixelHeight;
+                    var wb = new WriteableBitmap(width, height);
+                    var data = await Task.Run(() =>
+                    {
+                        var pixelData = new Pixel[width, height];
+                        Core.Decode(blur, pixelData, 1.5);
+
+                        var data = new byte[width * height * 4];
+                        var index = 0;
+                        for (var yPixel = 0; yPixel < height; yPixel++)
+                        for (var xPixel = 0; xPixel < width; xPixel++)
+                        {
+                            var pixel = pixelData[xPixel, yPixel];
+
+                            data[index++] = (byte)MathUtils.LinearTosRgb(pixel.Blue);
+                            data[index++] = (byte)MathUtils.LinearTosRgb(pixel.Green);
+                            data[index++] = (byte)MathUtils.LinearTosRgb(pixel.Red);
+                            data[index++] = 255;
+                        }
+
+                        return new Memory<byte>(data);
+                    });
+
+                    using Stream stream = wb.PixelBuffer.AsStream();
+                    await stream.WriteAsync(data);
+                    image.Source = wb;
+                }
+            }
         }
 
         /// <summary>

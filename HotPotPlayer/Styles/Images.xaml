@@ -23,7 +23,6 @@
                             HorizontalAlignment="{TemplateBinding HorizontalAlignment}"
                             VerticalAlignment="{TemplateBinding VerticalAlignment}"
                             Opacity="1.0"
-                            Source="{TemplateBinding PlaceholderSource}"
                             Stretch="{TemplateBinding PlaceholderStretch}" />
                         <Image
                             Name="Image"
