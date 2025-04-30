@@ -260,7 +260,7 @@ namespace HotPotPlayer.Services
 
                 if (SwapChain == IntPtr.Zero)
                 {
-                    await Task.Delay(1000);
+                    //await Task.Delay(1000);
                 }
                 _playerStarter.RunWorkerAsync(index);
             }
