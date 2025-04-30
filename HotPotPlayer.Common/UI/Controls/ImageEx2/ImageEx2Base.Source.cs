@@ -160,7 +160,7 @@ namespace HotPotPlayer.UI.Controls
 
         private async Task LoadImageAsync(Uri imageUri, CancellationToken token)
         {
-            await Task.Delay(2000, token);
+            //await Task.Delay(2000, token); Test
             if (imageUri != null)
             {
                 if (IsCacheEnabled)
