@@ -51,8 +51,6 @@ namespace HotPotPlayer.UI.Controls
         /// </summary>
         protected const string PartImage = "Image";
 
-        protected const string PartPlaceholderImage = "PlaceholderImage";
-
         /// <summary>
         /// VisualStates name in template
         /// </summary>
@@ -82,8 +80,6 @@ namespace HotPotPlayer.UI.Controls
         /// Gets the backing image object
         /// </summary>
         protected object Image { get; private set; }
-
-        protected object PlaceholderImage { get; private set; }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ImageExBase"/> class.
@@ -163,7 +159,6 @@ namespace HotPotPlayer.UI.Controls
             RemoveImageFailed(OnImageFailed);
 
             Image = GetTemplateChild(PartImage) as object;
-            PlaceholderImage = GetTemplateChild(PartPlaceholderImage) as object;
 
             IsInitialized = true;
 

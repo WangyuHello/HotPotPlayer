@@ -1,4 +1,5 @@
-﻿using Jellyfin.Sdk.Generated.Models;
+﻿using HotPotPlayer.Models;
+using Jellyfin.Sdk.Generated.Models;
 using Microsoft.UI.Xaml;
 using System;
 using System.Collections.Generic;
@@ -26,10 +27,26 @@ namespace HotPotPlayer.Helpers
             return JellyfinMusicService.GetPrimaryJellyfinImageVerySmall(tag, parentId);
         }
 
-        public static string GetPrimaryJellyfinImageBlur(BaseItemDto_ImageBlurHashes blurs)
+        public static ImageSourceWithBlur GetPrimaryJellyfinImageWithBlur(BaseItemDto_ImageTags tag, BaseItemDto_ImageBlurHashes blurs, Guid? parentId)
         {
-            var JellyfinMusicService = ((IComponentServiceLocator)Application.Current).JellyfinMusicService;
-            return JellyfinMusicService.GetPrimaryJellyfinImageBlur(blurs);
+            return new ImageSourceWithBlur
+            {
+                ImageTags = tag,
+                BlurHashes = blurs,
+                Parent = parentId.Value,
+                Label = "Primary"
+            };
+        }
+
+        public static ImageSourceWithBlur GetBackdropJellyfinImageWithBlur(List<string> tags, BaseItemDto_ImageBlurHashes blurs, Guid? parentId)
+        {
+            return new ImageSourceWithBlur
+            {
+                BackdropImageTags = tags,
+                BlurHashes = blurs,
+                Parent = parentId.Value,
+                Label = "Backdrop"
+            };
         }
 
         public static string GetJellyfinArtists(List<string> artists)

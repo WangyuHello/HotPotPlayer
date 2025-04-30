@@ -250,6 +250,11 @@ namespace HotPotPlayer.Services
             return GetPrimaryJellyfinImageBase(tag, parentId, 300);
         }
 
+        public Uri GetPrimaryJellyfinImageWidth(BaseItemDto_ImageTags tag, Guid? parentId, int widthheight)
+        {
+            return GetPrimaryJellyfinImageBase(tag, parentId, widthheight);
+        }
+
         public Uri GetPrimaryJellyfinImageLarge(BaseItemDto_ImageTags tag, Guid? parentId)
         {
             return GetPrimaryJellyfinImageBase(tag, parentId, 600);
@@ -273,7 +278,7 @@ namespace HotPotPlayer.Services
         {
             return GetPrimaryJellyfinImageBase(tag, parentId, 300, "Banner");
         }
-        public Uri GetBackdropJellyfinImage(List<string> tag, Guid? parentId)
+        public Uri GetBackdropJellyfinImage(List<string> tag, Guid? parentId, int widthheight)
         {
             if (tag == null || tag.Count == 0) return null;
             var requestInformation = JellyfinApiClient.Items[parentId.Value].Images[ImageType.Backdrop.ToString()].ToGetRequestInformation(param =>
@@ -281,8 +286,8 @@ namespace HotPotPlayer.Services
                 param.QueryParameters = new Jellyfin.Sdk.Generated.Items.Item.Images.Item.WithImageTypeItemRequestBuilder.WithImageTypeItemRequestBuilderGetQueryParameters
                 {
                     Tag = tag[0],
-                    FillHeight = 1000,
-                    FillWidth = 1000,
+                    FillHeight = widthheight,
+                    FillWidth = widthheight,
                     Quality = 96
                 };
             });

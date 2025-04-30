@@ -62,45 +62,45 @@ namespace HotPotPlayer.UI.Controls
         /// Invoked when Placeholder source has changed
         /// </summary>
         /// <param name="e">Event args</param>
-        protected virtual async void OnPlaceholderSourceChanged(DependencyPropertyChangedEventArgs e)
+        protected virtual void OnPlaceholderSourceChanged(DependencyPropertyChangedEventArgs e)
         {
-            if(PlaceholderImage is Image image)
-            {
-                if (e.NewValue is ImageSource s)
-                {
-                    image.Source = s;
-                }
-                else if (e.NewValue is string blur)
-                {
-                    var width = DecodePixelWidth;
-                    var height = DecodePixelHeight;
-                    var wb = new WriteableBitmap(width, height);
-                    var data = await Task.Run(() =>
-                    {
-                        var pixelData = new Pixel[width, height];
-                        Core.Decode(blur, pixelData, 1.5);
+            //if(PlaceholderImage is Image image)
+            //{
+            //    if (e.NewValue is ImageSource s)
+            //    {
+            //        image.Source = s;
+            //    }
+            //    else if (e.NewValue is string blur)
+            //    {
+            //        var width = DecodePixelWidth;
+            //        var height = DecodePixelHeight;
+            //        var wb = new WriteableBitmap(width, height);
+            //        var data = await Task.Run(() =>
+            //        {
+            //            var pixelData = new Pixel[width, height];
+            //            Core.Decode(blur, pixelData, 1.5);
 
-                        var data = new byte[width * height * 4];
-                        var index = 0;
-                        for (var yPixel = 0; yPixel < height; yPixel++)
-                        for (var xPixel = 0; xPixel < width; xPixel++)
-                        {
-                            var pixel = pixelData[xPixel, yPixel];
+            //            var data = new byte[width * height * 4];
+            //            var index = 0;
+            //            for (var yPixel = 0; yPixel < height; yPixel++)
+            //            for (var xPixel = 0; xPixel < width; xPixel++)
+            //            {
+            //                var pixel = pixelData[xPixel, yPixel];
 
-                            data[index++] = (byte)MathUtils.LinearTosRgb(pixel.Blue);
-                            data[index++] = (byte)MathUtils.LinearTosRgb(pixel.Green);
-                            data[index++] = (byte)MathUtils.LinearTosRgb(pixel.Red);
-                            data[index++] = 255;
-                        }
+            //                data[index++] = (byte)MathUtils.LinearTosRgb(pixel.Blue);
+            //                data[index++] = (byte)MathUtils.LinearTosRgb(pixel.Green);
+            //                data[index++] = (byte)MathUtils.LinearTosRgb(pixel.Red);
+            //                data[index++] = 255;
+            //            }
 
-                        return new Memory<byte>(data);
-                    });
+            //            return new Memory<byte>(data);
+            //        });
 
-                    using Stream stream = wb.PixelBuffer.AsStream();
-                    await stream.WriteAsync(data);
-                    image.Source = wb;
-                }
-            }
+            //        using Stream stream = wb.PixelBuffer.AsStream();
+            //        await stream.WriteAsync(data);
+            //        image.Source = wb;
+            //    }
+            //}
         }
 
         /// <summary>

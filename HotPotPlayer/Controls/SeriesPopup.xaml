@@ -12,6 +12,7 @@
     xmlns:animations="using:CommunityToolkit.WinUI.Animations"
     xmlns:controls="using:CommunityToolkit.WinUI.Controls"
     xmlns:ui="using:CommunityToolkit.WinUI"
+    xmlns:helper2="using:HotPotPlayer.Helpers"
     mc:Ignorable="d">
 
     <Grid Width="860" 
@@ -26,10 +27,10 @@
         <cont2:ImageEx2 
             x:Name="Backdrop"
             Grid.ColumnSpan="2"
-            Source="{x:Bind JellyfinMusicService.GetBackdropJellyfinImage(SeriesInfo.BackdropImageTags, Series.Id), Mode=OneWay}" 
+            Source="{x:Bind helper2:BaseItemDtoHelper.GetBackdropJellyfinImageWithBlur(SeriesInfo.BackdropImageTags, SeriesInfo.ImageBlurHashes, Series.Id), Mode=OneWay}" 
             Style="{StaticResource LocalAlbumPopupImageStyle}" 
-            Width="860"
-            Height="484"
+            Width="860" DecodePixelWidth="860"
+            Height="484" DecodePixelHeight="484"
             Tapped="Backdrop_Tapped"
             Stretch="UniformToFill"
             Margin="0,-142,0,0"
@@ -51,11 +52,11 @@
             <StackPanel>
                 <cont2:ImageEx2 
                 x:Name="Cover"
-                Source="{x:Bind JellyfinMusicService.GetPrimaryJellyfinImageLarge(Series.ImageTags, Series.Id), Mode=OneWay}" 
+                Source="{x:Bind helper2:BaseItemDtoHelper.GetPrimaryJellyfinImageWithBlur(Series.ImageTags, Series.ImageBlurHashes, Series.Id), Mode=OneWay}" 
                 Style="{StaticResource LocalAlbumPopupImageStyle}" 
                 Margin="16,16,16,8"
-                Width="260"
-                Height="380"
+                Width="260" DecodePixelWidth="260"
+                Height="380" DecodePixelHeight="380"
                 Stretch="UniformToFill"
                 />
 

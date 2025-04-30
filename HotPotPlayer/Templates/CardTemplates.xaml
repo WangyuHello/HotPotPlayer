@@ -79,8 +79,7 @@
             >
             <StackPanel Spacing="8">
                 <cont2:ImageEx2 
-                    Source="{x:Bind helper2:BaseItemDtoHelper.GetPrimaryJellyfinImage(ImageTags, Id)}" 
-                    PlaceholderSource="{x:Bind helper2:BaseItemDtoHelper.GetPrimaryJellyfinImageBlur(ImageBlurHashes)}"
+                    Source="{x:Bind helper2:BaseItemDtoHelper.GetPrimaryJellyfinImageWithBlur(ImageTags, ImageBlurHashes, Id)}" 
                     Style="{StaticResource LocalMusicImageStyle}" 
                     x:Phase="2" 
                 />
@@ -177,7 +176,7 @@
             Background="White"
             >
             <cont2:ImageEx2 
-                Source="{x:Bind helper2:BaseItemDtoHelper.GetPrimaryJellyfinImage(ImageTags, Id)}" 
+                Source="{x:Bind helper2:BaseItemDtoHelper.GetPrimaryJellyfinImageWithBlur(ImageTags, ImageBlurHashes, Id)}" 
                 Style="{StaticResource LocalMusicImageStyle}" 
                 Width="140" Height="140"
                 x:Phase="2" 
@@ -243,7 +242,7 @@
               >
             <StackPanel Spacing="8" >
                 <cont2:ImageEx2 
-                    Source="{x:Bind helper2:BaseItemDtoHelper.GetPrimaryJellyfinImage(ImageTags, Id)}" 
+                    Source="{x:Bind helper2:BaseItemDtoHelper.GetPrimaryJellyfinImageWithBlur(ImageTags, ImageBlurHashes, Id)}" 
                     Style="{StaticResource LocalMusicImageStyle}" 
                     x:Phase="1"
                     />
@@ -326,7 +325,7 @@
             <Grid Background="#0f000000">
                 <FontIcon FontFamily="{ThemeResource SegoeIcons}" Glyph="&#xE77B;" FontSize="32" Foreground="Gray"/>
                 <cont2:ImageEx2 
-                    Source="{x:Bind helper2:BaseItemDtoHelper.GetPrimaryJellyfinImage(ImageTags, Id)}" 
+                    Source="{x:Bind helper2:BaseItemDtoHelper.GetPrimaryJellyfinImageWithBlur(ImageTags, ImageBlurHashes, Id)}" 
                     Style="{StaticResource LocalMusicImageStyle}"
                     x:Phase="1"
                 />
@@ -716,8 +715,7 @@
               >
             <StackPanel Spacing="8" >
                 <cont2:ImageEx2 
-                    Source="{x:Bind helper2:BaseItemDtoHelper.GetPrimaryJellyfinImage(ImageTags, Id)}" 
-                    PlaceholderSource="{x:Bind helper2:BaseItemDtoHelper.GetPrimaryJellyfinImageBlur(ImageBlurHashes)}"
+                    Source="{x:Bind helper2:BaseItemDtoHelper.GetPrimaryJellyfinImageWithBlur(ImageTags, ImageBlurHashes, Id)}" 
                     Style="{StaticResource SeriesImageStyle}" 
                 />
                 <TextBlock 
@@ -983,7 +981,7 @@
             ui:VisualExtensions.NormalizedCenterPoint="0.5"
             >
             <cont2:ImageEx2 
-                Source="{x:Bind helper2:BaseItemDtoHelper.GetPrimaryJellyfinImageSmall(ImageTags, Id)}" 
+                Source="{x:Bind helper2:BaseItemDtoHelper.GetPrimaryJellyfinImageWithBlur(ImageTags, ImageBlurHashes, Id)}" 
                 Style="{StaticResource LocalMusicImageStyle}" 
                 ui:VisualExtensions.NormalizedCenterPoint="0.5"
                 Width="60" Height="60"

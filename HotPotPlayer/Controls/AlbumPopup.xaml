@@ -50,7 +50,7 @@
 
             <cont2:ImageEx2 
                 x:Name="Cover"
-                Source="{x:Bind JellyfinMusicService.GetPrimaryJellyfinImage(Album.ImageTags, Album.Id), Mode=OneWay}" 
+                Source="{x:Bind helper2:BaseItemDtoHelper.GetPrimaryJellyfinImageWithBlur(Album.ImageTags, Album.ImageBlurHashes, Album.Id), Mode=OneWay}" 
                 Style="{StaticResource LocalAlbumPopupImageStyle}" 
                 Tapped="Cover_Tapped"
                 />
@@ -81,10 +81,10 @@
                 <StackPanel Orientation="Horizontal" Spacing="8">
                     <cont2:ImageEx2 x:Name="CreatorAvatar" 
                     VerticalAlignment="Center" 
-                    Source="{x:Bind helper2:BaseItemDtoHelper.GetPrimaryJellyfinImageVerySmall(AlbumInfo.ImageTags, AlbumInfo.Id), Mode=OneWay}" 
+                    Source="{x:Bind helper2:BaseItemDtoHelper.GetPrimaryJellyfinImageWithBlur(AlbumInfo.ImageTags, AlbumInfo.ImageBlurHashes, AlbumInfo.Id), Mode=OneWay}" 
                     Style="{StaticResource LocalMusicImageStyle}" 
-                    Width="32" 
-                    Height="32" 
+                    Width="32" DecodePixelWidth="32"
+                    Height="32" DecodePixelHeight="32"
                     CornerRadius="16"  />
                     <TextBlock FontSize="15" 
                        FontWeight="Bold" 

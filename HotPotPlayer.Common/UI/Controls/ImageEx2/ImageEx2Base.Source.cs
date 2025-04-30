@@ -5,6 +5,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using CommunityToolkit.WinUI;
 using HotPotPlayer.Helpers;
+using HotPotPlayer.Models;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Media;
@@ -84,7 +85,7 @@ namespace HotPotPlayer.UI.Controls
             {
                 VisualStateManager.GoToState(this, UnloadedState, true);
             }
-            else if (source is BitmapSource { PixelHeight: > 0, PixelWidth: > 0 })
+            else if ((source is BitmapSource { PixelHeight: > 0, PixelWidth: > 0 }))
             {
                 VisualStateManager.GoToState(this, LoadedState, true);
                 ImageExOpened?.Invoke(this, new ImageEx2OpenedEventArgs());
@@ -118,6 +119,14 @@ namespace HotPotPlayer.UI.Controls
             }
 
             var uri = source as Uri;
+
+            if (source is ImageSourceWithBlur imageWithBlur)
+            {
+                var blurImage = await imageWithBlur.GetBlurImageAsync(DecodePixelWidth, DecodePixelHeight, _tokenSource.Token);
+                AttachSource(blurImage);
+                uri = imageWithBlur.GetImageUri(DecodePixelWidth, DecodePixelHeight);
+            }
+
             if (uri == null)
             {
                 var url = source as string ?? source.ToString();
@@ -151,6 +160,7 @@ namespace HotPotPlayer.UI.Controls
 
         private async Task LoadImageAsync(Uri imageUri, CancellationToken token)
         {
+            await Task.Delay(2000, token);
             if (imageUri != null)
             {
                 if (IsCacheEnabled)
