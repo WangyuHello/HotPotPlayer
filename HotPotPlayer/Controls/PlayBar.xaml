@@ -57,6 +57,7 @@
                            Tapped="{x:Bind MusicPlayer.ToggleShowPlayScreen}" 
                            x:Load="{x:Bind GetCoverLoad(MusicPlayer.IsPlayScreenVisible), Mode=OneWay}" 
                            Visibility="{x:Bind GetCoverVisibility(MusicPlayer.IsPlayScreenVisible), Mode=OneWay}" 
+                           DecodePixelWidth="100" DecodePixelHeight="100"
                            SourceGotFromCache="Cover_SourceGotFromCache"/>
             <StackPanel x:Name="TitlePanel" Grid.Column="1" Margin="8,4" VerticalAlignment="Center" Spacing="4" Visibility="{x:Bind GetCoverVisibility(MusicPlayer.IsPlayScreenVisible), Mode=OneWay}">
                 <TextBlock MaxLines="2" TextWrapping="Wrap" TextTrimming="CharacterEllipsis" FontSize="18" Text="{x:Bind MusicPlayer.CurrentPlaying.Name, Mode=OneWay}" FontFamily="{ThemeResource MiSansMedium}" />

@@ -91,6 +91,8 @@
         <Setter Property="DecodePixelHeight" Value="170" />
         <Setter Property="Width" Value="170" />
         <Setter Property="Height" Value="170" />
+        <Setter Property="DecodePixelWidth" Value="170" />
+        <Setter Property="DecodePixelHeight" Value="170" />
     </Style>
 
     <Style x:Key="LocalAlbumImageStyle" TargetType="cont:ImageEx2" BasedOn="{StaticResource ImageEx2BaseStyle}">
@@ -102,6 +104,8 @@
         <Setter Property="VerticalAlignment" Value="Center" />
         <Setter Property="Width" Value="200" />
         <Setter Property="Height" Value="200" />
+        <Setter Property="DecodePixelWidth" Value="200" />
+        <Setter Property="DecodePixelHeight" Value="200" />
     </Style>
 
     <Style x:Key="SeriesImageStyle" TargetType="cont:ImageEx2" BasedOn="{StaticResource ImageEx2BaseStyle}">
@@ -161,6 +165,8 @@
         <Setter Property="VerticalAlignment" Value="Top" />
         <Setter Property="Width" Value="400" />
         <Setter Property="Height" Value="400" />
+        <Setter Property="DecodePixelWidth" Value="400" />
+        <Setter Property="DecodePixelHeight" Value="400" />
         <Setter Property="Padding" Value="0" />
         <Setter Property="CornerRadius" Value="8" />
     </Style>
