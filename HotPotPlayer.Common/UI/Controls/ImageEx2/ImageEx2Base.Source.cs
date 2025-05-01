@@ -123,7 +123,8 @@ namespace HotPotPlayer.UI.Controls
             if (source is ImageSourceWithBlur imageWithBlur)
             {
                 var blurImage = await imageWithBlur.GetBlurImageAsync(DecodePixelWidth, DecodePixelHeight, _tokenSource.Token);
-                AttachSource(blurImage);
+                var placeholdImage = PlaceholdImage as Image;
+                placeholdImage.Source = blurImage;
                 uri = imageWithBlur.GetImageUri(DecodePixelWidth*2, DecodePixelHeight*2);
             }
 

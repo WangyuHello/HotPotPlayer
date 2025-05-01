@@ -86,11 +86,12 @@
                 </Grid.RowDefinitions>
 
                 <TextBlock Text="{x:Bind Series.Name, Mode=OneWay}" 
-                       Margin="0,16,16,0"
-                       FontSize="32"
-                       TextWrapping="Wrap"
-                       MaxLines="2"
-                       FontFamily="{ThemeResource MiSansMedium}"/>
+                           Margin="0,16,16,0"
+                           FontSize="32"
+                           TextWrapping="Wrap"
+                           MaxLines="2"
+                           IsTextSelectionEnabled="True"
+                           FontFamily="{ThemeResource MiSansMedium}"/>
 
                 <StackPanel Grid.Row="1" Orientation="Horizontal" Spacing="10">
                     <TextBlock VerticalAlignment="Center" Text="{x:Bind SeriesInfo.ProductionYear, Mode=OneWay}" FontFamily="{ThemeResource MiSansRegular}"/>
