@@ -70,13 +70,17 @@ namespace HotPotPlayer.Helpers
         {
             var t = new TimeOnly(runtimeticks.Value);
             string str = string.Empty;
-            if(t > new TimeOnly(1, 0))
+            if(t > new TimeOnly(10, 0))
             {
-                str = t.ToString("hh\\:mm");
+                str = t.ToString("hh小时mm分钟");
+            }
+            else if(t > new TimeOnly(1, 0))
+            {
+                str = t.ToString("h小时mm分钟");
             }
             else
             {
-                str = t.ToString("mm");
+                str = t.ToString("mm分钟");
             }
             return str;
         }
