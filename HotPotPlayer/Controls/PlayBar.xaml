@@ -62,6 +62,7 @@
             <cont:TransitionImage x:Name="Cover"
                                   Width="80" Height="80"
                                   Source="{x:Bind GetPlayBarImage(MusicPlayer.CurrentPlaying.ImageTags, MusicPlayer.CurrentPlaying.Id), Mode=OneWay}" 
+                                  CurrentPlayingIndex="{x:Bind MusicPlayer.CurrentPlayingIndex, Mode=OneWay}"
                                   Tapped="{x:Bind MusicPlayer.ToggleShowPlayScreen}" 
                                   x:Load="{x:Bind GetCoverLoad(MusicPlayer.IsPlayScreenVisible), Mode=OneWay}" 
                                   Visibility="{x:Bind GetCoverVisibility(MusicPlayer.IsPlayScreenVisible), Mode=OneWay}" 

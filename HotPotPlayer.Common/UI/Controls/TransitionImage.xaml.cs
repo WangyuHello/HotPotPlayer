@@ -47,8 +47,24 @@ namespace HotPotPlayer.UI.Controls
             ((TransitionImage)d).OnSourceChanged(e.NewValue as Uri);
         }
 
-        private Uri _prevUri;
-        private Uri _currentUri;
+        public int CurrentPlayingIndex
+        {
+            get { return (int)GetValue(CurrentPlayingIndexProperty); }
+            set { SetValue(CurrentPlayingIndexProperty, value); }
+        }
+
+        public static readonly DependencyProperty CurrentPlayingIndexProperty =
+            DependencyProperty.Register("CurrentPlayingIndex", typeof(int), typeof(TransitionImage), new PropertyMetadata(0, IndexChanged));
+
+        private static void IndexChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+            var @this = d as TransitionImage;
+            var pi = (int)e.OldValue;
+            var ni = (int)e.NewValue;
+            @this._previousTransition = ni < pi;
+        }
+
+        private bool _previousTransition = false;
         public event Action<ImageSource> SourceGotFromCache;
         private CancellationTokenSource _tokenSource;
         readonly Compositor _compositor = CompositionTarget.GetCompositorForCurrentThread();
@@ -67,7 +83,7 @@ namespace HotPotPlayer.UI.Controls
             SourceGotFromCache?.Invoke(img);
             if (!_tokenSource.IsCancellationRequested)
             {
-                if (newSource == _prevUri)
+                if (_previousTransition)
                 {
                     // Backward transition
                     if (_image1OnLeft)
@@ -280,9 +296,6 @@ namespace HotPotPlayer.UI.Controls
 
                     }
                 }
-
-                _prevUri = _currentUri;
-                _currentUri = newSource;
             }
         }
 

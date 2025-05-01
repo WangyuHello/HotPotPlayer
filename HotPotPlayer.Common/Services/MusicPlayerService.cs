@@ -723,8 +723,8 @@ namespace HotPotPlayer.Services
                     State = PlayerState.Playing;
                     var music = CurrentPlayList[index];
                     //music.IsIntercept = intercept;
-                    CurrentPlaying = music;
                     CurrentPlayingIndex = index;
+                    CurrentPlaying = music;
                     _playerTimer.Start();
                     RaisePropertyChanged(nameof(Volume));
                 }
