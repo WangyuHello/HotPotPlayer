@@ -22,8 +22,6 @@
       <PackageReference Include="CommunityToolkit.WinUI.Animations" Version="8.2.250402" />
       <PackageReference Include="CommunityToolkit.WinUI.Extensions" Version="8.2.250402" />
       <PackageReference Include="CommunityToolkit.WinUI.Helpers" Version="8.2.250402" />
-      <PackageReference Include="DirectNAot" Version="1.3.0" />
-      <PackageReference Include="DirectNAot.Extensions" Version="1.3.0" />
       <PackageReference Include="Microsoft.Graphics.Win2D" Version="1.3.2" />
       <PackageReference Include="Microsoft.WindowsAppSDK" Version="1.7.250310001" />
       <!--<PackageReference Include="HotPotPlayer.Interop.Projection" Version="0.1.0" />-->
@@ -32,6 +30,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\HotPotPlayer.Common\HotPotPlayer.Common.csproj" />
+    <ProjectReference Include="..\HotPotPlayer.Interop\HotPotPlayer.Interop.csproj" />
     <ProjectReference Include="..\HotPotPlayer.Native\HotPotPlayer.Native.csproj" />
   </ItemGroup>
 

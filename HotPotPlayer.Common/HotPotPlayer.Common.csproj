@@ -9,6 +9,7 @@
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
   <ItemGroup>
+    <None Remove="UI\Controls\TransitionImage.xaml" />
     <None Remove="UI\Controls\VolumeIntPresenter.xaml" />
     <None Remove="UI\Controls\VolumePresenter.xaml" />
   </ItemGroup>
@@ -60,5 +61,11 @@
 
   <ItemGroup>
     <Service Include="{508349b6-6b84-4df5-91f0-309beebad82d}" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Page Update="UI\Controls\TransitionImage.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
   </ItemGroup>
 </Project>

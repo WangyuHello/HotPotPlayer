@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<base:UserControlBase
+    x:Class="HotPotPlayer.UI.Controls.TransitionImage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:base="using:HotPotPlayer"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:HotPotPlayer.UI.Controls"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    x:DefaultBindMode="OneWay"
+    mc:Ignorable="d">
+
+    <StackPanel Orientation="Horizontal">
+        <Image x:Name="Image1" Stretch="UniformToFill" Width="80" Height="80">
+            
+        </Image>
+        <Image x:Name="Image2" Stretch="UniformToFill" Width="80" Height="80">
+            
+        </Image>
+    </StackPanel>
+</base:UserControlBase>

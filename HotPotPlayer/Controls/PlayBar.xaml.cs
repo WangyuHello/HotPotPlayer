@@ -204,7 +204,12 @@ namespace HotPotPlayer.Controls
 
         private void Cover_SourceGotFromCache(ImageSource obj)
         {
-            CoverImage = JellyfinMusicService.GetPrimaryJellyfinImageWidth(MusicPlayer.CurrentPlaying.ImageTags, MusicPlayer.CurrentPlaying.Id, Cover.DecodePixelWidth*2);
+            CoverImage = GetPlayBarImage(MusicPlayer.CurrentPlaying.ImageTags, MusicPlayer.CurrentPlaying.Id);
+        }
+
+        private Uri GetPlayBarImage(BaseItemDto_ImageTags tag, Guid? parentId)
+        {
+            return JellyfinMusicService.GetPrimaryJellyfinImageWidth(tag, parentId, 100);
         }
     }
 }

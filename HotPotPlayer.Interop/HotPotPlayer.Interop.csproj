@@ -17,6 +17,8 @@
     <PackageReference Include="Microsoft.Windows.CsWin32" Version="0.3.183">
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>
+	<PackageReference Include="DirectNAot" Version="1.3.0" />
+	<PackageReference Include="DirectNAot.Extensions" Version="1.3.0" />
   </ItemGroup>
 
 </Project>
