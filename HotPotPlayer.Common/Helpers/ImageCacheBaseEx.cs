@@ -1,6 +1,5 @@
 ﻿using CommunityToolkit.WinUI.Helpers;
 using HotPotPlayer.Extensions;
-using HotPotPlayer.Helpers.FFmpeg;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
@@ -454,68 +453,20 @@ namespace HotPotPlayer.Helpers
 
             using (MemoryStream ms = new MemoryStream())
             {
-                if (uri.IsFile)
+                using (var stream = await HttpClient.GetStreamAsync(uri))
                 {
-                    var uriPath = uri.GetLocalPath();
-                    var ext = Path.GetExtension(uriPath);
-                    if (VideoExt.Contains(ext))
+                    stream.CopyTo(ms);
+                    ms.Flush();
+
+                    ms.Position = 0;
+
+                    using (var fs = await baseFile.OpenStreamForWriteAsync())
                     {
-                        var frameStream = MediaInfoHelper.DecodeOneFrame(uriPath);
-                        if (frameStream == null)
-                        {
-                            return instance;
-                        }
+                        ms.CopyTo(fs);
 
-                        frameStream.Position = 0;
-                        using (var fs = await baseFile.OpenStreamForWriteAsync())
-                        {
-                            frameStream.CopyTo(fs);
-
-                            fs.Flush();
-
-                            frameStream.Position = 0;
-                        }
-                    }
-                    else if(AudioExt.Contains(ext))
-                    {
-                        using (var tfile = TagLib.File.Create(uri.GetLocalPath()))
-                        {
-                            byte[] binary = tfile.Tag.Pictures?.FirstOrDefault()?.Data?.Data;
-                            if (binary == null) return instance;
-
-                            ms.Write(binary, 0, binary.Length);
-                            ms.Flush();
-
-                            ms.Position = 0;
-
-                            using (var fs = await baseFile.OpenStreamForWriteAsync())
-                            {
-                                ms.CopyTo(fs);
-
-                                fs.Flush();
-
-                                ms.Position = 0;
-                            }
-                        }
-                    }
-                }
-                else
-                {
-                    using (var stream = await HttpClient.GetStreamAsync(uri))
-                    {
-                        stream.CopyTo(ms);
-                        ms.Flush();
+                        fs.Flush();
 
                         ms.Position = 0;
-
-                        using (var fs = await baseFile.OpenStreamForWriteAsync())
-                        {
-                            ms.CopyTo(fs);
-
-                            fs.Flush();
-
-                            ms.Position = 0;
-                        }
                     }
                 }
 

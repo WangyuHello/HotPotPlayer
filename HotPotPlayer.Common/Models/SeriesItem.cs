@@ -1,5 +1,4 @@
-﻿using Realms;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -16,16 +15,5 @@ namespace HotPotPlayer.Models
         public int Year { get; set; }
 
         public List<VideoItem> Videos { get; set; }
-    }
-
-    public class SeriesItemDb: RealmObject
-    {
-        [PrimaryKey]
-        public string Source { get; set; }
-        public string Title { get; set; }
-        public string Cover { get; set; }
-        public int Year { get; set; }
-
-        public IList<VideoItemDb> Videos { get; }
     }
 }

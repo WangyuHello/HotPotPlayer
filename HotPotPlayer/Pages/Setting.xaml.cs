@@ -197,21 +197,9 @@ namespace HotPotPlayer.Pages
 
         private void JellyfinServerRemoveClick(object sender, RoutedEventArgs e)
         {
-            var item = ((Button)sender).Tag as LibraryItem;
+            var item = (sender as Control).Tag as LibraryItem;
             //MusicLibrary.Remove(item);
             //Config.MusicLibrary = MusicLibrary.Select(s => s).ToList();
-        }
-
-        //private void VideoRemoveClick(object sender, RoutedEventArgs e)
-        //{
-        //    var item = ((Button)sender).Tag as LibraryItem;
-        //    VideoLibrary.Remove(item);
-        //    Config.VideoLibrary = VideoLibrary.Select(s => s).ToList();
-        //}
-
-        private void ReloadVideoLibrary(object sender, RoutedEventArgs e)
-        {
-            LocalVideoService.StartLoadLocalVideo();
         }
 
         private void ReloadJellyfinServers(object sender, RoutedEventArgs e)

@@ -34,9 +34,6 @@ namespace HotPotPlayer
         NetEaseMusicService netEaseMusicService;
         public NetEaseMusicService NetEaseMusicService => netEaseMusicService ??= new NetEaseMusicService(Config, UIQueue, this, JellyfinMusicService);
 
-        LocalVideoService localVideoService;
-        public LocalVideoService LocalVideoService => localVideoService ??= new LocalVideoService(Config, UIQueue, this);
-
         MusicPlayerService musicPlayer;
         public MusicPlayerService MusicPlayer => musicPlayer ??= new MusicPlayerService(Config, UIQueue, this);
 
@@ -50,7 +47,6 @@ namespace HotPotPlayer
         {
             jellyfinMusicService?.Dispose();
             netEaseMusicService?.Dispose();
-            localVideoService?.Dispose();
             musicPlayer?.Dispose();
         }
 

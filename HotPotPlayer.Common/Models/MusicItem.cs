@@ -1,6 +1,4 @@
 ﻿using HotPotPlayer.Extensions;
-using MongoDB.Bson;
-using Realms;
 using SixLabors.ImageSharp;
 using System;
 using System.Collections.Generic;
@@ -69,52 +67,6 @@ namespace HotPotPlayer.Models
                 0 => "未知",
                 _ => BitDepth + " bit"
             };
-        }
-    }
-
-    public class MusicItemDb: RealmObject
-    {
-        /// <summary>
-        /// 文件的路径作为Key，确保唯一性
-        /// </summary>
-        [PrimaryKey]
-        public string Source { get; set; }
-        public string Title { get; set; }
-        public string Artists { get; set; }
-        public string Album { get; set; }
-        public int Year { get; set; }
-        public long Duration { get; set; }
-        public int Track { get; set; }
-        public string Genre { get; set; }
-        public long BitRate { get; set; }
-        public int SampleRate { get; set; }
-        public int BitDepth { get; set; }
-
-        public string Cover { get; set; }
-        public int MainColor { get; set; }
-        public long LastWriteTime { get; set; }
-        public string AlbumArtists { get; set; }
-        public int Disc { get; set; }
-
-        /// <summary>
-        /// 每个音乐属于唯一一个专辑
-        /// </summary>
-        [Backlink(nameof(AlbumItemDb.MusicItems))]
-        public IQueryable<AlbumItemDb> AlbumRef { get; }
-    }
-
-    sealed class MusicItemDbComparer : EqualityComparer<MusicItemDb>
-    {
-        public override bool Equals(MusicItemDb x, MusicItemDb y)
-        {
-            if (x.Source == y.Source && x.LastWriteTime == y.LastWriteTime)
-                return true;
-            return false;
-        }
-
-        public override int GetHashCode(MusicItemDb obj)
-        {
-            return obj.Source.GetHashCode() + obj.LastWriteTime.GetHashCode();
         }
     }
 

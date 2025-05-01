@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace HotPotPlayer.Test
 {
-    internal class MockConfig: ConfigBase
+    internal class MockConfig : ConfigBase
     {
         static string GetSubDir(string name)
         {
@@ -29,18 +29,6 @@ namespace HotPotPlayer.Test
             Directory.Delete(DatabaseFolder, true);
         }
 
-        public override List<LibraryItem> MusicLibrary
-        {
-            get => new()
-            {
-                new LibraryItem
-                {
-                    Path = @"C:\Users\wangyu\Desktop\UITest\TestMusic",
-                    IsSystemLibrary = true
-                }
-            };
-            set { }
-        }
         public override List<LibraryItem> VideoLibrary
         {
             get => new()
@@ -58,6 +46,8 @@ namespace HotPotPlayer.Test
             };
             set { }
         }
+
+        public override List<JellyfinServerItem> JellyfinServers { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
     }
 
     internal class MockConfig2: ConfigBase
@@ -81,18 +71,6 @@ namespace HotPotPlayer.Test
             Directory.Delete(DatabaseFolder, true);
         }
 
-        public override List<LibraryItem> MusicLibrary
-        {
-            get => new()
-            {
-                new LibraryItem
-                {
-                    Path = @"D:\Music",
-                    IsSystemLibrary = true
-                }
-            };
-            set { }
-        }
         public override List<LibraryItem> VideoLibrary
         {
             get => new()
@@ -110,5 +88,7 @@ namespace HotPotPlayer.Test
             };
             set { }
         }
+
+        public override List<JellyfinServerItem> JellyfinServers { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
     }
 }

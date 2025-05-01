@@ -1,5 +1,4 @@
 ﻿using HotPotPlayer.Extensions;
-using Realms;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -27,24 +26,6 @@ namespace HotPotPlayer.Models
         {
             Title = title;
             Source = new FileInfo(Path.Combine(directory.FullName, title + ".zpl"));
-        }
-
-        public PlayListItem(Realm db, FileInfo file)
-        {
-            var lines = File.ReadAllLines(file.FullName);
-            var srcs = lines.Where(l => !(l[0] == '#'));
-            var files = srcs.Select(path =>
-            {
-                var musicFromDb = db.All<MusicItemDb>().Where(d => d.Source == path).FirstOrDefault();
-                var origin = musicFromDb?.ToOrigin();
-                return origin;
-            }).ToList();
-            files.RemoveAll(f => f == null);
-
-            Source = file;
-            Title = Path.GetFileNameWithoutExtension(file.FullName);
-            LastWriteTime = file.LastWriteTime;
-            MusicItems = new(files);
         }
 
         public bool AddMusic(MusicItem music)
@@ -118,27 +99,5 @@ namespace HotPotPlayer.Models
             Source = new FileInfo(Source.FullName);
             LastWriteTime = Source.LastWriteTime;
         }
-
-        public static PlayListItem Create(string title, string directory, Realm db)
-        {
-            var pl = new PlayListItem
-            {
-                Source = new FileInfo(Path.Combine(directory, title+".m3u8")),
-                Title = title,
-                MusicItems = new ObservableCollection<MusicItem>(),
-                LastWriteTime = DateTime.Now,
-            };
-
-            return pl;
-        }
-    }
-
-    public class PlayListItemDb : RealmObject
-    {
-        [PrimaryKey]
-        public string Source { get; set; }
-        public string Title { get; set; }
-        public long LastWriteTime { get; set; }
-        public IList<MusicItemDb> MusicItems { get; }
     }
 }

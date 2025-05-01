@@ -541,30 +541,6 @@ namespace HotPotPlayer.Services
             return result.Items;
         }
 
-        sealed class PlayListItemComparer : EqualityComparer<PlayListItemDb>
-        {
-            public override bool Equals(PlayListItemDb x, PlayListItemDb y)
-            {
-                if (x.Source == y.Source && x.LastWriteTime == y.LastWriteTime)
-                    return true;
-                return false;
-            }
-
-            public override int GetHashCode(PlayListItemDb obj)
-            {
-                return obj.Source.GetHashCode() + obj.LastWriteTime.GetHashCode();
-            }
-        }
-
-        public (IEnumerable<AlbumItem>, List<MusicItem>) GetArtistAlbumGroup(string artistName)
-        {
-            return (null, null);
-        }
-
-        public AlbumItem QueryAlbum(MusicItem musicItem)
-        {
-            return null;
-        }
 
         public void AddAlbumToPlayList(BaseItemDto playList, AlbumItem album)
         {
@@ -608,8 +584,8 @@ namespace HotPotPlayer.Services
 
         public override void Dispose()
         {
-            //JellyfinApiClient.Dispose();
-            //httpClient.Dispose();
+            JellyfinApiClient?.Dispose();
+            httpClient?.Dispose();
         }
     }
 }
