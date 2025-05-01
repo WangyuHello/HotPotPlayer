@@ -803,7 +803,7 @@
             >
             <cont2:ImageEx2 
                 Style="{StaticResource LocalVideoImageStyle}"
-                Width="284" Height="160" DecodePixelWidth="200" DecodePixelHeight="180"
+                Width="284" Height="160" DecodePixelWidth="284" DecodePixelHeight="160"
                 Source="{x:Bind helper2:BaseItemDtoHelper.GetChapterImage(ImageTag, Index, ParentId)}"
                 />
             <StackPanel Orientation="Vertical" 
