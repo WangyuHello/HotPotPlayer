@@ -796,4 +796,26 @@
             </Grid.ContextFlyout>
         </Grid>
     </DataTemplate>
+
+    <DataTemplate x:Key="ChapterListTemplate" x:DataType="models:CustomChapterInfo">
+        <Grid
+            Width="284" Height="160"
+            >
+            <cont2:ImageEx2 
+                Style="{StaticResource LocalVideoImageStyle}"
+                Width="284" Height="160" DecodePixelWidth="200" DecodePixelHeight="180"
+                Source="{x:Bind helper2:BaseItemDtoHelper.GetChapterImage(ImageTag, Index, ParentId)}"
+                />
+            <StackPanel Orientation="Vertical" 
+                        Background="#90000000"
+                        VerticalAlignment="Bottom"
+                        HorizontalAlignment="Left"
+                        Spacing="4"
+                        Padding="8,4,8,4"
+                        >
+                <TextBlock Text="{x:Bind Name}" Foreground="White" FontFamily="{ThemeResource MiSansRegular}"/>
+                <TextBlock Text="{x:Bind helper2:BaseItemDtoHelper.GetJellyfinDuration(StartPositionTicks)}" Foreground="White" FontFamily="{ThemeResource MiSansRegular}"/>
+            </StackPanel>
+        </Grid>
+    </DataTemplate>
 </ResourceDictionary>

@@ -1,5 +1,6 @@
 ﻿using CommunityToolkit.Mvvm.Collections;
 using DirectN;
+using Google.Protobuf.WellKnownTypes;
 using HotPotPlayer.Bilibili.Models.User;
 using HotPotPlayer.Models;
 using Jellyfin.Sdk;
@@ -278,6 +279,22 @@ namespace HotPotPlayer.Services
         {
             return GetPrimaryJellyfinImageBase(tag, parentId, 300, "Banner");
         }
+
+        public Uri GetChapterImage(string tag, int index, Guid parentId)
+        {
+            var requestInformation = JellyfinApiClient.Items[parentId].Images["Chapter"][index].ToGetRequestInformation(param =>
+            {
+                param.QueryParameters = new Jellyfin.Sdk.Generated.Items.Item.Images.Item.Item.WithImageIndexItemRequestBuilder.WithImageIndexItemRequestBuilderGetQueryParameters
+                {
+                    MaxWidth = 600,
+                    Tag = tag,
+                    Quality = 90
+                };
+            });
+            var uri = JellyfinApiClient.BuildUri(requestInformation);
+            return uri;
+        }
+
         public Uri GetBackdropJellyfinImage(List<string> tag, Guid? parentId, int widthheight)
         {
             if (tag == null || tag.Count == 0) return null;

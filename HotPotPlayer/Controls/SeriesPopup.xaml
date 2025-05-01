@@ -79,6 +79,9 @@
                     <RowDefinition Height="Auto" />
                     <RowDefinition Height="Auto" />
                     <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
                     <RowDefinition Height="*" />
                 </Grid.RowDefinitions>
 
@@ -149,8 +152,28 @@
                               SelectedIndex="{x:Bind GetAudioStreamsSelectIndex(SeriesInfo)}"/>
                 </Grid>
 
+                <Button Grid.Row="4"
+                        Width="60" 
+                        Height="36" 
+                        CornerRadius="4" 
+                        VerticalAlignment="Top"
+                        Style="{StaticResource AlbumPlayButton}" 
+                        Tag="{x:Bind Series}"
+                        Visibility="{x:Bind GetMoviePlayVisible(Series)}"
+                        Click="{x:Bind helper:BangumiHelper.SeriesPlay}" >
+                    <SymbolIcon Symbol="Play" />
+                </Button>
+
+                <TextBlock Grid.Row="5" 
+                           FontSize="21" 
+                           Margin="0,16,0,0"
+                           Visibility="{x:Bind GetMoviePlayVisible(Series)}"
+                           VerticalAlignment="Center" 
+                           Text="场景" 
+                           FontFamily="{ThemeResource MiSansMedium}"/>
+
                 <ListView 
-                Grid.Row="4" 
+                Grid.Row="7" 
                 ItemsSource="{x:Bind SelectedSeasonVideoItems, Mode=OneWay}" 
                 ItemTemplateSelector="{StaticResource EvenOldVideoListTemplate}"
                 Style="{StaticResource GeneralListViewStyle}"
@@ -163,17 +186,14 @@
                     </ListView.ItemContainerTransitions>
                 </ListView>
 
-                <Button Grid.Row="4"
-                        Width="60" 
-                        Height="36" 
-                        CornerRadius="4" 
-                        VerticalAlignment="Top"
-                        Style="{StaticResource AlbumPlayButton}" 
-                        Tag="{x:Bind Series}"
-                        Visibility="{x:Bind GetMoviePlayVisible(Series)}"
-                        Click="{x:Bind helper:BangumiHelper.SeriesPlay}" >
-                    <SymbolIcon Symbol="Play" />
-                </Button>
+                <ListView Grid.Row="6" 
+                          Visibility="{x:Bind GetMoviePlayVisible(Series)}"
+                          Style="{StaticResource HorizontalListViewStyle}"
+                          ItemsSource="{x:Bind CustomChapters}"
+                          ItemTemplate="{StaticResource ChapterListTemplate}"
+                          >
+                    
+                </ListView>
             </Grid>
 
             <Button Grid.Column="1"

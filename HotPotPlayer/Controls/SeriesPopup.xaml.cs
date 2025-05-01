@@ -1,4 +1,5 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
+using HotPotPlayer.Models;
 using Jellyfin.Sdk.Generated.Models;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
@@ -49,6 +50,9 @@ namespace HotPotPlayer.Controls
         private List<BaseItemDto> selectedSeasonVideoItems;
 
         [ObservableProperty]
+        private IEnumerable<CustomChapterInfo> customChapters;
+
+        [ObservableProperty]
         private bool isBackdropExpanded;
 
         private static async void SeriesChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
@@ -82,6 +86,15 @@ namespace HotPotPlayer.Controls
                 //Movie
                 @this.Seasons = null;
                 @this.SelectedSeasonVideoItems = null;
+
+                @this.CustomChapters = @this.SeriesInfo.Chapters.Select((c, i) => new CustomChapterInfo
+                {
+                    ImageTag = c.ImageTag,
+                    Index = i,
+                    ParentId = @this.SeriesInfo.Id.Value,
+                    Name = c.Name,
+                    StartPositionTicks = c.StartPositionTicks,
+                });
             }
         }
 
