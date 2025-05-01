@@ -92,20 +92,11 @@ namespace HotPotPlayer.Pages
             var series = e.ClickedItem as BaseItemDto;
             SelectedSeries = series;
 
-            bool isFolder = series.IsFolder.Value;
-
             var ani = VideoGridView.PrepareConnectedAnimation("forwardAnimation", series, "SeriesCardConnectedElement");
             ani.Configuration = new BasicConnectedAnimationConfiguration();
-            ani.TryStart(isFolder ? SeriesPopupTarget : MoviePopupTarget);
+            ani.TryStart(SeriesPopupTarget);
 
-            if (isFolder)
-            {
-                SeriesPopupOverlay.Visibility = Visibility.Visible;
-            }
-            else
-            {
-                MoviePopupOverlay.Visibility = Visibility.Visible;
-            }
+            SeriesPopupOverlay.Visibility = Visibility.Visible;
 
             var container = (GridViewItem)VideoGridView.ContainerFromItem(SelectedSeries);
             var root = container.ContentTemplateRoot;
@@ -118,18 +109,6 @@ namespace HotPotPlayer.Pages
             anim.Configuration = new BasicConnectedAnimationConfiguration();
             await VideoGridView.TryStartConnectedAnimationAsync(anim, SelectedSeries, "SeriesCardConnectedElement");
             SeriesPopupOverlay.Visibility = Visibility.Collapsed;
-
-            var container = (GridViewItem)VideoGridView.ContainerFromItem(SelectedSeries);
-            var root = container.ContentTemplateRoot;
-            root.Opacity = 1;
-        }
-
-        private async void MoviePopupOverlay_Tapped(object sender, TappedRoutedEventArgs e)
-        {
-            var anim = ConnectedAnimationService.GetForCurrentView().PrepareToAnimate("backwardsAnimation", MoviePopupTarget);
-            anim.Configuration = new BasicConnectedAnimationConfiguration();
-            await VideoGridView.TryStartConnectedAnimationAsync(anim, SelectedSeries, "SeriesCardConnectedElement");
-            MoviePopupOverlay.Visibility = Visibility.Collapsed;
 
             var container = (GridViewItem)VideoGridView.ContainerFromItem(SelectedSeries);
             var root = container.ContentTemplateRoot;

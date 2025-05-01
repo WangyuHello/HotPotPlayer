@@ -60,5 +60,19 @@ namespace HotPotPlayer.Helpers
             var str = t.ToString("mm\\:ss");
             return str;
         }
+        public static string GetJellyfinDuration2(long? runtimeticks)
+        {
+            var t = new TimeOnly(runtimeticks.Value);
+            string str = string.Empty;
+            if(t > new TimeOnly(1, 0))
+            {
+                str = t.ToString("hh\\:mm");
+            }
+            else
+            {
+                str = t.ToString("mm");
+            }
+            return str;
+        }
     }
 }

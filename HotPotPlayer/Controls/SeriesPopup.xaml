@@ -12,7 +12,9 @@
     xmlns:animations="using:CommunityToolkit.WinUI.Animations"
     xmlns:controls="using:CommunityToolkit.WinUI.Controls"
     xmlns:ui="using:CommunityToolkit.WinUI"
+    xmlns:helper="using:HotPotPlayer.Pages.Helper"
     xmlns:helper2="using:HotPotPlayer.Helpers"
+    x:DefaultBindMode="OneWay"
     mc:Ignorable="d">
 
     <Grid Width="860" 
@@ -87,8 +89,12 @@
                        MaxLines="2"
                        FontFamily="{ThemeResource MiSansMedium}"/>
 
-                <StackPanel Grid.Row="1" Orientation="Horizontal" Spacing="8">
+                <StackPanel Grid.Row="1" Orientation="Horizontal" Spacing="10">
                     <TextBlock VerticalAlignment="Center" Text="{x:Bind SeriesInfo.ProductionYear, Mode=OneWay}" FontFamily="{ThemeResource MiSansRegular}"/>
+                    <TextBlock VerticalAlignment="Center" 
+                               Text="{x:Bind helper2:BaseItemDtoHelper.GetJellyfinDuration2(SeriesInfo.RunTimeTicks)}" 
+                               Visibility="{x:Bind GetMoviePlayVisible(Series)}"
+                               FontFamily="{ThemeResource MiSansRegular}"/>
                     <Border Background="#30000000" CornerRadius="4" Padding="6,4">
                         <TextBlock Foreground="White" Text="{x:Bind SeriesInfo.OfficialRating, Mode=OneWay}" FontFamily="{ThemeResource MiSansRegular}"/>
                     </Border>
@@ -106,7 +112,42 @@
                            />
                 </ScrollViewer>
 
-                <SelectorBar Grid.Row="3" Margin="-4,0,0,0" x:Name="SeasonSelector" SelectionChanged="SeasonSelector_SelectionChanged" />
+                <SelectorBar Grid.Row="3" 
+                             Margin="-4,0,0,0" 
+                             x:Name="SeasonSelector" 
+                             SelectionChanged="SeasonSelector_SelectionChanged"
+                             />
+
+                <Grid Grid.Row="3"
+                      Margin="0,12"
+                      Visibility="{x:Bind GetMoviePlayVisible(Series)}"
+                      >
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="12"/>
+                        <ColumnDefinition Width="*" />
+                    </Grid.ColumnDefinitions>
+
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="4"/>
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
+
+                    <TextBlock Grid.Row="0" FontSize="15" VerticalAlignment="Center" Text="视频" FontFamily="{ThemeResource MiSansRegular}"/>
+                    <ComboBox Grid.Row="0" Grid.Column="2" 
+                              ItemsSource="{x:Bind GetVideoStreams(SeriesInfo)}" 
+                              Width="400"
+                              FontFamily="{ThemeResource MiSansRegular}"
+                              SelectedIndex="{x:Bind GetVideoStreamsSelectIndex(SeriesInfo)}"/>
+
+                    <TextBlock Grid.Row="2" FontSize="15" VerticalAlignment="Center" Text="音频" FontFamily="{ThemeResource MiSansRegular}"/>
+                    <ComboBox Grid.Row="2" Grid.Column="2" 
+                              Width="400"
+                              FontFamily="{ThemeResource MiSansRegular}"
+                              ItemsSource="{x:Bind GetAudioStreams(SeriesInfo)}" 
+                              SelectedIndex="{x:Bind GetAudioStreamsSelectIndex(SeriesInfo)}"/>
+                </Grid>
 
                 <ListView 
                 Grid.Row="4" 
@@ -121,6 +162,18 @@
                         </TransitionCollection>
                     </ListView.ItemContainerTransitions>
                 </ListView>
+
+                <Button Grid.Row="4"
+                        Width="60" 
+                        Height="36" 
+                        CornerRadius="4" 
+                        VerticalAlignment="Top"
+                        Style="{StaticResource AlbumPlayButton}" 
+                        Tag="{x:Bind Series}"
+                        Visibility="{x:Bind GetMoviePlayVisible(Series)}"
+                        Click="{x:Bind helper:BangumiHelper.SeriesPlay}" >
+                    <SymbolIcon Symbol="Play" />
+                </Button>
             </Grid>
 
             <Button Grid.Column="1"

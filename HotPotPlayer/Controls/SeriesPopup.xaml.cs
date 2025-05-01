@@ -55,25 +55,34 @@ namespace HotPotPlayer.Controls
         {
             var @this = (SeriesPopup)d;
             var series = e.NewValue as BaseItemDto;
-            if (!series.IsFolder.Value) return;
 
             @this.SeriesInfo = await @this.JellyfinMusicService.GetItemInfoAsync(series);
-            @this.Seasons = await @this.JellyfinMusicService.GetSeasons(series);
 
             @this.SeasonSelector.Items.Clear();
-            int i = 0;
-            foreach (var season in @this.Seasons)
+            if (series.IsFolder.Value)
             {
-                @this.SeasonSelector.Items.Add(new SelectorBarItem
+                //Series
+                @this.Seasons = await @this.JellyfinMusicService.GetSeasons(series);
+                int i = 0;
+                foreach (var season in @this.Seasons)
                 {
-                    IsSelected = i == 0,
-                    Text = season.Name,
-                    FontSize = 16,
-                    FontFamily = (FontFamily)Application.Current.Resources["MiSansRegular"]
-                });
-                i++;
+                    @this.SeasonSelector.Items.Add(new SelectorBarItem
+                    {
+                        IsSelected = i == 0,
+                        Text = season.Name,
+                        FontSize = 16,
+                        FontFamily = (FontFamily)Application.Current.Resources["MiSansRegular"]
+                    });
+                    i++;
+                }
+                @this.SelectedSeasonVideoItems = await @this.JellyfinMusicService.GetEpisodes(@this.Seasons[0]);
             }
-            @this.SelectedSeasonVideoItems = await @this.JellyfinMusicService.GetEpisodes(@this.Seasons[0]);
+            else
+            {
+                //Movie
+                @this.Seasons = null;
+                @this.SelectedSeasonVideoItems = null;
+            }
         }
 
         private async void SeasonSelector_SelectionChanged(SelectorBar sender, SelectorBarSelectionChangedEventArgs args)
@@ -108,6 +117,31 @@ namespace HotPotPlayer.Controls
         private string GetBackdropExpandIcon(bool isBackdropExpanded)
         {
             return IsBackdropExpanded ? "\uE70E" : "\uE70D";
+        }
+
+        private Visibility GetMoviePlayVisible(BaseItemDto item)
+        {
+            return item.IsFolder.Value ? Visibility.Collapsed : Visibility.Visible;
+        }
+
+        private IEnumerable<string> GetVideoStreams(BaseItemDto info)
+        {
+            return info?.MediaSources?.SelectMany(s => s.MediaStreams.Where(m => m.Type == MediaStream_Type.Video))?.Select(s => s.DisplayTitle);
+        }
+
+        private int GetVideoStreamsSelectIndex(BaseItemDto info)
+        {
+            return 0;
+        }
+
+        private IEnumerable<string> GetAudioStreams(BaseItemDto info)
+        {
+            return info?.MediaStreams?.Where(m => m.Type == MediaStream_Type.Audio)?.Select(s => s.DisplayTitle);
+        }
+
+        private int GetAudioStreamsSelectIndex(BaseItemDto info)
+        {
+            return 0;
         }
 
         private void SetBackdropOffset(bool isBackdropExpanded)
