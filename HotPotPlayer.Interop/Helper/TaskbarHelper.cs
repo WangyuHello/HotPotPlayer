@@ -11,14 +11,10 @@ using WinRT;
 
 namespace HotPotPlayer.Helpers
 {
-    public class TaskbarHelper
+    public class TaskbarHelper(IntPtr handle)
     {
-        HWND Handle { get; set; }
-
-        public TaskbarHelper(IntPtr handle) => Handle = new((nint)handle);
-
-        ITaskbarList4 _instance;
-        ITaskbarList4 Instance => _instance ??= Init();
+        HWND Handle { get; set; } = new((nint)handle);
+        ITaskbarList4? _instance;
 
         ITaskbarList4 Init()
         {
@@ -26,43 +22,55 @@ namespace HotPotPlayer.Helpers
             return taskbarList;
         }
 
-        THUMBBUTTON[] _buttons;
+        THUMBBUTTON[]? _buttons;
 
-        public void AddPlayButtons()
+        public void InitTaskBarButtons()
         {
-            if (_buttons != null)
+            if (_instance == null)
             {
-                return;
+                _instance = Init();
+
+                //var list3 = Instance.As<ITaskbarList3>();
+                //list3.ThumbBarSetImageList(Handle, )
+
+                _buttons = new THUMBBUTTON[3];
+                _buttons[0].dwMask = THUMBBUTTONMASK.THB_TOOLTIP | THUMBBUTTONMASK.THB_FLAGS;
+                _buttons[0].dwFlags = THUMBBUTTONFLAGS.THBF_ENABLED;
+                _buttons[0].iId = 0;
+                _buttons[0].szTip = "上一个";
+
+                _buttons[1].dwMask = THUMBBUTTONMASK.THB_TOOLTIP | THUMBBUTTONMASK.THB_FLAGS;
+                _buttons[1].dwFlags = THUMBBUTTONFLAGS.THBF_ENABLED;
+                _buttons[1].iId = 1;
+                _buttons[1].szTip = "播放/暂停";
+
+                _buttons[2].dwMask = THUMBBUTTONMASK.THB_TOOLTIP | THUMBBUTTONMASK.THB_FLAGS;
+                _buttons[2].dwFlags = THUMBBUTTONFLAGS.THBF_ENABLED;
+                _buttons[2].iId = 2;
+                _buttons[2].szTip = "下一个";
+
+                _instance.ThumbBarAddButtons(Handle, _buttons);
             }
-
-            var list3 = Instance.As<ITaskbarList3>();
-            //list3.ThumbBarSetImageList(Handle, )
-
-            _buttons = new THUMBBUTTON[3];
-            _buttons[0].dwMask = THUMBBUTTONMASK.THB_BITMAP | THUMBBUTTONMASK.THB_TOOLTIP | THUMBBUTTONMASK.THB_FLAGS;
-            _buttons[0].dwFlags = THUMBBUTTONFLAGS.THBF_ENABLED | THUMBBUTTONFLAGS.THBF_DISMISSONCLICK;
-            _buttons[0].iId = 0;
-            _buttons[0].iBitmap = 0;
-            _buttons[0].szTip = "上一个";
-
-            _buttons[1].dwMask = THUMBBUTTONMASK.THB_BITMAP | THUMBBUTTONMASK.THB_TOOLTIP | THUMBBUTTONMASK.THB_FLAGS;
-            _buttons[1].dwFlags = THUMBBUTTONFLAGS.THBF_ENABLED | THUMBBUTTONFLAGS.THBF_DISMISSONCLICK;
-            _buttons[1].iId = 1;
-            _buttons[1].iBitmap = 1;
-            _buttons[1].szTip = "播放/暂停";
-
-            _buttons[2].dwMask = THUMBBUTTONMASK.THB_BITMAP | THUMBBUTTONMASK.THB_TOOLTIP | THUMBBUTTONMASK.THB_FLAGS;
-            _buttons[2].dwFlags = THUMBBUTTONFLAGS.THBF_ENABLED | THUMBBUTTONFLAGS.THBF_DISMISSONCLICK;
-            _buttons[2].iId = 2;
-            _buttons[2].iBitmap = 2;
-            _buttons[2].szTip = "下一个";
-
-            Instance.ThumbBarAddButtons(Handle, _buttons);
         }
 
-        public void SetValue(double progressValue, double progressMax)
+        public void SetProgressValue(double progressValue, double progressMax)
         {
-            Instance.SetProgressValue(Handle, (ulong)progressValue, (ulong)progressMax);
+            _instance?.SetProgressValue(Handle, (ulong)progressValue, (ulong)progressMax);
+        }
+
+        // Taskbar Progress States
+        public enum TaskbarStates
+        {
+            NoProgress = 0,
+            Indeterminate = 0x1,
+            Normal = 0x2,
+            Error = 0x4,
+            Paused = 0x8
+        }
+
+        public void SetProgressState(TaskbarStates state)
+        {
+            _instance?.SetProgressState(Handle, (TBPFLAG)state);
         }
     }
 }

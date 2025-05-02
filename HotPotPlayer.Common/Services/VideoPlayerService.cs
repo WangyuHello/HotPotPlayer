@@ -223,7 +223,7 @@ namespace HotPotPlayer.Services
             smtc.IsPreviousEnabled = true;
             smtc.PlaybackStatus = MediaPlaybackStatus.Closed;
 
-            App?.Taskbar.AddPlayButtons();
+            App?.Taskbar.InitTaskBarButtons();
 
             return smtc;
         }
@@ -402,22 +402,21 @@ namespace HotPotPlayer.Services
             _mpv?.API.SetPropertyLong(key, value);
         }
 
-        private void PlayerTimerElapsed(object sender, ElapsedEventArgs e)
-        {
-            var time = _mpv.Position;
-            UIQueue.TryEnqueue(() =>
-            {
-                try
-                {
-                    CurrentTime = time;
-                }
-                catch (Exception)
-                {
+        //private void PlayerTimerElapsed(object sender, ElapsedEventArgs e)
+        //{
+        //    var time = _mpv.Position;
+        //    UIQueue.TryEnqueue(() =>
+        //    {
+        //        try
+        //        {
+        //            CurrentTime = time;
+        //        }
+        //        catch (Exception)
+        //        {
 
-                }
-            });
-            UpdateSmtcPosition();
-        }
+        //        }
+        //    });
+        //}
 
         private void MediaEndedSeeking(object sender, EventArgs e)
         {
@@ -449,6 +448,7 @@ namespace HotPotPlayer.Services
             {
                 CurrentTime = e.NewPosition;
             });
+            UpdateSmtcPosition();
         }
 
         private void MediaFinished(object sender, EventArgs e)
@@ -672,7 +672,9 @@ namespace HotPotPlayer.Services
                 EndTime = CurrentPlayingDuration ?? TimeSpan.Zero
             };
 
-            SMTC.UpdateTimelineProperties(timelineProperties);
+            SMTC?.UpdateTimelineProperties(timelineProperties);
+
+            App?.Taskbar.SetProgressValue(CurrentTime.TotalSeconds, CurrentPlayingDuration.Value.TotalSeconds);
         }
 
         private void SystemMediaControls_PlaybackPositionChangeRequested(SystemMediaTransportControls sender, PlaybackPositionChangeRequestedEventArgs args)

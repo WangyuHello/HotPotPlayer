@@ -22,5 +22,14 @@ namespace HotPotPlayer.Interop.Helper
             public int Right;
             public int Bottom;
         }
+
+        [DllImport("kernel32.dll", CharSet = CharSet.Unicode)]
+        public static extern IntPtr CreateEvent(IntPtr lpEventAttributes, bool bManualReset, bool bInitialState, string lpName);
+
+        [DllImport("kernel32.dll")]
+        public static extern bool SetEvent(IntPtr hEvent);
+
+        [DllImport("ole32.dll")]
+        public static extern uint CoWaitForMultipleObjects(uint dwFlags, uint dwMilliseconds, ulong nHandles, IntPtr[] pHandles, out uint dwIndex);
     }
 }

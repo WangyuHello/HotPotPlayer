@@ -203,7 +203,7 @@ namespace HotPotPlayer.Services
             smtc.IsPreviousEnabled = true;
             smtc.PlaybackStatus = MediaPlaybackStatus.Closed;
 
-            App?.Taskbar.AddPlayButtons();
+            App?.Taskbar.InitTaskBarButtons();
 
             return smtc;
         }
@@ -393,7 +393,6 @@ namespace HotPotPlayer.Services
                 {
                     return;
                 }
-                _playerTimer.Stop();
                 CurrentTime = TimeSpan.Zero;
                 IsPlaying = false;
                 State = PlayerState.Loading;
@@ -450,14 +449,12 @@ namespace HotPotPlayer.Services
             }
             if (_mpv.IsPlaying)
             {
-                _playerTimer.Stop();
                 _mpv.Pause();
                 IsPlaying = false;
             }
             else
             {
                 _mpv.Resume();
-                _playerTimer.Start();
                 IsPlaying = true;
             }
         }
@@ -482,7 +479,6 @@ namespace HotPotPlayer.Services
         //WaveStream _audioStream;
         //VolumeSampleProvider _volumeSample;
         MpvPlayer _mpv;
-        readonly Timer _playerTimer;
         bool _isMusicSwitching;
 
         public MusicPlayerService(ConfigBase config, DispatcherQueue queue, AppBase app): base(config, queue, app)
@@ -493,30 +489,8 @@ namespace HotPotPlayer.Services
             };
             _playerStarter.RunWorkerCompleted += PlayerStarterCompleted;
             _playerStarter.DoWork += PlayerStarterDoWork;
-            _playerTimer = new Timer(500)
-            {
-                AutoReset = true
-            };
-            _playerTimer.Elapsed += PlayerTimerElapsed;
 
             Config.SaveConfigWhenExit("Volume", () => (Volume != 0, Volume));
-        }
-
-        private void PlayerTimerElapsed(object sender, ElapsedEventArgs e)
-        {
-            var time = _mpv.Position;
-            UIQueue.TryEnqueue(() =>
-            {
-                try
-                {
-                    CurrentTime = time;
-                }
-                catch (Exception)
-                {
-
-                }
-            });
-            UpdateSmtcPosition();
         }
 
         private void PlayerStarterDoWork(object sender, DoWorkEventArgs e)
@@ -605,11 +579,12 @@ namespace HotPotPlayer.Services
             {
                 CurrentTime = e.NewPosition;
             });
+
+            UpdateSmtcPosition();
         }
 
         private void MediaFinished(object sender, EventArgs e)
         {
-            _playerTimer.Stop();
             UIQueue.TryEnqueue(() =>
             {
                 IsPlaying = false;
@@ -722,7 +697,6 @@ namespace HotPotPlayer.Services
                     //music.IsIntercept = intercept;
                     CurrentPlayingIndex = index;
                     CurrentPlaying = music;
-                    _playerTimer.Start();
                     RaisePropertyChanged(nameof(Volume));
                 }
                 else if (e.Result is (int index2, Exception _playException))
@@ -843,7 +817,9 @@ namespace HotPotPlayer.Services
                 EndTime = CurrentPlayingDuration ?? TimeSpan.Zero
             };
 
-            SMTC.UpdateTimelineProperties(timelineProperties);
+            SMTC?.UpdateTimelineProperties(timelineProperties);
+
+            App?.Taskbar.SetProgressValue(CurrentTime.TotalSeconds, CurrentPlayingDuration.Value.TotalSeconds);
         }
 
         private void SystemMediaControls_PlaybackPositionChangeRequested(SystemMediaTransportControls sender, PlaybackPositionChangeRequestedEventArgs args)

@@ -1,3 +1,4 @@
 ﻿CoCreateInstance
 ITaskbarList
+ITaskbarList3
 ITaskbarList4
