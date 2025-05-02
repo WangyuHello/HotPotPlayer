@@ -65,7 +65,7 @@ namespace HotPotPlayer
             MainWindow.TrySetAcrylicBackdrop();
             MainWindow.Closed += MainWindow_Closed;
             MainWindow.SizeChanged += MainWindow_SizeChanged;
-            SetIconAsync();
+            SetIcon();
 
             var firstArg = args.Arguments; //尚不支持，永远为null
             var args2 = Environment.GetCommandLineArgs();
@@ -83,23 +83,17 @@ namespace HotPotPlayer
             Config.MainWindowHandle = MainWindowHandle;
         }
 
-        private async void SetIconAsync()
+        private void SetIcon()
         {
-            Uri uri = new("ms-appx:///Assets/icon.ico");
-            StorageFile storageFile = null;
-            try
-            {
-                storageFile = await StorageFile.GetFileFromApplicationUriAsync(uri);
-            }
-            catch (Exception)
-            {
-                // Use default icon.
-            }
-
-            if (storageFile is not null)
-            {
-                AppWindow.SetIcon(storageFile.Path);
-            }
+            // https://learn.microsoft.com/zh-cn/windows/windows-app-sdk/api/winrt/microsoft.ui.windowing.appwindow.seticon?view=windows-app-sdk-1.7#microsoft-ui-windowing-appwindow-seticon(system-string)
+            string path = AppContext.BaseDirectory;
+            //string path = Package.Current.InstalledLocation.Path;
+            // OR
+            //string path = Package.Current.InstalledPath;
+            // OR
+            string iconFileName = "Assets/icon.ico";
+            string iconPath = Path.Combine(path, iconFileName);
+            AppWindow.SetIcon(iconPath);
         }
 
         private void MainWindow_SizeChanged(object sender, WindowSizeChangedEventArgs args)
