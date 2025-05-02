@@ -11,6 +11,7 @@ namespace HotPotPlayer.Helpers
     public class HelperBase
     {
         protected static MusicPlayerService MusicPlayer => ((AppBase)Application.Current).MusicPlayer;
+        protected static VideoPlayerService VideoPlayer => ((AppBase)Application.Current).VideoPlayer;
         protected static JellyfinMusicService JellyfinMusicService => ((AppBase)Application.Current).JellyfinMusicService;
         protected static NetEaseMusicService NetEaseMusicService => ((AppBase)Application.Current).NetEaseMusicService;
         protected static AppBase App => (AppBase)Application.Current;

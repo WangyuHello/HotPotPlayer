@@ -1,27 +1,15 @@
-﻿using HotPotPlayer.Models;
+﻿using HotPotPlayer.Extensions;
 using HotPotPlayer.Services;
 using Microsoft.UI;
-using Microsoft.UI.Composition.SystemBackdrops;
 using Microsoft.UI.Windowing;
 using Microsoft.UI.Xaml;
-using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Hosting;
-using Microsoft.UI.Xaml.Media.Animation;
-using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Drawing;
 using System.Linq;
 using System.Numerics;
-using System.Runtime.InteropServices;
-using System.Text;
-using System.Threading.Tasks;
-using WinUIEx;
-using WinRT;
-using Windows.UI;
 using Windows.Graphics;
-using HotPotPlayer.Extensions;
-using System.Drawing;
-using Color = Windows.UI.Color;
 
 namespace HotPotPlayer
 {
@@ -205,142 +193,6 @@ namespace HotPotPlayer
             float leftBarWidth = 60;
             var rects = dragArea.Select(r => new RectInt32((int)((r.X + leftBarWidth)* scaleAdjustment), (int)(r.Y * scaleAdjustment), (int)(r.Width * scaleAdjustment), (int)(r.Height * scaleAdjustment))).ToArray();
             appWindow.TitleBar.SetDragRectangles(rects);
-        }
-
-        WindowsSystemDispatcherQueueHelper m_wsdqHelper; // See separate sample below for implementation
-        MicaController m_micaController;
-        DesktopAcrylicController m_acrylicController;
-        SystemBackdropConfiguration m_configurationSource;
-
-        public bool TrySetMicaBackdrop()
-        {
-            if (MicaController.IsSupported())
-            {
-                m_wsdqHelper = new WindowsSystemDispatcherQueueHelper();
-                m_wsdqHelper.EnsureWindowsSystemDispatcherQueueController();
-
-                // Hooking up the policy object
-                m_configurationSource = new SystemBackdropConfiguration();
-                this.Activated += Window_Activated;
-                this.Closed += Window_Closed;
-
-                // Initial configuration state.
-                m_configurationSource.IsInputActive = true;
-                switch (((FrameworkElement)this.Content).ActualTheme)
-                {
-                    case ElementTheme.Dark: m_configurationSource.Theme = SystemBackdropTheme.Dark; break;
-                    case ElementTheme.Light: m_configurationSource.Theme = SystemBackdropTheme.Light; break;
-                    case ElementTheme.Default: m_configurationSource.Theme = SystemBackdropTheme.Default; break;
-                }
-
-                m_micaController = new MicaController();
-
-                // Enable the system backdrop.
-                // Note: Be sure to have "using WinRT;" to support the MainWindow.As<...>() call.
-                m_micaController.AddSystemBackdropTarget(this.As<Microsoft.UI.Composition.ICompositionSupportsSystemBackdrop>());
-                m_micaController.SetSystemBackdropConfiguration(m_configurationSource);
-                m_micaController.FallbackColor = Color.FromArgb(255, 0xf1, 0xf3, 0xf6);
-                //m_micaController.TintColor = Color.FromArgb(255, 0xf1, 0xf3, 0xf6);
-                //m_micaController.TintOpacity = 0.8f;
-                //m_micaController.LuminosityOpacity = 0.65f;
-                return true; // succeeded
-            }
-
-            return false; // Mica is not supported on this system
-        }
-
-        public bool TrySetAcrylicBackdrop()
-        {
-            if (DesktopAcrylicController.IsSupported())
-            {
-                m_wsdqHelper = new WindowsSystemDispatcherQueueHelper();
-                m_wsdqHelper.EnsureWindowsSystemDispatcherQueueController();
-
-                // Hooking up the policy object
-                m_configurationSource = new SystemBackdropConfiguration();
-                this.Activated += Window_Activated;
-                this.Closed += Window_Closed;
-
-                // Initial configuration state.
-                m_configurationSource.IsInputActive = true;
-                switch (((FrameworkElement)this.Content).ActualTheme)
-                {
-                    case ElementTheme.Dark: m_configurationSource.Theme = SystemBackdropTheme.Dark; break;
-                    case ElementTheme.Light: m_configurationSource.Theme = SystemBackdropTheme.Light; break;
-                    case ElementTheme.Default: m_configurationSource.Theme = SystemBackdropTheme.Default; break;
-                }
-
-                m_acrylicController = new DesktopAcrylicController();
-
-                // Enable the system backdrop.
-                // Note: Be sure to have "using WinRT;" to support the MainWindow.As<...>() call.
-                m_acrylicController.AddSystemBackdropTarget(this.As<Microsoft.UI.Composition.ICompositionSupportsSystemBackdrop>());
-                m_acrylicController.SetSystemBackdropConfiguration(m_configurationSource);
-                m_acrylicController.FallbackColor = Color.FromArgb(255, 0xf1, 0xf3, 0xf6);
-                m_acrylicController.TintColor = Color.FromArgb(255, 0xde, 0xe3, 0xee);
-                m_acrylicController.TintOpacity = 0.98f;
-                m_acrylicController.LuminosityOpacity = 0.5f;
-                return true; // succeeded
-            }
-
-            return false; // Acrylic is not supported on this system
-        }
-
-        private void Window_Closed(object sender, WindowEventArgs args)
-        {
-            // Make sure any Mica/Acrylic controller is disposed so it doesn't try to
-            // use this closed window.
-            if (m_micaController != null)
-            {
-                m_micaController.Dispose();
-                m_micaController = null;
-            }
-            if (m_acrylicController != null)
-            {
-                m_acrylicController.Dispose();
-                m_acrylicController = null;
-            }
-            this.Activated -= Window_Activated;
-            m_configurationSource = null;
-        }
-
-        private void Window_Activated(object sender, WindowActivatedEventArgs args)
-        {
-            m_configurationSource.IsInputActive = args.WindowActivationState != WindowActivationState.Deactivated;
-        }
-    }
-
-    class WindowsSystemDispatcherQueueHelper
-    {
-        [StructLayout(LayoutKind.Sequential)]
-        struct DispatcherQueueOptions
-        {
-            internal int dwSize;
-            internal int threadType;
-            internal int apartmentType;
-        }
-
-        [DllImport("CoreMessaging.dll")]
-        private static extern int CreateDispatcherQueueController([In] DispatcherQueueOptions options, [In, Out, MarshalAs(UnmanagedType.IUnknown)] ref object dispatcherQueueController);
-
-        object m_dispatcherQueueController = null;
-        public void EnsureWindowsSystemDispatcherQueueController()
-        {
-            if (Windows.System.DispatcherQueue.GetForCurrentThread() != null)
-            {
-                // one already exists, so we'll just use it.
-                return;
-            }
-
-            if (m_dispatcherQueueController == null)
-            {
-                DispatcherQueueOptions options;
-                options.dwSize = Marshal.SizeOf(typeof(DispatcherQueueOptions));
-                options.threadType = 2;    // DQTYPE_THREAD_CURRENT
-                options.apartmentType = 2; // DQTAT_COM_STA
-
-                CreateDispatcherQueueController(options, ref m_dispatcherQueueController);
-            }
         }
     }
 }

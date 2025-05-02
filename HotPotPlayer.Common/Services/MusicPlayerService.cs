@@ -527,9 +527,6 @@ namespace HotPotPlayer.Services
 
             try
             {
-                //_outputDevice?.Dispose();
-                //_outputDevice = new WaveOutEvent { DeviceNumber = -1 };
-                //_outputDevice.PlaybackStopped += OnPlaybackStopped;
                 if (_mpv == null)
                 {
                     _mpv = new MpvPlayer(@"NativeLibs\mpv-2.dll")

@@ -54,7 +54,7 @@ namespace HotPotPlayer.Pages.BilibiliSub
         private void BiliVideoClick(object sender, ItemClickEventArgs e)
         {
             var v = e.ClickedItem as RecommendVideoItem;
-            PlayVideo(v.Bvid);
+            PlayVideoInNewWindow(v.Bvid);
         }
     }
 }

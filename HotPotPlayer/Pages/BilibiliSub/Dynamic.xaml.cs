@@ -115,12 +115,12 @@ namespace HotPotPlayer.Pages.BilibiliSub
             if (v.Modules.ModuleDynamic?.Major?.Archive != null)
             {
                 var bvid = v.Modules.ModuleDynamic.Major.Archive.Bvid;
-                PlayVideo(bvid);
+                PlayVideoInNewWindow(bvid);
             }
             else if(v.HasOrigin && v.Origin.Modules.ModuleDynamic?.Major?.Archive != null)
             {
                 var bvid = v.Origin.Modules.ModuleDynamic.Major.Archive.Bvid;
-                PlayVideo(bvid);
+                PlayVideoInNewWindow(bvid);
             }
             else if(v.Modules.ModuleDynamic?.Major?.Article != null)
             {

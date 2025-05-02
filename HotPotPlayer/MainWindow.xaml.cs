@@ -49,7 +49,7 @@ namespace HotPotPlayer
         }
 
         MusicPlayerService MusicPlayer => ((App)Application.Current).MusicPlayer;
-        VideoPlayerService VideoPlayerService => ((App)Application.Current).VideoPlayer;
+        VideoPlayerService VideoPlayer => ((App)Application.Current).VideoPlayer;
         JellyfinMusicService MusicService => ((App)Application.Current).JellyfinMusicService;
         NetEaseMusicService CloudMusicService => ((App)Application.Current).NetEaseMusicService;
         //TrayIcon tray;
@@ -83,7 +83,7 @@ namespace HotPotPlayer
                     var videoFiles = app.Config.GetVideoFilesFromDirectory(dir);
                     var names = videoFiles.Select(s => s.Name).ToList();
                     var index = names.IndexOf(initMedia.Name);
-                    app.PlayVideos(videoFiles, index);
+                    VideoPlayer.PlayNext(videoFiles, index);
                 }
             }
         }

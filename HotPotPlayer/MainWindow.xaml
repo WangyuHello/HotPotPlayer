@@ -18,7 +18,7 @@
     <Grid x:Name="Root" Loaded="MainWindow_Loaded" PointerReleased="MainWindow_PointerReleased" >
         <Grid x:Name="ContentRoot" ui:VisualExtensions.NormalizedCenterPoint="0.5" ui:VisualExtensions.RotationAxis="0,1,0" >
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="{x:Bind GetMainSideBarWidth(VideoPlayerService.VisualState), Mode=OneWay}" />
+                <ColumnDefinition Width="{x:Bind GetMainSideBarWidth(VideoPlayer.VisualState), Mode=OneWay}" />
                 <ColumnDefinition Width="*" />
             </Grid.ColumnDefinitions>
             <controls:MainSidebar 
@@ -79,11 +79,11 @@
         </controls:PlayBar>
 
         <pages:VideoPlay x:Name="VideoPlay" 
-                         HorizontalAlignment="{x:Bind GetVideoPlayHorizontalAlignment(VideoPlayerService.VisualState), Mode=OneWay}"
-                         VerticalAlignment="{x:Bind GetVideoPlayVerticalAlignment(VideoPlayerService.VisualState), Mode=OneWay}"
-                         Margin="{x:Bind GetVideoPlayMargin(VideoPlayerService.VisualState), Mode=OneWay}"
-                         Width="{x:Bind GetVideoPlayWidth(VideoPlayerService.VisualState), Mode=OneWay}"
-                         Height="{x:Bind GetVideoPlayHeight(VideoPlayerService.VisualState), Mode=OneWay}"
+                         HorizontalAlignment="{x:Bind GetVideoPlayHorizontalAlignment(VideoPlayer.VisualState), Mode=OneWay}"
+                         VerticalAlignment="{x:Bind GetVideoPlayVerticalAlignment(VideoPlayer.VisualState), Mode=OneWay}"
+                         Margin="{x:Bind GetVideoPlayMargin(VideoPlayer.VisualState), Mode=OneWay}"
+                         Width="{x:Bind GetVideoPlayWidth(VideoPlayer.VisualState), Mode=OneWay}"
+                         Height="{x:Bind GetVideoPlayHeight(VideoPlayer.VisualState), Mode=OneWay}"
                          CornerRadius="16"
                          >
             

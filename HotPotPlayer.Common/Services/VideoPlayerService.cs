@@ -1,6 +1,7 @@
 ﻿using DirectN;
 using DirectN.Extensions;
 using DirectN.Extensions.Com;
+using HotPotPlayer.Helpers;
 using HotPotPlayer.Models;
 using Jellyfin.Sdk.Generated.Models;
 using Microsoft.UI.Dispatching;
@@ -19,6 +20,7 @@ using System.Threading.Tasks;
 using System.Timers;
 using Windows.Devices.Enumeration;
 using Windows.Media;
+using Windows.Storage.Streams;
 
 namespace HotPotPlayer.Services
 {
@@ -106,17 +108,17 @@ namespace HotPotPlayer.Services
                 {
                     if (nowPlaying)
                     {
-                        //if (SMTC != null)
-                        //{
-                        //    SMTC.PlaybackStatus = MediaPlaybackStatus.Playing;
-                        //}
+                        if (SMTC != null)
+                        {
+                            SMTC.PlaybackStatus = MediaPlaybackStatus.Playing;
+                        }
                     }
                     else
                     {
-                        //if (SMTC != null)
-                        //{
-                        //    SMTC.PlaybackStatus = MediaPlaybackStatus.Paused;
-                        //}
+                        if (SMTC != null)
+                        {
+                            SMTC.PlaybackStatus = MediaPlaybackStatus.Paused;
+                        }
                     }
                 });
             });
@@ -195,6 +197,37 @@ namespace HotPotPlayer.Services
         public float ScaleX { get; set; }
         public float ScaleY { get; set; }
 
+        private SystemMediaTransportControls _smtc;
+
+        private SystemMediaTransportControls SMTC
+        {
+            get => _smtc;
+        }
+        /// <summary>
+        /// https://docs.microsoft.com/en-us/windows/apps/desktop/modernize/winrt-com-interop-csharp
+        /// </summary>
+        /// <returns></returns>
+        SystemMediaTransportControls InitSmtc()
+        {
+            var smtc = SystemMediaTransportControlsInterop.GetForWindow(Config.MainWindowHandle);
+            smtc.IsEnabled = true;
+            smtc.ButtonPressed += SystemMediaControls_ButtonPressed;
+            smtc.PlaybackRateChangeRequested += SystemMediaControls_PlaybackRateChangeRequested;
+            smtc.PlaybackPositionChangeRequested += SystemMediaControls_PlaybackPositionChangeRequested;
+            smtc.AutoRepeatModeChangeRequested += SystemMediaControls_AutoRepeatModeChangeRequested;
+            smtc.PropertyChanged += SystemMediaControls_PropertyChanged;
+            smtc.IsPlayEnabled = true;
+            smtc.IsPauseEnabled = true;
+            smtc.IsStopEnabled = true;
+            smtc.IsNextEnabled = true;
+            smtc.IsPreviousEnabled = true;
+            smtc.PlaybackStatus = MediaPlaybackStatus.Closed;
+
+            App?.Taskbar.AddPlayButtons();
+
+            return smtc;
+        }
+
         public async void PlayNext(BaseItemDto video)
         {
             if (video.IsFolder.Value)
@@ -222,7 +255,11 @@ namespace HotPotPlayer.Services
 
         public void PlayNext(List<FileInfo> files, int index)
         {
-            var fakeDtos = files.Select(f => new BaseItemDto { Path = f.FullName });
+            var fakeDtos = files.Select(f => new BaseItemDto 
+            { 
+                Path = f.FullName,
+                Name = f.Name
+            });
             CurrentPlayList = [ .. fakeDtos];
             PlayNext(index);
         }
@@ -236,7 +273,7 @@ namespace HotPotPlayer.Services
             }
         }
 
-        public async void PlayNext(int? index)
+        public void PlayNext(int? index)
         {
             if (index == null)
             {
@@ -379,7 +416,7 @@ namespace HotPotPlayer.Services
 
                 }
             });
-            //UpdateSmtcPosition();
+            UpdateSmtcPosition();
         }
 
         private void MediaEndedSeeking(object sender, EventArgs e)
@@ -504,11 +541,19 @@ namespace HotPotPlayer.Services
                 _mpv.LoadPlaylist(lists, true);
                 _mpv.PlaylistPlayIndex(index);
 
-                var videoInfo = App.JellyfinMusicService.GetItemInfoAsync(CurrentPlayList[index]).Result;
+                BaseItemDto videoInfo = null;
+                if (video.Id != null)
+                {
+                    videoInfo = App.JellyfinMusicService.GetItemInfoAsync(CurrentPlayList[index]).Result;
+                }
+                else
+                {
+                    videoInfo = video;
+                }
 
                 e.Result = ValueTuple.Create(index, videoInfo, false);
-                //_smtc ??= InitSmtc();
-                //UpdateMstcInfo((int)e.Argument);
+                _smtc ??= InitSmtc();
+                UpdateMstcInfo(videoInfo);
             }
             catch (Exception ex)
             {
@@ -579,6 +624,128 @@ namespace HotPotPlayer.Services
         public void UpdatePanelBounds(Rectangle bounds)
         {
             _currentBounds = bounds;
+        }
+
+        private void SystemMediaControls_PropertyChanged(SystemMediaTransportControls sender, SystemMediaTransportControlsPropertyChangedEventArgs args)
+        {
+            if (args.Property == SystemMediaTransportControlsProperty.SoundLevel)
+            {
+                switch (SMTC.SoundLevel)
+                {
+                    case SoundLevel.Full:
+                    case SoundLevel.Low:
+
+                        break;
+                    case SoundLevel.Muted:
+
+                        break;
+                }
+            }
+        }
+
+        private void SystemMediaControls_AutoRepeatModeChangeRequested(SystemMediaTransportControls sender, AutoRepeatModeChangeRequestedEventArgs args)
+        {
+            switch (args.RequestedAutoRepeatMode)
+            {
+                case MediaPlaybackAutoRepeatMode.None:
+                    PlayMode = PlayMode.Loop;
+                    break;
+                case MediaPlaybackAutoRepeatMode.List:
+                    PlayMode = PlayMode.Loop;
+                    break;
+                case MediaPlaybackAutoRepeatMode.Track:
+                    PlayMode = PlayMode.SingleLoop;
+                    break;
+            }
+
+            SMTC.AutoRepeatMode = args.RequestedAutoRepeatMode;
+        }
+
+        private void UpdateSmtcPosition()
+        {
+            var timelineProperties = new SystemMediaTransportControlsTimelineProperties
+            {
+                StartTime = TimeSpan.FromSeconds(0),
+                MinSeekTime = TimeSpan.FromSeconds(0),
+                Position = CurrentTime,
+                MaxSeekTime = CurrentPlayingDuration ?? TimeSpan.Zero,
+                EndTime = CurrentPlayingDuration ?? TimeSpan.Zero
+            };
+
+            SMTC.UpdateTimelineProperties(timelineProperties);
+        }
+
+        private void SystemMediaControls_PlaybackPositionChangeRequested(SystemMediaTransportControls sender, PlaybackPositionChangeRequestedEventArgs args)
+        {
+            if (args.RequestedPlaybackPosition.Duration() <= (CurrentPlayingDuration ?? TimeSpan.Zero) &&
+            args.RequestedPlaybackPosition.Duration().TotalSeconds >= 0)
+            {
+                if (State == PlayerState.Playing)
+                {
+                    PlayTo(args.RequestedPlaybackPosition.Duration());
+                    UpdateSmtcPosition();
+                }
+            }
+        }
+
+        private void SystemMediaControls_PlaybackRateChangeRequested(SystemMediaTransportControls sender, PlaybackRateChangeRequestedEventArgs args)
+        {
+            if (args.RequestedPlaybackRate >= 0 && args.RequestedPlaybackRate <= 2)
+            {
+                SMTC.PlaybackRate = args.RequestedPlaybackRate;
+            }
+        }
+
+        private void SystemMediaControls_ButtonPressed(SystemMediaTransportControls sender, SystemMediaTransportControlsButtonPressedEventArgs args)
+        {
+            switch (args.Button)
+            {
+                case SystemMediaTransportControlsButton.Play:
+                    UIQueue.TryEnqueue(PlayOrPause);
+                    break;
+
+                case SystemMediaTransportControlsButton.Pause:
+                    UIQueue.TryEnqueue(PlayOrPause);
+                    break;
+
+                case SystemMediaTransportControlsButton.Stop:
+                    UIQueue.TryEnqueue(PlayOrPause);
+                    break;
+
+                case SystemMediaTransportControlsButton.Next:
+                    UIQueue.TryEnqueue(PlayNext);
+                    break;
+
+                case SystemMediaTransportControlsButton.Previous:
+                    UIQueue.TryEnqueue(PlayPrevious);
+                    break;
+            }
+        }
+
+        /// <summary>
+        /// https://docs.microsoft.com/en-us/windows/uwp/audio-video-camera/system-media-transport-controls
+        /// </summary>
+        /// <param name="index"></param>
+        private void UpdateMstcInfo(BaseItemDto video)
+        {
+            SMTC.PlaybackStatus = MediaPlaybackStatus.Playing;
+
+            SystemMediaTransportControlsDisplayUpdater updater = SMTC.DisplayUpdater;
+
+            updater.Type = MediaPlaybackType.Video;
+            updater.VideoProperties.Title = video.Name;
+            updater.VideoProperties.Subtitle = video.Id == null ? "文件" : "Jellyfin";
+            if (video.Id != null)
+            {
+                var uri = App.JellyfinMusicService.GetPrimaryJellyfinImageSmall(video.ImageTags, video.Id);
+
+                if (uri != null)
+                {
+                    updater.Thumbnail = RandomAccessStreamReference.CreateFromUri(uri);
+                }
+            }
+
+            SMTC.DisplayUpdater.Update();
         }
 
         public IComObject<IDXGISwapChain1> GetOrCreateSwapChain()

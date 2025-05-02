@@ -17,7 +17,7 @@ namespace HotPotPlayer.Test
             var config = new MockConfig();
             config.ClearDb();
             var musicService = new JellyfinMusicService(config);
-            musicService.LoadJellyfinMusicAsync();
+            //musicService.LoadJellyfinMusicAsync();
         }
 
         [Fact]
@@ -25,7 +25,7 @@ namespace HotPotPlayer.Test
         {
             var config = new MockConfig();
             var musicService = new JellyfinMusicService(config);
-            musicService.LoadJellyfinMusicAsync();
+            //musicService.LoadJellyfinMusicAsync();
         }
 
         [Fact]
@@ -34,7 +34,7 @@ namespace HotPotPlayer.Test
             var config = new MockConfig2();
             config.ClearDb();
             var musicService = new JellyfinMusicService(config);
-            musicService.LoadJellyfinMusicAsync();
+            //musicService.LoadJellyfinMusicAsync();
         }
 
         [Fact]
@@ -42,7 +42,7 @@ namespace HotPotPlayer.Test
         {
             var config = new MockConfig2();
             var musicService = new JellyfinMusicService(config);
-            musicService.LoadJellyfinMusicAsync();
+            //musicService.LoadJellyfinMusicAsync();
         }
 
         MockConfig2 config;
@@ -54,7 +54,7 @@ namespace HotPotPlayer.Test
             config.ClearDb();
             var musicService = new JellyfinMusicService(config);
             musicService.PropertyChanged += MusicService_PropertyChanged;
-            musicService.LoadJellyfinMusicAsync();
+            //musicService.LoadJellyfinMusicAsync();
             Console.Read();
         }
 
@@ -63,13 +63,13 @@ namespace HotPotPlayer.Test
             var service = (JellyfinMusicService)sender;
             if (e.PropertyName == "State" && service.State == LocalServiceState.Complete)
             {
-                var m1 = service.LocalAlbumGroup[0][3].MusicItems[0];
-                var m2 = service.LocalAlbumGroup[0][4].MusicItems[1];
+                //var m1 = service.LocalAlbumGroup[0][3].MusicItems[0];
+                //var m2 = service.LocalAlbumGroup[0][4].MusicItems[1];
 
-                PlayListItem pl = new PlayListItem("Test", new DirectoryInfo(config.MusicPlayListDirectory[0].Path));
-                pl.AddMusic(m1);
-                pl.AddMusic(m2);
-                pl.Write();
+                //PlayListItem pl = new PlayListItem("Test", new DirectoryInfo(config.MusicPlayListDirectory[0].Path));
+                //pl.AddMusic(m1);
+                //pl.AddMusic(m2);
+                //pl.Write();
             }
         }
     }

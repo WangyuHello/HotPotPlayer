@@ -14,7 +14,7 @@ namespace HotPotPlayer.Pages.Helper
         public static void SeriesPlay(object sender, RoutedEventArgs e)
         {
             var video = (sender as FrameworkElement).Tag as BaseItemDto;
-            App.PlayVideos(video, 0);
+            VideoPlayer.PlayNext(video);
         }
     }
 }

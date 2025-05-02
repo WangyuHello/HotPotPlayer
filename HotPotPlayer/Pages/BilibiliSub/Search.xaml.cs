@@ -66,7 +66,7 @@ namespace HotPotPlayer.Pages.BilibiliSub
         private void SearchVideoClick(object sender, ItemClickEventArgs e)
         {
             var v = e.ClickedItem as SearchResultData;
-            PlayVideo(v.Bvid);
+            PlayVideoInNewWindow(v.Bvid);
         }
     }
 }

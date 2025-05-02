@@ -23,6 +23,7 @@ using WinUIEx;
 using Microsoft.UI.Windowing;
 using Microsoft.UI.Xaml.Media.Animation;
 using System.Drawing;
+using HotPotPlayer.Interop.Helper;
 
 // To learn more about WinUI, the WinUI project structure,
 // and more about our project templates, see: http://aka.ms/winui-project-info.
@@ -55,23 +56,10 @@ namespace HotPotPlayer
             MainWindow.Activate();
         }
 
-        [DllImport("user32.dll")]
-        private static extern int GetWindowRect(IntPtr hwnd, out MyRect lpRect);
-
-        [DllImport("user32.dll")]
-        private static extern uint GetDpiForWindow([In] IntPtr hmonitor);
-        public struct MyRect
-        {
-            public int Left;
-            public int Top;
-            public int Right;
-            public int Bottom;
-        }
-
         private void MainWindow_Closed(object sender, WindowEventArgs args)
         {
-            GetWindowRect(MainWindowHandle, out MyRect windowRect);
-            var scale = GetDpiForWindow(MainWindowHandle) / 96d;
+            WindowHelper.GetWindowRect(MainWindowHandle, out WindowHelper.MyRect windowRect);
+            var scale = WindowHelper.GetDpiForWindow(MainWindowHandle) / 96d;
             var width = Convert.ToInt32((windowRect.Right - windowRect.Left) / scale);
             var height = Convert.ToInt32((windowRect.Bottom - windowRect.Top) / scale);
 
@@ -134,7 +122,6 @@ namespace HotPotPlayer
         public override IntPtr MainWindowHandle => MainWindow.GetWindowHandle();
         public override Rect Bounds => bounds;
         public override XamlRoot XamlRoot => MainWindow.Content.XamlRoot;
-
         public override AppWindow AppWindow => MainWindow.AppWindow;
     }
 }

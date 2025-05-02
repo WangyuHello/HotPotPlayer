@@ -112,7 +112,7 @@ namespace HotPotPlayer.Controls
         {
             var video = e.ClickedItem as BaseItemDto;
             var index = SelectedSeasonVideoItems.IndexOf(video);
-            App.PlayVideos(SelectedSeasonVideoItems, index);
+            VideoPlayer.PlayNext(SelectedSeasonVideoItems, index);
         }
 
         private void BackdropExpand_Click(object sender, RoutedEventArgs e)
