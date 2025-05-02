@@ -1,29 +1,15 @@
-﻿using HotPotPlayer.Pages;
-using Microsoft.UI.Xaml;
-using Microsoft.UI.Xaml.Controls;
-using Microsoft.UI.Xaml.Controls.Primitives;
-using Microsoft.UI.Xaml.Data;
-using Microsoft.UI.Xaml.Input;
-using Microsoft.UI.Xaml.Media;
-using Microsoft.UI.Xaml.Navigation;
-using Microsoft.UI.Xaml.Shapes;
-using WinRT;
-using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.IO;
-using System.Linq;
-using System.Runtime.InteropServices;
-using System.Runtime.InteropServices.WindowsRuntime;
-using Windows.ApplicationModel;
-using Windows.ApplicationModel.Activation;
-using Windows.Foundation;
-using Windows.Foundation.Collections;
-using WinUIEx;
-using Microsoft.UI.Windowing;
-using Microsoft.UI.Xaml.Media.Animation;
-using System.Drawing;
+﻿using DirectN.Extensions.Utilities;
 using HotPotPlayer.Interop.Helper;
+using Microsoft.UI.Windowing;
+using Microsoft.UI.Xaml;
+using Microsoft.UI.Xaml.Media.Animation;
+using System;
+using System.Drawing;
+using System.IO;
+using System.Threading.Tasks;
+using Windows.Foundation;
+using Windows.Storage;
+using WinUIEx;
 
 // To learn more about WinUI, the WinUI project structure,
 // and more about our project templates, see: http://aka.ms/winui-project-info.
@@ -70,7 +56,7 @@ namespace HotPotPlayer
             ShutDown();
         }
 
-        private void InitMainWindow(Microsoft.UI.Xaml.LaunchActivatedEventArgs args)
+        private void InitMainWindow(LaunchActivatedEventArgs args)
         {
             MainWindow.Title = "HotPotPlayer";
             var width = Config.GetConfig("width", 1420);
@@ -79,6 +65,7 @@ namespace HotPotPlayer
             MainWindow.TrySetAcrylicBackdrop();
             MainWindow.Closed += MainWindow_Closed;
             MainWindow.SizeChanged += MainWindow_SizeChanged;
+            SetIconAsync();
 
             var firstArg = args.Arguments; //尚不支持，永远为null
             var args2 = Environment.GetCommandLineArgs();
@@ -94,6 +81,25 @@ namespace HotPotPlayer
             }
 
             Config.MainWindowHandle = MainWindowHandle;
+        }
+
+        private async void SetIconAsync()
+        {
+            Uri uri = new("ms-appx:///Assets/icon.ico");
+            StorageFile storageFile = null;
+            try
+            {
+                storageFile = await StorageFile.GetFileFromApplicationUriAsync(uri);
+            }
+            catch (Exception)
+            {
+                // Use default icon.
+            }
+
+            if (storageFile is not null)
+            {
+                AppWindow.SetIcon(storageFile.Path);
+            }
         }
 
         private void MainWindow_SizeChanged(object sender, WindowSizeChangedEventArgs args)

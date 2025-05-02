@@ -38,6 +38,7 @@
     <None Remove="Assets\Font\MiSans-Regular.ttf" />
     <None Remove="Assets\Font\MiSans-Semibold.ttf" />
     <None Remove="Assets\Font\MiSans-Thin.ttf" />
+    <None Remove="Assets\icon.ico" />
     <None Remove="Assets\Icon\bili.ttf" />
     <None Remove="Assets\Icon\code.svg" />
     <None Remove="Assets\Icon\Coin.svg" />
