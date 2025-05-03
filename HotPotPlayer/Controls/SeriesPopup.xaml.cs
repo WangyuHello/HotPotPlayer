@@ -157,20 +157,67 @@ namespace HotPotPlayer.Controls
             return 0;
         }
 
+        private string GetGenres(List<string> genres)
+        {
+            return string.Join(", ", genres);
+        }
+
+        private string GetStudios(List<NameGuidPair> studios)
+        {
+            return string.Join (", ", studios.Select(s => s.Name));
+        }
+
+        private string GetDirector(List<BaseItemPerson> people)
+        {
+            return people.FirstOrDefault(p => p.Type == BaseItemPerson_Type.Director)?.Name;
+        }
+
+        private Visibility GetDirectorVisible(List<BaseItemPerson> people)
+        {
+            return people.FirstOrDefault(p => p.Type == BaseItemPerson_Type.Director) == null ? Visibility.Collapsed : Visibility.Visible;
+        }
+
+        private string GetWriter(List<BaseItemPerson> people)
+        {
+            return people.FirstOrDefault(p => p.Type == BaseItemPerson_Type.Writer)?.Name;
+        }
+
+        private string GetWriterTitle(BaseItemDto series)
+        {
+            if (series == null)
+            {
+                return null;
+            }
+            return series.IsFolder.Value ? "作者" : "编剧";
+        }
+
+        private Visibility GetChapterVisible(BaseItemDto series)
+        {
+            if (series == null)
+            {
+                return Visibility.Collapsed;
+            }
+            return (series.Chapters == null || series.Chapters.Count == 0) ? Visibility.Collapsed : Visibility.Visible;
+        }
+
         private void SetBackdropOffset(bool isBackdropExpanded)
         {
             var backdropVisual = ElementCompositionPreview.GetElementVisual(Backdrop);
             var mainInfoVisual = ElementCompositionPreview.GetElementVisual(MainInfo);
+            var leftPanelVisual = ElementCompositionPreview.GetElementVisual(LeftPanel);
 
             if (isBackdropExpanded)
             {
                 backdropVisual.Offset = new System.Numerics.Vector3(0, 0, 0);
                 mainInfoVisual.Offset = new System.Numerics.Vector3(0, 484f, 0);
+                leftPanelVisual.Offset = new System.Numerics.Vector3(0, 20f, 0);
+
             }
             else
             {
                 backdropVisual.Offset = new System.Numerics.Vector3(0, -142f, 0);
                 mainInfoVisual.Offset = new System.Numerics.Vector3(0, 200f, 0);
+                leftPanelVisual.Offset = new System.Numerics.Vector3(0, -40f, 0);
             }
         }
     }

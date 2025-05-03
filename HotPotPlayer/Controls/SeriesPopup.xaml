@@ -51,25 +51,42 @@
                 <ColumnDefinition Width="*" />
             </Grid.ColumnDefinitions>
 
-            <StackPanel>
-                <cont2:ImageEx2 
-                x:Name="Cover"
-                Source="{x:Bind helper2:BaseItemDtoHelper.GetPrimaryJellyfinImageWithBlur(Series.ImageTags, Series.ImageBlurHashes, Series.Id), Mode=OneWay}" 
-                Style="{StaticResource LocalAlbumPopupImageStyle}" 
-                Margin="16,16,16,8"
-                Width="260" DecodePixelWidth="260"
-                Height="380" DecodePixelHeight="380"
-                Stretch="UniformToFill"
+            <StackPanel x:Name="LeftPanel" 
+                        Margin="0,-40,0,0">
+                <cont2:ImageEx2 x:Name="Cover"
+                                Source="{x:Bind helper2:BaseItemDtoHelper.GetPrimaryJellyfinImageWithBlur(Series.ImageTags, Series.ImageBlurHashes, Series.Id), Mode=OneWay}" 
+                                Style="{StaticResource LocalAlbumPopupImageStyle}" 
+                                Margin="16,0,16,16"
+                                Width="260" DecodePixelWidth="260"
+                                Height="380" DecodePixelHeight="380"
+                                Stretch="UniformToFill"
                 />
 
-                <winui:ItemsRepeater
-                     Margin="16,0,8,0"
-                     ItemsSource="{x:Bind SeriesInfo.Tags, Mode=OneWay}" 
-                     ItemTemplate="{StaticResource JellyfinTagTemplate}">
-                    <winui:ItemsRepeater.Layout>
-                        <controls:WrapLayout VerticalSpacing="4" HorizontalSpacing="8"/>
-                    </winui:ItemsRepeater.Layout>
-                </winui:ItemsRepeater>
+                <Grid Margin="16,0">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="64" />
+                        <ColumnDefinition Width="*" />
+                    </Grid.ColumnDefinitions>
+
+                    <TextBlock VerticalAlignment="Center" FontSize="14" Text="类型" FontFamily="{ThemeResource MiSansMedium}"/>
+                    <HyperlinkButton Grid.Column="1" VerticalAlignment="Center" Content="{x:Bind GetGenres(SeriesInfo.Genres)}" Tag="{x:Bind }" FontSize="14" FontFamily="{ThemeResource MiSansRegular}"/>
+                    <TextBlock Grid.Row="1" FontSize="14" VerticalAlignment="Center" Visibility="{x:Bind GetDirectorVisible(SeriesInfo.People)}" Text="导演" FontFamily="{ThemeResource MiSansMedium}"/>
+                    <HyperlinkButton Grid.Row="1" VerticalAlignment="Center" Grid.Column="1" Visibility="{x:Bind GetDirectorVisible(SeriesInfo.People)}" Content="{x:Bind GetDirector(SeriesInfo.People)}" Tag="{x:Bind }" FontSize="14" FontFamily="{ThemeResource MiSansRegular}"/>
+                    <TextBlock Grid.Row="2" FontSize="14" VerticalAlignment="Center" Text="{x:Bind GetWriterTitle(SeriesInfo)}" FontFamily="{ThemeResource MiSansMedium}"/>
+                    <HyperlinkButton Grid.Row="2" VerticalAlignment="Center" Grid.Column="1" Content="{x:Bind GetWriter(SeriesInfo.People)}" Tag="{x:Bind }" FontSize="14" FontFamily="{ThemeResource MiSansRegular}"/>
+                    <TextBlock Grid.Row="3" FontSize="14" VerticalAlignment="Center" Text="工作室" FontFamily="{ThemeResource MiSansMedium}"/>
+                    <HyperlinkButton Grid.Row="3" VerticalAlignment="Center" Grid.Column="1" Content="{x:Bind GetStudios(SeriesInfo.Studios)}" Tag="{x:Bind }" FontSize="14" FontFamily="{ThemeResource MiSansRegular}"/>
+                </Grid>
+
+                <animations:Implicit.Animations>
+                    <animations:OffsetAnimation Duration="0:0:0.7" EasingMode="EaseOut"/>
+                </animations:Implicit.Animations>
             </StackPanel>
 
 
@@ -168,7 +185,7 @@
                 <TextBlock Grid.Row="5" 
                            FontSize="21" 
                            Margin="0,16,0,0"
-                           Visibility="{x:Bind GetMoviePlayVisible(Series)}"
+                           Visibility="{x:Bind GetChapterVisible(SeriesInfo)}"
                            VerticalAlignment="Center" 
                            Text="场景" 
                            FontFamily="{ThemeResource MiSansMedium}"/>
