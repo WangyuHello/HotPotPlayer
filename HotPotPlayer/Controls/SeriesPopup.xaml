@@ -67,51 +67,59 @@
                 <ColumnDefinition Width="*" />
             </Grid.ColumnDefinitions>
 
-            <StackPanel x:Name="LeftPanel" 
+            <Grid x:Name="LeftPanel" 
                         Margin="0,-40,0,0">
-                <cont2:ImageEx2 x:Name="Cover"
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="*" />
+                </Grid.RowDefinitions>
+                <Border CornerRadius="8" >
+                    <cont2:ImageEx2 x:Name="Cover"
                                 Source="{x:Bind helper2:BaseItemDtoHelper.GetPrimaryJellyfinImageWithBlur(Series.ImageTags, Series.ImageBlurHashes, Series.Id), Mode=OneWay}" 
                                 Style="{StaticResource LocalAlbumPopupImageStyle}" 
                                 Margin="16,0,16,16"
                                 Width="260" DecodePixelWidth="260"
                                 Height="380" DecodePixelHeight="380"
                                 Stretch="UniformToFill"
-                />
+                    />
+                </Border>
 
-                <Grid Margin="16,0">
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="Auto" />
-                        <RowDefinition Height="Auto" />
-                        <RowDefinition Height="Auto" />
-                        <RowDefinition Height="Auto" />
-                    </Grid.RowDefinitions>
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="64" />
-                        <ColumnDefinition Width="*" />
-                    </Grid.ColumnDefinitions>
+                <ScrollView Margin="16,0" Grid.Row="1">
+                    <Grid >
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                        </Grid.RowDefinitions>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="64" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
 
-                    <TextBlock Margin="0,5,0,0" VerticalAlignment="Top" FontSize="14" Text="类型" FontFamily="{ThemeResource MiSansMedium}"/>
-                    <winui:ItemsRepeater ItemsSource="{x:Bind SeriesInfo.GenreItems}" ItemTemplate="{StaticResource NameGuidButton}" Grid.Column="1" Layout="{StaticResource ButtonWrapLayout}">
-                    </winui:ItemsRepeater>
+                        <TextBlock Margin="0,5,0,0" VerticalAlignment="Top" FontSize="14" Text="类型" FontFamily="{ThemeResource MiSansMedium}"/>
+                        <winui:ItemsRepeater ItemsSource="{x:Bind SeriesInfo.GenreItems}" ItemTemplate="{StaticResource NameGuidButton}" Grid.Column="1" Layout="{StaticResource ButtonWrapLayout}">
+                        </winui:ItemsRepeater>
 
-                    <TextBlock Margin="0,13,0,0" Grid.Row="1" FontSize="14" VerticalAlignment="Top" Visibility="{x:Bind GetDirectorVisible(SeriesInfo.People)}" Text="导演" FontFamily="{ThemeResource MiSansMedium}"/>
-                    <winui:ItemsRepeater Margin="0,8,0,0" Grid.Row="1" Grid.Column="1" ItemsSource="{x:Bind GetDirector(SeriesInfo.People)}" ItemTemplate="{StaticResource BaseItemPersonButton}" Layout="{StaticResource ButtonWrapLayout}">
-                    </winui:ItemsRepeater>
+                        <TextBlock Margin="0,13,0,0" Grid.Row="1" FontSize="14" VerticalAlignment="Top" Visibility="{x:Bind GetDirectorVisible(SeriesInfo.People)}" Text="导演" FontFamily="{ThemeResource MiSansMedium}"/>
+                        <winui:ItemsRepeater Margin="0,8,0,0" Grid.Row="1" Grid.Column="1" ItemsSource="{x:Bind GetDirector(SeriesInfo.People)}" ItemTemplate="{StaticResource BaseItemPersonButton}" Layout="{StaticResource ButtonWrapLayout}">
+                        </winui:ItemsRepeater>
 
 
-                    <TextBlock Margin="0,13,0,0" Grid.Row="2" FontSize="14" VerticalAlignment="Top" Text="{x:Bind GetWriterTitle(SeriesInfo)}" FontFamily="{ThemeResource MiSansMedium}"/>
-                    <winui:ItemsRepeater Margin="0,8,0,0" Grid.Row="2" Grid.Column="1" ItemsSource="{x:Bind GetWriter(SeriesInfo.People)}" ItemTemplate="{StaticResource BaseItemPersonButton}" Layout="{StaticResource ButtonWrapLayout}">
-                    </winui:ItemsRepeater>
+                        <TextBlock Margin="0,13,0,0" Grid.Row="2" FontSize="14" VerticalAlignment="Top" Text="{x:Bind GetWriterTitle(SeriesInfo)}" FontFamily="{ThemeResource MiSansMedium}"/>
+                        <winui:ItemsRepeater Margin="0,8,0,0" Grid.Row="2" Grid.Column="1" ItemsSource="{x:Bind GetWriter(SeriesInfo.People)}" ItemTemplate="{StaticResource BaseItemPersonButton}" Layout="{StaticResource ButtonWrapLayout}">
+                        </winui:ItemsRepeater>
 
-                    <TextBlock Margin="0,13,0,0" Grid.Row="3" FontSize="14" VerticalAlignment="Top" Text="工作室" FontFamily="{ThemeResource MiSansMedium}"/>
-                    <winui:ItemsRepeater Margin="0,8,0,0" Grid.Row="3" Grid.Column="1" ItemsSource="{x:Bind SeriesInfo.Studios}" ItemTemplate="{StaticResource NameGuidButton}" Layout="{StaticResource ButtonWrapLayout}">
-                    </winui:ItemsRepeater>
-                </Grid>
+                        <TextBlock Margin="0,13,0,0" Grid.Row="3" FontSize="14" VerticalAlignment="Top" Text="工作室" FontFamily="{ThemeResource MiSansMedium}"/>
+                        <winui:ItemsRepeater Margin="0,8,0,0" Grid.Row="3" Grid.Column="1" ItemsSource="{x:Bind SeriesInfo.Studios}" ItemTemplate="{StaticResource NameGuidButton}" Layout="{StaticResource ButtonWrapLayout}">
+                        </winui:ItemsRepeater>
+                    </Grid>
+                </ScrollView>
 
                 <animations:Implicit.Animations>
                     <animations:OffsetAnimation Duration="0:0:0.7" EasingMode="EaseOut"/>
                 </animations:Implicit.Animations>
-            </StackPanel>
+            </Grid>
 
 
             <Grid Grid.Column="1" >

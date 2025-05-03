@@ -118,6 +118,7 @@ namespace HotPotPlayer.Services
                         {
                             SMTC.PlaybackStatus = MediaPlaybackStatus.Playing;
                         }
+                        App?.Taskbar.SetProgressState(TaskbarHelper.TaskbarStates.Normal);
                     }
                     else
                     {
@@ -125,6 +126,7 @@ namespace HotPotPlayer.Services
                         {
                             SMTC.PlaybackStatus = MediaPlaybackStatus.Paused;
                         }
+                        App?.Taskbar.SetProgressState(TaskbarHelper.TaskbarStates.Paused);
                     }
                 });
             });
@@ -188,6 +190,7 @@ namespace HotPotPlayer.Services
         MpvPlayer _mpv;
         bool _isVideoSwitching;
         readonly BackgroundWorker _playerStarter;
+        private string _currentPlaySessionId;
 
         private float _currentScaleX;
         private float _currentScaleY;
@@ -360,14 +363,13 @@ namespace HotPotPlayer.Services
                 _playerTimer.Stop();
                 _mpv.Pause();
                 IsPlaying = false;
-                App?.Taskbar.SetProgressState(TaskbarHelper.TaskbarStates.Paused);
+                
             }
             else
             {
                 _mpv.Resume();
                 _playerTimer.Start();
                 IsPlaying = true;
-                App?.Taskbar.SetProgressState(TaskbarHelper.TaskbarStates.Normal);
             }
         }
 
@@ -430,6 +432,12 @@ namespace HotPotPlayer.Services
                 }
             });
             UpdateSmtcPosition();
+            //UpdateJellyfinPosition();
+        }
+
+        private void UpdateJellyfinPosition()
+        {
+            App.JellyfinMusicService.ReportProgress(CurrentPlaying, _currentPlaySessionId, CurrentTime.Ticks, !IsPlaying);
         }
 
         private void MediaEndedSeeking(object sender, EventArgs e)
@@ -560,16 +568,18 @@ namespace HotPotPlayer.Services
                 _mpv.PlaylistPlayIndex(index);
 
                 BaseItemDto videoInfo = null;
+                string playSessionId = string.Empty;
                 if (video.Id != null)
                 {
                     videoInfo = App.JellyfinMusicService.GetItemInfoAsync(CurrentPlayList[index]).Result;
+                    //playSessionId = App.JellyfinMusicService.GetPlayBackInfo(video).Result;
                 }
                 else
                 {
                     videoInfo = video;
                 }
 
-                e.Result = ValueTuple.Create(index, videoInfo, false);
+                e.Result = ValueTuple.Create(index, videoInfo, playSessionId);
                 _smtc ??= InitSmtc();
                 InitMstcInfo(videoInfo);
             }
@@ -591,15 +601,14 @@ namespace HotPotPlayer.Services
         {
             try
             {
-                if (e.Result is (int index, BaseItemDto info, bool intercept))
+                if (e.Result is (int index, BaseItemDto info, string playSessionId))
                 {
                     HasError = false;
                     IsPlaying = true;
                     State = PlayerState.Playing;
-                    //var video = CurrentPlayList[index];
-                    //music.IsIntercept = intercept;
                     CurrentPlaying = info;
                     CurrentPlayingIndex = index;
+                    _currentPlaySessionId = playSessionId;
                     _playerTimer.Start();
                     RaisePropertyChanged(nameof(Volume));
                 }

@@ -513,6 +513,60 @@ namespace HotPotPlayer.Services
             url_temp = url_temp + "&api_key=" + SdkClientSettings.AccessToken;
             return url_temp;
         }
+        public async Task<string> GetPlayBackInfo(BaseItemDto video)
+        {
+            var result = await JellyfinApiClient.Items[video.Id.Value].PlaybackInfo.PostAsync(new PlaybackInfoDto
+            {
+                AutoOpenLiveStream = true,
+                EnableDirectPlay = true,
+                EnableDirectStream = true,
+                MediaSourceId= video.Id.Value.ToString(),
+                MaxStreamingBitrate = 785555264,
+                StartTimeTicks = 0,
+                UserId = userDto.Id.Value,
+                DeviceProfile = new DeviceProfile
+                {
+                    MaxStaticBitrate = 1000000000,
+                    MaxStreamingBitrate = 1000000000,
+                    DirectPlayProfiles =
+                    [
+                        new() {
+                            Container = "mkv",
+                            Type = DirectPlayProfile_Type.Video,
+                            VideoCodec = "h264,hevc,vp9,av1",
+                            AudioCodec = "aac,mp3,ac3,eac3,mp2,opus,flac,vorbis"
+                        },
+                        new() {
+                            Container = "mp4,m4v",
+                            Type = DirectPlayProfile_Type.Video,
+                            VideoCodec = "h264,hevc,vp9,av1",
+                            AudioCodec = "aac,mp3,ac3,eac3,mp2,opus,flac,vorbis"
+                        },
+                        new() {
+                            Container = "flac",
+                            Type = DirectPlayProfile_Type.Audio,
+                        }
+                    ]
+                }
+            });
+            return result.PlaySessionId;
+        }
+
+        public async void ReportProgress(BaseItemDto video, string playsessionId, long positionTicks, bool isPause, bool isMute = false)
+        {
+            await JellyfinApiClient.Sessions.Playing.Progress.PostAsync(new PlaybackProgressInfo
+            {
+                CanSeek = true,
+                IsPaused = isPause,
+                IsMuted = isMute,
+                ItemId = video.Id,
+                MediaSourceId = video.Id.Value.ToString(),
+                PlaySessionId = playsessionId,
+                PlayMethod = PlaybackProgressInfo_PlayMethod.DirectStream,
+                VolumeLevel = 100,
+                PositionTicks = positionTicks
+            });
+        }
 
         public async Task<List<BaseItemDto>> GetSeasons(BaseItemDto bangumi)
         {
