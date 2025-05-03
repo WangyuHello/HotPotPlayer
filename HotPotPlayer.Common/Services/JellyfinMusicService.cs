@@ -39,7 +39,19 @@ namespace HotPotPlayer.Services
         #endregion
         #region Field
         private string devideId;
-        public string DevideId => devideId ??= $"{Guid.NewGuid():N}";
+        public string DevideId
+        {
+            get
+            {
+                if (string.IsNullOrEmpty(devideId))
+                {
+                    var fromConf = Config.GetConfig("JellyfinDeviceId", $"{Guid.NewGuid():N}");
+                    Config.SaveConfigWhenExit("JellyfinDeviceId", () => devideId);
+                    devideId = fromConf;
+                }
+                return devideId;
+            }
+        }
 
         private JellyfinSdkSettings sdkClientSettings;
 
@@ -70,7 +82,7 @@ namespace HotPotPlayer.Services
                 if (httpClient == null)
                 {
                     httpClient = new HttpClient();
-                    httpClient.DefaultRequestHeaders.UserAgent.Add(new ProductInfoHeaderValue("My-Jellyfin-Client", "0.0.1"));
+                    httpClient.DefaultRequestHeaders.UserAgent.Add(new ProductInfoHeaderValue("HotPotPlayer", "0.0.1"));
                     httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json", 1.0));
                     httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("*/*", 0.8));
                 }
