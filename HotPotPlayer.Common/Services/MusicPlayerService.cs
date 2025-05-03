@@ -87,7 +87,7 @@ namespace HotPotPlayer.Services
             get => _isPlaying;
             set => Set(ref _isPlaying, value, nowPlaying =>
             {
-                Task.Run(() =>
+                Task.Run(async () =>
                 {
                     if (nowPlaying)
                     {
@@ -95,6 +95,7 @@ namespace HotPotPlayer.Services
                         {
                             SMTC.PlaybackStatus = MediaPlaybackStatus.Playing;
                         }
+                        App?.Taskbar?.SetProgressState(TaskbarHelper.TaskbarStates.Normal);
                     }
                     else
                     {
@@ -102,6 +103,8 @@ namespace HotPotPlayer.Services
                         {
                             SMTC.PlaybackStatus = MediaPlaybackStatus.Paused;
                         }
+                        App?.Taskbar?.SetProgressState(TaskbarHelper.TaskbarStates.Paused);
+                        await App.JellyfinMusicService.ReportProgress(CurrentPlaying, CurrentTime.Ticks, true);
                     }
                 });
             });
@@ -453,14 +456,12 @@ namespace HotPotPlayer.Services
                 _playerTimer.Stop();
                 _mpv.Pause();
                 IsPlaying = false;
-                App?.Taskbar?.SetProgressState(TaskbarHelper.TaskbarStates.Paused);
             }
             else
             {
                 _mpv.Resume();
                 _playerTimer.Start();
                 IsPlaying = true;
-                App?.Taskbar?.SetProgressState(TaskbarHelper.TaskbarStates.Normal);
             }
         }
 
@@ -519,6 +520,12 @@ namespace HotPotPlayer.Services
                 }
             });
             UpdateSmtcPosition();
+            UpdateJellyfinPosition();
+        }
+
+        private async void UpdateJellyfinPosition()
+        {
+            await App.JellyfinMusicService.ReportProgress(CurrentPlaying, CurrentTime.Ticks, !IsPlaying);
         }
 
         private void PlayerStarterDoWork(object sender, DoWorkEventArgs e)

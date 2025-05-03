@@ -110,7 +110,7 @@ namespace HotPotPlayer.Services
             get => _isPlaying;
             set => Set(ref _isPlaying, value, nowPlaying =>
             {
-                Task.Run(() =>
+                Task.Run(async () =>
                 {
                     if (nowPlaying)
                     {
@@ -127,6 +127,7 @@ namespace HotPotPlayer.Services
                             SMTC.PlaybackStatus = MediaPlaybackStatus.Paused;
                         }
                         App?.Taskbar.SetProgressState(TaskbarHelper.TaskbarStates.Paused);
+                        await App.JellyfinMusicService.ReportProgress(CurrentPlaying, CurrentTime.Ticks, true);
                     }
                 });
             });
@@ -388,6 +389,7 @@ namespace HotPotPlayer.Services
         {
             _playerTimer.Stop();
             _mpv.Pause();
+            IsPlaying = false;
             App?.Taskbar.SetProgressState(TaskbarHelper.TaskbarStates.NoProgress);
         }
 
@@ -432,12 +434,12 @@ namespace HotPotPlayer.Services
                 }
             });
             UpdateSmtcPosition();
-            //UpdateJellyfinPosition();
+            UpdateJellyfinPosition();
         }
 
-        private void UpdateJellyfinPosition()
+        private async void UpdateJellyfinPosition()
         {
-            App.JellyfinMusicService.ReportProgress(CurrentPlaying, _currentPlaySessionId, CurrentTime.Ticks, !IsPlaying);
+            await App.JellyfinMusicService.ReportProgress(CurrentPlaying, CurrentTime.Ticks, !IsPlaying);
         }
 
         private void MediaEndedSeeking(object sender, EventArgs e)

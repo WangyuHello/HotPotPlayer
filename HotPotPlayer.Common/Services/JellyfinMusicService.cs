@@ -39,7 +39,7 @@ namespace HotPotPlayer.Services
         #endregion
         #region Field
         private string devideId;
-        public string DevideId => devideId ??= $"this-is-my-device-id-{Guid.NewGuid():N}";
+        public string DevideId => devideId ??= $"{Guid.NewGuid():N}";
 
         private JellyfinSdkSettings sdkClientSettings;
 
@@ -51,9 +51,9 @@ namespace HotPotPlayer.Services
                 {
                     sdkClientSettings = new JellyfinSdkSettings();
                     sdkClientSettings.Initialize(
-                        "HotpotPlayer",
+                        "HotPotPlayer",
                         "0.0.1",
-                        "Sample Device",
+                        Environment.MachineName,
                         DevideId);
                     sdkClientSettings.SetServerUrl(Config.GetConfig<string>("JellyfinUrl"));
                 }
@@ -100,6 +100,7 @@ namespace HotPotPlayer.Services
         private UserDto userDto;
         private BaseItemDto musicLibraryDto;
         public List<BaseItemDto> VideoLibraryDto { get; set; }
+        private List<SessionInfoDto> sessions;
 
         private bool IsLogin = false;
         #endregion
@@ -340,6 +341,7 @@ namespace HotPotPlayer.Services
             IsLogin = true;
 
             await GetViews().ConfigureAwait(false);
+            sessions = await GetPlaySeesion();
         }
 
         public async Task<List<BaseItemDto>> GetAlbumMusicItemsAsync(BaseItemDto album)
@@ -552,7 +554,19 @@ namespace HotPotPlayer.Services
             return result.PlaySessionId;
         }
 
-        public async void ReportProgress(BaseItemDto video, string playsessionId, long positionTicks, bool isPause, bool isMute = false)
+        public async Task<List<SessionInfoDto>> GetPlaySeesion()
+        {
+            var result = await JellyfinApiClient.Sessions.GetAsync(param =>
+            {
+                param.QueryParameters = new Jellyfin.Sdk.Generated.Sessions.SessionsRequestBuilder.SessionsRequestBuilderGetQueryParameters
+                {
+                    DeviceId = DevideId
+                };
+            }).ConfigureAwait(false);
+            return result;
+        }
+
+        public async Task ReportProgress(BaseItemDto video, long positionTicks, bool isPause, bool isMute = false)
         {
             await JellyfinApiClient.Sessions.Playing.Progress.PostAsync(new PlaybackProgressInfo
             {
@@ -561,7 +575,7 @@ namespace HotPotPlayer.Services
                 IsMuted = isMute,
                 ItemId = video.Id,
                 MediaSourceId = video.Id.Value.ToString(),
-                PlaySessionId = playsessionId,
+                PlaySessionId = sessions.First().Id,
                 PlayMethod = PlaybackProgressInfo_PlayMethod.DirectStream,
                 VolumeLevel = 100,
                 PositionTicks = positionTicks
