@@ -14,8 +14,14 @@
     xmlns:ui="using:CommunityToolkit.WinUI"
     xmlns:helper="using:HotPotPlayer.Pages.Helper"
     xmlns:helper2="using:HotPotPlayer.Helpers"
+    xmlns:media="using:Microsoft.UI.Xaml.Media"
     x:DefaultBindMode="OneWay"
     mc:Ignorable="d">
+
+    <base:UserControlBase.Resources>
+        <media:AcrylicBrush x:Key="PopupInfoBackground"
+            TintOpacity="0.4" TintLuminosityOpacity="0.1" TintColor="#CECDDB" FallbackColor="#CECDDB" />
+    </base:UserControlBase.Resources>
 
     <Grid Width="860" 
           Height="760"
@@ -45,7 +51,7 @@
 
         <Grid Margin="0,200,0,0" 
               x:Name="MainInfo"
-              Background="{StaticResource PopupBackground}">
+              Background="{ThemeResource PopupInfoBackground}">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="292" />
                 <ColumnDefinition Width="*" />

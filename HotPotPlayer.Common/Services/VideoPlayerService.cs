@@ -571,7 +571,7 @@ namespace HotPotPlayer.Services
 
                 e.Result = ValueTuple.Create(index, videoInfo, false);
                 _smtc ??= InitSmtc();
-                UpdateMstcInfo(videoInfo);
+                InitMstcInfo(videoInfo);
             }
             catch (Exception ex)
             {
@@ -746,7 +746,7 @@ namespace HotPotPlayer.Services
         /// https://docs.microsoft.com/en-us/windows/uwp/audio-video-camera/system-media-transport-controls
         /// </summary>
         /// <param name="index"></param>
-        private void UpdateMstcInfo(BaseItemDto video)
+        private void InitMstcInfo(BaseItemDto video)
         {
             SMTC.PlaybackStatus = MediaPlaybackStatus.Playing;
 
@@ -767,6 +767,7 @@ namespace HotPotPlayer.Services
 
             SMTC.DisplayUpdater.Update();
 
+            App?.Taskbar.SetProgressState(TaskbarHelper.TaskbarStates.NoProgress);
             App?.Taskbar.SetProgressValue(0, 100);
         }
 

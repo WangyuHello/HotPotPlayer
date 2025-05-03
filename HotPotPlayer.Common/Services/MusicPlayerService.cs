@@ -565,7 +565,7 @@ namespace HotPotPlayer.Services
                 e.Result = ValueTuple.Create(index, false);
 
                 _smtc ??= InitSmtc();
-                UpdateMstcInfo((int)e.Argument);
+                InitMstcInfo((int)e.Argument);
 
                 PreCacheNextMusic(index);
             }
@@ -901,7 +901,7 @@ namespace HotPotPlayer.Services
         /// https://docs.microsoft.com/en-us/windows/uwp/audio-video-camera/system-media-transport-controls
         /// </summary>
         /// <param name="index"></param>
-        private void UpdateMstcInfo(int index)
+        private void InitMstcInfo(int index)
         {
             SMTC.PlaybackStatus = MediaPlaybackStatus.Playing;
             var music = CurrentPlayList[index];
@@ -931,6 +931,7 @@ namespace HotPotPlayer.Services
 
             SMTC.DisplayUpdater.Update();
 
+            App?.Taskbar.SetProgressState(TaskbarHelper.TaskbarStates.NoProgress);
             App?.Taskbar.SetProgressValue(0, 100);
         }
     }
