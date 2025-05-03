@@ -37,17 +37,18 @@ namespace HotPotPlayer
         MusicPlayerService musicPlayer;
         public MusicPlayerService MusicPlayer => musicPlayer ??= new MusicPlayerService(Config, UIQueue, this);
 
-        VideoPlayerService videoPlayerService;
-        public VideoPlayerService VideoPlayer => videoPlayerService ??= new VideoPlayerService(Config, UIQueue, this);
+        VideoPlayerService videoPlayer;
+        public VideoPlayerService VideoPlayer => videoPlayer ??= new VideoPlayerService(Config, UIQueue, this);
 
         BiliBiliService bilibiliService;
         public BiliBiliService BiliBiliService => bilibiliService ??= new BiliBiliService(Config, UIQueue, this);
 
         public void ShutDown()
         {
-            jellyfinMusicService?.Dispose();
-            netEaseMusicService?.Dispose();
+            //jellyfinMusicService?.Dispose();
+            //netEaseMusicService?.Dispose();
             musicPlayer?.Dispose();
+            videoPlayer?.Dispose();
         }
 
         public abstract void ShowToast(ToastInfo toast);

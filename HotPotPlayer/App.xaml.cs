@@ -42,20 +42,6 @@ namespace HotPotPlayer
             MainWindow.Activate();
         }
 
-        private void MainWindow_Closed(object sender, WindowEventArgs args)
-        {
-            WindowHelper.GetWindowRect(MainWindowHandle, out WindowHelper.MyRect windowRect);
-            var scale = WindowHelper.GetDpiForWindow(MainWindowHandle) / 96d;
-            var width = Convert.ToInt32((windowRect.Right - windowRect.Left) / scale);
-            var height = Convert.ToInt32((windowRect.Bottom - windowRect.Top) / scale);
-
-            Config.SetConfig("width", width);
-            Config.SetConfig("height", height);
-            Config.SetConfig("initpage", MainWindow.GetSavePageName());
-            Config.SaveSettings();
-            ShutDown();
-        }
-
         private void InitMainWindow(LaunchActivatedEventArgs args)
         {
             MainWindow.Title = "HotPotPlayer";
@@ -63,9 +49,10 @@ namespace HotPotPlayer
             var height = Config.GetConfig("height", 1100);
             MainWindow.CenterOnScreen(width, height);
             MainWindow.TrySetAcrylicBackdrop();
-            MainWindow.Closed += MainWindow_Closed;
             MainWindow.SizeChanged += MainWindow_SizeChanged;
             SetIcon();
+
+            AppWindow.Closing += AppWindow_Closing;
 
             var firstArg = args.Arguments; //尚不支持，永远为null
             var args2 = Environment.GetCommandLineArgs();
@@ -81,6 +68,21 @@ namespace HotPotPlayer
             }
 
             Config.MainWindowHandle = MainWindowHandle;
+        }
+
+        private void AppWindow_Closing(AppWindow sender, AppWindowClosingEventArgs args)
+        {
+            //args.Cancel = true;
+            WindowHelper.GetWindowRect(MainWindowHandle, out WindowHelper.MyRect windowRect);
+            var scale = WindowHelper.GetDpiForWindow(MainWindowHandle) / 96d;
+            var width = Convert.ToInt32((windowRect.Right - windowRect.Left) / scale);
+            var height = Convert.ToInt32((windowRect.Bottom - windowRect.Top) / scale);
+
+            Config.SetConfig("width", width);
+            Config.SetConfig("height", height);
+            Config.SetConfig("initpage", MainWindow.GetSavePageName());
+            Config.SaveSettings();
+            ShutDown();
         }
 
         private void SetIcon()

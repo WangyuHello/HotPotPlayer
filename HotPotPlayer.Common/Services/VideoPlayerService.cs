@@ -826,9 +826,9 @@ namespace HotPotPlayer.Services
                 _mpv.MediaStartedSeeking -= MediaStartedSeeking;
                 _mpv.MediaEndedSeeking -= MediaEndedSeeking;
             }
-            _mpv?.Dispose();
-            base.Dispose();
-            GC.SuppressFinalize(this);
+            //_mpv?.Dispose();
+            //base.Dispose();
+            //GC.SuppressFinalize(this);
         }
     }
 }
