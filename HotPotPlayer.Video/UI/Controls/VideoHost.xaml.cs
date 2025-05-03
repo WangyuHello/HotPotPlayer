@@ -439,7 +439,7 @@ namespace HotPotPlayer.Video.UI.Controls
             //_swapChainPanelNative.SetSwapChain(null);
             Task.Run(() =>
             {
-                VideoPlayer.Pause();
+                VideoPlayer.PauseAsStop();
                 //VideoPlayer.ShutDown();
             });
         }

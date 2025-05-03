@@ -36,6 +36,7 @@ namespace HotPotPlayer.Services
     public partial class VideoPlayerService : ServiceBaseWithConfig
     {
 
+        readonly Timer _playerTimer;
         public VideoPlayerService(ConfigBase config, DispatcherQueue uiThread = null, AppBase app = null) : base(config, uiThread, app)
         {
             _playerStarter = new BackgroundWorker
@@ -45,6 +46,11 @@ namespace HotPotPlayer.Services
 
             _playerStarter.RunWorkerCompleted += PlayerStarterCompleted;
             _playerStarter.DoWork += PlayerStarterDoWork;
+            _playerTimer = new Timer(500)
+            {
+                AutoReset = true
+            };
+            _playerTimer.Elapsed += PlayerTimerElapsed;
 
             Config.SaveConfigWhenExit("Volume", () => (Volume != 0, Volume));
         }
@@ -178,7 +184,6 @@ namespace HotPotPlayer.Services
 
         public event EventHandler<MpvVideoGeometryInitEventArgs> VideoGeometryInit;
         public event EventHandler<IntPtr> SwapChainInited;
-        public event Action OnMediaLoaded;
         public IntPtr SwapChain { get; set; }
         MpvPlayer _mpv;
         bool _isVideoSwitching;
@@ -289,6 +294,7 @@ namespace HotPotPlayer.Services
                 {
                     return;
                 }
+                _playerTimer.Stop();
                 CurrentTime = TimeSpan.Zero;
                 IsPlaying = false;
 
@@ -351,13 +357,17 @@ namespace HotPotPlayer.Services
             }
             if (_mpv.IsPlaying)
             {
+                _playerTimer.Stop();
                 _mpv.Pause();
                 IsPlaying = false;
+                App?.Taskbar.SetProgressState(TaskbarHelper.TaskbarStates.Paused);
             }
             else
             {
                 _mpv.Resume();
+                _playerTimer.Start();
                 IsPlaying = true;
+                App?.Taskbar.SetProgressState(TaskbarHelper.TaskbarStates.Normal);
             }
         }
 
@@ -368,12 +378,15 @@ namespace HotPotPlayer.Services
 
         public void Stop()
         {
+            _playerTimer.Stop();
             _mpv.Stop();
         }
 
-        public void Pause()
+        public void PauseAsStop()
         {
+            _playerTimer.Stop();
             _mpv.Pause();
+            App?.Taskbar.SetProgressState(TaskbarHelper.TaskbarStates.NoProgress);
         }
 
         public void TogglePlayMode()
@@ -402,21 +415,22 @@ namespace HotPotPlayer.Services
             _mpv?.API.SetPropertyLong(key, value);
         }
 
-        //private void PlayerTimerElapsed(object sender, ElapsedEventArgs e)
-        //{
-        //    var time = _mpv.Position;
-        //    UIQueue.TryEnqueue(() =>
-        //    {
-        //        try
-        //        {
-        //            CurrentTime = time;
-        //        }
-        //        catch (Exception)
-        //        {
+        private void PlayerTimerElapsed(object sender, ElapsedEventArgs e)
+        {
+            var time = _mpv.Position;
+            UIQueue.TryEnqueue(() =>
+            {
+                try
+                {
+                    CurrentTime = time;
+                }
+                catch (Exception)
+                {
 
-        //        }
-        //    });
-        //}
+                }
+            });
+            UpdateSmtcPosition();
+        }
 
         private void MediaEndedSeeking(object sender, EventArgs e)
         {
@@ -448,11 +462,12 @@ namespace HotPotPlayer.Services
             {
                 CurrentTime = e.NewPosition;
             });
-            UpdateSmtcPosition();
+            //UpdateSmtcPosition();
         }
 
         private void MediaFinished(object sender, EventArgs e)
         {
+            _playerTimer.Stop();
             UIQueue.TryEnqueue(() =>
             {
                 IsPlaying = false;
@@ -463,6 +478,8 @@ namespace HotPotPlayer.Services
             }
         }
 
+        public Action OnMediaLoaded;
+
         private void MediaLoaded(object sender, EventArgs e)
         {
             _mpv.Resume();
@@ -472,6 +489,7 @@ namespace HotPotPlayer.Services
                 RaisePropertyChanged(nameof(Volume));
                 RaisePropertyChanged(nameof(CurrentPlayingDuration));
             });
+            OnMediaLoaded?.Invoke();
         }
 
         private void MediaPaused(object sender, EventArgs e)
@@ -582,8 +600,8 @@ namespace HotPotPlayer.Services
                     //music.IsIntercept = intercept;
                     CurrentPlaying = info;
                     CurrentPlayingIndex = index;
+                    _playerTimer.Start();
                     RaisePropertyChanged(nameof(Volume));
-                    OnMediaLoaded?.Invoke();
                 }
                 else if (e.Result is (int index2, Exception _playException))
                 {
@@ -748,6 +766,8 @@ namespace HotPotPlayer.Services
             }
 
             SMTC.DisplayUpdater.Update();
+
+            App?.Taskbar.SetProgressValue(0, 100);
         }
 
         public IComObject<IDXGISwapChain1> GetOrCreateSwapChain()
