@@ -8,6 +8,7 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:cont2="using:HotPotPlayer.UI.Controls"
+    xmlns:jmodel="using:Jellyfin.Sdk.Generated.Models"
     xmlns:winui="using:Microsoft.UI.Xaml.Controls"
     xmlns:animations="using:CommunityToolkit.WinUI.Animations"
     xmlns:controls="using:CommunityToolkit.WinUI.Controls"
@@ -21,6 +22,15 @@
     <base:UserControlBase.Resources>
         <media:AcrylicBrush x:Key="PopupInfoBackground"
             TintOpacity="0.4" TintLuminosityOpacity="0.1" TintColor="#CECDDB" FallbackColor="#CECDDB" />
+
+        <DataTemplate x:Name="NameGuidButton" x:DataType="jmodel:NameGuidPair">
+            <HyperlinkButton Background="#10000000" Padding="4" Content="{x:Bind Name}" FontSize="14" FontFamily="{ThemeResource MiSansRegular}"/>
+        </DataTemplate>
+        <DataTemplate x:Name="BaseItemPersonButton" x:DataType="jmodel:BaseItemPerson">
+            <HyperlinkButton Background="#10000000" Padding="4" Content="{x:Bind Name}" FontSize="14" FontFamily="{ThemeResource MiSansRegular}"/>
+        </DataTemplate>
+
+        <controls:WrapLayout x:Name="ButtonWrapLayout" VerticalSpacing="4" HorizontalSpacing="8"/>
     </base:UserControlBase.Resources>
 
     <Grid Width="860" 
@@ -80,14 +90,22 @@
                         <ColumnDefinition Width="*" />
                     </Grid.ColumnDefinitions>
 
-                    <TextBlock VerticalAlignment="Center" FontSize="14" Text="类型" FontFamily="{ThemeResource MiSansMedium}"/>
-                    <HyperlinkButton Grid.Column="1" VerticalAlignment="Center" Content="{x:Bind GetGenres(SeriesInfo.Genres)}" Tag="{x:Bind }" FontSize="14" FontFamily="{ThemeResource MiSansRegular}"/>
-                    <TextBlock Grid.Row="1" FontSize="14" VerticalAlignment="Center" Visibility="{x:Bind GetDirectorVisible(SeriesInfo.People)}" Text="导演" FontFamily="{ThemeResource MiSansMedium}"/>
-                    <HyperlinkButton Grid.Row="1" VerticalAlignment="Center" Grid.Column="1" Visibility="{x:Bind GetDirectorVisible(SeriesInfo.People)}" Content="{x:Bind GetDirector(SeriesInfo.People)}" Tag="{x:Bind }" FontSize="14" FontFamily="{ThemeResource MiSansRegular}"/>
-                    <TextBlock Grid.Row="2" FontSize="14" VerticalAlignment="Center" Text="{x:Bind GetWriterTitle(SeriesInfo)}" FontFamily="{ThemeResource MiSansMedium}"/>
-                    <HyperlinkButton Grid.Row="2" VerticalAlignment="Center" Grid.Column="1" Content="{x:Bind GetWriter(SeriesInfo.People)}" Tag="{x:Bind }" FontSize="14" FontFamily="{ThemeResource MiSansRegular}"/>
-                    <TextBlock Grid.Row="3" FontSize="14" VerticalAlignment="Center" Text="工作室" FontFamily="{ThemeResource MiSansMedium}"/>
-                    <HyperlinkButton Grid.Row="3" VerticalAlignment="Center" Grid.Column="1" Content="{x:Bind GetStudios(SeriesInfo.Studios)}" Tag="{x:Bind }" FontSize="14" FontFamily="{ThemeResource MiSansRegular}"/>
+                    <TextBlock Margin="0,5,0,0" VerticalAlignment="Top" FontSize="14" Text="类型" FontFamily="{ThemeResource MiSansMedium}"/>
+                    <winui:ItemsRepeater ItemsSource="{x:Bind SeriesInfo.GenreItems}" ItemTemplate="{StaticResource NameGuidButton}" Grid.Column="1" Layout="{StaticResource ButtonWrapLayout}">
+                    </winui:ItemsRepeater>
+
+                    <TextBlock Margin="0,13,0,0" Grid.Row="1" FontSize="14" VerticalAlignment="Top" Visibility="{x:Bind GetDirectorVisible(SeriesInfo.People)}" Text="导演" FontFamily="{ThemeResource MiSansMedium}"/>
+                    <winui:ItemsRepeater Margin="0,8,0,0" Grid.Row="1" Grid.Column="1" ItemsSource="{x:Bind GetDirector(SeriesInfo.People)}" ItemTemplate="{StaticResource BaseItemPersonButton}" Layout="{StaticResource ButtonWrapLayout}">
+                    </winui:ItemsRepeater>
+
+
+                    <TextBlock Margin="0,13,0,0" Grid.Row="2" FontSize="14" VerticalAlignment="Top" Text="{x:Bind GetWriterTitle(SeriesInfo)}" FontFamily="{ThemeResource MiSansMedium}"/>
+                    <winui:ItemsRepeater Margin="0,8,0,0" Grid.Row="2" Grid.Column="1" ItemsSource="{x:Bind GetWriter(SeriesInfo.People)}" ItemTemplate="{StaticResource BaseItemPersonButton}" Layout="{StaticResource ButtonWrapLayout}">
+                    </winui:ItemsRepeater>
+
+                    <TextBlock Margin="0,13,0,0" Grid.Row="3" FontSize="14" VerticalAlignment="Top" Text="工作室" FontFamily="{ThemeResource MiSansMedium}"/>
+                    <winui:ItemsRepeater Margin="0,8,0,0" Grid.Row="3" Grid.Column="1" ItemsSource="{x:Bind SeriesInfo.Studios}" ItemTemplate="{StaticResource NameGuidButton}" Layout="{StaticResource ButtonWrapLayout}">
+                    </winui:ItemsRepeater>
                 </Grid>
 
                 <animations:Implicit.Animations>

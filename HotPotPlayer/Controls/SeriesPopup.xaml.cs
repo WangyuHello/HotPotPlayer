@@ -157,19 +157,9 @@ namespace HotPotPlayer.Controls
             return 0;
         }
 
-        private string GetGenres(List<string> genres)
+        private IEnumerable<BaseItemPerson> GetDirector(List<BaseItemPerson> people)
         {
-            return string.Join(", ", genres);
-        }
-
-        private string GetStudios(List<NameGuidPair> studios)
-        {
-            return string.Join (", ", studios.Select(s => s.Name));
-        }
-
-        private string GetDirector(List<BaseItemPerson> people)
-        {
-            return people.FirstOrDefault(p => p.Type == BaseItemPerson_Type.Director)?.Name;
+            return people.Where(p => p.Type == BaseItemPerson_Type.Director);
         }
 
         private Visibility GetDirectorVisible(List<BaseItemPerson> people)
@@ -177,9 +167,9 @@ namespace HotPotPlayer.Controls
             return people.FirstOrDefault(p => p.Type == BaseItemPerson_Type.Director) == null ? Visibility.Collapsed : Visibility.Visible;
         }
 
-        private string GetWriter(List<BaseItemPerson> people)
+        private IEnumerable<BaseItemPerson> GetWriter(List<BaseItemPerson> people)
         {
-            return people.FirstOrDefault(p => p.Type == BaseItemPerson_Type.Writer)?.Name;
+            return people.Where(p => p.Type == BaseItemPerson_Type.Writer);
         }
 
         private string GetWriterTitle(BaseItemDto series)
