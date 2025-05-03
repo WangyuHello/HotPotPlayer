@@ -12,12 +12,12 @@ using Windows.Foundation;
 
 namespace HotPotPlayer.Models
 {
-    public class VideoCollection(JellyfinMusicService service, BaseItemDto library) : ObservableCollection<BaseItemDto>, ISupportIncrementalLoading
+    public partial class VideoCollection(JellyfinMusicService service, BaseItemDto library) : ObservableCollection<BaseItemDto>, ISupportIncrementalLoading
     {
         readonly BaseItemDto _library = library;
         readonly JellyfinMusicService _service = service;
         int _pageNum;
-        const int _perPageItem = 50;
+        const int _perPageItem = 30;
         bool _hasMore = true;
         public bool HasMoreItems => _hasMore;
 

@@ -1,4 +1,5 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.WinUI;
 using HotPotPlayer.Controls;
 using HotPotPlayer.Extensions;
 using HotPotPlayer.Models;
@@ -45,12 +46,13 @@ namespace HotPotPlayer.Pages
 
         private List<BaseItemDto> videoViews;
         private List<VideoCollection> videoLists;
-
-        [ObservableProperty]
-        private VideoCollection selectedVideoList;
+        private List<GridView> videoGridViews;
 
         [ObservableProperty]
         private BaseItemDto selectedSeries;
+
+        [ObservableProperty]
+        private int selectedPivotIndex;
 
         bool IsFirstNavigate = true;
 
@@ -61,56 +63,66 @@ namespace HotPotPlayer.Pages
             {
                 IsFirstNavigate = false;
                 videoViews = await JellyfinMusicService.GetVideoViews();
+                videoGridViews = [];
+                videoLists = [.. videoViews.Select(v => new VideoCollection(JellyfinMusicService, v))];
+
+                Style style = this.FindResource("SeriesCardViewStyle") as Style;
 
                 int i = 0;
                 foreach (var videoView in videoViews)
                 {
-                    VideoSelector.Items.Add(new SelectorBarItem
+
+                    var gridView = new GridView()
                     {
-                        IsSelected = i == 0,
-                        Text = videoView.Name,
-                        Tag = videoView,
-                        FontSize = 24,
-                        FontFamily = (Microsoft.UI.Xaml.Media.FontFamily)Application.Current.Resources["MiSansRegular"]
+                        Margin = new Thickness(0, 8, 0, 0),
+                        Style = style,
+                        Footer = new Grid { Height = 100 },
+                        ItemContainerTransitions = null,
+                        ItemsSource = videoLists[i]
+                    };
+
+                    gridView.ItemClick += SeriesClick;
+                    videoGridViews.Add(gridView);
+
+                    VideoPivot.Items.Add(new PivotItem
+                    {
+                        Header = videoView.Name,
+                        Margin = new Thickness(0),
+                        Content = gridView
                     });
+
                     i++;
                 }
-
-                videoLists = videoViews.Select(v => new VideoCollection(JellyfinMusicService, v)).ToList();
-                SelectedVideoList = videoLists[0];
             }
-        }
-        private void VideoSelector_SelectionChanged(SelectorBar sender, SelectorBarSelectionChangedEventArgs args)
-        {
-            SelectorBarItem selectedItem = sender.SelectedItem;
-            int currentSelectedIndex = sender.Items.IndexOf(selectedItem);
-            SelectedVideoList = videoLists[currentSelectedIndex];
         }
 
         private void SeriesClick(object sender, ItemClickEventArgs e)
         {
             var series = e.ClickedItem as BaseItemDto;
+            var gridView = sender as GridView;
             SelectedSeries = series;
 
-            var ani = VideoGridView.PrepareConnectedAnimation("forwardAnimation", series, "SeriesCardConnectedElement");
+            var ani = gridView.PrepareConnectedAnimation("forwardAnimation", series, "SeriesCardConnectedElement");
             ani.Configuration = new BasicConnectedAnimationConfiguration();
             ani.TryStart(SeriesPopupTarget);
 
             SeriesPopupOverlay.Visibility = Visibility.Visible;
 
-            var container = (GridViewItem)VideoGridView.ContainerFromItem(SelectedSeries);
+            var container = (GridViewItem)gridView.ContainerFromItem(SelectedSeries);
             var root = container.ContentTemplateRoot;
             root.Opacity = 0;
         }
 
         private async void SeriesPopupOverlay_Tapped(object sender, TappedRoutedEventArgs e)
         {
+            var gridView = videoGridViews[SelectedPivotIndex];
+
             var anim = ConnectedAnimationService.GetForCurrentView().PrepareToAnimate("backwardsAnimation", SeriesPopupTarget);
             anim.Configuration = new BasicConnectedAnimationConfiguration();
-            await VideoGridView.TryStartConnectedAnimationAsync(anim, SelectedSeries, "SeriesCardConnectedElement");
+            await gridView.TryStartConnectedAnimationAsync(anim, SelectedSeries, "SeriesCardConnectedElement");
             SeriesPopupOverlay.Visibility = Visibility.Collapsed;
 
-            var container = (GridViewItem)VideoGridView.ContainerFromItem(SelectedSeries);
+            var container = (GridViewItem)gridView.ContainerFromItem(SelectedSeries);
             var root = container.ContentTemplateRoot;
             root.Opacity = 1;
         }
