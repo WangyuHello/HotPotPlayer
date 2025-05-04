@@ -24,10 +24,10 @@
             TintOpacity="0.4" TintLuminosityOpacity="0.1" TintColor="#CECDDB" FallbackColor="#CECDDB" />
 
         <DataTemplate x:Name="NameGuidButton" x:DataType="jmodel:NameGuidPair">
-            <HyperlinkButton Background="#10000000" Padding="4" Content="{x:Bind Name}" FontSize="14" FontFamily="{ThemeResource MiSansRegular}"/>
+            <HyperlinkButton Background="#10000000" Padding="4" Content="{x:Bind Name, Mode=OneTime}" FontSize="14" FontFamily="{ThemeResource MiSansRegular}"/>
         </DataTemplate>
         <DataTemplate x:Name="BaseItemPersonButton" x:DataType="jmodel:BaseItemPerson">
-            <HyperlinkButton Background="#10000000" Padding="4" Content="{x:Bind Name}" FontSize="14" FontFamily="{ThemeResource MiSansRegular}"/>
+            <HyperlinkButton Background="#10000000" Padding="4" Content="{x:Bind Name, Mode=OneTime}" FontSize="14" FontFamily="{ThemeResource MiSansRegular}"/>
         </DataTemplate>
 
         <controls:WrapLayout x:Name="ButtonWrapLayout" VerticalSpacing="4" HorizontalSpacing="8"/>

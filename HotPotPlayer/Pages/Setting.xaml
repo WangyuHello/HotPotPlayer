@@ -77,12 +77,27 @@
                                 Style="{StaticResource AccentButtonStyle}" 
                                 Click="AddJellyfinServer"/>
                     </controls:SettingsExpander>
-                    <TextBlock Margin="0,12" FontSize="18" FontFamily="{ThemeResource MiSansMedium}">调试</TextBlock>
-                    <Button Click="OpenInstalledLocationClick" FontFamily="{ThemeResource MiSansNormal}">打开安装位置</Button>
-                    <Button Click="OpenDataLocationClick" FontFamily="{ThemeResource MiSansNormal}">打开数据位置</Button>
-                    <Button Click="ClearDataClick" Style="{ThemeResource AccentButtonStyle}" FontFamily="{ThemeResource MiSansNormal}">删除应用数据</Button>
-                    <Button Click="ClearConfigClick" Style="{ThemeResource AccentButtonStyle}" FontFamily="{ThemeResource MiSansNormal}">删除应用配置</Button>
-                    <Button Click="ClearCacheClick" Style="{ThemeResource AccentButtonStyle}" FontFamily="{ThemeResource MiSansNormal}">删除缓存</Button>
+                    <TextBlock Margin="0,24,0,12" FontSize="18" FontFamily="{ThemeResource MiSansMedium}">调试</TextBlock>
+
+                    <controls:SettingsCard Header="打开安装位置" FontFamily="{ThemeResource MiSansNormal}" IsClickEnabled="True" Click="OpenInstalledLocationClick">
+                        
+                    </controls:SettingsCard>
+
+                    <controls:SettingsCard Header="打开数据位置" FontFamily="{ThemeResource MiSansNormal}" IsClickEnabled="True" Click="OpenDataLocationClick">
+
+                    </controls:SettingsCard>
+
+                    <controls:SettingsCard Header="删除应用数据" Description="注意：此操作不可逆" FontFamily="{ThemeResource MiSansNormal}" IsClickEnabled="True" Click="ClearDataClick">
+
+                    </controls:SettingsCard>
+
+                    <controls:SettingsCard Header="删除应用配置" Description="注意：此操作不可逆" FontFamily="{ThemeResource MiSansNormal}" IsClickEnabled="True" Click="ClearConfigClick">
+
+                    </controls:SettingsCard>
+
+                    <controls:SettingsCard Header="删除应用缓存" Description="注意：此操作不可逆" FontFamily="{ThemeResource MiSansNormal}" IsClickEnabled="True" Click="ClearCacheClick">
+
+                    </controls:SettingsCard>
                 </StackPanel>
             </Grid>
         </ScrollViewer>

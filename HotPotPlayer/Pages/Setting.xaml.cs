@@ -1,5 +1,6 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.WinUI.Controls;
+using HotPotPlayer.Bilibili.Models.Search;
 using HotPotPlayer.Models;
 using HotPotPlayer.Pages.SettingSub;
 using HotPotPlayer.Services;
@@ -64,32 +65,81 @@ namespace HotPotPlayer.Pages
 
         private async void ClearDataClick(object sender, RoutedEventArgs e)
         {
-            await ApplicationData.Current.ClearAsync();
-
-            ContentDialog dialog = new();
-            dialog.Title = "清理完成";
-            dialog.PrimaryButtonText = "确定";
-            dialog.DefaultButton = ContentDialogButton.Primary;
-            dialog.XamlRoot = XamlRoot;
-
-            var _ = await dialog.ShowAsync();
-        }
-
-        private void ClearConfigClick(object sender, RoutedEventArgs e)
-        {
-            Config.ResetSettings();
-        }
-
-        private void ClearCacheClick(object sender, RoutedEventArgs e)
-        {
-            var cache = Config.CacheFolder;
-            var di = new DirectoryInfo(cache);
-            var temp = di.Parent.GetDirectories("TempState").FirstOrDefault();
-            if (temp == null) return;
-            var sub = temp.GetDirectories();
-            foreach (var item in sub)
+            ContentDialog dialog = new()
             {
-                item.Delete(true);
+                XamlRoot = App.XamlRoot,
+                Style = Application.Current.Resources["DefaultContentDialogStyle"] as Style,
+                Title = "确认删除应用数据？",
+                PrimaryButtonText = "确认",
+                CloseButtonText = "取消",
+                DefaultButton = ContentDialogButton.Primary,
+                FontFamily = Application.Current.Resources["MiSansNormal"] as Microsoft.UI.Xaml.Media.FontFamily,
+            };
+            var result = await dialog.ShowAsync();
+
+            if (result == ContentDialogResult.Primary)
+            {
+                await ApplicationData.Current.ClearAsync();
+                App.ShowToast(new ToastInfo
+                {
+                    Text = "已删除应用数据"
+                });
+            }
+        }
+
+        private async void ClearConfigClick(object sender, RoutedEventArgs e)
+        {
+            ContentDialog dialog = new()
+            {
+                XamlRoot = App.XamlRoot,
+                Style = Application.Current.Resources["DefaultContentDialogStyle"] as Style,
+                Title = "确认删除应用配置？",
+                PrimaryButtonText = "确认",
+                CloseButtonText = "取消",
+                DefaultButton = ContentDialogButton.Primary,
+                FontFamily = Application.Current.Resources["MiSansNormal"] as Microsoft.UI.Xaml.Media.FontFamily,
+            };
+            var result = await dialog.ShowAsync();
+
+            if (result == ContentDialogResult.Primary)
+            {
+                Config.ResetSettings();
+                App.ShowToast(new ToastInfo
+                {
+                    Text = "已删除应用配置"
+                });
+            }
+        }
+
+        private async void ClearCacheClick(object sender, RoutedEventArgs e)
+        {
+            ContentDialog dialog = new()
+            {
+                XamlRoot = App.XamlRoot,
+                Style = Application.Current.Resources["DefaultContentDialogStyle"] as Style,
+                Title = "确认删除应用缓存？",
+                PrimaryButtonText = "确认",
+                CloseButtonText = "取消",
+                DefaultButton = ContentDialogButton.Primary,
+                FontFamily = Application.Current.Resources["MiSansNormal"] as Microsoft.UI.Xaml.Media.FontFamily,
+            };
+            var result = await dialog.ShowAsync();
+
+            if (result == ContentDialogResult.Primary)
+            {
+                var cache = Config.CacheFolder;
+                var di = new DirectoryInfo(cache);
+                var temp = di.Parent.GetDirectories("TempState").FirstOrDefault();
+                if (temp == null) return;
+                var sub = temp.GetDirectories();
+                foreach (var item in sub)
+                {
+                    item.Delete(true);
+                }
+                App.ShowToast(new ToastInfo
+                {
+                    Text = "已删除应用缓存"
+                });
             }
         }
 
@@ -114,6 +164,7 @@ namespace HotPotPlayer.Pages
             var dialogContent = new AddJellyfinServerDialog();
             dialog.Content = dialogContent;
             dialog.IsPrimaryButtonEnabled = false;
+            dialog.FontFamily = Application.Current.Resources["MiSansNormal"] as Microsoft.UI.Xaml.Media.FontFamily;
 
             var result = await dialog.ShowAsync();
 
