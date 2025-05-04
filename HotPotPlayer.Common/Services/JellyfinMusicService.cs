@@ -1,7 +1,4 @@
-﻿using CommunityToolkit.Mvvm.Collections;
-using DirectN;
-using Google.Protobuf.WellKnownTypes;
-using HotPotPlayer.Bilibili.Models.User;
+﻿using CommunityToolkit.Mvvm.ComponentModel;
 using HotPotPlayer.Models;
 using Jellyfin.Sdk;
 using Jellyfin.Sdk.Generated.Artists;
@@ -10,13 +7,10 @@ using Jellyfin.Sdk.Generated.Models;
 using Microsoft.UI.Dispatching;
 using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Diagnostics;
 using System.Linq;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Threading.Tasks;
-using TagLib.Matroska;
 using SortOrder = Jellyfin.Sdk.Generated.Models.SortOrder;
 
 namespace HotPotPlayer.Services
@@ -25,17 +19,17 @@ namespace HotPotPlayer.Services
     {
 
         #region State
-        private LocalServiceState _state = LocalServiceState.Idle;
-
-        public LocalServiceState State
-        {
-            get => _state;
-            set => Set(ref _state, value);
-        }
+        [ObservableProperty]
+        private LocalServiceState state = LocalServiceState.Idle;
 
         #endregion
         #region Property
-        public List<BaseItemDto> JellyfinPlayListList { get; set; }
+        [ObservableProperty]
+        private List<BaseItemDto> jellyfinPlayListList;
+
+        [ObservableProperty]
+        private PublicSystemInfo systemInfo;
+
         #endregion
         #region Field
         private string devideId;
@@ -46,7 +40,7 @@ namespace HotPotPlayer.Services
                 if (string.IsNullOrEmpty(devideId))
                 {
                     var fromConf = Config.GetConfig("JellyfinDeviceId", $"{Guid.NewGuid():N}");
-                    Config.SaveConfigWhenExit("JellyfinDeviceId", () => devideId);
+                    Config.SetConfig("JellyfinDeviceId", devideId);
                     devideId = fromConf;
                 }
                 return devideId;
@@ -113,14 +107,25 @@ namespace HotPotPlayer.Services
         private BaseItemDto musicLibraryDto;
         public List<BaseItemDto> VideoLibraryDto { get; set; }
         private List<SessionInfoDto> sessions;
-
+        
         private bool IsLogin = false;
         #endregion
+
+        public async Task GetSystemInfoPublic()
+        {
+            var result = await JellyfinApiClient.System.Info.Public.GetAsync().ConfigureAwait(false);
+            SystemInfo = result;
+        }
 
         public async Task<IEnumerable<IGrouping<int, BaseItemDto>>> GetJellyfinAlbumGroupsAsync()
         {
             if (!IsLogin)
             {
+                var pw = Config.GetConfig<string>("JellyfinPassword");
+                if (string.IsNullOrEmpty(pw))
+                {
+                    return null;
+                }
                 await JellyfinLoginAsync();
             }
 
@@ -144,6 +149,11 @@ namespace HotPotPlayer.Services
         {
             if (!IsLogin)
             {
+                var pw = Config.GetConfig<string>("JellyfinPassword");
+                if (string.IsNullOrEmpty(pw))
+                {
+                    return null;
+                }
                 await JellyfinLoginAsync();
             }
 
@@ -216,6 +226,11 @@ namespace HotPotPlayer.Services
         {
             if (!IsLogin)
             {
+                var pw = Config.GetConfig<string>("JellyfinPassword");
+                if (string.IsNullOrEmpty(pw))
+                {
+                    return null;
+                }
                 await JellyfinLoginAsync();
             }
 
@@ -340,7 +355,11 @@ namespace HotPotPlayer.Services
 
         public async Task JellyfinLoginAsync()
         {
-            var systemInfo = await JellyfinApiClient.System.Info.Public.GetAsync();
+            if (IsLogin)
+            {
+                return;
+            }
+            await GetSystemInfoPublic();
             // Authenticate user.
             var authenticationResult = await JellyfinApiClient.Users.AuthenticateByName.PostAsync(new AuthenticateUserByName
             {
@@ -350,10 +369,10 @@ namespace HotPotPlayer.Services
 
             SdkClientSettings.SetAccessToken(authenticationResult.AccessToken);
             userDto = authenticationResult.User;
-            IsLogin = true;
 
             await GetViews().ConfigureAwait(false);
             sessions = await GetPlaySeesion();
+            IsLogin = true;
         }
 
         public async Task<List<BaseItemDto>> GetAlbumMusicItemsAsync(BaseItemDto album)

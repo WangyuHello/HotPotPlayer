@@ -1,4 +1,5 @@
-﻿using HotPotPlayer.Helpers;
+﻿using CommunityToolkit.Mvvm.ComponentModel;
+using HotPotPlayer.Helpers;
 using HotPotPlayer.Models;
 using Jellyfin.Sdk.Generated.Models;
 using Microsoft.UI.Dispatching;
@@ -30,41 +31,24 @@ namespace HotPotPlayer.Services
         Loading
     }
 
-    public class MusicPlayerService: ServiceBaseWithConfig
+    public partial class MusicPlayerService: ServiceBaseWithConfig
     {
-        private PlayerState _state;
-        public PlayerState State
-        {
-            get => _state;
-            set => Set(ref _state, value);
-        }
+        [ObservableProperty]
+        private PlayerState state;
 
-        private BaseItemDto _currentPlaying;
-        public BaseItemDto CurrentPlaying
-        {
-            get => _currentPlaying;
-            set => Set(ref _currentPlaying, value);
-        }
+        [ObservableProperty]
+        private BaseItemDto currentPlaying;
 
         public TimeSpan? CurrentPlayingDuration
         {
             get => _mpv?.Duration;
         }
 
-        private int _currentPlayingIndex = -1;
-        public int CurrentPlayingIndex
-        {
-            get => _currentPlayingIndex;
-            set => Set(ref _currentPlayingIndex, value);
-        }
+        [ObservableProperty]
+        private int currentPlayingIndex = -1;
 
-        private ObservableCollection<BaseItemDto> _currentPlayList;
-
-        public ObservableCollection<BaseItemDto> CurrentPlayList
-        {
-            get => _currentPlayList;
-            set => Set(ref _currentPlayList, value);
-        }
+        [ObservableProperty]
+        private ObservableCollection<BaseItemDto> currentPlayList;
 
         public bool SuppressCurrentTimeTrigger { get; set; }
 
@@ -76,7 +60,7 @@ namespace HotPotPlayer.Services
             set
             {
                 if (SuppressCurrentTimeTrigger) return;
-                Set(ref _currentTime, value);
+                SetProperty(ref _currentTime, value);
             }
         }
 
@@ -85,7 +69,7 @@ namespace HotPotPlayer.Services
         public bool IsPlaying
         {
             get => _isPlaying;
-            set => Set(ref _isPlaying, value, nowPlaying =>
+            set => SetProperty(ref _isPlaying, value, nowPlaying =>
             {
                 Task.Run(async () =>
                 {
@@ -110,36 +94,17 @@ namespace HotPotPlayer.Services
             });
         }
 
-        private bool _hasError;
+        [ObservableProperty]
+        private bool hasError;
 
-        public bool HasError
-        {
-            get => _hasError;
-            set => Set(ref _hasError, value);
-        }
+        [ObservableProperty]
+        private bool isPlayBarVisible;
 
-        private bool _isPlayBarVisible;
+        [ObservableProperty]
+        private bool isPlayListBarVisible;
 
-        public bool IsPlayBarVisible
-        {
-            get => _isPlayBarVisible;
-            set => Set(ref _isPlayBarVisible, value);
-        }
-
-        private bool _isPlayListBarVisible;
-        public bool IsPlayListBarVisible
-        {
-            get => _isPlayListBarVisible;
-            set => Set(ref _isPlayListBarVisible, value);
-        }
-
-        private bool _isPlayScreenVisible;
-
-        public bool IsPlayScreenVisible
-        {
-            get => _isPlayScreenVisible;
-            set => Set(ref _isPlayScreenVisible, value);
-        }
+        [ObservableProperty]
+        private bool isPlayScreenVisible;
 
         public int Volume
         {
@@ -167,18 +132,13 @@ namespace HotPotPlayer.Services
                     {
                         _mpv.Volume = value;
                     }
-                    RaisePropertyChanged(nameof(Volume));
+                    OnPropertyChanged(nameof(Volume));
                 }
             }
         }
 
-        private PlayMode _playMode;
-
-        public PlayMode PlayMode
-        {
-            get => _playMode;
-            set => Set(ref _playMode, value);
-        }
+        [ObservableProperty]
+        private PlayMode playMode;
 
         private SystemMediaTransportControls _smtc;
 
@@ -638,8 +598,8 @@ namespace HotPotPlayer.Services
             UIQueue.TryEnqueue(() =>
             {
                 IsPlaying = true;
-                RaisePropertyChanged(nameof(Volume));
-                RaisePropertyChanged(nameof(CurrentPlayingDuration));
+                OnPropertyChanged(nameof(Volume));
+                OnPropertyChanged(nameof(CurrentPlayingDuration));
             });
         }
 
@@ -735,7 +695,7 @@ namespace HotPotPlayer.Services
                     CurrentPlayingIndex = index;
                     CurrentPlaying = music;
                     _playerTimer.Start();
-                    RaisePropertyChanged(nameof(Volume));
+                    OnPropertyChanged(nameof(Volume));
                 }
                 else if (e.Result is (int index2, Exception _playException))
                 {

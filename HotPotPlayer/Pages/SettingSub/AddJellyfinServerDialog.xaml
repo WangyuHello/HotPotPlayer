@@ -10,9 +10,9 @@
 
     <StackPanel VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Spacing="12">
         <!-- Content body -->
-        <TextBox x:Name="Url" Header="地址"/>
-        <TextBox x:Name="UserName" Header="用户名"/>
-        <PasswordBox x:Name="Password" Header="密码"/>
+        <TextBox x:FieldModifier="Public" x:Name="Url" Header="地址"/>
+        <TextBox x:FieldModifier="Public" x:Name="UserName" Header="用户名"/>
+        <PasswordBox x:FieldModifier="Public" x:Name="Password" Header="密码"/>
     </StackPanel>
 
 </Page>

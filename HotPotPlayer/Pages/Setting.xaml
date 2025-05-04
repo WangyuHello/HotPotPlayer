@@ -7,42 +7,28 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:model="using:HotPotPlayer.Models"
+    xmlns:controls="using:CommunityToolkit.WinUI.Controls"
+    xmlns:ui="using:CommunityToolkit.WinUI"
+    xmlns:jmodel="using:Jellyfin.Sdk.Generated.Models"
     mc:Ignorable="d"
     NavigationCacheMode="Enabled"
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
 
     <base:PageBase.Resources>
-        <DataTemplate x:Key="JellyfinServerListTemplate" x:DataType="model:JellyfinServerItem">
-            <Grid HorizontalAlignment="Stretch">
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="Auto" />
-                    <ColumnDefinition Width="Auto" />
-                    <ColumnDefinition Width="*" />
-                    <ColumnDefinition Width="Auto" />
-                </Grid.ColumnDefinitions>
-                <TextBlock Text="{x:Bind Url}" FontSize="14" VerticalAlignment="Center"/>
-                <Button Grid.Column="3" Tag="{x:Bind }" Click="JellyfinServerRemoveClick">
-                    <SymbolIcon Symbol="Clear" />
-                </Button>
-            </Grid>
+        <DataTemplate x:Key="JellyfinServerListTemplate" x:DataType="jmodel:PublicSystemInfo">
+            <controls:SettingsCard Description="{x:Bind LocalAddress}"
+                                   Header="{x:Bind ServerName}"
+                                   FontFamily="{ThemeResource MiSansNormal}"
+                                   IsClickEnabled="True" 
+                                   Click="SettingCardClick"
+                                   Tag="{x:Bind }"
+                                   >
+                <StackPanel Orientation="Horizontal" Spacing="16">
+                    <TextBlock VerticalAlignment="Center" Text="{x:Bind Version}" FontFamily="{ThemeResource MiSansNormal}"/>
+                    <Button Content="删除" FontFamily="{ThemeResource MiSansRegular}"/>
+                </StackPanel>
+            </controls:SettingsCard>
         </DataTemplate>
-        <!--<DataTemplate x:Key="VideoLibraryListTemplate" x:DataType="model:LibraryItem">
-            <Grid HorizontalAlignment="Stretch">
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="Auto" />
-                    <ColumnDefinition Width="Auto" />
-                    <ColumnDefinition Width="*" />
-                    <ColumnDefinition Width="Auto" />
-                </Grid.ColumnDefinitions>
-                <TextBlock Text="{x:Bind Path}" FontSize="14" VerticalAlignment="Center"/>
-                <Border Grid.Column="1" Margin="8,0,0,-2" Visibility="{x:Bind IsRemovableDisk}" VerticalAlignment="Center" BorderBrush="Black" BorderThickness="1" CornerRadius="4" Padding="4,0.8,4,2">
-                    <TextBlock Text="{x:Bind RemovableDiskType}" />
-                </Border>
-                <Button Grid.Column="3" Visibility="{x:Bind GetRemoveVisible}" Tag="{x:Bind }" Click="VideoRemoveClick">
-                    <SymbolIcon Symbol="Clear" />
-                </Button>
-            </Grid>
-        </DataTemplate>-->
         
         <Style x:Key="ServerListContainerStyle" TargetType="ListViewItem">
             <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
@@ -58,54 +44,47 @@
             <RowDefinition Height="Auto" />
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
-        <TextBlock Margin="36,0,0,12" FontSize="24">设置</TextBlock>
-        <StackPanel Grid.Row="1">
-            <!--<InfoBar IsOpen="{x:Bind GetLibraryWarningVisible(MusicLibrary), Mode=OneWay}" Severity="Warning" Message="无法访问音乐库，请检查系统设置" IsClosable="False">
-                <InfoBar.ActionButton>
-                    <Button Content="前往设置" Click="LaunchMusicSettingClick" HorizontalAlignment="Right"/>
-                </InfoBar.ActionButton>
-            </InfoBar>
-            <InfoBar IsOpen="{x:Bind GetLibraryWarningVisible(VideoLibrary), Mode=OneWay}" Severity="Warning" Message="无法访问视频库，请检查系统设置" IsClosable="False">
-                <InfoBar.ActionButton>
-                    <Button Content="前往设置" Click="LaunchVideoSettingClick" HorizontalAlignment="Right"/>
-                </InfoBar.ActionButton>
-            </InfoBar>-->
-        </StackPanel>
-        <StackPanel Grid.Row="2" Margin="36,0,36,0">
-            <TextBlock Margin="0,12" FontSize="18">Jellyfin</TextBlock>
-            <Expander HorizontalAlignment="Stretch" HorizontalContentAlignment="Stretch">
-                <Expander.Header>
-                    <Grid>
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="Auto" />
-                            <ColumnDefinition Width="Auto" />
-                            <ColumnDefinition Width="*" />
-                            <ColumnDefinition Width="Auto" />
-                            <ColumnDefinition Width="Auto" />
-                        </Grid.ColumnDefinitions>
-                        <FontIcon FontFamily="{ThemeResource SegoeIcons}" Glyph="&#xE8B7;" />
-                        <TextBlock Grid.Column="1" Margin="12,0" VerticalAlignment="Center">服务器</TextBlock>
-                        <Button Grid.Column="3" Click="ReloadJellyfinServers">
-                            <SymbolIcon Symbol="Refresh"/>
-                        </Button>
-                        <Button Grid.Column="4" Click="AddJellyfinServer">
-                            <FontIcon FontFamily="{ThemeResource SegoeIcons}" Glyph="&#xE836;" />
-                        </Button>
-                    </Grid>
-                </Expander.Header>
-                <Expander.Content>
-                    <ListView ItemsSource="{x:Bind JellyfinServers, Mode=OneWay}" 
-                              SelectionMode="None" 
-                              ItemTemplate="{StaticResource JellyfinServerListTemplate}" 
-                              ItemContainerStyle="{StaticResource ServerListContainerStyle}"/>
-                </Expander.Content>
-            </Expander>
-            <TextBlock Margin="0,12" FontSize="18">调试</TextBlock>
-            <Button Click="OpenInstalledLocationClick">打开安装位置</Button>
-            <Button Click="OpenDataLocationClick">打开数据位置</Button>
-            <Button Click="ClearDataClick" Style="{ThemeResource AccentButtonStyle}">删除应用数据</Button>
-            <Button Click="ClearConfigClick" Style="{ThemeResource AccentButtonStyle}">删除应用配置</Button>
-            <Button Click="ClearCacheClick" Style="{ThemeResource AccentButtonStyle}">删除缓存</Button>
-        </StackPanel>
+        <TextBlock Margin="36,0,0,12" FontSize="24" FontFamily="{ThemeResource MiSansMedium}">设置</TextBlock>
+
+        <ScrollViewer Grid.Row="2" >
+            <Grid Margin="36,0,36,0">
+                <StackPanel MaxWidth="1000"
+                            HorizontalAlignment="Stretch"
+                            Spacing="4"
+                            >
+                    <TextBlock Margin="0,12" FontSize="18" FontFamily="{ThemeResource MiSansMedium}">Jellyfin</TextBlock>
+
+                    <controls:SettingsCard Description="This is a default card, with the Header, HeaderIcon, Description and Content set"
+                                           Header="This is the Header"
+                                           FontFamily="{ThemeResource MiSansNormal}">
+                        <controls:SettingsCard.HeaderIcon>
+                            <FontIcon FontFamily="{ThemeResource SegoeIcons}" Glyph="&#xE716;" />
+                        </controls:SettingsCard.HeaderIcon>
+                        <ToggleSwitch IsOn="True" />
+                    </controls:SettingsCard>
+
+                    <controls:SettingsExpander Description="列表"
+                                               Header="服务器"
+                                               FontFamily="{ThemeResource MiSansNormal}"
+                                               ItemTemplate="{StaticResource JellyfinServerListTemplate}"
+                                               ItemsSource="{x:Bind JellyfinServers, Mode=OneWay}"
+                                               >
+                        <controls:SettingsExpander.HeaderIcon>
+                            <FontIcon FontFamily="{ThemeResource SegoeIcons}" Glyph="&#xE977;" />
+                        </controls:SettingsExpander.HeaderIcon>
+                        <Button Content="添加"
+                                FontFamily="{ThemeResource MiSansRegular}"
+                                Style="{StaticResource AccentButtonStyle}" 
+                                Click="AddJellyfinServer"/>
+                    </controls:SettingsExpander>
+                    <TextBlock Margin="0,12" FontSize="18" FontFamily="{ThemeResource MiSansMedium}">调试</TextBlock>
+                    <Button Click="OpenInstalledLocationClick" FontFamily="{ThemeResource MiSansNormal}">打开安装位置</Button>
+                    <Button Click="OpenDataLocationClick" FontFamily="{ThemeResource MiSansNormal}">打开数据位置</Button>
+                    <Button Click="ClearDataClick" Style="{ThemeResource AccentButtonStyle}" FontFamily="{ThemeResource MiSansNormal}">删除应用数据</Button>
+                    <Button Click="ClearConfigClick" Style="{ThemeResource AccentButtonStyle}" FontFamily="{ThemeResource MiSansNormal}">删除应用配置</Button>
+                    <Button Click="ClearCacheClick" Style="{ThemeResource AccentButtonStyle}" FontFamily="{ThemeResource MiSansNormal}">删除缓存</Button>
+                </StackPanel>
+            </Grid>
+        </ScrollViewer>
     </Grid>
 </base:PageBase>

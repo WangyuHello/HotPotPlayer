@@ -1,4 +1,5 @@
-﻿using DirectN;
+﻿using CommunityToolkit.Mvvm.ComponentModel;
+using DirectN;
 using DirectN.Extensions;
 using DirectN.Extensions.Com;
 using HotPotPlayer.Helpers;
@@ -55,39 +56,22 @@ namespace HotPotPlayer.Services
             Config.SaveConfigWhenExit("Volume", () => (Volume != 0, Volume));
         }
 
-        private PlayerState _state;
+        [ObservableProperty]
+        private PlayerState state;
 
-        public PlayerState State
-        {
-            get => _state;
-            set => Set(ref _state, value);
-        }
-
-        private BaseItemDto _currentPlaying;
-        public BaseItemDto CurrentPlaying
-        {
-            get => _currentPlaying;
-            set => Set(ref _currentPlaying, value);
-        }
+        [ObservableProperty]
+        private BaseItemDto currentPlaying;
 
         public TimeSpan? CurrentPlayingDuration
         {
             get => _mpv?.Duration;
         }
 
-        private int _currentPlayingIndex = -1;
-        public int CurrentPlayingIndex
-        {
-            get => _currentPlayingIndex;
-            set => Set(ref _currentPlayingIndex, value);
-        }
+        [ObservableProperty]
+        private int currentPlayingIndex = -1;
 
-        private ObservableCollection<BaseItemDto> _currentPlayList;
-        public ObservableCollection<BaseItemDto> CurrentPlayList
-        {
-            get => _currentPlayList;
-            set => Set(ref _currentPlayList, value);
-        }
+        [ObservableProperty]
+        private ObservableCollection<BaseItemDto> currentPlayList;
 
         public bool SuppressCurrentTimeTrigger { get; set; }
 
@@ -99,7 +83,7 @@ namespace HotPotPlayer.Services
             set
             {
                 if (SuppressCurrentTimeTrigger) return;
-                Set(ref _currentTime, value);
+                SetProperty(ref _currentTime, value);
             }
         }
 
@@ -108,7 +92,7 @@ namespace HotPotPlayer.Services
         public bool IsPlaying
         {
             get => _isPlaying;
-            set => Set(ref _isPlaying, value, nowPlaying =>
+            set => SetProperty(ref _isPlaying, value, nowPlaying =>
             {
                 Task.Run(async () =>
                 {
@@ -133,12 +117,8 @@ namespace HotPotPlayer.Services
             });
         }
 
-        private bool _hasError;
-        public bool HasError
-        {
-            get => _hasError;
-            set => Set(ref _hasError, value);
-        }
+        [ObservableProperty]
+        private bool hasError;
 
         public int Volume
         {
@@ -166,24 +146,16 @@ namespace HotPotPlayer.Services
                     {
                         _mpv.Volume = value;
                     }
-                    RaisePropertyChanged(nameof(Volume));
+                    OnPropertyChanged(nameof(Volume));
                 }
             }
         }
 
-        private PlayMode _playMode;
-        public PlayMode PlayMode
-        {
-            get => _playMode;
-            set => Set(ref _playMode, value);
-        }
+        [ObservableProperty]
+        private PlayMode playMode;
 
+        [ObservableProperty]
         private VideoPlayVisualState visualState;
-        public VideoPlayVisualState VisualState
-        {
-            get => visualState;
-            set => Set(ref visualState, value);
-        }
 
         public event EventHandler<MpvVideoGeometryInitEventArgs> VideoGeometryInit;
         public event EventHandler<IntPtr> SwapChainInited;
@@ -496,8 +468,8 @@ namespace HotPotPlayer.Services
             UIQueue.TryEnqueue(() =>
             {
                 IsPlaying = true;
-                RaisePropertyChanged(nameof(Volume));
-                RaisePropertyChanged(nameof(CurrentPlayingDuration));
+                OnPropertyChanged(nameof(Volume));
+                OnPropertyChanged(nameof(CurrentPlayingDuration));
             });
             OnMediaLoaded?.Invoke();
         }
@@ -612,7 +584,7 @@ namespace HotPotPlayer.Services
                     CurrentPlayingIndex = index;
                     _currentPlaySessionId = playSessionId;
                     _playerTimer.Start();
-                    RaisePropertyChanged(nameof(Volume));
+                    OnPropertyChanged(nameof(Volume));
                 }
                 else if (e.Result is (int index2, Exception _playException))
                 {

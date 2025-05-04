@@ -1,6 +1,9 @@
-﻿using HotPotPlayer.Models;
+﻿using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.WinUI.Controls;
+using HotPotPlayer.Models;
 using HotPotPlayer.Pages.SettingSub;
 using HotPotPlayer.Services;
+using Jellyfin.Sdk.Generated.Models;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Controls.Primitives;
@@ -37,46 +40,14 @@ namespace HotPotPlayer.Pages
             this.InitializeComponent();
         }
 
-        public bool GetLibraryWarningVisible(ObservableCollection<LibraryItem> lib)
-        {
-            //return true;
-            return lib == null;
-        }
+        [ObservableProperty]
+        private ObservableCollection<PublicSystemInfo> jellyfinServers;
 
-        private bool _isVideoLibraryWarningVisible;
-
-        public bool IsVideoLibraryWarningVisible
-        {
-            get => _isVideoLibraryWarningVisible;
-            set => Set(ref _isVideoLibraryWarningVisible, value);
-        }
-
-        private ObservableCollection<JellyfinServerItem> _jellyfinServers;
-
-        public ObservableCollection<JellyfinServerItem> JellyfinServers
-        {
-            get => _jellyfinServers;
-            set => Set(ref _jellyfinServers, value);
-        }
-
-        protected override void OnNavigatedTo(NavigationEventArgs e)
+        protected override async void OnNavigatedTo(NavigationEventArgs e)
         {
             base.OnNavigatedTo(e);
-            var jellyfinServers = Config.JellyfinServers;
-            if (jellyfinServers != null)
-            {
-                JellyfinServers = [.. jellyfinServers];
-            }
-        }
-
-        private async void LaunchMusicSettingClick(object sender, RoutedEventArgs e)
-        {
-            bool _ = await Windows.System.Launcher.LaunchUriAsync(new Uri("ms-settings:privacy-musiclibrary"));
-        }
-
-        private async void LaunchVideoSettingClick(object sender, RoutedEventArgs e)
-        {
-            bool _ = await Windows.System.Launcher.LaunchUriAsync(new Uri("ms-settings:privacy-videos"));
+            await App.JellyfinMusicService.JellyfinLoginAsync();
+            JellyfinServers = [App.JellyfinMusicService.SystemInfo];
         }
 
         private async void OpenInstalledLocationClick(object sender, RoutedEventArgs e)
@@ -122,33 +93,12 @@ namespace HotPotPlayer.Pages
             }
         }
 
-        //private async void AddVideoLibrary(object sender, RoutedEventArgs e)
-        //{
-        //    var folderPicker = new FolderPicker
-        //    {
-        //        SuggestedStartLocation = PickerLocationId.ComputerFolder
-        //    };
-        //    WinRT.Interop.InitializeWithWindow.Initialize(folderPicker, App.MainWindowHandle);
-
-        //    var folder = await folderPicker.PickSingleFolderAsync();
-        //    if (folder != null)
-        //    {
-        //        var path = folder.Path;
-        //        if (VideoLibrary == null)
-        //        {
-        //            VideoLibrary = new ObservableCollection<LibraryItem>
-        //            {
-        //                new LibraryItem {Path = path}
-        //            };
-        //            Config.VideoLibrary = VideoLibrary.Select(s => s).ToList();
-        //        }
-        //        if (!VideoLibrary.Where(s => s.Path == path).Any())
-        //        {
-        //            VideoLibrary.Add(new LibraryItem { Path = path });
-        //            Config.VideoLibrary = VideoLibrary.Select(s => s).ToList();
-        //        }
-        //    }
-        //}
+        private async void SettingCardClick(object sender, RoutedEventArgs e)
+        {
+            var b = sender as SettingsCard;
+            var server = b.Tag as PublicSystemInfo;
+            bool _ = await Windows.System.Launcher.LaunchUriAsync(new Uri(server.LocalAddress));
+        }
 
         private async void AddJellyfinServer(object sender, RoutedEventArgs e)
         {
@@ -161,13 +111,23 @@ namespace HotPotPlayer.Pages
             dialog.PrimaryButtonText = "保存";
             dialog.CloseButtonText = "取消";
             dialog.DefaultButton = ContentDialogButton.Primary;
-            dialog.Content = new AddJellyfinServerDialog();
+            var dialogContent = new AddJellyfinServerDialog();
+            dialog.Content = dialogContent;
+            dialog.IsPrimaryButtonEnabled = false;
 
             var result = await dialog.ShowAsync();
 
             if (result == ContentDialogResult.Primary)
             {
-
+                if (string.IsNullOrEmpty(dialogContent.Url.Text) ||
+                    string.IsNullOrEmpty(dialogContent.UserName.Text) ||
+                    string.IsNullOrEmpty(dialogContent.Password.Password))
+                {
+                    return;
+                }
+                Config.SetConfig("JellyfinUrl", dialogContent.Url.Text);
+                Config.SetConfig("JellyfinUserName", dialogContent.UserName.Text);
+                Config.SetConfig("JellyfinPassword", dialogContent.Password.Password);
             }
             //var folderPicker = new FolderPicker
             //{
@@ -197,15 +157,9 @@ namespace HotPotPlayer.Pages
 
         private void JellyfinServerRemoveClick(object sender, RoutedEventArgs e)
         {
-            var item = (sender as Control).Tag as LibraryItem;
-            //MusicLibrary.Remove(item);
-            //Config.MusicLibrary = MusicLibrary.Select(s => s).ToList();
+
         }
 
-        private void ReloadJellyfinServers(object sender, RoutedEventArgs e)
-        {
-            
-        }
         public override RectangleF[] GetTitleBarDragArea()
         {
             return new RectangleF[]

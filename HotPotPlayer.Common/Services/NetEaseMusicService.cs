@@ -1,4 +1,5 @@
-﻿using HotPotPlayer.Extensions;
+﻿using CommunityToolkit.Mvvm.ComponentModel;
+using HotPotPlayer.Extensions;
 using HotPotPlayer.Models;
 using HotPotPlayer.Models.CloudMusic;
 using Microsoft.UI.Dispatching;
@@ -16,7 +17,7 @@ using System.Threading.Tasks;
 
 namespace HotPotPlayer.Services
 {
-    public class NetEaseMusicService: ServiceBaseWithConfig
+    public partial class NetEaseMusicService: ServiceBaseWithConfig
     {
         JellyfinMusicService LocalMusic;
         public NetEaseMusicService(ConfigBase config, DispatcherQueue uiThread = null, AppBase app = null, JellyfinMusicService localMusic = null) : base(config, uiThread, app)
@@ -40,68 +41,32 @@ namespace HotPotPlayer.Services
             }
         }
 
-        private CloudUserItem _self;
-        public CloudUserItem Self
-        {
-            get => _self;
-            set => Set(ref _self, value);
-        }
+        [ObservableProperty]
+        private CloudUserItem self;
 
-        private LevelItem _level;
-        public LevelItem Level
-        {
-            get => _level;
-            set => Set(ref _level, value);
-        }
+        [ObservableProperty]
+        private LevelItem level;
 
-        private CloudPlayListItem _likeList;
-        public CloudPlayListItem LikeList
-        {
-            get => _likeList;
-            set => Set(ref _likeList, value);
-        }
+        [ObservableProperty]
+        private CloudPlayListItem likeList;
 
-        private ObservableCollection<CloudPlayListItem> _userPlayLists;
-        public ObservableCollection<CloudPlayListItem> UserPlayLists
-        {
-            get => _userPlayLists;
-            set => Set(ref _userPlayLists, value);
-        }
+        [ObservableProperty]
+        private ObservableCollection<CloudPlayListItem> userPlayLists;
 
-        private ObservableCollection<CloudPlayListItem> _subscribePlayLists;
-        public ObservableCollection<CloudPlayListItem> SubscribePlayLists
-        {
-            get => _subscribePlayLists;
-            set => Set(ref _subscribePlayLists, value);
-        }
+        [ObservableProperty]
+        private ObservableCollection<CloudPlayListItem> subscribePlayLists;
 
-        private ObservableCollection<CloudMusicItem> _recommedList;
-        public ObservableCollection<CloudMusicItem> RecommedList
-        {
-            get => _recommedList;
-            set => Set(ref _recommedList, value);
-        }
+        [ObservableProperty]
+        private ObservableCollection<CloudMusicItem> recommedList;
 
-        private ObservableCollection<CloudPlayListItem> _recommedPlayList;
-        public ObservableCollection<CloudPlayListItem> RecommedPlayList
-        {
-            get => _recommedPlayList;
-            set => Set(ref _recommedPlayList, value);
-        }
+        [ObservableProperty]
+        private ObservableCollection<CloudPlayListItem> recommedPlayList;
 
-        private ObservableCollection<Toplist> _topList;
-        public ObservableCollection<Toplist> TopList
-        {
-            get => _topList;
-            set => Set(ref _topList, value);
-        }
+        [ObservableProperty]
+        private ObservableCollection<Toplist> topList;
 
-        private ObservableCollection<CloudArtistItem> _topArtists;
-        public ObservableCollection<CloudArtistItem> TopArtists
-        {
-            get => _topArtists;
-            set => Set(ref _topArtists, value);
-        }
+        [ObservableProperty]
+        private ObservableCollection<CloudArtistItem> topArtists;
 
         public async Task InitAsync()
         {
