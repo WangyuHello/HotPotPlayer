@@ -53,17 +53,18 @@ jobs:
     env:
       Solution_Name: HotPotPlayer                       # Replace with your solution name, i.e. MyWpfApp.sln.
       Project_Directory: HotPotPlayer
+      Configuration: Release
 
     steps:
     - name: Checkout
-      uses: actions/checkout@v2
+      uses: actions/checkout@v4
       with:
         submodules: 'true'
     
-    - name: Use Dev Package
-      run: Move-Item -Force (Join-Path -Path $env:Project_Directory -ChildPath Package.Dev.appxmanifest) (Join-Path -Path $env:Project_Directory -ChildPath Package.appxmanifest)
+    # - name: Use Dev Package
+    #   run: Move-Item -Force (Join-Path -Path $env:Project_Directory -ChildPath Package.Dev.appxmanifest) (Join-Path -Path $env:Project_Directory -ChildPath Package.appxmanifest)
 
-    - name: File Regex Replace
+    - name: Setup version
       uses: mingjun97/file-regex-replace@v1
       with:
         regex: 'Version="1.0.0.0"'
@@ -72,20 +73,20 @@ jobs:
 
     # Install the .NET Core workload
     - name: Install .NET Core
-      uses: actions/setup-dotnet@v1
+      uses: actions/setup-dotnet@v4
       with:
         dotnet-version: 6.0.x
 
     # Add  MSBuild to the PATH: https://github.com/microsoft/setup-msbuild
     - name: Setup MSBuild.exe
-      uses: microsoft/setup-msbuild@v1.1
+      uses: microsoft/setup-msbuild@v2
       with:
         vs-prerelease: true
         msbuild-architecture: x64
 
     # Restore the application to populate the obj folder with RuntimeIdentifiers
     - name: Restore the application
-      run: msbuild $env:Solution_Name /t:Restore /p:Configuration=Release
+      run: msbuild $env:Solution_Name /t:Restore /p:Configuration=$env:Configuration
 
     # Decode the base 64 encoded pfx and save the Signing_Certificate
     - name: Decode the pfx
@@ -97,13 +98,15 @@ jobs:
 
     # Create the app package by building and packaging the Windows Application Packaging project
     - name: Create the app package
-      run: msbuild $env:Solution_Name /p:RuntimeIdentifier=win10-x64 /p:AppxBundlePlatforms=$env:Appx_Bundle_Platforms /p:Configuration=$env:Configuration /p:UapAppxPackageBuildMode=$env:Appx_Package_Build_Mode /p:AppxBundle=$env:Appx_Bundle /p:PackageCertificateKeyFile=HotPotPlayer_TemporaryKey.pfx /p:AppxPackageDir="$env:Appx_Package_Dir" /p:GenerateAppxPackageOnBuild=true
+      # run: msbuild $env:Solution_Name /p:RuntimeIdentifier=win10-x64 /p:AppxBundlePlatforms=$env:Appx_Bundle_Platforms /p:Configuration=$env:Configuration /p:UapAppxPackageBuildMode=$env:Appx_Package_Build_Mode /p:AppxBundle=$env:Appx_Bundle /p:PackageCertificateKeyFile=HotPotPlayer_TemporaryKey.pfx /p:AppxPackageDir="$env:Appx_Package_Dir" /p:GenerateAppxPackageOnBuild=true
+      run: msbuild $env:Solution_Name /p:Configuration=$env:Configuration /p:Platform=$env:Platform /p:UapAppxPackageBuildMode=$env:Appx_Package_Build_Mode /p:AppxBundle=$env:Appx_Bundle /p:PackageCertificateKeyFile=HotPotPlayer_TemporaryKey.pfx /p:AppxPackageDir="$env:Appx_Package_Dir" /p:GenerateAppxPackageOnBuild=true
       env:
         Appx_Bundle: Never
         Appx_Bundle_Platforms: x64
         Appx_Package_Build_Mode: SideloadOnly
         Appx_Package_Dir: Packages\
-        Configuration: Release
+        Configuration: ${{ env.Configuration }}
+        Platform: x64
 
     # Remove the pfx
     - name: Remove the pfx
@@ -117,6 +120,6 @@ jobs:
         tag_name: 'v0.${{ github.run_number }}.${{ github.run_attempt }}.0'
         body: '安装方法同 https://github.com/Richasy/Bili.Uwp/wiki/%E4%B8%8B%E8%BD%BD%E5%B9%B6%E5%AE%89%E8%A3%85%E5%93%94%E5%93%A9%E7%9A%84%E8%AF%A6%E7%BB%86%E8%AF%B4%E6%98%8E#%E5%B8%B8%E8%A7%84%E4%BD%BF%E7%94%A8%E5%BA%94%E7%94%A8%E5%AE%89%E8%A3%85%E7%A8%8B%E5%BA%8F-app-installer'
         files: |
-          HotPotPlayer/Packages/**/HotPotPlayer*.msix
-          HotPotPlayer/Packages/**/HotPotPlayer*.cer
+          ${{ env.Project_Directory }}/Packages/**/HotPotPlayer*.msix
+          ${{ env.Project_Directory }}/Packages/**/HotPotPlayer*.cer
         fail_on_unmatched_files: true
