@@ -68,8 +68,8 @@ jobs:
       with:
         submodules: 'true'
     
-    # - name: Use Dev Package
-    #   run: Move-Item -Force (Join-Path -Path $env:Project_Directory -ChildPath Package.Dev.appxmanifest) (Join-Path -Path $env:Project_Directory -ChildPath Package.appxmanifest)
+    - name: Use Dev Package
+      run: Move-Item -Force (Join-Path -Path $env:Project_Directory -ChildPath Package.Dev.appxmanifest) (Join-Path -Path $env:Project_Directory -ChildPath Package.appxmanifest)
 
     - name: Setup version
       uses: mingjun97/file-regex-replace@v1
