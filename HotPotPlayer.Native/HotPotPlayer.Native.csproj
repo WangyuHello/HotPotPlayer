@@ -5,15 +5,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <None Update="d3dcompiler_47.dll">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Update="dbghelp.dll">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Update="libfeature_support.dll">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
     <None Update="NativeLibs\libmpv-2.dll">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
