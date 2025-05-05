@@ -208,8 +208,7 @@ namespace HotPotPlayer.Pages
                 Config.SetConfig("JellyfinUserName", dialogContent.UserName.Text);
                 Config.SetConfig("JellyfinPassword", dialogContent.Password.Password);
 
-                JellyfinMusicService.IsMusicPageFirstNavigate = true;
-                JellyfinMusicService.IsVideoPageFirstNavigate = true;
+                JellyfinMusicService.Reset();
             }
 
             dialogContent.ValidateChanged -= ValidateChanged;

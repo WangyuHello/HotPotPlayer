@@ -439,6 +439,20 @@ namespace HotPotPlayer.Services
             return (!string.IsNullOrEmpty(token), message);
         }
 
+        public void Reset()
+        {
+            jellyfinAuthenticationProvider = null;
+            jellyfinRequestAdapter?.Dispose();
+            jellyfinApiClient?.Dispose();
+            jellyfinRequestAdapter = null;
+            jellyfinApiClient = null;
+            httpClient?.Dispose();
+            httpClient = null;
+
+            IsMusicPageFirstNavigate = true;
+            IsVideoPageFirstNavigate = true;
+        }
+
         public async Task<List<BaseItemDto>> GetAlbumMusicItemsAsync(BaseItemDto album)
         {
             var result = await JellyfinApiClient.Items.GetAsync(param =>
