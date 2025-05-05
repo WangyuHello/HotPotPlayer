@@ -29,7 +29,11 @@ namespace HotPotPlayer.Pages
     {
         public VideoPlay()
         {
+            IsTabStop = true;
             this.InitializeComponent();
+            KeyDown += TheHost.OnKeyDown;
+            //Focus(FocusState.Programmatic);
+            //LostFocus += (s, arg) => { Focus(FocusState.Programmatic); };
         }
 
         public VideoPlayInfo Source

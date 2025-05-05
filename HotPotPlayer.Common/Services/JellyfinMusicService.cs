@@ -710,7 +710,7 @@ namespace HotPotPlayer.Services
 
         public async Task ReportProgress(BaseItemDto video, long positionTicks, bool isPause, bool isMute = false)
         {
-            if (video.Id == null)
+            if (video == null || video.Id == null)
             {
                 return;
             }

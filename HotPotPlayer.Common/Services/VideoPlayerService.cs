@@ -352,6 +352,28 @@ namespace HotPotPlayer.Services
             await _mpv.SeekAsync(to);
         }
 
+        public async void PlayStepForward(TimeSpan delta)
+        {
+            var t = _mpv.Position + delta;
+            if (t > CurrentPlayingDuration)
+            {
+
+            }
+            else
+            {
+                await _mpv.SeekAsync(t);
+            }
+        }
+
+        public async void PlayStepBackward(TimeSpan delta)
+        {
+            var t = TimeSpan.Zero;
+            if (_mpv.Position > delta) {
+                t = _mpv.Position - delta;
+            }
+            await _mpv.SeekAsync(t);
+        }
+
         public void Stop()
         {
             _playerTimer.Stop();

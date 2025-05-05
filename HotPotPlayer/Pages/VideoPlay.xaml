@@ -9,5 +9,5 @@
     mc:Ignorable="d"
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
 
-    <vcont:VideoHost Loaded="OnVideoHostLoaded"/>
+    <vcont:VideoHost x:Name="TheHost" Loaded="OnVideoHostLoaded"/>
 </base:PageBase>

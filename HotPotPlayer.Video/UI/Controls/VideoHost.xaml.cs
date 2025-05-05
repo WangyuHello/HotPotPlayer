@@ -132,6 +132,21 @@ namespace HotPotPlayer.Video.UI.Controls
             Debug.WriteLine($"{_currentWidth} {_currentHeight} {_currentScaleX} {_currentScaleY}");
         }
 
+        public void OnKeyDown(object sender, KeyRoutedEventArgs e)
+        {
+            switch (e.Key)
+            {
+                case Windows.System.VirtualKey.Left:
+                    VideoPlayer.PlayStepBackward(TimeSpan.FromSeconds(10));
+                    break;
+                case Windows.System.VirtualKey.Right:
+                    VideoPlayer.PlayStepForward(TimeSpan.FromSeconds(10));
+                    break;
+                default:
+                    break;
+            }
+        }
+
         [ObservableProperty]
         private bool isFullScreen;
 
@@ -218,7 +233,6 @@ namespace HotPotPlayer.Video.UI.Controls
         {
             VideoPlayer.TogglePlayMode();
         }
-
 
         private void ToggleFullScreenClick(object sender, RoutedEventArgs e)
         {
