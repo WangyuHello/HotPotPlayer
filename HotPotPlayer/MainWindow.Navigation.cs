@@ -118,6 +118,10 @@ namespace HotPotPlayer
 
         public string GetSavePageName()
         {
+            if (SelectedPageName == null)
+            {
+                return null;
+            }
             var segs = SelectedPageName.Split(".");
             var mainName = segs[0].Replace("Sub", "");
             if (mainName == "VideoPlay" || mainName == "BiliVideoPlay")

@@ -710,6 +710,10 @@ namespace HotPotPlayer.Services
 
         public async Task ReportProgress(BaseItemDto video, long positionTicks, bool isPause, bool isMute = false)
         {
+            if (video.Id == null)
+            {
+                return;
+            }
             await JellyfinApiClient.Sessions.Playing.Progress.PostAsync(new PlaybackProgressInfo
             {
                 CanSeek = true,
