@@ -10,9 +10,9 @@
 
     <StackPanel VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Spacing="12">
         <!-- Content body -->
-        <TextBox x:FieldModifier="Public" x:Name="Url" Header="地址"/>
-        <TextBox x:FieldModifier="Public" x:Name="UserName" Header="用户名"/>
-        <PasswordBox x:FieldModifier="Public" x:Name="Password" Header="密码"/>
+        <TextBox x:FieldModifier="Public" x:Name="Url" Header="地址" TextChanged="Url_TextChanged" FontFamily="{ThemeResource MiSansNormal}"/>
+        <TextBox x:FieldModifier="Public" x:Name="UserName" Header="用户名" TextChanged="UserName_TextChanged" FontFamily="{ThemeResource MiSansNormal}"/>
+        <PasswordBox x:FieldModifier="Public" x:Name="Password" Header="密码" PasswordChanged="Password_PasswordChanged" FontFamily="{ThemeResource MiSansNormal}"/>
     </StackPanel>
 
 </Page>

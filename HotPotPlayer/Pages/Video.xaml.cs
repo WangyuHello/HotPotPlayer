@@ -54,14 +54,12 @@ namespace HotPotPlayer.Pages
         [ObservableProperty]
         private int selectedPivotIndex;
 
-        bool IsFirstNavigate = true;
-
         protected override async void OnNavigatedTo(NavigationEventArgs e)
         {
             base.OnNavigatedTo(e);
-            if (IsFirstNavigate)
+            if (JellyfinMusicService.IsVideoPageFirstNavigate)
             {
-                IsFirstNavigate = false;
+                JellyfinMusicService.IsVideoPageFirstNavigate = false;
                 videoViews = await JellyfinMusicService.GetVideoViews();
                 videoGridViews = [];
                 videoLists = [.. videoViews.Select(v => new VideoCollection(JellyfinMusicService, v))];

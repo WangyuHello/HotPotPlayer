@@ -47,8 +47,8 @@ namespace HotPotPlayer.Pages
         protected override async void OnNavigatedTo(NavigationEventArgs e)
         {
             base.OnNavigatedTo(e);
-            await App.JellyfinMusicService.JellyfinLoginAsync();
-            JellyfinServers = [App.JellyfinMusicService.SystemInfo];
+            await JellyfinMusicService.JellyfinLoginAsync();
+            JellyfinServers = [JellyfinMusicService.SystemInfo];
         }
 
         private async void OpenInstalledLocationClick(object sender, RoutedEventArgs e)
@@ -150,11 +150,15 @@ namespace HotPotPlayer.Pages
             bool _ = await Windows.System.Launcher.LaunchUriAsync(new Uri(server.LocalAddress));
         }
 
+        private void MusicLibrary_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            
+        }
+
         private async void AddJellyfinServer(object sender, RoutedEventArgs e)
         {
             ContentDialog dialog = new ContentDialog();
 
-            // XamlRoot must be set in the case of a ContentDialog running in a Desktop app
             dialog.XamlRoot = App.XamlRoot;
             dialog.Style = Application.Current.Resources["DefaultContentDialogStyle"] as Style;
             dialog.Title = "添加Jellyfin服务器";
@@ -162,11 +166,17 @@ namespace HotPotPlayer.Pages
             dialog.CloseButtonText = "取消";
             dialog.DefaultButton = ContentDialogButton.Primary;
             var dialogContent = new AddJellyfinServerDialog();
+            dialogContent.ValidateChanged += ValidateChanged;
             dialog.Content = dialogContent;
             dialog.IsPrimaryButtonEnabled = false;
             dialog.FontFamily = Application.Current.Resources["MiSansNormal"] as Microsoft.UI.Xaml.Media.FontFamily;
 
             var result = await dialog.ShowAsync();
+
+            void ValidateChanged(bool valid)
+            {
+                dialog.IsPrimaryButtonEnabled = valid;
+            }
 
             if (result == ContentDialogResult.Primary)
             {
@@ -179,31 +189,12 @@ namespace HotPotPlayer.Pages
                 Config.SetConfig("JellyfinUrl", dialogContent.Url.Text);
                 Config.SetConfig("JellyfinUserName", dialogContent.UserName.Text);
                 Config.SetConfig("JellyfinPassword", dialogContent.Password.Password);
-            }
-            //var folderPicker = new FolderPicker
-            //{
-            //    SuggestedStartLocation = PickerLocationId.ComputerFolder
-            //};
-            //WinRT.Interop.InitializeWithWindow.Initialize(folderPicker, App.MainWindowHandle);
 
-            //var folder = await folderPicker.PickSingleFolderAsync();
-            //if (folder != null)
-            //{
-            //    var path = folder.Path;
-            //    if (MusicLibrary == null)
-            //    {
-            //        MusicLibrary = new ObservableCollection<LibraryItem>
-            //        {
-            //            new LibraryItem {Path = path}
-            //        };
-            //        Config.MusicLibrary = MusicLibrary.Select(s => s).ToList();
-            //    }
-            //    if (!MusicLibrary.Where(s => s.Path == path).Any())
-            //    {
-            //        MusicLibrary.Add(new LibraryItem { Path = path });
-            //        Config.MusicLibrary = MusicLibrary.Select(s => s).ToList();
-            //    }
-            //}
+                JellyfinMusicService.IsMusicPageFirstNavigate = true;
+                JellyfinMusicService.IsVideoPageFirstNavigate = true;
+            }
+
+            dialogContent.ValidateChanged -= ValidateChanged;
         }
 
         private void JellyfinServerRemoveClick(object sender, RoutedEventArgs e)

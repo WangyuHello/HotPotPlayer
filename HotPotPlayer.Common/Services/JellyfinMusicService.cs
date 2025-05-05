@@ -103,12 +103,24 @@ namespace HotPotPlayer.Services
             get => jellyfinRequestAdapter ??= new JellyfinRequestAdapter(JellyfinAuthenticationProvider, SdkClientSettings, HttpClient);
         }
 
+        [ObservableProperty]
         private UserDto userDto;
-        private BaseItemDto musicLibraryDto;
-        public List<BaseItemDto> VideoLibraryDto { get; set; }
+
+        [ObservableProperty]
+        private BaseItemDto selectedMusicLibraryDto;
+
+        [ObservableProperty]
+        private List<BaseItemDto> musicLibraryDto;
+
+        [ObservableProperty]
+        private List<BaseItemDto> videoLibraryDto;
+
+        [ObservableProperty]
         private List<SessionInfoDto> sessions;
         
         private bool IsLogin = false;
+        public bool IsMusicPageFirstNavigate { get; set; } = true;
+        public bool IsVideoPageFirstNavigate { get; set; } = true;
         #endregion
 
         public async Task GetSystemInfoPublic()
@@ -138,11 +150,23 @@ namespace HotPotPlayer.Services
         private async Task GetViews()
         {
             var views = await JellyfinApiClient.UserViews.GetAsync().ConfigureAwait(false);
-            musicLibraryDto = views.Items.FirstOrDefault(v => v.CollectionType == BaseItemDto_CollectionType.Music);
 
-            VideoLibraryDto = views.Items.Where(v => v.CollectionType == null || 
+            MusicLibraryDto = [.. views.Items.Where(v => v.CollectionType == BaseItemDto_CollectionType.Music)];
+
+            var selectedMusicLibraryName = Config.GetConfig<string>("JellyfinMusicLibraryName");
+            if (string.IsNullOrEmpty(selectedMusicLibraryName))
+            {
+                SelectedMusicLibraryDto = MusicLibraryDto.FirstOrDefault();
+                Config.SetConfig("JellyfinMusicLibraryName", SelectedMusicLibraryDto.Name);
+            }
+            else
+            {
+                SelectedMusicLibraryDto = MusicLibraryDto.FirstOrDefault(m => m.Name == selectedMusicLibraryName);
+            }
+
+            VideoLibraryDto = [.. views.Items.Where(v => v.CollectionType == null || 
                                                 v.CollectionType == BaseItemDto_CollectionType.Movies || 
-                                                v.CollectionType == BaseItemDto_CollectionType.Tvshows).ToList();
+                                                v.CollectionType == BaseItemDto_CollectionType.Tvshows)];
         }
 
         public async Task<List<BaseItemDto>> GetVideoViews()
@@ -166,8 +190,8 @@ namespace HotPotPlayer.Services
             {
                 param.QueryParameters = new ItemsRequestBuilder.ItemsRequestBuilderGetQueryParameters
                 {
-                    UserId = userDto.Id,
-                    ParentId = musicLibraryDto.Id,
+                    UserId = UserDto.Id,
+                    ParentId = SelectedMusicLibraryDto.Id,
                     SortBy = [ItemSortBy.ProductionYear, ItemSortBy.PremiereDate, ItemSortBy.SortName],
                     SortOrder = [SortOrder.Descending],
                     IncludeItemTypes = [BaseItemKind.MusicAlbum],
@@ -188,7 +212,7 @@ namespace HotPotPlayer.Services
             {
                 param.QueryParameters = new ItemsRequestBuilder.ItemsRequestBuilderGetQueryParameters
                 {
-                    UserId = userDto.Id,
+                    UserId = UserDto.Id,
                     SortBy = [ItemSortBy.SortName],
                     SortOrder = [SortOrder.Ascending],
                     IncludeItemTypes = [BaseItemKind.Playlist],
@@ -208,8 +232,8 @@ namespace HotPotPlayer.Services
             {
                 param.QueryParameters = new ArtistsRequestBuilder.ArtistsRequestBuilderGetQueryParameters
                 {
-                    UserId = userDto.Id,
-                    ParentId = musicLibraryDto.Id,
+                    UserId = UserDto.Id,
+                    ParentId = SelectedMusicLibraryDto.Id,
                     SortBy = [ItemSortBy.SortName],
                     SortOrder = [SortOrder.Ascending],
                     Fields = [ItemFields.PrimaryImageAspectRatio, ItemFields.SortName],
@@ -238,7 +262,7 @@ namespace HotPotPlayer.Services
             {
                 param.QueryParameters = new ItemsRequestBuilder.ItemsRequestBuilderGetQueryParameters
                 {
-                    UserId = userDto.Id,
+                    UserId = UserDto.Id,
                     ParentId = library.Id,
                     SortBy = [ItemSortBy.ProductionYear, ItemSortBy.PremiereDate, ItemSortBy.SortName],
                     SortOrder = [SortOrder.Descending],
@@ -368,10 +392,10 @@ namespace HotPotPlayer.Services
             }).ConfigureAwait(false);
 
             SdkClientSettings.SetAccessToken(authenticationResult.AccessToken);
-            userDto = authenticationResult.User;
+            UserDto = authenticationResult.User;
 
             await GetViews().ConfigureAwait(false);
-            sessions = await GetPlaySeesion();
+            Sessions = await GetPlaySeesion();
             IsLogin = true;
         }
 
@@ -381,7 +405,7 @@ namespace HotPotPlayer.Services
             {
                 param.QueryParameters = new ItemsRequestBuilder.ItemsRequestBuilderGetQueryParameters
                 {
-                    UserId = userDto.Id,
+                    UserId = UserDto.Id,
                     ParentId = album.Id,
                     Fields = [ItemFields.ItemCounts, ItemFields.PrimaryImageAspectRatio, ItemFields.CanDelete, ItemFields.MediaSourceCount],
                     SortBy = [ItemSortBy.ParentIndexNumber, ItemSortBy.IndexNumber, ItemSortBy.SortName],
@@ -397,7 +421,7 @@ namespace HotPotPlayer.Services
             {
                 param.QueryParameters = new Jellyfin.Sdk.Generated.Playlists.Item.Items.ItemsRequestBuilder.ItemsRequestBuilderGetQueryParameters
                 {
-                    UserId = userDto.Id,
+                    UserId = UserDto.Id,
                     Fields = [ItemFields.ItemCounts, ItemFields.PrimaryImageAspectRatio, ItemFields.CanDelete, ItemFields.MediaSourceCount],
                     EnableImageTypes = [ImageType.Primary, ImageType.Backdrop, ImageType.Banner, ImageType.Thumb]
                 };
@@ -412,7 +436,7 @@ namespace HotPotPlayer.Services
             {
                 param.QueryParameters = new Jellyfin.Sdk.Generated.Items.Item.WithItemItemRequestBuilder.WithItemItemRequestBuilderGetQueryParameters
                 {
-                    UserId = userDto.Id,
+                    UserId = UserDto.Id,
                 };
             }).ConfigureAwait(false);
 
@@ -425,7 +449,7 @@ namespace HotPotPlayer.Services
             {
                 param.QueryParameters = new Jellyfin.Sdk.Generated.Items.Item.WithItemItemRequestBuilder.WithItemItemRequestBuilderGetQueryParameters
                 {
-                    UserId = userDto.Id,
+                    UserId = UserDto.Id,
                 };
             }).ConfigureAwait(false);
             
@@ -438,7 +462,7 @@ namespace HotPotPlayer.Services
             {
                 param.QueryParameters = new Jellyfin.Sdk.Generated.Items.Item.WithItemItemRequestBuilder.WithItemItemRequestBuilderGetQueryParameters
                 {
-                    UserId = userDto.Id,
+                    UserId = UserDto.Id,
                 };
             }).ConfigureAwait(false);
 
@@ -451,7 +475,7 @@ namespace HotPotPlayer.Services
             {
                 param.QueryParameters = new Jellyfin.Sdk.Generated.Items.Item.WithItemItemRequestBuilder.WithItemItemRequestBuilderGetQueryParameters
                 {
-                    UserId = userDto.Id,
+                    UserId = UserDto.Id,
                 };
             }).ConfigureAwait(false);
 
@@ -464,7 +488,7 @@ namespace HotPotPlayer.Services
             {
                 param.QueryParameters = new Jellyfin.Sdk.Generated.Items.Item.Similar.SimilarRequestBuilder.SimilarRequestBuilderGetQueryParameters
                 {
-                    UserId = userDto.Id,
+                    UserId = UserDto.Id,
                     Limit = 7,
                     Fields = [ItemFields.PrimaryImageAspectRatio, ItemFields.CanDelete],
                     ExcludeArtistIds = [.. music.AlbumArtists.Select(a => a.Id)]
@@ -479,7 +503,7 @@ namespace HotPotPlayer.Services
             {
                 param.QueryParameters = new Jellyfin.Sdk.Generated.Items.Item.WithItemItemRequestBuilder.WithItemItemRequestBuilderGetQueryParameters
                 {
-                    UserId = userDto.Id,
+                    UserId = UserDto.Id,
                 };
             }).ConfigureAwait(false);
             return result;
@@ -511,7 +535,7 @@ namespace HotPotPlayer.Services
             {
                 param.QueryParameters = new Jellyfin.Sdk.Generated.Audio.Item.Universal.UniversalRequestBuilder.UniversalRequestBuilderGetQueryParameters
                 {
-                    UserId = userDto.Id.Value,
+                    UserId = UserDto.Id.Value,
                     DeviceId = DevideId,
                     MaxStreamingBitrate = 876421732,
                     Container = ["opus","webm|opus","ts|mp3","mp3","aac","m4a|aac","m4b|aac","flac","webma","webm|webma","wav","ogg"],
@@ -556,7 +580,7 @@ namespace HotPotPlayer.Services
                 MediaSourceId= video.Id.Value.ToString(),
                 MaxStreamingBitrate = 785555264,
                 StartTimeTicks = 0,
-                UserId = userDto.Id.Value,
+                UserId = UserDto.Id.Value,
                 DeviceProfile = new DeviceProfile
                 {
                     MaxStaticBitrate = 1000000000,
@@ -606,7 +630,7 @@ namespace HotPotPlayer.Services
                 IsMuted = isMute,
                 ItemId = video.Id,
                 MediaSourceId = video.Id.Value.ToString(),
-                PlaySessionId = sessions.First().Id,
+                PlaySessionId = Sessions.First().Id,
                 PlayMethod = PlaybackProgressInfo_PlayMethod.DirectStream,
                 VolumeLevel = 100,
                 PositionTicks = positionTicks
@@ -619,7 +643,7 @@ namespace HotPotPlayer.Services
             {
                 param.QueryParameters = new Jellyfin.Sdk.Generated.Shows.Item.Seasons.SeasonsRequestBuilder.SeasonsRequestBuilderGetQueryParameters
                 {
-                    UserId = userDto.Id,
+                    UserId = UserDto.Id,
                     Fields = [ItemFields.ItemCounts, ItemFields.PrimaryImageAspectRatio, ItemFields.CanDelete, ItemFields.MediaSourceCount]
                 };
             }).ConfigureAwait(false);
@@ -632,7 +656,7 @@ namespace HotPotPlayer.Services
             {
                 param.QueryParameters = new Jellyfin.Sdk.Generated.Shows.Item.Episodes.EpisodesRequestBuilder.EpisodesRequestBuilderGetQueryParameters
                 {
-                    UserId = userDto.Id,
+                    UserId = UserDto.Id,
                     SeasonId = season.Id,
                     Fields = [ItemFields.ItemCounts, ItemFields.PrimaryImageAspectRatio, ItemFields.CanDelete, ItemFields.MediaSourceCount, ItemFields.Overview]
                 };

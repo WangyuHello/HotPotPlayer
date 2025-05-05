@@ -54,15 +54,6 @@
                             >
                     <TextBlock Margin="0,12" FontSize="18" FontFamily="{ThemeResource MiSansMedium}">Jellyfin</TextBlock>
 
-                    <controls:SettingsCard Description="This is a default card, with the Header, HeaderIcon, Description and Content set"
-                                           Header="This is the Header"
-                                           FontFamily="{ThemeResource MiSansNormal}">
-                        <controls:SettingsCard.HeaderIcon>
-                            <FontIcon FontFamily="{ThemeResource SegoeIcons}" Glyph="&#xE716;" />
-                        </controls:SettingsCard.HeaderIcon>
-                        <ToggleSwitch IsOn="True" />
-                    </controls:SettingsCard>
-
                     <controls:SettingsExpander Description="列表"
                                                Header="服务器"
                                                FontFamily="{ThemeResource MiSansNormal}"
@@ -77,6 +68,24 @@
                                 Style="{StaticResource AccentButtonStyle}" 
                                 Click="AddJellyfinServer"/>
                     </controls:SettingsExpander>
+
+                    <controls:SettingsCard Description="只能选择一个音乐库"
+                                           Header="选择音乐库"
+                                           FontFamily="{ThemeResource MiSansNormal}">
+                        <controls:SettingsCard.HeaderIcon>
+                            <FontIcon FontFamily="{ThemeResource SegoeIcons}" Glyph="&#xEC4F;" />
+                        </controls:SettingsCard.HeaderIcon>
+                        <ComboBox SelectedItem="{x:Bind JellyfinMusicService.SelectedMusicLibraryDto}" 
+                                  ItemsSource="{x:Bind JellyfinMusicService.MusicLibraryDto}"
+                                  SelectionChanged="MusicLibrary_SelectionChanged">
+                            <ComboBox.ItemTemplate>
+                                <DataTemplate x:DataType="jmodel:BaseItemDto">
+                                    <TextBlock Text="{x:Bind Name}" FontFamily="{ThemeResource MiSansNormal}"/>
+                                </DataTemplate>
+                            </ComboBox.ItemTemplate>
+                        </ComboBox>
+                    </controls:SettingsCard>
+
                     <TextBlock Margin="0,24,0,12" FontSize="18" FontFamily="{ThemeResource MiSansMedium}">调试</TextBlock>
 
                     <controls:SettingsCard Header="打开安装位置" FontFamily="{ThemeResource MiSansNormal}" IsClickEnabled="True" Click="OpenInstalledLocationClick">

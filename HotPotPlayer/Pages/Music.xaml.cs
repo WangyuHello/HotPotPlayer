@@ -75,15 +75,13 @@ namespace HotPotPlayer.Pages
         [ObservableProperty]
         private LocalServiceState loadingState = LocalServiceState.Idle;
 
-        bool IsFirstNavigate = true;
-
         protected override async void OnNavigatedTo(NavigationEventArgs e)
         {
             base.OnNavigatedTo(e);
 
-            if (IsFirstNavigate)
+            if (JellyfinMusicService.IsMusicPageFirstNavigate)
             {
-                IsFirstNavigate = false;
+                JellyfinMusicService.IsMusicPageFirstNavigate = false;
                 LoadingState = LocalServiceState.Loading;
                 var albumsGroups = await JellyfinMusicService.GetJellyfinAlbumGroupsAsync();
                 foreach (var album in albumsGroups)

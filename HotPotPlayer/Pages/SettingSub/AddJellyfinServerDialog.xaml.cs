@@ -27,5 +27,50 @@ namespace HotPotPlayer.Pages.SettingSub
         {
             this.InitializeComponent();
         }
+
+        public event Action<bool> ValidateChanged;
+
+        private void Url_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            var txt = ((TextBox)sender).Text;
+            if (string.IsNullOrEmpty(txt))
+            {
+                ValidateChanged?.Invoke(false);
+                return;
+            }
+            var httpUrl = $"http://{txt}";
+            var httpsUrl = $"http://{txt}";
+            var rawUrl = txt;
+
+            var suc1 = Uri.TryCreate(httpUrl, UriKind.RelativeOrAbsolute, out var httpUri);
+            if (suc1)
+            {
+                ValidateChanged?.Invoke(true);
+                return;
+            }
+            var suc2 = Uri.TryCreate(httpsUrl, UriKind.RelativeOrAbsolute, out var httpsUri);
+            if (suc2)
+            {
+                ValidateChanged?.Invoke(true);
+                return;
+            }
+            var suc3 = Uri.TryCreate(rawUrl, UriKind.RelativeOrAbsolute, out var rawUri);
+            if (suc3)
+            {
+                ValidateChanged?.Invoke(true);
+                return;
+            }
+
+        }
+
+        private void UserName_TextChanged(object sender, TextChangedEventArgs e)
+        {
+
+        }
+
+        private void Password_PasswordChanged(object sender, RoutedEventArgs e)
+        {
+
+        }
     }
 }
