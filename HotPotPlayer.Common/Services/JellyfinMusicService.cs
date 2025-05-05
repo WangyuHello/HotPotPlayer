@@ -1,10 +1,12 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
+using DirectN;
 using HotPotPlayer.Models;
 using Jellyfin.Sdk;
 using Jellyfin.Sdk.Generated.Artists;
 using Jellyfin.Sdk.Generated.Items;
 using Jellyfin.Sdk.Generated.Models;
 using Microsoft.UI.Dispatching;
+using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -128,6 +130,7 @@ namespace HotPotPlayer.Services
             var result = await JellyfinApiClient.System.Info.Public.GetAsync().ConfigureAwait(false);
             return result;
         }
+
 
         public async Task<IEnumerable<IGrouping<int, BaseItemDto>>> GetJellyfinAlbumGroupsAsync()
         {
@@ -399,6 +402,21 @@ namespace HotPotPlayer.Services
             IsLogin = true;
         }
 
+        public async Task<PublicSystemInfo> GetPublicSystemInfo()
+        {
+            if (!IsLogin)
+            {
+                var pw = Config.GetConfig<string>("JellyfinPassword");
+                if (string.IsNullOrEmpty(pw))
+                {
+                    return null;
+                }
+                await JellyfinLoginAsync();
+            }
+
+            return SystemInfo;
+        }
+
         public async Task<(bool success, string message)> TryLoginAsync(string url, string username, string password)
         {
             var http = new HttpClient();
@@ -439,6 +457,21 @@ namespace HotPotPlayer.Services
             return (!string.IsNullOrEmpty(token), message);
         }
 
+        public static async Task<(JObject re, string msg)> TryGetSystemInfoPublicAsync(string url)
+        {
+            using var http = new HttpClient();
+            var msg = string.Empty;
+            var r = string.Empty;
+            try
+            {
+                r = await http.GetStringAsync(url + "/System/Info/Public");
+            }
+            catch (Exception e)
+            {
+                msg = e.Message;
+            }
+            return (JObject.Parse(r), msg);
+        }
         public void Reset()
         {
             jellyfinAuthenticationProvider = null;

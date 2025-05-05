@@ -49,6 +49,9 @@ namespace HotPotPlayer.Pages
         private ReadOnlyObservableGroupedCollection<int, BaseItemDto> JellyfinAlbumGroup => new(_jellyfinAlbumGroup);
 
         [ObservableProperty]
+        private bool noJellyfinVisible;
+
+        [ObservableProperty]
         private ObservableCollection<BaseItemDto> jellyfinPlayListList;
 
         [ObservableProperty]
@@ -84,12 +87,20 @@ namespace HotPotPlayer.Pages
                 JellyfinMusicService.IsMusicPageFirstNavigate = false;
                 LoadingState = LocalServiceState.Loading;
                 var albumsGroups = await JellyfinMusicService.GetJellyfinAlbumGroupsAsync();
+                if (albumsGroups == null)
+                {
+                    NoJellyfinVisible = true;
+                    goto complete;
+                }
+                NoJellyfinVisible = false;
                 foreach (var album in albumsGroups)
                 {
                     _jellyfinAlbumGroup.AddGroup(album);
                 }
                 JellyfinPlayListList = [.. await JellyfinMusicService.GetJellyfinPlayListsAsync()];
                 JellfinArtistList = new ArtistCollection(JellyfinMusicService);
+
+                complete:
                 LoadingState = LocalServiceState.Complete;
             }
         }

@@ -15,6 +15,10 @@
     "MusicInit": {
       "commandName": "MsixPackage",
       "commandLineArgs": "\"Z:\\Music\\01_01_三原色_YOASOBI.flac\""
+    },
+    "NoConfig": {
+      "commandName": "MsixPackage",
+      "commandLineArgs": "--noconfig"
     }
   }
 }

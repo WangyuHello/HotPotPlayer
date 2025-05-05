@@ -42,8 +42,6 @@ namespace HotPotPlayer.Pages
             this.InitializeComponent();
         }
 
-
-
         private List<BaseItemDto> videoViews;
         private List<VideoCollection> videoLists;
         private List<GridView> videoGridViews;
@@ -54,6 +52,9 @@ namespace HotPotPlayer.Pages
         [ObservableProperty]
         private int selectedPivotIndex;
 
+        [ObservableProperty]
+        private bool noJellyfinVisible;
+
         protected override async void OnNavigatedTo(NavigationEventArgs e)
         {
             base.OnNavigatedTo(e);
@@ -61,6 +62,12 @@ namespace HotPotPlayer.Pages
             {
                 JellyfinMusicService.IsVideoPageFirstNavigate = false;
                 videoViews = await JellyfinMusicService.GetVideoViews();
+                if (videoViews == null)
+                {
+                    NoJellyfinVisible = true;
+                    return;
+                }
+                NoJellyfinVisible = false;
                 videoGridViews = [];
                 videoLists = [.. videoViews.Select(v => new VideoCollection(JellyfinMusicService, v))];
 
@@ -123,6 +130,11 @@ namespace HotPotPlayer.Pages
             var container = (GridViewItem)gridView.ContainerFromItem(SelectedSeries);
             var root = container.ContentTemplateRoot;
             root.Opacity = 1;
+        }
+
+        Visibility GetNoJellyfinVisible(ObservableCollection<BaseItemDto> collection)
+        {
+            return collection == null ? Visibility.Visible : Visibility.Collapsed;
         }
 
         public override RectangleF[] GetTitleBarDragArea()

@@ -44,11 +44,20 @@ namespace HotPotPlayer.Pages
         [ObservableProperty]
         private ObservableCollection<PublicSystemInfo> jellyfinServers;
 
+        [ObservableProperty]
+        private BaseItemDto selectedMusicLibraryDto;
+
+        [ObservableProperty]
+        private List<BaseItemDto> musicLibraryDto;
+
         protected override async void OnNavigatedTo(NavigationEventArgs e)
         {
             base.OnNavigatedTo(e);
-            await JellyfinMusicService.JellyfinLoginAsync();
-            JellyfinServers = [JellyfinMusicService.SystemInfo];
+            var info = await JellyfinMusicService.GetPublicSystemInfo();
+            if (info == null) return;
+            JellyfinServers = [info];
+            MusicLibraryDto = JellyfinMusicService.MusicLibraryDto;
+            SelectedMusicLibraryDto = JellyfinMusicService.SelectedMusicLibraryDto;
         }
 
         private async void OpenInstalledLocationClick(object sender, RoutedEventArgs e)
@@ -187,15 +196,19 @@ namespace HotPotPlayer.Pages
                     return;
                 }
 
-                var info = await JellyfinMusicService.GetSystemInfoPublicAsync();
-                if (info == null || string.IsNullOrEmpty(info.Id)) return;
-
                 var prefix = dialogContent.UrlPrefix.SelectedIndex switch
                 {
                     0 => "http://",
                     1 => "https://",
                     _ => "http://",
                 };
+
+                var (info, msg) = await JellyfinMusicService.TryGetSystemInfoPublicAsync(prefix + dialogContent.Url.Text);
+                if (info == null)
+                {
+                    App.ShowToast(new ToastInfo { Text = msg });
+                    return;
+                }
 
                 var (loginResult, message) = await JellyfinMusicService.TryLoginAsync(prefix + dialogContent.Url.Text, dialogContent.UserName.Text, dialogContent.Password.Password);
                 if (!loginResult)
@@ -204,11 +217,16 @@ namespace HotPotPlayer.Pages
                     return;
                 }
 
+                App.ShowToast(new ToastInfo { Text = "登录成功" });
                 Config.SetConfig("JellyfinUrl", prefix + dialogContent.Url.Text);
                 Config.SetConfig("JellyfinUserName", dialogContent.UserName.Text);
                 Config.SetConfig("JellyfinPassword", dialogContent.Password.Password);
 
                 JellyfinMusicService.Reset();
+
+                JellyfinServers = [await JellyfinMusicService.GetPublicSystemInfo()];
+                MusicLibraryDto = JellyfinMusicService.MusicLibraryDto;
+                SelectedMusicLibraryDto = JellyfinMusicService.SelectedMusicLibraryDto;
             }
 
             dialogContent.ValidateChanged -= ValidateChanged;

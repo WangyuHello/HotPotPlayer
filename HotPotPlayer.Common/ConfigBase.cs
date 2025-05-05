@@ -14,13 +14,10 @@ namespace HotPotPlayer
         public IntPtr MainWindowHandle { get; set; }
         public abstract string CacheFolder { get; }
         public abstract string LocalFolder { get; }
-        public abstract string DatabaseFolder { get; }
 
         public abstract List<JellyfinServerItem> JellyfinServers { get; set; }
-        public abstract List<LibraryItem> VideoLibrary { get; set; }
 
-        private List<LibraryItem> _musicPlayListDirectory;
-        public List<LibraryItem> MusicPlayListDirectory => _musicPlayListDirectory ??= new List<LibraryItem>();
+        public bool EnableSave { get; set; } = true;
 
         private JObject _settings;
         private JObject Settings
@@ -39,7 +36,7 @@ namespace HotPotPlayer
                     }
                     else
                     {
-                        _settings = new JObject();
+                        _settings = [];
                     }
                 }
                 return _settings;
@@ -48,11 +45,12 @@ namespace HotPotPlayer
 
         public void ResetSettings()
         {
-            _settings = new JObject();
+            _settings = [];
         }
 
         public void SaveSettings()
         {
+            if(!EnableSave) return;
             exitSaveActions?.ForEach(a => a?.Invoke());
 
             var configDir = Path.Combine(LocalFolder, "Config");
@@ -135,49 +133,18 @@ namespace HotPotPlayer
             exitSaveActions.Add(action);
         }
 
-        public virtual string[] AudioSupportedExt => new[] { ".flac", ".wav", ".m4a", ".mp3", ".opus", ".ogg" };
-        public virtual string[] VideoSupportedExt => new[] { ".mkv", ".mp4" };
-
-        public List<FileInfo> GetMusicFilesFromLibrary() => null;
+        public virtual string[] AudioSupportedExt => [".flac", ".wav", ".m4a", ".mp3", ".opus", ".ogg"];
+        public virtual string[] VideoSupportedExt => [".mkv", ".mp4"];
 
         public List<FileInfo> GetMusicFilesFromDirectory(DirectoryInfo dir)
         {
-            List<FileInfo> files = new();
-            files.AddRange(dir.GetFiles("*.*", SearchOption.AllDirectories).Where(f => AudioSupportedExt.Contains(f.Extension)));
-            return files;
-        }
-
-        public List<FileInfo> GetPlaylistFilesFromLibrary()
-        {
-            var libs = MusicPlayListDirectory.Select(s => s.Path);
-            List<FileInfo> files = new();
-            foreach (var lib in libs)
-            {
-                var di = new DirectoryInfo(lib);
-                if (!di.Exists) continue;
-                files.AddRange(di.GetFiles("*.m3u8", SearchOption.AllDirectories));
-            }
-            return files;
-        }
-
-        public List<FileInfo> GetVideoFilesFromLibrary()
-        {
-            var libs = VideoLibrary.Select(s => s.Path);
-            List<FileInfo> files = new();
-            foreach (var lib in libs)
-            {
-                var di = new DirectoryInfo(lib);
-                if (!di.Exists) continue;
-                files.AddRange(di.GetFiles("*.*", SearchOption.AllDirectories).Where(f => VideoSupportedExt.Contains(f.Extension)));
-            }
-
+            List<FileInfo> files = [.. dir.GetFiles("*.*", SearchOption.AllDirectories).Where(f => AudioSupportedExt.Contains(f.Extension))];
             return files;
         }
 
         public List<FileInfo> GetVideoFilesFromDirectory(DirectoryInfo dir)
         {
-            List<FileInfo> files = new();
-            files.AddRange(dir.GetFiles("*.*", SearchOption.TopDirectoryOnly).Where(f => VideoSupportedExt.Contains(f.Extension)));
+            List<FileInfo> files = [.. dir.GetFiles("*.*", SearchOption.TopDirectoryOnly).Where(f => VideoSupportedExt.Contains(f.Extension))];
             return files;
         }
 

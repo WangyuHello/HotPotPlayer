@@ -90,6 +90,11 @@
             <TextBlock FontSize="14">加载中</TextBlock>
         </StackPanel>
 
+        <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center" Spacing="16" Visibility="{x:Bind NoJellyfinVisible, Mode=OneWay}">
+            <FontIcon FontSize="60" FontFamily="{ThemeResource SegoeIcons}" Glyph="&#xE977;" />
+            <TextBlock FontSize="20" Text="尚未添加Jellyfin服务器，请在设置页面添加" FontFamily="{ThemeResource MiSansRegular}"/>
+        </StackPanel>
+
         <!--<CommandBar HorizontalAlignment="Right"
                     VerticalAlignment="Top"
                     Margin="0,0,12,0"

@@ -75,8 +75,8 @@
                         <controls:SettingsCard.HeaderIcon>
                             <FontIcon FontFamily="{ThemeResource SegoeIcons}" Glyph="&#xEC4F;" />
                         </controls:SettingsCard.HeaderIcon>
-                        <ComboBox SelectedItem="{x:Bind JellyfinMusicService.SelectedMusicLibraryDto}" 
-                                  ItemsSource="{x:Bind JellyfinMusicService.MusicLibraryDto}"
+                        <ComboBox SelectedItem="{x:Bind SelectedMusicLibraryDto, Mode=OneWay}" 
+                                  ItemsSource="{x:Bind MusicLibraryDto, Mode=OneWay}"
                                   SelectionChanged="MusicLibrary_SelectionChanged">
                             <ComboBox.ItemTemplate>
                                 <DataTemplate x:DataType="jmodel:BaseItemDto">

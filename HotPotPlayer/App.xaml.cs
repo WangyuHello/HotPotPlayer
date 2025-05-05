@@ -1,5 +1,4 @@
-﻿using DirectN.Extensions.Utilities;
-using HotPotPlayer.Interop.Helper;
+﻿using HotPotPlayer.Interop.Helper;
 using Microsoft.UI.Windowing;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Media.Animation;
@@ -35,7 +34,7 @@ namespace HotPotPlayer
         /// will be used such as when the application is launched to open a specific file.
         /// </summary>
         /// <param name="args">Details about the launch request and process.</param>
-        protected override void OnLaunched(Microsoft.UI.Xaml.LaunchActivatedEventArgs args)
+        protected override void OnLaunched(LaunchActivatedEventArgs args)
         {
             mainWindow = new MainWindow();
             InitMainWindow(args);
@@ -44,6 +43,16 @@ namespace HotPotPlayer
 
         private void InitMainWindow(LaunchActivatedEventArgs args)
         {
+            //var firstArg = args.Arguments; //尚不支持，永远为null
+            var args2 = Environment.GetCommandLineArgs();
+            var firstArg2 = args2.Length > 1 ? args2[1] : null;
+
+            if (firstArg2 == "--noconfig")
+            {
+                Config.ResetSettings();
+                Config.EnableSave = false;
+            }
+
             MainWindow.Title = "HotPotPlayer";
             var width = Config.GetConfig("width", 1420);
             var height = Config.GetConfig("height", 1100);
@@ -54,9 +63,6 @@ namespace HotPotPlayer
 
             AppWindow.Closing += AppWindow_Closing;
 
-            var firstArg = args.Arguments; //尚不支持，永远为null
-            var args2 = Environment.GetCommandLineArgs();
-            var firstArg2 = args2.Length > 1 ? args2[1] : null;
             if (!string.IsNullOrEmpty(firstArg2) && File.Exists(firstArg2))
             {
                 //InitPageName == null
