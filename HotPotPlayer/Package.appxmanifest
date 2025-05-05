@@ -10,7 +10,7 @@
   <Identity
     Name="HotPotPlayer"
     Publisher="CN=wangyu"
-    Version="1.0.1.0" />
+    Version="1.0.0.0" />
 
   <Properties>
     <DisplayName>HotPotPlayer</DisplayName>
