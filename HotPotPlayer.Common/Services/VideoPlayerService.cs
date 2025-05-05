@@ -131,7 +131,8 @@ namespace HotPotPlayer.Services
                     {
                         return volume.Value;
                     }
-                    return 0;
+                    Config.SetConfig("Volume", 50);
+                    return 50;
                 }
                 else
                 {

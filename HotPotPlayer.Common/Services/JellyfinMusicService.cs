@@ -42,7 +42,7 @@ namespace HotPotPlayer.Services
                 if (string.IsNullOrEmpty(devideId))
                 {
                     var fromConf = Config.GetConfig("JellyfinDeviceId", $"{Guid.NewGuid():N}");
-                    Config.SetConfig("JellyfinDeviceId", devideId);
+                    Config.SetConfig("JellyfinDeviceId", fromConf);
                     devideId = fromConf;
                 }
                 return devideId;
