@@ -162,7 +162,7 @@ namespace HotPotPlayer.Pages
             dialog.XamlRoot = App.XamlRoot;
             dialog.Style = Application.Current.Resources["DefaultContentDialogStyle"] as Style;
             dialog.Title = "添加Jellyfin服务器";
-            dialog.PrimaryButtonText = "保存";
+            dialog.PrimaryButtonText = "测试并保存";
             dialog.CloseButtonText = "取消";
             dialog.DefaultButton = ContentDialogButton.Primary;
             var dialogContent = new AddJellyfinServerDialog();
@@ -186,7 +186,25 @@ namespace HotPotPlayer.Pages
                 {
                     return;
                 }
-                Config.SetConfig("JellyfinUrl", dialogContent.Url.Text);
+
+                var info = await JellyfinMusicService.GetSystemInfoPublicAsync();
+                if (info == null || string.IsNullOrEmpty(info.Id)) return;
+
+                var prefix = dialogContent.UrlPrefix.SelectedIndex switch
+                {
+                    0 => "http://",
+                    1 => "https://",
+                    _ => "http://",
+                };
+
+                var (loginResult, message) = await JellyfinMusicService.TryLoginAsync(prefix + dialogContent.Url.Text, dialogContent.UserName.Text, dialogContent.Password.Password);
+                if (!loginResult)
+                {
+                    App.ShowToast(new ToastInfo { Text = message });
+                    return;
+                }
+
+                Config.SetConfig("JellyfinUrl", prefix + dialogContent.Url.Text);
                 Config.SetConfig("JellyfinUserName", dialogContent.UserName.Text);
                 Config.SetConfig("JellyfinPassword", dialogContent.Password.Password);
 

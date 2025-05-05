@@ -116,17 +116,17 @@ namespace HotPotPlayer.Services
         private List<BaseItemDto> videoLibraryDto;
 
         [ObservableProperty]
-        private List<SessionInfoDto> sessions;
+        private SessionInfoDto session;
         
         private bool IsLogin = false;
         public bool IsMusicPageFirstNavigate { get; set; } = true;
         public bool IsVideoPageFirstNavigate { get; set; } = true;
         #endregion
 
-        public async Task GetSystemInfoPublic()
+        public async Task<PublicSystemInfo> GetSystemInfoPublicAsync()
         {
             var result = await JellyfinApiClient.System.Info.Public.GetAsync().ConfigureAwait(false);
-            SystemInfo = result;
+            return result;
         }
 
         public async Task<IEnumerable<IGrouping<int, BaseItemDto>>> GetJellyfinAlbumGroupsAsync()
@@ -383,7 +383,7 @@ namespace HotPotPlayer.Services
             {
                 return;
             }
-            await GetSystemInfoPublic();
+            SystemInfo = await GetSystemInfoPublicAsync();
             // Authenticate user.
             var authenticationResult = await JellyfinApiClient.Users.AuthenticateByName.PostAsync(new AuthenticateUserByName
             {
@@ -395,8 +395,48 @@ namespace HotPotPlayer.Services
             UserDto = authenticationResult.User;
 
             await GetViews().ConfigureAwait(false);
-            Sessions = await GetPlaySeesion();
+            Session = authenticationResult.SessionInfo;
             IsLogin = true;
+        }
+
+        public async Task<(bool success, string message)> TryLoginAsync(string url, string username, string password)
+        {
+            var http = new HttpClient();
+            http.DefaultRequestHeaders.UserAgent.Add(new ProductInfoHeaderValue("HotPotPlayer", "0.0.1"));
+            http.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json", 1.0));
+            http.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("*/*", 0.8));
+
+            var setting = new JellyfinSdkSettings();
+            setting.Initialize(
+                "HotPotPlayer",
+                "0.0.1",
+                Environment.MachineName,
+                DevideId);
+            setting.SetServerUrl(url);
+
+            var auth = new JellyfinAuthenticationProvider(setting);
+            var adapter = new JellyfinRequestAdapter(auth, setting, http);
+            var client = new JellyfinApiClient(adapter);
+            var token = string.Empty;
+            var message = string.Empty;
+            try
+            {
+                var authenticationResult = await client.Users.AuthenticateByName.PostAsync(new AuthenticateUserByName
+                {
+                    Username = username,
+                    Pw = password
+                }).ConfigureAwait(false);
+                token = authenticationResult.AccessToken;
+            }
+            catch (Exception e)
+            {
+                message = e.Message;
+            }
+            finally
+            { 
+                http.Dispose(); 
+            }
+            return (!string.IsNullOrEmpty(token), message);
         }
 
         public async Task<List<BaseItemDto>> GetAlbumMusicItemsAsync(BaseItemDto album)
@@ -609,7 +649,7 @@ namespace HotPotPlayer.Services
             return result.PlaySessionId;
         }
 
-        public async Task<List<SessionInfoDto>> GetPlaySeesion()
+        public async Task<List<SessionInfoDto>> GetSeesions()
         {
             var result = await JellyfinApiClient.Sessions.GetAsync(param =>
             {
@@ -630,7 +670,7 @@ namespace HotPotPlayer.Services
                 IsMuted = isMute,
                 ItemId = video.Id,
                 MediaSourceId = video.Id.Value.ToString(),
-                PlaySessionId = Sessions.First().Id,
+                PlaySessionId = Session.Id,
                 PlayMethod = PlaybackProgressInfo_PlayMethod.DirectStream,
                 VolumeLevel = 100,
                 PositionTicks = positionTicks

@@ -30,47 +30,27 @@ namespace HotPotPlayer.Pages.SettingSub
 
         public event Action<bool> ValidateChanged;
 
+        private bool IsValid()
+        {
+            var t1 = Url.Text;
+            var t2 = UserName.Text;
+            var t3 = Password.Password;
+            return (!string.IsNullOrEmpty(t1) && !string.IsNullOrEmpty(t2) && !string.IsNullOrEmpty(t3));
+        }
+
         private void Url_TextChanged(object sender, TextChangedEventArgs e)
         {
-            var txt = ((TextBox)sender).Text;
-            if (string.IsNullOrEmpty(txt))
-            {
-                ValidateChanged?.Invoke(false);
-                return;
-            }
-            var httpUrl = $"http://{txt}";
-            var httpsUrl = $"http://{txt}";
-            var rawUrl = txt;
-
-            var suc1 = Uri.TryCreate(httpUrl, UriKind.RelativeOrAbsolute, out var httpUri);
-            if (suc1)
-            {
-                ValidateChanged?.Invoke(true);
-                return;
-            }
-            var suc2 = Uri.TryCreate(httpsUrl, UriKind.RelativeOrAbsolute, out var httpsUri);
-            if (suc2)
-            {
-                ValidateChanged?.Invoke(true);
-                return;
-            }
-            var suc3 = Uri.TryCreate(rawUrl, UriKind.RelativeOrAbsolute, out var rawUri);
-            if (suc3)
-            {
-                ValidateChanged?.Invoke(true);
-                return;
-            }
-
+            ValidateChanged?.Invoke(IsValid());
         }
 
         private void UserName_TextChanged(object sender, TextChangedEventArgs e)
         {
-
+            ValidateChanged?.Invoke(IsValid());
         }
 
         private void Password_PasswordChanged(object sender, RoutedEventArgs e)
         {
-
+            ValidateChanged?.Invoke(IsValid());
         }
     }
 }

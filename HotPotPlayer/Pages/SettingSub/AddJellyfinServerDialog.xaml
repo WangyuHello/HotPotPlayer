@@ -8,9 +8,20 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d">
 
-    <StackPanel VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Spacing="12">
+    <StackPanel VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Spacing="12" Width="400">
         <!-- Content body -->
-        <TextBox x:FieldModifier="Public" x:Name="Url" Header="地址" TextChanged="Url_TextChanged" FontFamily="{ThemeResource MiSansNormal}"/>
+        <TextBlock Text="地址" FontFamily="{ThemeResource MiSansNormal}"/>
+        <Grid Margin="0,-4,0,0">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+            <ComboBox x:FieldModifier="Public" x:Name="UrlPrefix" SelectedIndex="0" VerticalAlignment="Center">
+                <x:String>http://</x:String>
+                <x:String>https://</x:String>
+            </ComboBox>
+            <TextBox x:FieldModifier="Public" Grid.Column="1" x:Name="Url" TextChanged="Url_TextChanged" FontFamily="{ThemeResource MiSansNormal}"/>
+        </Grid>
         <TextBox x:FieldModifier="Public" x:Name="UserName" Header="用户名" TextChanged="UserName_TextChanged" FontFamily="{ThemeResource MiSansNormal}"/>
         <PasswordBox x:FieldModifier="Public" x:Name="Password" Header="密码" PasswordChanged="Password_PasswordChanged" FontFamily="{ThemeResource MiSansNormal}"/>
     </StackPanel>
