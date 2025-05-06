@@ -86,6 +86,16 @@
                         </ComboBox>
                     </controls:SettingsCard>
 
+                    <TextBlock Margin="0,24,0,12" FontSize="18" FontFamily="{ThemeResource MiSansMedium}">MPV</TextBlock>
+
+                    <controls:SettingsCard Description="根据元数据中的值调整音量增益"
+                               Header="回放增益">
+                        <controls:SettingsCard.HeaderIcon>
+                            <FontIcon FontFamily="{ThemeResource SegoeIcons}" Glyph="&#xE8D6;" />
+                        </controls:SettingsCard.HeaderIcon>
+                        <ToggleSwitch OffContent="关闭" OnContent="开启" IsOn="{x:Bind EnableReplayGain, Mode=TwoWay}" FontFamily="{ThemeResource MiSansNormal}"/>
+                    </controls:SettingsCard>
+
                     <TextBlock Margin="0,24,0,12" FontSize="18" FontFamily="{ThemeResource MiSansMedium}">调试</TextBlock>
 
                     <controls:SettingsCard Header="打开安装位置" FontFamily="{ThemeResource MiSansNormal}" IsClickEnabled="True" Click="OpenInstalledLocationClick">

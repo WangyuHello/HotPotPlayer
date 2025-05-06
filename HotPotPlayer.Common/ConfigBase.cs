@@ -65,12 +65,16 @@ namespace HotPotPlayer
             return Settings.TryGetValue(key, out var value);
         }
 
-        public T GetConfig<T>(string key, T defaultValue = default)
+        public T GetConfig<T>(string key, T defaultValue = default, bool init = false)
         {
             var r = Settings.TryGetValue(key, out var value);
             if (r)
             {
                 return value.ToObject<T>();
+            }
+            if (init)
+            {
+                SetConfig(key, defaultValue);
             }
             return defaultValue;
         }

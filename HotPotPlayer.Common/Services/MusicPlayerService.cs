@@ -141,6 +141,8 @@ namespace HotPotPlayer.Services
         [ObservableProperty]
         private PlayMode playMode;
 
+        public bool EnableReplayGain => Config.GetConfig("EnableReplayGain", true, true);
+
         private SystemMediaTransportControls _smtc;
 
         private SystemMediaTransportControls SMTC
@@ -509,7 +511,10 @@ namespace HotPotPlayer.Services
                     };
                     _mpv.API.SetPropertyString("audio-display", "no");
                     //_mpv.API.SetPropertyString("d3d11-composition", "yes");
-                    _mpv.API.SetPropertyString("replaygain", "album");
+                    if (EnableReplayGain)
+                    {
+                        _mpv.API.SetPropertyString("replaygain", "album");
+                    }
                     _mpv.MediaResumed += MediaResumed;
                     _mpv.MediaPaused += MediaPaused;
                     _mpv.MediaLoaded += MediaLoaded;
@@ -520,13 +525,16 @@ namespace HotPotPlayer.Services
                     _mpv.MediaEndedSeeking += MediaEndedSeeking;
                 }
                 //var intercept = LoadMusic(music);
-                if (music.NormalizationGain != null && music.NormalizationGain != 0)
+                if (EnableReplayGain)
                 {
-                    _mpv.API.SetPropertyDouble("replaygain-fallback", (double)music.NormalizationGain);
-                }
-                else
-                {
-                    _mpv.API.SetPropertyString("replaygain", "album");
+                    if (music.NormalizationGain != null && music.NormalizationGain != 0)
+                    {
+                        _mpv.API.SetPropertyDouble("replaygain-fallback", (double)music.NormalizationGain);
+                    }
+                    else
+                    {
+                        _mpv.API.SetPropertyString("replaygain", "album");
+                    }
                 }
                 _mpv.LoadPlaylist(CurrentPlayList.Select(App.JellyfinMusicService.GetMusicStream), true);
                 _mpv.PlaylistPlayIndex(index);

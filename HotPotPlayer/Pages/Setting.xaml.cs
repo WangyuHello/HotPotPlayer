@@ -50,6 +50,18 @@ namespace HotPotPlayer.Pages
         [ObservableProperty]
         private List<BaseItemDto> musicLibraryDto;
 
+        private bool enableReplayGain;
+
+        public bool EnableReplayGain
+        {
+            get => enableReplayGain;
+            set
+            {
+                SetProperty(ref enableReplayGain, value);
+                Config.SetConfig(nameof(EnableReplayGain), value);
+            }
+        }
+
         protected override async void OnNavigatedTo(NavigationEventArgs e)
         {
             base.OnNavigatedTo(e);
@@ -58,6 +70,7 @@ namespace HotPotPlayer.Pages
             JellyfinServers = [info];
             MusicLibraryDto = JellyfinMusicService.MusicLibraryDto;
             SelectedMusicLibraryDto = JellyfinMusicService.SelectedMusicLibraryDto;
+            EnableReplayGain = Config.GetConfig("EnableReplayGain", true, true);
         }
 
         private async void OpenInstalledLocationClick(object sender, RoutedEventArgs e)
