@@ -71,12 +71,19 @@ jobs:
     - name: Use Dev Package
       run: Move-Item -Force (Join-Path -Path $env:Project_Directory -ChildPath Package.Dev.appxmanifest) (Join-Path -Path $env:Project_Directory -ChildPath Package.appxmanifest)
 
-    - name: Setup version
+    - name: Setup package version
       uses: mingjun97/file-regex-replace@v1
       with:
         regex: 'Version="1.0.0.0"'
         replacement: 'Version="0.${{ github.run_number }}.${{ github.run_attempt }}.0"'
         include: Package.appxmanifest
+
+    - name: Setup app version
+      uses: mingjun97/file-regex-replace@v1
+      with:
+        regex: 'version = "1.0.0.0"'
+        replacement: 'version = "0.${{ github.run_number }}.${{ github.run_attempt }}.0"'
+        include: ${{ env.Project_Directory }}/App.Service.cs
 
     # Install the .NET Core workload
     - name: Install .NET Core

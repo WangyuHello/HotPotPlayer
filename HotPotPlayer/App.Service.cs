@@ -37,11 +37,8 @@ namespace HotPotPlayer
 
         private static string GetApplicationVersion()
         {
-            Assembly thisAssem = typeof(App).Assembly;
-            AssemblyName thisAssemName = thisAssem.GetName();
-
-            Version ver = thisAssemName.Version;
-            return ver.ToString();
+            var version = "1.0.0.0";
+            return version;
         }
     }
 }
