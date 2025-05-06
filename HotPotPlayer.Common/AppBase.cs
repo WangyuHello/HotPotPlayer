@@ -43,6 +43,8 @@ namespace HotPotPlayer
         BiliBiliService bilibiliService;
         public BiliBiliService BiliBiliService => bilibiliService ??= new BiliBiliService(Config, UIQueue, this);
 
+        public abstract string ApplicationVersion { get; }
+
         public void ShutDown()
         {
             //jellyfinMusicService?.Dispose();

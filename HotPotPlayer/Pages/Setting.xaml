@@ -117,6 +117,19 @@
                     <controls:SettingsCard Header="删除应用缓存" Description="注意：此操作不可逆" FontFamily="{ThemeResource MiSansNormal}" IsClickEnabled="True" Click="ClearCacheClick">
 
                     </controls:SettingsCard>
+
+                    <TextBlock Margin="0,24,0,12" FontSize="18" FontFamily="{ThemeResource MiSansMedium}">HotPotPlayer</TextBlock>
+
+                    <controls:SettingsCard
+                               Click="VersionClick"
+                               Header="版本"
+                               Description="{x:Bind App.ApplicationVersion}"
+                               HeaderIcon="{ui:BitmapIcon Source=ms-appx:///Assets/Square44x44Logo.scale-200.png}"
+                               FontFamily="{ThemeResource MiSansNormal}"
+                               IsClickEnabled="True">
+                        
+                    </controls:SettingsCard>
+
                 </StackPanel>
             </Grid>
         </ScrollViewer>

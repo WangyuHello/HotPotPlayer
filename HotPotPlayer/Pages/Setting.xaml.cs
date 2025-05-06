@@ -1,5 +1,6 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.WinUI.Controls;
+using Grpc.Core;
 using HotPotPlayer.Bilibili.Models.Search;
 using HotPotPlayer.Models;
 using HotPotPlayer.Pages.SettingSub;
@@ -248,6 +249,11 @@ namespace HotPotPlayer.Pages
         private void JellyfinServerRemoveClick(object sender, RoutedEventArgs e)
         {
 
+        }
+
+        private async void VersionClick(object sender, RoutedEventArgs e)
+        {
+            bool _ = await Windows.System.Launcher.LaunchUriAsync(new Uri("https://github.com/WangyuHello/HotPotPlayer"));
         }
 
         public override RectangleF[] GetTitleBarDragArea()

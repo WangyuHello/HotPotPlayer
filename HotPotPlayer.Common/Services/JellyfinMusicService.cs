@@ -12,6 +12,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
 using System.Net.Http.Headers;
+using System.Reflection;
 using System.Threading.Tasks;
 using SortOrder = Jellyfin.Sdk.Generated.Models.SortOrder;
 
@@ -60,7 +61,7 @@ namespace HotPotPlayer.Services
                     sdkClientSettings = new JellyfinSdkSettings();
                     sdkClientSettings.Initialize(
                         "HotPotPlayer",
-                        "0.0.1",
+                        App.ApplicationVersion,
                         Environment.MachineName,
                         DevideId);
                     sdkClientSettings.SetServerUrl(Config.GetConfig<string>("JellyfinUrl"));
@@ -78,7 +79,7 @@ namespace HotPotPlayer.Services
                 if (httpClient == null)
                 {
                     httpClient = new HttpClient();
-                    httpClient.DefaultRequestHeaders.UserAgent.Add(new ProductInfoHeaderValue("HotPotPlayer", "0.0.1"));
+                    httpClient.DefaultRequestHeaders.UserAgent.Add(new ProductInfoHeaderValue("HotPotPlayer", App.ApplicationVersion));
                     httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json", 1.0));
                     httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("*/*", 0.8));
                 }
@@ -420,14 +421,14 @@ namespace HotPotPlayer.Services
         public async Task<(bool success, string message)> TryLoginAsync(string url, string username, string password)
         {
             var http = new HttpClient();
-            http.DefaultRequestHeaders.UserAgent.Add(new ProductInfoHeaderValue("HotPotPlayer", "0.0.1"));
+            http.DefaultRequestHeaders.UserAgent.Add(new ProductInfoHeaderValue("HotPotPlayer", App.ApplicationVersion));
             http.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json", 1.0));
             http.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("*/*", 0.8));
 
             var setting = new JellyfinSdkSettings();
             setting.Initialize(
                 "HotPotPlayer",
-                "0.0.1",
+                App.ApplicationVersion,
                 Environment.MachineName,
                 DevideId);
             setting.SetServerUrl(url);
