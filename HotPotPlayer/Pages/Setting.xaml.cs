@@ -58,7 +58,7 @@ namespace HotPotPlayer.Pages
             set
             {
                 SetProperty(ref enableReplayGain, value);
-                Config.SetConfig(nameof(EnableReplayGain), value);
+                Config.SetConfig(nameof(EnableReplayGain), value, true);
             }
         }
 
