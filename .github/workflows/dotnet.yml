@@ -83,7 +83,8 @@ jobs:
       with:
         regex: 'version = "1.0.0.0"'
         replacement: 'version = "0.${{ github.run_number }}.${{ github.run_attempt }}.0"'
-        include: ${{ env.Project_Directory }}/App.Service.cs
+        include: App.Service.cs
+        path: ${{ env.Project_Directory }}
 
     # Install the .NET Core workload
     - name: Install .NET Core
