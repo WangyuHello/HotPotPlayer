@@ -88,6 +88,8 @@ namespace HotPotPlayer
             Config.SetConfig("height", height);
             Config.SetConfig("initpage", MainWindow.GetSavePageName());
             Config.SaveSettings();
+
+            JellyfinMusicService.Logout().Wait();
             ShutDown();
         }
 

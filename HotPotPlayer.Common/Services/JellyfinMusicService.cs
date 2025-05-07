@@ -729,6 +729,22 @@ namespace HotPotPlayer.Services
             });
         }
 
+        public async void ReportStop(BaseItemDto video, long positionTicks)
+        {
+            if (video == null || video.Id == null)
+            {
+                return;
+            }
+            await JellyfinApiClient.Sessions.Playing.Stopped.PostAsync(new PlaybackStopInfo
+            {
+                ItemId = video.Id,
+                SessionId = Session.Id,
+                MediaSourceId = video.Id.Value.ToString(),
+                PositionTicks = positionTicks,
+                PlaySessionId = Session.Id,
+            });
+        }
+
         public async Task<List<BaseItemDto>> GetSeasons(BaseItemDto bangumi)
         {
             var result = await JellyfinApiClient.Shows[bangumi.Id.Value].Seasons.GetAsync(param =>
@@ -756,7 +772,10 @@ namespace HotPotPlayer.Services
             return result.Items;
         }
 
-
+        public async Task Logout()
+        {
+            await JellyfinApiClient.Sessions.Logout.PostAsync().ConfigureAwait(false);
+        }
         public void AddAlbumToPlayList(BaseItemDto playList, AlbumItem album)
         {
 

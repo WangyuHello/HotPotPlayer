@@ -17,6 +17,7 @@ using System.IO;
 using System.Linq;
 using System.Reflection.Metadata;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Timers;
 using Windows.Devices.Enumeration;
@@ -37,7 +38,7 @@ namespace HotPotPlayer.Services
     public partial class VideoPlayerService : ServiceBaseWithConfig
     {
 
-        readonly Timer _playerTimer;
+        readonly System.Timers.Timer _playerTimer;
         public VideoPlayerService(ConfigBase config, DispatcherQueue uiThread = null, AppBase app = null) : base(config, uiThread, app)
         {
             _playerStarter = new BackgroundWorker
@@ -47,7 +48,7 @@ namespace HotPotPlayer.Services
 
             _playerStarter.RunWorkerCompleted += PlayerStarterCompleted;
             _playerStarter.DoWork += PlayerStarterDoWork;
-            _playerTimer = new Timer(500)
+            _playerTimer = new System.Timers.Timer(500)
             {
                 AutoReset = true
             };
@@ -231,6 +232,10 @@ namespace HotPotPlayer.Services
 
         public void PlayNext(List<BaseItemDto> files, int index)
         {
+            if (CurrentPlaying != null && CurrentPlaying.Id != null)
+            {
+                App.JellyfinMusicService.ReportStop(CurrentPlaying, CurrentTime.Ticks);
+            }
             CurrentPlayList = [.. files];
             PlayNext(index);
         }
@@ -248,6 +253,10 @@ namespace HotPotPlayer.Services
 
         public void PlayNextInCurrentList(BaseItemDto v)
         {
+            if (CurrentPlaying != null && CurrentPlaying.Id != null)
+            {
+                App.JellyfinMusicService.ReportStop(CurrentPlaying, CurrentTime.Ticks);
+            }
             var i = CurrentPlayList.IndexOf(v);
             if (i != CurrentPlayingIndex)
             {
@@ -386,6 +395,7 @@ namespace HotPotPlayer.Services
             _mpv.Pause();
             IsPlaying = false;
             App?.Taskbar.SetProgressState(TaskbarHelper.TaskbarStates.NoProgress);
+            App.JellyfinMusicService.ReportStop(CurrentPlaying, CurrentTime.Ticks);
         }
 
         public void TogglePlayMode()
@@ -485,8 +495,13 @@ namespace HotPotPlayer.Services
 
         public Action OnMediaLoaded;
 
+        private readonly ManualResetEvent _event = new ManualResetEvent(false);
         private void MediaLoaded(object sender, EventArgs e)
         {
+            _event.WaitOne();
+            var prevPosition = new TimeSpan(CurrentPlaying?.UserData?.PlaybackPositionTicks ?? 0);
+            if(prevPosition > CurrentPlayingDuration) prevPosition = TimeSpan.Zero;
+            _mpv.Position = prevPosition;
             _mpv.Resume();
             UIQueue.TryEnqueue(() =>
             {
@@ -518,6 +533,7 @@ namespace HotPotPlayer.Services
             _isVideoSwitching = true;
             var index = (int)e.Argument;
             var video = CurrentPlayList[index];
+            _event.Reset();
 
             try
             {
@@ -569,7 +585,6 @@ namespace HotPotPlayer.Services
                 if (video.Id != null)
                 {
                     videoInfo = App.JellyfinMusicService.GetItemInfoAsync(CurrentPlayList[index]).Result;
-                    //playSessionId = App.JellyfinMusicService.GetPlayBackInfo(video).Result;
                 }
                 else
                 {
@@ -629,6 +644,7 @@ namespace HotPotPlayer.Services
             {
 
             }
+            _event.Set();
         }
 
         public void UpdatePanelScale(float scaleX, float scaleY)

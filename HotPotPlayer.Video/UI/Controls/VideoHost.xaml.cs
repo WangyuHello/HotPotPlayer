@@ -451,11 +451,7 @@ namespace HotPotPlayer.Video.UI.Controls
             //_isSwapchainInited = false;
             //_swapChainPanelNative = Host.As<ISwapChainPanelNative>();
             //_swapChainPanelNative.SetSwapChain(null);
-            Task.Run(() =>
-            {
-                VideoPlayer.PauseAsStop();
-                //VideoPlayer.ShutDown();
-            });
+            Task.Run(VideoPlayer.PauseAsStop);
         }
 
         private void ToggleSmallWindowClick(object sender, RoutedEventArgs e)
