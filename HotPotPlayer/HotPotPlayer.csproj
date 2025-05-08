@@ -55,6 +55,7 @@
     <None Remove="Assets\Icon\Icons.xaml" />
     <None Remove="Assets\Icon\Like.svg" />
     <None Remove="Assets\Icon\LikeBlue.svg" />
+    <None Remove="Assets\Icon\mpv.png" />
     <None Remove="Assets\Icon\next.ico" />
     <None Remove="Assets\Icon\pause.ico" />
     <None Remove="Assets\Icon\prev.ico" />

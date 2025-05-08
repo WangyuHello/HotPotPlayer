@@ -17,11 +17,13 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices.WindowsRuntime;
+using System.Threading.Tasks;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
 using Windows.Storage;
@@ -63,6 +65,17 @@ namespace HotPotPlayer.Pages
             }
         }
 
+        [ObservableProperty]
+        private string mpvVersion;
+
+        private string GetMpvVersion()
+        {
+            FileVersionInfo myFileVersionInfo =
+                FileVersionInfo.GetVersionInfo(Path.Combine(Windows.ApplicationModel.Package.Current.InstalledLocation.Path, "NativeLibs/mpv-2.dll"));
+
+            return myFileVersionInfo.ProductVersion;
+        }
+
         protected override async void OnNavigatedTo(NavigationEventArgs e)
         {
             base.OnNavigatedTo(e);
@@ -72,6 +85,7 @@ namespace HotPotPlayer.Pages
             MusicLibraryDto = JellyfinMusicService.MusicLibraryDto;
             SelectedMusicLibraryDto = JellyfinMusicService.SelectedMusicLibraryDto;
             EnableReplayGain = Config.GetConfig("EnableReplayGain", true, true);
+            MpvVersion ??= GetMpvVersion();
         }
 
         private async void OpenInstalledLocationClick(object sender, RoutedEventArgs e)
@@ -235,6 +249,7 @@ namespace HotPotPlayer.Pages
                 Config.SetConfig("JellyfinUrl", prefix + dialogContent.Url.Text);
                 Config.SetConfig("JellyfinUserName", dialogContent.UserName.Text);
                 Config.SetConfig("JellyfinPassword", dialogContent.Password.Password);
+                Config.SaveSettings();
 
                 JellyfinMusicService.Reset();
 
@@ -254,6 +269,11 @@ namespace HotPotPlayer.Pages
         private async void VersionClick(object sender, RoutedEventArgs e)
         {
             bool _ = await Windows.System.Launcher.LaunchUriAsync(new Uri("https://github.com/WangyuHello/HotPotPlayer"));
+        }
+
+        private async void MpvVersionClick(object sender, RoutedEventArgs e)
+        {
+            bool _ = await Windows.System.Launcher.LaunchUriAsync(new Uri("https://github.com/WangyuHello/mpv"));
         }
 
         public override RectangleF[] GetTitleBarDragArea()

@@ -89,11 +89,20 @@
                     <TextBlock Margin="0,24,0,12" FontSize="18" FontFamily="{ThemeResource MiSansMedium}">MPV</TextBlock>
 
                     <controls:SettingsCard Description="根据元数据中的值调整音量增益"
-                               Header="回放增益">
+                                           Header="回放增益"
+                                           FontFamily="{ThemeResource MiSansNormal}">
                         <controls:SettingsCard.HeaderIcon>
                             <FontIcon FontFamily="{ThemeResource SegoeIcons}" Glyph="&#xE8D6;" />
                         </controls:SettingsCard.HeaderIcon>
                         <ToggleSwitch OffContent="关闭" OnContent="开启" IsOn="{x:Bind EnableReplayGain, Mode=TwoWay}" FontFamily="{ThemeResource MiSansNormal}"/>
+                    </controls:SettingsCard>
+
+                    <controls:SettingsCard Description="{x:Bind MpvVersion, Mode=OneWay}"
+                                           Header="版本"
+                                           FontFamily="{ThemeResource MiSansNormal}"
+                                           HeaderIcon="{ui:BitmapIcon Source=ms-appx:///Assets/Icon/mpv.png}"
+                                           IsClickEnabled="True"
+                                           Click="MpvVersionClick">
                     </controls:SettingsCard>
 
                     <TextBlock Margin="0,24,0,12" FontSize="18" FontFamily="{ThemeResource MiSansMedium}">调试</TextBlock>
