@@ -715,7 +715,7 @@ namespace HotPotPlayer.Services
             {
                 return;
             }
-            await JellyfinApiClient.Sessions.Playing.Progress.PostAsync(new PlaybackProgressInfo
+               await JellyfinApiClient.Sessions.Playing.Progress.PostAsync(new PlaybackProgressInfo
             {
                 CanSeek = true,
                 IsPaused = isPause,

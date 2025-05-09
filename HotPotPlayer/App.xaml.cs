@@ -54,8 +54,20 @@ namespace HotPotPlayer
             }
 
             MainWindow.Title = "HotPotPlayer";
-            var width = Config.GetConfig("width", 1420);
-            var height = Config.GetConfig("height", 1100);
+
+            var width = Config.GetConfig("width", 0);
+            var height = Config.GetConfig("height", 0);
+
+            if (width == 0)
+            {
+                var dpi = WindowHelper.GetDpiForWindow(MainWindowHandle);
+                var screenWidth = WindowHelper.GetSystemMetrics(WindowHelper.SM_CXSCREEN);
+                var screenHeight = WindowHelper.GetSystemMetrics(WindowHelper.SM_CYSCREEN);
+
+                width = screenWidth > 1420 ? 1420 : (int)(screenWidth * 0.8);
+                height = screenHeight > 1100 ? 1100 : (int)(screenHeight * 0.8);
+            }
+
             MainWindow.CenterOnScreen(width, height);
             MainWindow.TrySetAcrylicBackdrop();
             MainWindow.SizeChanged += MainWindow_SizeChanged;

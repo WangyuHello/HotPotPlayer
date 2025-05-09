@@ -31,5 +31,11 @@ namespace HotPotPlayer.Interop.Helper
 
         [DllImport("ole32.dll")]
         public static extern uint CoWaitForMultipleObjects(uint dwFlags, uint dwMilliseconds, ulong nHandles, IntPtr[] pHandles, out uint dwIndex);
+
+        [DllImport("user32.dll")]
+        public static extern int GetSystemMetrics(int nIndex);
+
+        public const int SM_CXSCREEN = 0; // Screen width
+        public const int SM_CYSCREEN = 1; // Screen height
     }
 }
