@@ -86,6 +86,14 @@
                         </ComboBox>
                     </controls:SettingsCard>
 
+                    <controls:SettingsCard Header="恢复上一次播放进度"
+                                           FontFamily="{ThemeResource MiSansNormal}">
+                        <controls:SettingsCard.HeaderIcon>
+                            <FontIcon FontFamily="{ThemeResource SegoeIcons}" Glyph="&#xE77C;" />
+                        </controls:SettingsCard.HeaderIcon>
+                        <ToggleSwitch OffContent="关闭" OnContent="开启" IsOn="{x:Bind EnableRestorePrevLocation, Mode=TwoWay}" FontFamily="{ThemeResource MiSansNormal}"/>
+                    </controls:SettingsCard>
+
                     <TextBlock Margin="0,24,0,12" FontSize="18" FontFamily="{ThemeResource MiSansMedium}">MPV</TextBlock>
 
                     <controls:SettingsCard Description="根据元数据中的值调整音量增益"

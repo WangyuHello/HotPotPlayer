@@ -23,6 +23,7 @@ using System.Timers;
 using Windows.Devices.Enumeration;
 using Windows.Media;
 using Windows.Storage.Streams;
+using PlayerState = HotPotPlayer.Models.PlayerState;
 
 namespace HotPotPlayer.Services
 {
@@ -35,137 +36,14 @@ namespace HotPotPlayer.Services
         SmallHost
     }
 
-    public partial class VideoPlayerService : ServiceBaseWithConfig
+    public partial class VideoPlayerService(ConfigBase config, DispatcherQueue uiThread = null, AppBase app = null) : PlayerService(config, uiThread, app)
     {
-
-        readonly System.Timers.Timer _playerTimer;
-        public VideoPlayerService(ConfigBase config, DispatcherQueue uiThread = null, AppBase app = null) : base(config, uiThread, app)
-        {
-            _playerStarter = new BackgroundWorker
-            {
-                WorkerReportsProgress = true
-            };
-
-            _playerStarter.RunWorkerCompleted += PlayerStarterCompleted;
-            _playerStarter.DoWork += PlayerStarterDoWork;
-            _playerTimer = new System.Timers.Timer(500)
-            {
-                AutoReset = true
-            };
-            _playerTimer.Elapsed += PlayerTimerElapsed;
-
-            Config.SaveConfigWhenExit("Volume", () => (Volume != 0, Volume));
-        }
-
-        [ObservableProperty]
-        private PlayerState state;
-
-        [ObservableProperty]
-        private BaseItemDto currentPlaying;
-
-        public TimeSpan? CurrentPlayingDuration
-        {
-            get => _mpv?.Duration;
-        }
-
-        [ObservableProperty]
-        private int currentPlayingIndex = -1;
-
-        [ObservableProperty]
-        private ObservableCollection<BaseItemDto> currentPlayList;
-
-        public bool SuppressCurrentTimeTrigger { get; set; }
-
-        private TimeSpan _currentTime;
-
-        public TimeSpan CurrentTime
-        {
-            get => _currentTime;
-            set
-            {
-                if (SuppressCurrentTimeTrigger) return;
-                SetProperty(ref _currentTime, value);
-            }
-        }
-
-        private bool _isPlaying;
-
-        public bool IsPlaying
-        {
-            get => _isPlaying;
-            set => SetProperty(ref _isPlaying, value, nowPlaying =>
-            {
-                Task.Run(async () =>
-                {
-                    if (nowPlaying)
-                    {
-                        if (SMTC != null)
-                        {
-                            SMTC.PlaybackStatus = MediaPlaybackStatus.Playing;
-                        }
-                        App?.Taskbar.SetProgressState(TaskbarHelper.TaskbarStates.Normal);
-                    }
-                    else
-                    {
-                        if (SMTC != null)
-                        {
-                            SMTC.PlaybackStatus = MediaPlaybackStatus.Paused;
-                        }
-                        App?.Taskbar.SetProgressState(TaskbarHelper.TaskbarStates.Paused);
-                        await App.JellyfinMusicService.ReportProgress(CurrentPlaying, CurrentTime.Ticks, true);
-                    }
-                });
-            });
-        }
-
-        [ObservableProperty]
-        private bool hasError;
-
-        public int Volume
-        {
-            get
-            {
-                if (_mpv == null)
-                {
-                    var volume = Config.GetConfig<int?>("Volume");
-                    if (volume != null)
-                    {
-                        return volume.Value;
-                    }
-                    Config.SetConfig("Volume", 50);
-                    return 50;
-                }
-                else
-                {
-                    return _mpv.Volume;
-                }
-            }
-            set
-            {
-                if (value != _mpv.Volume)
-                {
-                    if (_mpv != null)
-                    {
-                        _mpv.Volume = value;
-                    }
-                    OnPropertyChanged(nameof(Volume));
-                }
-            }
-        }
-
-        [ObservableProperty]
-        private PlayMode playMode;
-
         [ObservableProperty]
         private VideoPlayVisualState visualState;
 
         public event EventHandler<MpvVideoGeometryInitEventArgs> VideoGeometryInit;
         public event EventHandler<IntPtr> SwapChainInited;
         public IntPtr SwapChain { get; set; }
-        MpvPlayer _mpv;
-        bool _isVideoSwitching;
-        readonly BackgroundWorker _playerStarter;
-        private string _currentPlaySessionId;
 
         private float _currentScaleX;
         private float _currentScaleY;
@@ -180,38 +58,7 @@ namespace HotPotPlayer.Services
         public float ScaleX { get; set; }
         public float ScaleY { get; set; }
 
-        private SystemMediaTransportControls _smtc;
-
-        private SystemMediaTransportControls SMTC
-        {
-            get => _smtc;
-        }
-        /// <summary>
-        /// https://docs.microsoft.com/en-us/windows/apps/desktop/modernize/winrt-com-interop-csharp
-        /// </summary>
-        /// <returns></returns>
-        SystemMediaTransportControls InitSmtc()
-        {
-            var smtc = SystemMediaTransportControlsInterop.GetForWindow(Config.MainWindowHandle);
-            smtc.IsEnabled = true;
-            smtc.ButtonPressed += SystemMediaControls_ButtonPressed;
-            smtc.PlaybackRateChangeRequested += SystemMediaControls_PlaybackRateChangeRequested;
-            smtc.PlaybackPositionChangeRequested += SystemMediaControls_PlaybackPositionChangeRequested;
-            smtc.AutoRepeatModeChangeRequested += SystemMediaControls_AutoRepeatModeChangeRequested;
-            smtc.PropertyChanged += SystemMediaControls_PropertyChanged;
-            smtc.IsPlayEnabled = true;
-            smtc.IsPauseEnabled = true;
-            smtc.IsStopEnabled = true;
-            smtc.IsNextEnabled = true;
-            smtc.IsPreviousEnabled = true;
-            smtc.PlaybackStatus = MediaPlaybackStatus.Closed;
-
-            App?.Taskbar.InitTaskBarButtons();
-
-            return smtc;
-        }
-
-        public async void PlayNext(BaseItemDto video)
+        public override async void PlayNext(BaseItemDto video)
         {
             if (video.IsFolder.Value)
             {
@@ -230,421 +77,49 @@ namespace HotPotPlayer.Services
             PlayNext(0);
         }
 
-        public void PlayNext(List<BaseItemDto> files, int index)
+        protected override void OnPlayNextStateChange()
         {
-            if (CurrentPlaying != null && CurrentPlaying.Id != null)
-            {
-                App.JellyfinMusicService.ReportStop(CurrentPlaying, CurrentTime.Ticks);
-            }
-            CurrentPlayList = [.. files];
-            PlayNext(index);
+            VisualState = VideoPlayVisualState.FullWindow;
         }
 
-        public void PlayNext(List<FileInfo> files, int index)
+        protected override void SetupMpvInitProperty(MpvPlayer _mpv)
         {
-            var fakeDtos = files.Select(f => new BaseItemDto 
-            { 
-                Path = f.FullName,
-                Name = f.Name
-            });
-            CurrentPlayList = [ .. fakeDtos];
-            PlayNext(index);
+            //_mpv.API.SetPropertyDouble("display-fps-override", 120d);
+            //_mpv.API.SetPropertyString("gpu-debug", "yes");
+            //_mpv.API.SetPropertyString("vo", "gpu-next");
+            _mpv.API.SetPropertyString("vo", "gpu");
+            _mpv.API.SetPropertyString("gpu-context", "d3d11");
+            _mpv.API.SetPropertyString("hwdec", "d3d11va");
+            _mpv.API.SetPropertyString("d3d11-composition", "yes");
+            //_mpv.API.SetPropertyString("target-colorspace-hint", "yes"); //HDR passthrough
         }
 
-        public void PlayNextInCurrentList(BaseItemDto v)
+        protected override void SetupMpvEvent(MpvPlayer _mpv)
         {
-            if (CurrentPlaying != null && CurrentPlaying.Id != null)
-            {
-                App.JellyfinMusicService.ReportStop(CurrentPlaying, CurrentTime.Ticks);
-            }
-            var i = CurrentPlayList.IndexOf(v);
-            if (i != CurrentPlayingIndex)
-            {
-                PlayNext(i);
-            }
+            _mpv.API.VideoGeometryInit += VideoGeometryInit;
+            _mpv.API.SwapChainInited += OnSwapChainInited;
         }
 
-        public void PlayNext(int? index)
+        protected override IEnumerable<string> GetMediaSources(ObservableCollection<BaseItemDto> list)
         {
-            if (index == null)
+            var lists = list.Select(v =>
             {
-                return;
-            }
-            if (CurrentPlayList == null || CurrentPlayList.Count == 0)
-            {
-                return;
-            }
-            if ((index >= 0) && (index < CurrentPlayList.Count))
-            {
-                if (_playerStarter.IsBusy)
+                if (v.Path != null && v.Id == null)
                 {
-                    return;
-                }
-                _playerTimer.Stop();
-                CurrentTime = TimeSpan.Zero;
-                IsPlaying = false;
-
-                VisualState = VideoPlayVisualState.FullWindow;
-                State = PlayerState.Loading;
-
-                if (SwapChain == IntPtr.Zero)
-                {
-                    //await Task.Delay(1000);
-                }
-                _playerStarter.RunWorkerAsync(index);
-            }
-        }
-
-        Random random;
-        public void PlayNext()
-        {
-            if (CurrentPlayingIndex != -1)
-            {
-                if (PlayMode == PlayMode.Loop)
-                {
-                    var index = CurrentPlayingIndex + 1;
-                    if (index >= CurrentPlayList.Count)
-                    {
-                        index = 0;
-                    }
-                    PlayNext(index);
-                }
-                else if (PlayMode == PlayMode.SingleLoop)
-                {
-                    PlayNext(CurrentPlayingIndex);
-                }
-                else if (PlayMode == PlayMode.Shuffle)
-                {
-                    random ??= new Random();
-                    var index = random.Next(CurrentPlayList.Count);
-                    PlayNext(index);
-                }
-            }
-        }
-
-        public void PlayPrevious()
-        {
-            if (CurrentPlayingIndex != -1)
-            {
-                var index = CurrentPlayingIndex - 1;
-                if (index < 0)
-                {
-                    index = CurrentPlayList.Count - 1;
-                }
-                PlayNext(index);
-            }
-        }
-
-        public void PlayOrPause()
-        {
-            if (_mpv == null)
-            {
-                return;
-            }
-            if (_mpv.IsPlaying)
-            {
-                _playerTimer.Stop();
-                _mpv.Pause();
-                IsPlaying = false;
-                
-            }
-            else
-            {
-                _mpv.Resume();
-                _playerTimer.Start();
-                IsPlaying = true;
-            }
-        }
-
-        public async void PlayTo(TimeSpan to)
-        {
-            await _mpv.SeekAsync(to);
-        }
-
-        public async void PlayStepForward(TimeSpan delta)
-        {
-            var t = _mpv.Position + delta;
-            if (t > CurrentPlayingDuration)
-            {
-
-            }
-            else
-            {
-                await _mpv.SeekAsync(t);
-            }
-        }
-
-        public async void PlayStepBackward(TimeSpan delta)
-        {
-            var t = TimeSpan.Zero;
-            if (_mpv.Position > delta) {
-                t = _mpv.Position - delta;
-            }
-            await _mpv.SeekAsync(t);
-        }
-
-        public void Stop()
-        {
-            _playerTimer.Stop();
-            _mpv.Stop();
-        }
-
-        public void PauseAsStop()
-        {
-            _playerTimer.Stop();
-            _mpv.Pause();
-            IsPlaying = false;
-            App?.Taskbar.SetProgressState(TaskbarHelper.TaskbarStates.NoProgress);
-            App.JellyfinMusicService.ReportStop(CurrentPlaying, CurrentTime.Ticks);
-        }
-
-        public void TogglePlayMode()
-        {
-            PlayMode = PlayMode switch
-            {
-                PlayMode.Loop => PlayMode.SingleLoop,
-                PlayMode.SingleLoop => PlayMode.Shuffle,
-                PlayMode.Shuffle => PlayMode.Loop,
-                _ => PlayMode.Loop,
-            };
-        }
-
-        public void Command(params string[] args)
-        {
-            _mpv?.API.Command(args);
-        }
-
-        public void SetPropertyString(string key, string value)
-        {
-            _mpv?.API.SetPropertyString(key, value);
-        }
-
-        public void SetPropertyLong(string  key, long value)
-        {
-            _mpv?.API.SetPropertyLong(key, value);
-        }
-
-        private void PlayerTimerElapsed(object sender, ElapsedEventArgs e)
-        {
-            var time = _mpv.Position;
-            UIQueue.TryEnqueue(() =>
-            {
-                try
-                {
-                    CurrentTime = time;
-                }
-                catch (Exception)
-                {
-
-                }
-            });
-            UpdateSmtcPosition();
-            UpdateJellyfinPosition();
-        }
-
-        private async void UpdateJellyfinPosition()
-        {
-            await App.JellyfinMusicService.ReportProgress(CurrentPlaying, CurrentTime.Ticks, !IsPlaying);
-        }
-
-        private void MediaEndedSeeking(object sender, EventArgs e)
-        {
-            UIQueue.TryEnqueue(() =>
-            {
-                IsPlaying = true;
-            });
-        }
-
-        private void MediaStartedSeeking(object sender, EventArgs e)
-        {
-            UIQueue.TryEnqueue(() =>
-            {
-                IsPlaying = false;
-            });
-        }
-
-        private void MediaUnloaded(object sender, EventArgs e)
-        {
-            UIQueue.TryEnqueue(() =>
-            {
-                IsPlaying = false;
-            });
-        }
-
-        private void PositionChanged(object sender, MpvPlayerPositionChangedEventArgs e)
-        {
-            UIQueue.TryEnqueue(() =>
-            {
-                CurrentTime = e.NewPosition;
-            });
-            //UpdateSmtcPosition();
-        }
-
-        private void MediaFinished(object sender, EventArgs e)
-        {
-            _playerTimer.Stop();
-            UIQueue.TryEnqueue(() =>
-            {
-                IsPlaying = false;
-            });
-            if (!_isVideoSwitching)
-            {
-                UIQueue.TryEnqueue(PlayNext);
-            }
-        }
-
-        public Action OnMediaLoaded;
-
-        private readonly ManualResetEvent _event = new ManualResetEvent(false);
-        private void MediaLoaded(object sender, EventArgs e)
-        {
-            _event.WaitOne();
-            var prevPosition = new TimeSpan(CurrentPlaying?.UserData?.PlaybackPositionTicks ?? 0);
-            if(prevPosition > CurrentPlayingDuration) prevPosition = TimeSpan.Zero;
-            _mpv.Position = prevPosition;
-            _mpv.Resume();
-            UIQueue.TryEnqueue(() =>
-            {
-                IsPlaying = true;
-                OnPropertyChanged(nameof(Volume));
-                OnPropertyChanged(nameof(CurrentPlayingDuration));
-            });
-            OnMediaLoaded?.Invoke();
-        }
-
-        private void MediaPaused(object sender, EventArgs e)
-        {
-            UIQueue.TryEnqueue(() =>
-            {
-                IsPlaying = false;
-            });
-        }
-
-        private void MediaResumed(object sender, EventArgs e)
-        {
-            UIQueue.TryEnqueue(() =>
-            {
-                IsPlaying = true;
-            });
-        }
-
-        private void PlayerStarterDoWork(object sender, DoWorkEventArgs e)
-        {
-            _isVideoSwitching = true;
-            var index = (int)e.Argument;
-            var video = CurrentPlayList[index];
-            _event.Reset();
-
-            try
-            {
-                if (_mpv == null)
-                {
-                    _mpv = new MpvPlayer(@"NativeLibs\mpv-2.dll")
-                    {
-                        AutoPlay = false,
-                        Volume = Volume,
-                        LogLevel = MpvLogLevel.None,
-                        Loop = false,
-                        LoopPlaylist = false,
-                    };
-                    //_mpv.API.SetPropertyDouble("display-fps-override", 120d);
-                    //_mpv.API.SetPropertyString("gpu-debug", "yes");
-                    //_mpv.API.SetPropertyString("vo", "gpu-next");
-                    _mpv.API.SetPropertyString("vo", "gpu");
-                    _mpv.API.SetPropertyString("gpu-context", "d3d11");
-                    _mpv.API.SetPropertyString("hwdec", "d3d11va");
-                    _mpv.API.SetPropertyString("d3d11-composition", "yes");
-                    //_mpv.API.SetPropertyString("target-colorspace-hint", "yes"); //HDR passthrough
-                    _mpv.MediaResumed += MediaResumed;
-                    _mpv.MediaPaused += MediaPaused;
-                    _mpv.MediaLoaded += MediaLoaded;
-                    _mpv.MediaFinished += MediaFinished;
-                    _mpv.PositionChanged += PositionChanged;
-                    _mpv.MediaUnloaded += MediaUnloaded;
-                    _mpv.MediaStartedSeeking += MediaStartedSeeking;
-                    _mpv.MediaEndedSeeking += MediaEndedSeeking;
-                    _mpv.API.VideoGeometryInit += VideoGeometryInit;
-                    _mpv.API.SwapChainInited += OnSwapChainInited;
-                }
-                var lists = CurrentPlayList.Select(v =>
-                {
-                    if (v.Path != null && v.Id == null)
-                    {
-                        return v.Path;
-                    }
-                    else
-                    {
-                        return App.JellyfinMusicService.GetVideoStream(v);
-                    }
-                });
-                _mpv.LoadPlaylist(lists, true);
-                _mpv.PlaylistPlayIndex(index);
-
-                BaseItemDto videoInfo = null;
-                string playSessionId = string.Empty;
-                if (video.Id != null)
-                {
-                    videoInfo = App.JellyfinMusicService.GetItemInfoAsync(CurrentPlayList[index]).Result;
+                    return v.Path;
                 }
                 else
                 {
-                    videoInfo = video;
+                    return App.JellyfinMusicService.GetVideoStream(v);
                 }
-
-                e.Result = ValueTuple.Create(index, videoInfo, playSessionId);
-                _smtc ??= InitSmtc();
-                InitMstcInfo(videoInfo);
-            }
-            catch (Exception ex)
-            {
-                e.Result = (index, ex);
-            }
-
-            _isVideoSwitching = false;
+            });
+            return lists;
         }
 
         private void OnSwapChainInited(object sender, IntPtr swapchain)
         {
             SwapChain = swapchain;
             SwapChainInited?.Invoke(sender, swapchain);
-        }
-
-        private void PlayerStarterCompleted(object sender, RunWorkerCompletedEventArgs e)
-        {
-            try
-            {
-                if (e.Result is (int index, BaseItemDto info, string playSessionId))
-                {
-                    HasError = false;
-                    IsPlaying = true;
-                    State = PlayerState.Playing;
-                    CurrentPlaying = info;
-                    CurrentPlayingIndex = index;
-                    _currentPlaySessionId = playSessionId;
-                    _playerTimer.Start();
-                    OnPropertyChanged(nameof(Volume));
-                }
-                else if (e.Result is (int index2, Exception _playException))
-                {
-                    App?.ShowToast(new ToastInfo { Text = "播放错误 " + _playException.Message });
-                    HasError = true;
-                    State = PlayerState.Error;
-                    if (index2 != CurrentPlayList.Count - 1)
-                    {
-                        CurrentPlayingIndex = index2;
-                        PlayNext();
-                    }
-                }
-                else
-                {
-                    State = PlayerState.Idle;
-                }
-            }
-            catch (Exception)
-            {
-
-            }
-            _event.Set();
         }
 
         public void UpdatePanelScale(float scaleX, float scaleY)
@@ -664,133 +139,6 @@ namespace HotPotPlayer.Services
         public void UpdatePanelBounds(Rectangle bounds)
         {
             _currentBounds = bounds;
-        }
-
-        private void SystemMediaControls_PropertyChanged(SystemMediaTransportControls sender, SystemMediaTransportControlsPropertyChangedEventArgs args)
-        {
-            if (args.Property == SystemMediaTransportControlsProperty.SoundLevel)
-            {
-                switch (SMTC.SoundLevel)
-                {
-                    case SoundLevel.Full:
-                    case SoundLevel.Low:
-
-                        break;
-                    case SoundLevel.Muted:
-
-                        break;
-                }
-            }
-        }
-
-        private void SystemMediaControls_AutoRepeatModeChangeRequested(SystemMediaTransportControls sender, AutoRepeatModeChangeRequestedEventArgs args)
-        {
-            switch (args.RequestedAutoRepeatMode)
-            {
-                case MediaPlaybackAutoRepeatMode.None:
-                    PlayMode = PlayMode.Loop;
-                    break;
-                case MediaPlaybackAutoRepeatMode.List:
-                    PlayMode = PlayMode.Loop;
-                    break;
-                case MediaPlaybackAutoRepeatMode.Track:
-                    PlayMode = PlayMode.SingleLoop;
-                    break;
-            }
-
-            SMTC.AutoRepeatMode = args.RequestedAutoRepeatMode;
-        }
-
-        private void UpdateSmtcPosition()
-        {
-            var timelineProperties = new SystemMediaTransportControlsTimelineProperties
-            {
-                StartTime = TimeSpan.FromSeconds(0),
-                MinSeekTime = TimeSpan.FromSeconds(0),
-                Position = CurrentTime,
-                MaxSeekTime = CurrentPlayingDuration ?? TimeSpan.Zero,
-                EndTime = CurrentPlayingDuration ?? TimeSpan.Zero
-            };
-
-            SMTC?.UpdateTimelineProperties(timelineProperties);
-
-            App?.Taskbar.SetProgressValue(CurrentTime.TotalSeconds, CurrentPlayingDuration.Value.TotalSeconds);
-        }
-
-        private void SystemMediaControls_PlaybackPositionChangeRequested(SystemMediaTransportControls sender, PlaybackPositionChangeRequestedEventArgs args)
-        {
-            if (args.RequestedPlaybackPosition.Duration() <= (CurrentPlayingDuration ?? TimeSpan.Zero) &&
-            args.RequestedPlaybackPosition.Duration().TotalSeconds >= 0)
-            {
-                if (State == PlayerState.Playing)
-                {
-                    PlayTo(args.RequestedPlaybackPosition.Duration());
-                    UpdateSmtcPosition();
-                }
-            }
-        }
-
-        private void SystemMediaControls_PlaybackRateChangeRequested(SystemMediaTransportControls sender, PlaybackRateChangeRequestedEventArgs args)
-        {
-            if (args.RequestedPlaybackRate >= 0 && args.RequestedPlaybackRate <= 2)
-            {
-                SMTC.PlaybackRate = args.RequestedPlaybackRate;
-            }
-        }
-
-        private void SystemMediaControls_ButtonPressed(SystemMediaTransportControls sender, SystemMediaTransportControlsButtonPressedEventArgs args)
-        {
-            switch (args.Button)
-            {
-                case SystemMediaTransportControlsButton.Play:
-                    UIQueue.TryEnqueue(PlayOrPause);
-                    break;
-
-                case SystemMediaTransportControlsButton.Pause:
-                    UIQueue.TryEnqueue(PlayOrPause);
-                    break;
-
-                case SystemMediaTransportControlsButton.Stop:
-                    UIQueue.TryEnqueue(PlayOrPause);
-                    break;
-
-                case SystemMediaTransportControlsButton.Next:
-                    UIQueue.TryEnqueue(PlayNext);
-                    break;
-
-                case SystemMediaTransportControlsButton.Previous:
-                    UIQueue.TryEnqueue(PlayPrevious);
-                    break;
-            }
-        }
-
-        /// <summary>
-        /// https://docs.microsoft.com/en-us/windows/uwp/audio-video-camera/system-media-transport-controls
-        /// </summary>
-        /// <param name="index"></param>
-        private void InitMstcInfo(BaseItemDto video)
-        {
-            SMTC.PlaybackStatus = MediaPlaybackStatus.Playing;
-
-            SystemMediaTransportControlsDisplayUpdater updater = SMTC.DisplayUpdater;
-
-            updater.Type = MediaPlaybackType.Video;
-            updater.VideoProperties.Title = video.Name;
-            updater.VideoProperties.Subtitle = video.Id == null ? "文件" : "Jellyfin";
-            if (video.Id != null)
-            {
-                var uri = App.JellyfinMusicService.GetPrimaryJellyfinImageSmall(video.ImageTags, video.Id);
-
-                if (uri != null)
-                {
-                    updater.Thumbnail = RandomAccessStreamReference.CreateFromUri(uri);
-                }
-            }
-
-            SMTC.DisplayUpdater.Update();
-
-            App?.Taskbar.SetProgressState(TaskbarHelper.TaskbarStates.NoProgress);
-            App?.Taskbar.SetProgressValue(0, 100);
         }
 
         public IComObject<IDXGISwapChain1> GetOrCreateSwapChain()
@@ -819,39 +167,10 @@ namespace HotPotPlayer.Services
             return _swapChain;
         }
 
-        public void ShutDown()
+        public override void ShutDown()
         {
-            _mpv?.Stop();
-            if (_mpv != null)
-            {
-                _mpv.MediaPaused -= MediaPaused;
-                _mpv.MediaResumed -= MediaResumed;
-                _mpv.MediaLoaded -= MediaLoaded;
-                _mpv.MediaFinished -= MediaFinished;
-                _mpv.MediaStartedSeeking -= MediaStartedSeeking;
-                _mpv.MediaEndedSeeking -= MediaEndedSeeking;
-            }
-            _mpv?.Dispose();
-            _mpv = null;
+            base.ShutDown();
             SwapChain = 0;
-        }
-
-        public override void Dispose()
-        {
-            _playerStarter?.Dispose();
-            _mpv?.Stop();
-            if (_mpv != null)
-            {
-                _mpv.MediaPaused -= MediaPaused;
-                _mpv.MediaResumed -= MediaResumed;
-                _mpv.MediaLoaded -= MediaLoaded;
-                _mpv.MediaFinished -= MediaFinished;
-                _mpv.MediaStartedSeeking -= MediaStartedSeeking;
-                _mpv.MediaEndedSeeking -= MediaEndedSeeking;
-            }
-            //_mpv?.Dispose();
-            //base.Dispose();
-            //GC.SuppressFinalize(this);
         }
     }
 }

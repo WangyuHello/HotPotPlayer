@@ -2,6 +2,7 @@
 // Licensed under the MIT License. See LICENSE in the project root for license information.
 
 using HotPotPlayer.Bilibili.Models.Video;
+using HotPotPlayer.Models;
 using HotPotPlayer.Services;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;

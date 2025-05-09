@@ -27,6 +27,7 @@ using System.Threading.Tasks;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
 using WinRT;
+using PlayerState = HotPotPlayer.Models.PlayerState;
 
 // To learn more about WinUI, the WinUI project structure,
 // and more about our project templates, see: http://aka.ms/winui-project-info.
@@ -375,9 +376,9 @@ namespace HotPotPlayer.Video.UI.Controls
             };
         }
 
-        private Visibility GetLoadingVisible(Services.PlayerState state)
+        private Visibility GetLoadingVisible(PlayerState state)
         {
-            return (state == Services.PlayerState.Loading) ? Visibility.Visible : Visibility.Collapsed;
+            return (state == PlayerState.Loading) ? Visibility.Visible : Visibility.Collapsed;
         }
 
         private void Grid_PointerEntered(object sender, PointerRoutedEventArgs e)

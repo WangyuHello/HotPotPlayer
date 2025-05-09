@@ -17,86 +17,8 @@ using Windows.Storage.Streams;
 
 namespace HotPotPlayer.Services
 {
-    public enum PlayMode
+    public partial class MusicPlayerService(ConfigBase config, DispatcherQueue queue, AppBase app) : PlayerService(config, queue, app)
     {
-        Loop,
-        SingleLoop,
-        Shuffle
-    }
-    public enum PlayerState
-    {
-        Idle,
-        Playing,
-        Error,
-        Loading
-    }
-
-    public partial class MusicPlayerService: ServiceBaseWithConfig
-    {
-        [ObservableProperty]
-        private PlayerState state;
-
-        [ObservableProperty]
-        private BaseItemDto currentPlaying;
-
-        public TimeSpan? CurrentPlayingDuration
-        {
-            get => _mpv?.Duration;
-        }
-
-        [ObservableProperty]
-        private int currentPlayingIndex = -1;
-
-        [ObservableProperty]
-        private ObservableCollection<BaseItemDto> currentPlayList;
-
-        public bool SuppressCurrentTimeTrigger { get; set; }
-
-        private TimeSpan _currentTime;
-
-        public TimeSpan CurrentTime
-        {
-            get => _currentTime;
-            set
-            {
-                if (SuppressCurrentTimeTrigger) return;
-                SetProperty(ref _currentTime, value);
-            }
-        }
-
-        private bool _isPlaying;
-
-        public bool IsPlaying
-        {
-            get => _isPlaying;
-            set => SetProperty(ref _isPlaying, value, nowPlaying =>
-            {
-                Task.Run(async () =>
-                {
-                    if (nowPlaying)
-                    {
-                        if (SMTC != null)
-                        {
-                            SMTC.PlaybackStatus = MediaPlaybackStatus.Playing;
-                        }
-                        App?.Taskbar?.SetProgressState(TaskbarHelper.TaskbarStates.Normal);
-                    }
-                    else
-                    {
-                        if (SMTC != null)
-                        {
-                            SMTC.PlaybackStatus = MediaPlaybackStatus.Paused;
-                        }
-                        App?.Taskbar?.SetProgressState(TaskbarHelper.TaskbarStates.Paused);
-                        await App.JellyfinMusicService.ReportProgress(CurrentPlaying, CurrentTime.Ticks, true);
-                    }
-                });
-            });
-        }
-
-        [ObservableProperty]
-        private bool hasError;
-
         [ObservableProperty]
         private bool isPlayBarVisible;
 
@@ -106,74 +28,7 @@ namespace HotPotPlayer.Services
         [ObservableProperty]
         private bool isPlayScreenVisible;
 
-        public int Volume
-        {
-            get
-            {
-                if(_mpv == null)
-                {
-                    var volume = Config.GetConfig<int?>("Volume");
-                    if (volume != null)
-                    {
-                        return volume.Value;
-                    }
-                    Config.SetConfig("Volume", 50);
-                    return 50;
-                }
-                else
-                {
-                    return _mpv.Volume;
-                }
-            }
-            set 
-            {
-                if (value != _mpv.Volume)
-                {
-                    if (_mpv != null)
-                    {
-                        _mpv.Volume = value;
-                    }
-                    OnPropertyChanged(nameof(Volume));
-                }
-            }
-        }
-
-        [ObservableProperty]
-        private PlayMode playMode;
-
         public bool EnableReplayGain => Config.GetConfig("EnableReplayGain", true, true);
-
-        private SystemMediaTransportControls _smtc;
-
-        private SystemMediaTransportControls SMTC
-        {
-            get => _smtc;
-        }
-        /// <summary>
-        /// https://docs.microsoft.com/en-us/windows/apps/desktop/modernize/winrt-com-interop-csharp
-        /// </summary>
-        /// <returns></returns>
-        SystemMediaTransportControls InitSmtc()
-        {
-            var smtc = SystemMediaTransportControlsInterop.GetForWindow(Config.MainWindowHandle);
-            smtc.IsEnabled = true;
-            smtc.ButtonPressed += SystemMediaControls_ButtonPressed;
-            smtc.PlaybackRateChangeRequested += SystemMediaControls_PlaybackRateChangeRequested;
-            smtc.PlaybackPositionChangeRequested += SystemMediaControls_PlaybackPositionChangeRequested;
-            smtc.AutoRepeatModeChangeRequested += SystemMediaControls_AutoRepeatModeChangeRequested;
-            smtc.PropertyChanged += SystemMediaControls_PropertyChanged;
-            smtc.IsPlayEnabled = true;
-            smtc.IsPauseEnabled = true;
-            smtc.IsStopEnabled = true;
-            smtc.IsNextEnabled = true;
-            smtc.IsPreviousEnabled = true;
-            smtc.PlaybackStatus = MediaPlaybackStatus.Closed;
-
-            App?.Taskbar.InitTaskBarButtons();
-
-            return smtc;
-        }
-
         public bool SuppressTogglePlayListBar { get; set; }
 
         public void TogglePlayListBarVisibility()
@@ -190,7 +45,7 @@ namespace HotPotPlayer.Services
             //PlayNext(0);
         }
 
-        public async void PlayNext(BaseItemDto music)
+        public override async void PlayNext(BaseItemDto music)
         {
             if (music.Type == BaseItemDto_Type.MusicAlbum)
             {
@@ -339,344 +194,42 @@ namespace HotPotPlayer.Services
             CurrentPlayList?.Insert(CurrentPlayingIndex + 1, music);
         }
 
-        /// <summary>
-        /// 主方法
-        /// </summary>
-        /// <param name="index"></param>
-        public void PlayNext(int? index)
+        protected override void SetupMpvInitProperty(MpvPlayer mpv)
         {
-            if (index == null)
+            mpv.API.SetPropertyString("audio-display", "no");
+            //_mpv.API.SetPropertyString("d3d11-composition", "yes");
+
+            if (EnableReplayGain)
             {
-                return;
-            }
-            if (CurrentPlayList == null || CurrentPlayList.Count == 0)
-            {
-                return;
-            }
-            if ((index >= 0) && (index < CurrentPlayList.Count))
-            {
-                if (_playerStarter.IsBusy)
-                {
-                    return;
-                }
-                _playerTimer.Stop();
-                CurrentTime = TimeSpan.Zero;
-                IsPlaying = false;
-                State = PlayerState.Loading;
-                _playerStarter.RunWorkerAsync(index);
+                mpv.API.SetPropertyString("replaygain", "album");
             }
         }
 
-        Random random;
-
-        public void PlayNext()
+        protected override void SetupMpvPropertyBeforePlay(MpvPlayer mpv, BaseItemDto media)
         {
-            if (CurrentPlayingIndex != -1)
+            if (EnableReplayGain)
             {
-                if (PlayMode == PlayMode.Loop)
+                if (media.NormalizationGain != null && media.NormalizationGain != 0)
                 {
-                    var index = CurrentPlayingIndex + 1;
-                    if (index >= CurrentPlayList.Count)
-                    {
-                        index = 0;
-                    }
-                    PlayNext(index);
+                    _mpv.API.SetPropertyDouble("replaygain-fallback", (double)media.NormalizationGain);
                 }
-                else if(PlayMode == PlayMode.SingleLoop)
+                else
                 {
-                    PlayNext(CurrentPlayingIndex);
-                }
-                else if (PlayMode == PlayMode.Shuffle)
-                {
-                    random ??= new Random();
-                    var index = random.Next(CurrentPlayList.Count);
-                    PlayNext(index);
+                    _mpv.API.SetPropertyString("replaygain", "album");
                 }
             }
         }
 
-        public void PlayPrevious()
+        protected override IEnumerable<string> GetMediaSources(ObservableCollection<BaseItemDto> list)
         {
-            if (CurrentPlayingIndex != -1)
-            {
-                var index = CurrentPlayingIndex - 1;
-                if (index < 0)
-                {
-                    index = CurrentPlayList.Count - 1;
-                }
-                PlayNext(index);
-            }
+            return list.Select(App.JellyfinMusicService.GetMusicStream);
+        }
+        protected override void DoAfterPlay(int index)
+        {
+            PreCacheNextMusic(index);
         }
 
-        public void PlayOrPause()
-        {
-            if (_mpv == null)
-            {
-                return;
-            }
-            if (_mpv.IsPlaying)
-            {
-                _playerTimer.Stop();
-                _mpv.Pause();
-                IsPlaying = false;
-            }
-            else
-            {
-                _mpv.Resume();
-                _playerTimer.Start();
-                IsPlaying = true;
-            }
-        }
-
-        public async void PlayTo(TimeSpan to)
-        {
-            await _mpv.SeekAsync(to);
-        }
-
-        public void TogglePlayMode()
-        {
-            PlayMode = PlayMode switch
-            {
-                PlayMode.Loop => PlayMode.SingleLoop,
-                PlayMode.SingleLoop => PlayMode.Shuffle,
-                PlayMode.Shuffle => PlayMode.Loop,
-                _ => PlayMode.Loop,
-            };
-        }
-
-        //WaveOutEvent _outputDevice;
-        //WaveStream _audioStream;
-        //VolumeSampleProvider _volumeSample;
-        MpvPlayer _mpv;
-        readonly Timer _playerTimer;
-        bool _isMusicSwitching;
-
-        public MusicPlayerService(ConfigBase config, DispatcherQueue queue, AppBase app): base(config, queue, app)
-        {
-            _playerStarter = new BackgroundWorker
-            {
-                WorkerReportsProgress = true
-            };
-            _playerStarter.RunWorkerCompleted += PlayerStarterCompleted;
-            _playerStarter.DoWork += PlayerStarterDoWork;
-            _playerTimer = new Timer(500)
-            {
-                AutoReset = true
-            };
-            _playerTimer.Elapsed += PlayerTimerElapsed;
-
-            Config.SaveConfigWhenExit("Volume", () => (Volume != 0, Volume));
-        }
-
-        private void PlayerTimerElapsed(object sender, ElapsedEventArgs e)
-        {
-            var time = _mpv.Position;
-            UIQueue.TryEnqueue(() =>
-            {
-                try
-                {
-                    CurrentTime = time;
-                }
-                catch (Exception)
-                {
-
-                }
-            });
-            UpdateSmtcPosition();
-            UpdateJellyfinPosition();
-        }
-
-        private async void UpdateJellyfinPosition()
-        {
-            await App.JellyfinMusicService.ReportProgress(CurrentPlaying, CurrentTime.Ticks, !IsPlaying);
-        }
-
-        private void PlayerStarterDoWork(object sender, DoWorkEventArgs e)
-        {
-            _isMusicSwitching = true;
-            var index = (int)e.Argument;
-            var music = CurrentPlayList[index];
-
-            try
-            {
-                if (_mpv == null)
-                {
-                    _mpv = new MpvPlayer(@"NativeLibs\mpv-2.dll")
-                    {
-                        AutoPlay = false,
-                        Volume = Volume,
-                        LogLevel = MpvLogLevel.None,
-                        Loop = false,
-                        LoopPlaylist = false,
-                    };
-                    _mpv.API.SetPropertyString("audio-display", "no");
-                    //_mpv.API.SetPropertyString("d3d11-composition", "yes");
-                    if (EnableReplayGain)
-                    {
-                        _mpv.API.SetPropertyString("replaygain", "album");
-                    }
-                    _mpv.MediaResumed += MediaResumed;
-                    _mpv.MediaPaused += MediaPaused;
-                    _mpv.MediaLoaded += MediaLoaded;
-                    _mpv.MediaFinished += MediaFinished;
-                    _mpv.PositionChanged += PositionChanged;
-                    _mpv.MediaUnloaded += MediaUnloaded;
-                    _mpv.MediaStartedSeeking += MediaStartedSeeking;
-                    _mpv.MediaEndedSeeking += MediaEndedSeeking;
-                }
-                //var intercept = LoadMusic(music);
-                if (EnableReplayGain)
-                {
-                    if (music.NormalizationGain != null && music.NormalizationGain != 0)
-                    {
-                        _mpv.API.SetPropertyDouble("replaygain-fallback", (double)music.NormalizationGain);
-                    }
-                    else
-                    {
-                        _mpv.API.SetPropertyString("replaygain", "album");
-                    }
-                }
-                _mpv.LoadPlaylist(CurrentPlayList.Select(App.JellyfinMusicService.GetMusicStream), true);
-                _mpv.PlaylistPlayIndex(index);
-                e.Result = ValueTuple.Create(index, false);
-
-                _smtc ??= InitSmtc();
-                InitMstcInfo((int)e.Argument);
-
-                PreCacheNextMusic(index);
-            }
-            catch (Exception ex)
-            {
-                e.Result = (index, ex);
-            }
-
-            _isMusicSwitching = false;
-        }
-
-        private void MediaEndedSeeking(object sender, EventArgs e)
-        {
-            UIQueue.TryEnqueue(() =>
-            {
-                IsPlaying = true;
-            });
-        }
-
-        private void MediaStartedSeeking(object sender, EventArgs e)
-        {
-            UIQueue.TryEnqueue(() =>
-            {
-                IsPlaying = false;
-            });
-        }
-
-        private void MediaUnloaded(object sender, EventArgs e)
-        {
-            UIQueue.TryEnqueue(() =>
-            {
-                IsPlaying = false;
-            });
-        }
-
-        private void PositionChanged(object sender, MpvPlayerPositionChangedEventArgs e)
-        {
-            UIQueue.TryEnqueue(() =>
-            {
-                CurrentTime = e.NewPosition;
-            });
-
-            // Use timer to update smtc
-            //UpdateSmtcPosition();
-        }
-
-        private void MediaFinished(object sender, EventArgs e)
-        {
-            _playerTimer.Stop();
-            UIQueue.TryEnqueue(() =>
-            {
-                IsPlaying = false;
-            });
-            if (!_isMusicSwitching)
-            {
-                UIQueue.TryEnqueue(PlayNext);
-            }
-        }
-
-        private void MediaLoaded(object sender, EventArgs e)
-        {
-            _mpv.Resume();
-            UIQueue.TryEnqueue(() =>
-            {
-                IsPlaying = true;
-                OnPropertyChanged(nameof(Volume));
-                OnPropertyChanged(nameof(CurrentPlayingDuration));
-            });
-        }
-
-        private void MediaPaused(object sender, EventArgs e)
-        {
-            UIQueue.TryEnqueue(() =>
-            {
-                IsPlaying = false;
-            });
-        }
-
-        private void MediaResumed(object sender, EventArgs e)
-        {
-            UIQueue.TryEnqueue(() =>
-            {
-                IsPlaying = true;
-            });
-        }
-
-        //private bool LoadMusic(BaseItemDto music)
-        //{
-        //    bool intercept;
-        //    if (_audioStream == null)
-        //    {
-        //        var volume = Volume;
-        //        (_audioStream, intercept) = music switch
-        //        {
-        //            //CloudMusicItem c2 => c2.GetSource() switch
-        //            //{
-        //            //    Uri uri when uri.IsFile => Tuple.Create<WaveStream, bool>(new AudioFileReader(uri.GetLocalPath()), true),
-        //            //    Uri netUri when !netUri.IsFile => Tuple.Create<WaveStream, bool>(new MediaFoundationReader(netUri.OriginalString), false),
-        //            //    _ => throw new NotImplementedException()
-        //            //},
-        //            _ => Tuple.Create<WaveStream, bool>(new MediaFoundationReader(App.JellyfinMusicService.GetMusicStream(music)), false)
-        //        };
-        //        _volumeSample = new(_audioStream.ToSampleProvider());
-
-        //        if (volume != 0)
-        //        {
-        //            _volumeSample.Volume = volume;
-        //        }
-        //        _outputDevice.Init(_volumeSample);
-        //    }
-        //    else
-        //    {
-        //        _audioStream.Dispose();
-        //        var tempVolume = (float)Volume;
-
-        //        (_audioStream, intercept) = music switch
-        //        {
-        //            //CloudMusicItem c2 => c2.GetSource() switch
-        //            //{
-        //            //    Uri uri when uri.IsFile => Tuple.Create<WaveStream, bool>(new AudioFileReader(uri.GetLocalPath()), true),
-        //            //    Uri netUri when !netUri.IsFile => Tuple.Create<WaveStream, bool>(new MediaFoundationReader(netUri.OriginalString), false),
-        //            //    _ => throw new NotImplementedException()
-        //            //},
-        //            _ => Tuple.Create<WaveStream, bool>(new MediaFoundationReader(App.JellyfinMusicService.GetMusicStream(music)), false)
-        //        };
-
-        //        _volumeSample = new(_audioStream.ToSampleProvider())
-        //        {
-        //            Volume = tempVolume
-        //        };
-
-        //        _outputDevice.Init(_volumeSample);
-        //    }
-        //    return intercept;
-        //}
+        protected override bool UpdateDetailedInfo => false;
 
         private async void PreCacheNextMusic(int index)
         {
@@ -689,43 +242,9 @@ namespace HotPotPlayer.Services
             await ImageCacheEx.Instance.PreCacheAsync(App.JellyfinMusicService.GetPrimaryJellyfinImageSmall(next.ImageTags, next.Id));
         }
 
-        private void PlayerStarterCompleted(object sender, RunWorkerCompletedEventArgs e)
+        protected override void OnPlayerStaterComplete()
         {
             IsPlayBarVisible = true;
-            try
-            {
-                if (e.Result is (int index, bool intercept))
-                {
-                    HasError = false;
-                    IsPlaying = true;
-                    State = PlayerState.Playing;
-                    var music = CurrentPlayList[index];
-                    //music.IsIntercept = intercept;
-                    CurrentPlayingIndex = index;
-                    CurrentPlaying = music;
-                    _playerTimer.Start();
-                    OnPropertyChanged(nameof(Volume));
-                }
-                else if (e.Result is (int index2, Exception _playException))
-                {
-                    App?.ShowToast(new ToastInfo { Text = "播放错误 " + _playException.Message });
-                    HasError = true;
-                    State = PlayerState.Error;
-                    if (index2 != CurrentPlayList.Count - 1)
-                    {
-                        CurrentPlayingIndex = index2;
-                        PlayNext();
-                    }
-                }
-                else
-                {
-                    State = PlayerState.Idle;
-                }
-            }
-            catch (Exception)
-            {
-
-            }
         }
 
         public void ShowPlayBar()
@@ -756,159 +275,11 @@ namespace HotPotPlayer.Services
             IsPlayScreenVisible = false;
         }
 
-        public override void Dispose()
+        protected override void SetupMstcInfo(BaseItemDto media, SystemMediaTransportControlsDisplayUpdater updater)
         {
-            _playerStarter?.Dispose();
-            //_playerTimer?.Dispose();
-            _mpv?.Stop();
-            if (_mpv != null)
-            {
-                _mpv.MediaPaused -= MediaPaused;
-                _mpv.MediaResumed -= MediaResumed;
-                _mpv.MediaLoaded -= MediaLoaded;
-                _mpv.MediaFinished -= MediaFinished;
-                _mpv.MediaStartedSeeking -= MediaStartedSeeking;
-                _mpv.MediaEndedSeeking -= MediaEndedSeeking;
-            }
-            //_mpv?.Dispose();
-        }
-
-        readonly BackgroundWorker _playerStarter;
-
-        private void SystemMediaControls_PropertyChanged(SystemMediaTransportControls sender, SystemMediaTransportControlsPropertyChangedEventArgs args)
-        {
-            if (args.Property == SystemMediaTransportControlsProperty.SoundLevel)
-            {
-                switch (SMTC.SoundLevel)
-                {
-                    case SoundLevel.Full:
-                    case SoundLevel.Low:
-                        
-                        break;
-                    case SoundLevel.Muted:
-                        
-                        break;
-                }
-            }
-        }
-
-        private void SystemMediaControls_AutoRepeatModeChangeRequested(SystemMediaTransportControls sender, AutoRepeatModeChangeRequestedEventArgs args)
-        {
-            switch (args.RequestedAutoRepeatMode)
-            {
-                case MediaPlaybackAutoRepeatMode.None:
-                    PlayMode = PlayMode.Loop;
-                    break;
-                case MediaPlaybackAutoRepeatMode.List:
-                    PlayMode = PlayMode.Loop;
-                    break;
-                case MediaPlaybackAutoRepeatMode.Track:
-                    PlayMode = PlayMode.SingleLoop;
-                    break;
-            }
-
-            SMTC.AutoRepeatMode = args.RequestedAutoRepeatMode;
-        }
-
-        private void UpdateSmtcPosition()
-        {
-            var timelineProperties = new SystemMediaTransportControlsTimelineProperties
-            {
-                StartTime = TimeSpan.FromSeconds(0),
-                MinSeekTime = TimeSpan.FromSeconds(0),
-                Position = CurrentTime,
-                MaxSeekTime = CurrentPlayingDuration ?? TimeSpan.Zero,
-                EndTime = CurrentPlayingDuration ?? TimeSpan.Zero
-            };
-
-            SMTC?.UpdateTimelineProperties(timelineProperties);
-
-            App?.Taskbar.SetProgressValue(CurrentTime.TotalSeconds, CurrentPlayingDuration.Value.TotalSeconds);
-        }
-
-        private void SystemMediaControls_PlaybackPositionChangeRequested(SystemMediaTransportControls sender, PlaybackPositionChangeRequestedEventArgs args)
-        {
-            if (args.RequestedPlaybackPosition.Duration() <= (CurrentPlayingDuration ?? TimeSpan.Zero) &&
-            args.RequestedPlaybackPosition.Duration().TotalSeconds >= 0)
-            {
-                if (State == PlayerState.Playing)
-                {
-                    PlayTo(args.RequestedPlaybackPosition.Duration());
-                    UpdateSmtcPosition();
-                }
-            }
-        }
-
-        private void SystemMediaControls_PlaybackRateChangeRequested(SystemMediaTransportControls sender, PlaybackRateChangeRequestedEventArgs args)
-        {
-            if (args.RequestedPlaybackRate >= 0 && args.RequestedPlaybackRate <= 2)
-            {
-                SMTC.PlaybackRate = args.RequestedPlaybackRate;
-            }
-        }
-
-        private void SystemMediaControls_ButtonPressed(SystemMediaTransportControls sender, SystemMediaTransportControlsButtonPressedEventArgs args)
-        {
-            switch (args.Button)
-            {
-                case SystemMediaTransportControlsButton.Play:
-                    UIQueue.TryEnqueue(PlayOrPause);
-                    break;
-
-                case SystemMediaTransportControlsButton.Pause:
-                    UIQueue.TryEnqueue(PlayOrPause);
-                    break;
-
-                case SystemMediaTransportControlsButton.Stop:
-                    UIQueue.TryEnqueue(PlayOrPause);
-                    break;
-
-                case SystemMediaTransportControlsButton.Next:
-                    UIQueue.TryEnqueue(PlayNext);
-                    break;
-
-                case SystemMediaTransportControlsButton.Previous:
-                    UIQueue.TryEnqueue(PlayPrevious);
-                    break;
-            }
-        }
-
-        /// <summary>
-        /// https://docs.microsoft.com/en-us/windows/uwp/audio-video-camera/system-media-transport-controls
-        /// </summary>
-        /// <param name="index"></param>
-        private void InitMstcInfo(int index)
-        {
-            SMTC.PlaybackStatus = MediaPlaybackStatus.Playing;
-            var music = CurrentPlayList[index];
-            if (false) //TODO cloudmusic
-            {
-                //SystemMediaTransportControlsDisplayUpdater updater = SMTC.DisplayUpdater;
-
-                //updater.Type = MediaPlaybackType.Music;
-                //updater.MusicProperties.Artist = c.GetArtists();
-                //updater.MusicProperties.Title = c.Title;
-                //updater.Thumbnail = RandomAccessStreamReference.CreateFromUri(c.Cover);
-
-            }
-            else
-            {
-                SystemMediaTransportControlsDisplayUpdater updater = SMTC.DisplayUpdater;
-
-                updater.Type = MediaPlaybackType.Music;
-                updater.MusicProperties.Artist = BaseItemDtoHelper.GetJellyfinArtists(music.Artists);
-                updater.MusicProperties.Title = music.Name;
-                var uri = App.JellyfinMusicService.GetPrimaryJellyfinImageSmall(music.ImageTags, music.Id);
-                if (uri != null)
-                {
-                    updater.Thumbnail = RandomAccessStreamReference.CreateFromUri(uri);
-                }
-            }
-
-            SMTC.DisplayUpdater.Update();
-
-            App?.Taskbar.SetProgressState(TaskbarHelper.TaskbarStates.NoProgress);
-            App?.Taskbar.SetProgressValue(0, 100);
+            updater.Type = MediaPlaybackType.Music;
+            updater.MusicProperties.Artist = BaseItemDtoHelper.GetJellyfinArtists(media.Artists);
+            updater.MusicProperties.Title = media.Name;
         }
     }
 }

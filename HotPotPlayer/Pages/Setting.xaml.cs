@@ -65,6 +65,17 @@ namespace HotPotPlayer.Pages
             }
         }
 
+        private bool enableRestorePrevLocation;
+        public bool EnableRestorePrevLocation
+        {
+            get => enableRestorePrevLocation;
+            set
+            {
+                SetProperty(ref enableRestorePrevLocation, value);
+                Config.SetConfig(nameof(EnableRestorePrevLocation), value, true);
+            }
+        }
+
         [ObservableProperty]
         private string mpvVersion;
 
@@ -84,7 +95,8 @@ namespace HotPotPlayer.Pages
             JellyfinServers = [info];
             MusicLibraryDto = JellyfinMusicService.MusicLibraryDto;
             SelectedMusicLibraryDto = JellyfinMusicService.SelectedMusicLibraryDto;
-            EnableReplayGain = Config.GetConfig("EnableReplayGain", true, true);
+            EnableReplayGain = Config.GetConfig(nameof(EnableReplayGain), true, true);
+            EnableRestorePrevLocation = Config.GetConfig(nameof(EnableRestorePrevLocation), false, true);
             MpvVersion ??= GetMpvVersion();
         }
 
