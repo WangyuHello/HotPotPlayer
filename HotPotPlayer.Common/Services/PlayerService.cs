@@ -406,7 +406,7 @@ namespace HotPotPlayer.Services
 
         public Action OnMediaLoaded;
 
-        protected readonly ManualResetEvent _event = new ManualResetEvent(false);
+        protected readonly ManualResetEvent _event = new(false);
         private void MediaLoaded(object sender, EventArgs e)
         {
             var restore = Config.GetConfig("EnableRestorePrevLocation", false, true);

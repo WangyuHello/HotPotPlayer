@@ -34,7 +34,7 @@
             <SymbolIcon Symbol="Back" />
         </Button>
         <Button Grid.Row="2" Margin="0,4" x:Name="Music" Style="{StaticResource MainNavButton}" Click="NavigateClick" Tag="Music" IsEnabled="{x:Bind GetEnableState('Music', SelectedPageName), Mode=OneWay}">
-            <SymbolIcon Symbol="MusicInfo" />
+            <FontIcon FontFamily="{ThemeResource SegoeIcons}" Glyph="&#xE8D6;" />
         </Button>
         <Button Grid.Row="3" Margin="0,4" x:Name="Video" Style="{StaticResource MainNavButton}" Click="NavigateClick" Tag="Video" IsEnabled="{x:Bind GetEnableState('Video', SelectedPageName), Mode=OneWay}">
             <FontIcon FontFamily="{ThemeResource SegoeIcons}" Glyph="&#xE29B;" />
