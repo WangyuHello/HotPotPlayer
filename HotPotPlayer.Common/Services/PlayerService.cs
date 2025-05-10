@@ -25,7 +25,6 @@ namespace HotPotPlayer.Services
         protected readonly System.Timers.Timer _playerTimer;
         protected MpvPlayer _mpv;
         private readonly BackgroundWorker _playerStarter;
-        private SystemMediaTransportControls _smtc;
         bool _isMediaSwitching;
 
         public PlayerService(ConfigBase config, DispatcherQueue uiThread = null, AppBase app = null) : base(config, uiThread, app)
@@ -88,19 +87,11 @@ namespace HotPotPlayer.Services
                 {
                     if (nowPlaying)
                     {
-                        if (SMTC != null)
-                        {
-                            SMTC.PlaybackStatus = MediaPlaybackStatus.Playing;
-                        }
-                        App?.Taskbar.SetProgressState(TaskbarHelper.TaskbarStates.Normal);
+                        App.SetSmtcStatus(MediaPlaybackStatus.Playing);
                     }
                     else
                     {
-                        if (SMTC != null)
-                        {
-                            SMTC.PlaybackStatus = MediaPlaybackStatus.Paused;
-                        }
-                        App?.Taskbar.SetProgressState(TaskbarHelper.TaskbarStates.Paused);
+                        App.SetSmtcStatus(MediaPlaybackStatus.Paused);
                         await App.JellyfinMusicService.ReportProgress(CurrentPlaying, CurrentTime.Ticks, true);
                     }
                 });
@@ -144,35 +135,6 @@ namespace HotPotPlayer.Services
 
         [ObservableProperty]
         private PlayMode playMode;
-
-        private SystemMediaTransportControls SMTC
-        {
-            get => _smtc;
-        }
-        /// <summary>
-        /// https://docs.microsoft.com/en-us/windows/apps/desktop/modernize/winrt-com-interop-csharp
-        /// </summary>
-        /// <returns></returns>
-        SystemMediaTransportControls InitSmtc()
-        {
-            var smtc = SystemMediaTransportControlsInterop.GetForWindow(Config.MainWindowHandle);
-            smtc.IsEnabled = true;
-            smtc.ButtonPressed += SystemMediaControls_ButtonPressed;
-            smtc.PlaybackRateChangeRequested += SystemMediaControls_PlaybackRateChangeRequested;
-            smtc.PlaybackPositionChangeRequested += SystemMediaControls_PlaybackPositionChangeRequested;
-            smtc.AutoRepeatModeChangeRequested += SystemMediaControls_AutoRepeatModeChangeRequested;
-            smtc.PropertyChanged += SystemMediaControls_PropertyChanged;
-            smtc.IsPlayEnabled = true;
-            smtc.IsPauseEnabled = true;
-            smtc.IsStopEnabled = true;
-            smtc.IsNextEnabled = true;
-            smtc.IsPreviousEnabled = true;
-            smtc.PlaybackStatus = MediaPlaybackStatus.Closed;
-
-            App?.Taskbar.InitTaskBarButtons();
-
-            return smtc;
-        }
 
         public virtual void PlayNext(BaseItemDto video) { }
 
@@ -343,7 +305,7 @@ namespace HotPotPlayer.Services
             _playerTimer.Stop();
             _mpv.Pause();
             IsPlaying = false;
-            App?.Taskbar.SetProgressState(TaskbarHelper.TaskbarStates.NoProgress);
+            App.SetSmtcStatus(MediaPlaybackStatus.Stopped);
             App.JellyfinMusicService.ReportStop(CurrentPlaying, CurrentTime.Ticks);
         }
 
@@ -387,7 +349,7 @@ namespace HotPotPlayer.Services
 
                 }
             });
-            UpdateSmtcPosition();
+            App.SetSmtcPosition(CurrentTime, CurrentPlayingDuration);
             UpdateJellyfinPosition();
         }
 
@@ -545,7 +507,10 @@ namespace HotPotPlayer.Services
                 }
 
                 e.Result = ValueTuple.Create(index, info);
-                _smtc ??= InitSmtc();
+                if(App.SMTC == null)
+                {
+                    App.InitSmtc();
+                }
                 InitMstcInfo(info);
 
                 DoAfterPlay(index);
@@ -605,58 +570,39 @@ namespace HotPotPlayer.Services
             _event.Set();
         }
 
-        private void SystemMediaControls_PropertyChanged(SystemMediaTransportControls sender, SystemMediaTransportControlsPropertyChangedEventArgs args)
+        protected virtual void SetupMstcInfo(BaseItemDto media, SystemMediaTransportControlsDisplayUpdater updater)
         {
-            if (args.Property == SystemMediaTransportControlsProperty.SoundLevel)
+            updater.Type = MediaPlaybackType.Video;
+            updater.VideoProperties.Title = media.Name;
+            updater.VideoProperties.Subtitle = media.Id == null ? "文件" : "Jellyfin";
+        }
+
+        /// <summary>
+        /// https://docs.microsoft.com/en-us/windows/uwp/audio-video-camera/system-media-transport-controls
+        /// </summary>
+        /// <param name="index"></param>
+        private void InitMstcInfo(BaseItemDto media)
+        {
+            App.SetSmtcStatus(MediaPlaybackStatus.Playing, true);
+
+            SystemMediaTransportControlsDisplayUpdater updater = App.SMTC.DisplayUpdater;
+
+            SetupMstcInfo(media, updater);
+
+            if (media.Id != null)
             {
-                switch (SMTC.SoundLevel)
+                var uri = App.JellyfinMusicService.GetPrimaryJellyfinImageSmall(media.ImageTags, media.Id);
+
+                if (uri != null)
                 {
-                    case SoundLevel.Full:
-                    case SoundLevel.Low:
-
-                        break;
-                    case SoundLevel.Muted:
-
-                        break;
+                    updater.Thumbnail = RandomAccessStreamReference.CreateFromUri(uri);
                 }
             }
+
+            App.SMTC.DisplayUpdater.Update();
         }
 
-        private void SystemMediaControls_AutoRepeatModeChangeRequested(SystemMediaTransportControls sender, AutoRepeatModeChangeRequestedEventArgs args)
-        {
-            switch (args.RequestedAutoRepeatMode)
-            {
-                case MediaPlaybackAutoRepeatMode.None:
-                    PlayMode = PlayMode.Loop;
-                    break;
-                case MediaPlaybackAutoRepeatMode.List:
-                    PlayMode = PlayMode.Loop;
-                    break;
-                case MediaPlaybackAutoRepeatMode.Track:
-                    PlayMode = PlayMode.SingleLoop;
-                    break;
-            }
-
-            SMTC.AutoRepeatMode = args.RequestedAutoRepeatMode;
-        }
-
-        private void UpdateSmtcPosition()
-        {
-            var timelineProperties = new SystemMediaTransportControlsTimelineProperties
-            {
-                StartTime = TimeSpan.FromSeconds(0),
-                MinSeekTime = TimeSpan.FromSeconds(0),
-                Position = CurrentTime,
-                MaxSeekTime = CurrentPlayingDuration ?? TimeSpan.Zero,
-                EndTime = CurrentPlayingDuration ?? TimeSpan.Zero
-            };
-
-            SMTC?.UpdateTimelineProperties(timelineProperties);
-
-            App?.Taskbar.SetProgressValue(CurrentTime.TotalSeconds, CurrentPlayingDuration.Value.TotalSeconds);
-        }
-
-        private void SystemMediaControls_PlaybackPositionChangeRequested(SystemMediaTransportControls sender, PlaybackPositionChangeRequestedEventArgs args)
+        public void SMTCPlaybackPositionChangeRequested(SystemMediaTransportControls sender, PlaybackPositionChangeRequestedEventArgs args)
         {
             if (args.RequestedPlaybackPosition.Duration() <= (CurrentPlayingDuration ?? TimeSpan.Zero) &&
             args.RequestedPlaybackPosition.Duration().TotalSeconds >= 0)
@@ -664,20 +610,12 @@ namespace HotPotPlayer.Services
                 if (State == PlayerState.Playing)
                 {
                     PlayTo(args.RequestedPlaybackPosition.Duration());
-                    UpdateSmtcPosition();
+                    App.SetSmtcPosition(CurrentTime, CurrentPlayingDuration);
                 }
             }
         }
 
-        private void SystemMediaControls_PlaybackRateChangeRequested(SystemMediaTransportControls sender, PlaybackRateChangeRequestedEventArgs args)
-        {
-            if (args.RequestedPlaybackRate >= 0 && args.RequestedPlaybackRate <= 2)
-            {
-                SMTC.PlaybackRate = args.RequestedPlaybackRate;
-            }
-        }
-
-        private void SystemMediaControls_ButtonPressed(SystemMediaTransportControls sender, SystemMediaTransportControlsButtonPressedEventArgs args)
+        public void SMTCButtonPressed(SystemMediaTransportControls sender, SystemMediaTransportControlsButtonPressedEventArgs args)
         {
             switch (args.Button)
             {
@@ -701,41 +639,6 @@ namespace HotPotPlayer.Services
                     UIQueue.TryEnqueue(PlayPrevious);
                     break;
             }
-        }
-
-        protected virtual void SetupMstcInfo(BaseItemDto media, SystemMediaTransportControlsDisplayUpdater updater)
-        {
-            updater.Type = MediaPlaybackType.Video;
-            updater.VideoProperties.Title = media.Name;
-            updater.VideoProperties.Subtitle = media.Id == null ? "文件" : "Jellyfin";
-        }
-
-        /// <summary>
-        /// https://docs.microsoft.com/en-us/windows/uwp/audio-video-camera/system-media-transport-controls
-        /// </summary>
-        /// <param name="index"></param>
-        private void InitMstcInfo(BaseItemDto media)
-        {
-            SMTC.PlaybackStatus = MediaPlaybackStatus.Playing;
-
-            SystemMediaTransportControlsDisplayUpdater updater = SMTC.DisplayUpdater;
-
-            SetupMstcInfo(media, updater);
-
-            if (media.Id != null)
-            {
-                var uri = App.JellyfinMusicService.GetPrimaryJellyfinImageSmall(media.ImageTags, media.Id);
-
-                if (uri != null)
-                {
-                    updater.Thumbnail = RandomAccessStreamReference.CreateFromUri(uri);
-                }
-            }
-
-            SMTC.DisplayUpdater.Update();
-
-            App?.Taskbar.SetProgressState(TaskbarHelper.TaskbarStates.NoProgress);
-            App?.Taskbar.SetProgressValue(0, 100);
         }
 
         public virtual void ShutDown()

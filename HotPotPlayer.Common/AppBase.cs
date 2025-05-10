@@ -15,6 +15,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Windows.Foundation;
+using Windows.Media;
 
 namespace HotPotPlayer
 {
@@ -43,7 +44,13 @@ namespace HotPotPlayer
         BiliBiliService bilibiliService;
         public BiliBiliService BiliBiliService => bilibiliService ??= new BiliBiliService(Config, UIQueue, this);
 
+        public abstract SystemMediaTransportControls SMTC { get; set; }
+        public abstract void InitSmtc();
+        public abstract void SetSmtcStatus(MediaPlaybackStatus status, bool init = false);
+        public abstract void SetSmtcPosition(TimeSpan current, TimeSpan? duration);
+
         public abstract string ApplicationVersion { get; }
+
 
         public void ShutDown()
         {
