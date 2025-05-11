@@ -29,9 +29,6 @@ namespace HotPotPlayer.Services
         #endregion
         #region Property
         [ObservableProperty]
-        private List<BaseItemDto> jellyfinPlayListList;
-
-        [ObservableProperty]
         private PublicSystemInfo systemInfo;
 
         #endregion
@@ -125,6 +122,12 @@ namespace HotPotPlayer.Services
         private bool IsLogin = false;
         public bool IsMusicPageFirstNavigate { get; set; } = true;
         public bool IsVideoPageFirstNavigate { get; set; } = true;
+
+        private List<BaseItemDto> jellyfinPlaylistList;
+        public async Task<List<BaseItemDto>> GetJellyfinPlayListList()
+        {
+            return jellyfinPlaylistList ??= await GetJellyfinPlayListsAsync(() => SelectedMusicLibraryDto, default);
+        }
         #endregion
 
         public async Task<PublicSystemInfo> GetSystemInfoPublicAsync()
@@ -219,7 +222,6 @@ namespace HotPotPlayer.Services
                     Limit = limit,
                 };
             }, token).ConfigureAwait(false);
-            JellyfinPlayListList = result.Items;
             return result.Items;
         }
 

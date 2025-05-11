@@ -253,7 +253,7 @@ namespace HotPotPlayer.Pages.Helper
             }
         }
 
-        internal static void MusicClick(object sender, RoutedEventArgs e)
+        public static async void MusicClick(object sender, RoutedEventArgs e)
         {
             var button = (Button)sender;
             var music = (MusicItem)button.Tag;
@@ -297,7 +297,7 @@ namespace HotPotPlayer.Pages.Helper
                 i.Click += (s, e) => AddToNewPlayList(music);
                 sub.Items.Add(i);
 
-                foreach (var item in JellyfinMusicService.JellyfinPlayListList)
+                foreach (var item in await JellyfinMusicService.GetJellyfinPlayListList())
                 {
                     i = new MenuFlyoutItem
                     {
@@ -345,7 +345,7 @@ namespace HotPotPlayer.Pages.Helper
 
         }
 
-        internal static void PlayListMusicClick(object sender, RoutedEventArgs e)
+        public static async void PlayListMusicClick(object sender, RoutedEventArgs e)
         {
             var button = (Button)sender;
             var music = (BaseItemDto)button.Tag;
@@ -388,7 +388,7 @@ namespace HotPotPlayer.Pages.Helper
                 };
                 sub.Items.Add(i);
 
-                foreach (var item in JellyfinMusicService.JellyfinPlayListList)
+                foreach (var item in await JellyfinMusicService.GetJellyfinPlayListList())
                 {
                     i = new MenuFlyoutItem
                     {
@@ -469,7 +469,7 @@ namespace HotPotPlayer.Pages.Helper
 
         }
 
-        public static void InitSplitButtonFlyout(SplitButton targetButton, AlbumItem album)
+        public static async void InitSplitButtonFlyout(SplitButton targetButton, AlbumItem album)
         {
             if (targetButton.Flyout != null)
             {
@@ -491,7 +491,7 @@ namespace HotPotPlayer.Pages.Helper
                 Icon = new SymbolIcon { Symbol = Symbol.Add },
             };
             flyout.Items.Add(i1);
-            foreach (var item in JellyfinMusicService.JellyfinPlayListList)
+            foreach (var item in await JellyfinMusicService.GetJellyfinPlayListList())
             {
                 var i = new MenuFlyoutItem
                 {

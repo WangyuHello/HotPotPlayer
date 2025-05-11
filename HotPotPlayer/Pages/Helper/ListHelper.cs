@@ -34,7 +34,7 @@ namespace HotPotPlayer.Pages.Helper
             //App.PlayVideo(video);
         }
 
-        internal static void RightTapMusicInListClick(object sender, RoutedEventArgs e)
+        public static async void RightTapMusicInListClick(object sender, RoutedEventArgs e)
         {
             var _element = (FrameworkElement)sender;
             var music = (BaseItemDto)_element.DataContext;
@@ -92,7 +92,7 @@ namespace HotPotPlayer.Pages.Helper
                 }
                 else
                 {
-                    foreach (var item in JellyfinMusicService.JellyfinPlayListList)
+                    foreach (var item in await JellyfinMusicService.GetJellyfinPlayListList())
                     {
                         i = new MenuFlyoutItem
                         {
@@ -124,7 +124,7 @@ namespace HotPotPlayer.Pages.Helper
             _element.ContextFlyout.ShowAt(_element);
         }
 
-        internal static void RightTapMusicInPlayListClick(object sender, RoutedEventArgs e)
+        public static async void RightTapMusicInPlayListClick(object sender, RoutedEventArgs e)
         {
             var _element = (FrameworkElement)sender;
             var music = (BaseItemDto)_element.DataContext;
@@ -181,7 +181,7 @@ namespace HotPotPlayer.Pages.Helper
                 }
                 else
                 {
-                    foreach (var item in JellyfinMusicService.JellyfinPlayListList)
+                    foreach (var item in await JellyfinMusicService.GetJellyfinPlayListList())
                     {
                         i = new MenuFlyoutItem
                         {
@@ -235,7 +235,7 @@ namespace HotPotPlayer.Pages.Helper
             _element.ContextFlyout.ShowAt(_element);
         }
 
-        internal static void RightTapMusicInCloudPlayListClick(object sender, RoutedEventArgs e)
+        public static async void RightTapMusicInCloudPlayListClick(object sender, RoutedEventArgs e)
         {
             var _element = (FrameworkElement)sender;
             var music = (MusicItem)_element.DataContext;
@@ -292,7 +292,7 @@ namespace HotPotPlayer.Pages.Helper
                 }
                 else
                 {
-                    foreach (var item in JellyfinMusicService.JellyfinPlayListList)
+                    foreach (var item in await JellyfinMusicService.GetJellyfinPlayListList())
                     {
                         i = new MenuFlyoutItem
                         {
@@ -325,7 +325,7 @@ namespace HotPotPlayer.Pages.Helper
             _element.ContextFlyout.ShowAt(_element);
         }
 
-        internal static void RightTapMusicInArtistMusicListClick(object sender, RoutedEventArgs e)
+        public static async void RightTapMusicInArtistMusicListClick(object sender, RoutedEventArgs e)
         {
             var _element = (FrameworkElement)sender;
             var music = (MusicItem)_element.DataContext;
@@ -382,7 +382,7 @@ namespace HotPotPlayer.Pages.Helper
                 }
                 else
                 {
-                    foreach (var item in JellyfinMusicService.JellyfinPlayListList)
+                    foreach (var item in await JellyfinMusicService.GetJellyfinPlayListList())
                     {
                         i = new MenuFlyoutItem
                         {
@@ -414,7 +414,7 @@ namespace HotPotPlayer.Pages.Helper
             _element.ContextFlyout.ShowAt(_element);
         }
 
-        internal static void RightTapMusicInCurrentPlayListClick(object sender, RoutedEventArgs e)
+        public static async void RightTapMusicInCurrentPlayListClick(object sender, RoutedEventArgs e)
         {
             FrameworkElement target = null;
             BaseItemDto music = null;
@@ -469,7 +469,7 @@ namespace HotPotPlayer.Pages.Helper
                 }
                 else
                 {
-                    foreach (var item in JellyfinMusicService.JellyfinPlayListList)
+                    foreach (var item in await JellyfinMusicService.GetJellyfinPlayListList())
                     {
                         i = new MenuFlyoutItem
                         {

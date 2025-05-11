@@ -15,7 +15,7 @@ namespace HotPotPlayer.Pages.Helper
 {
     internal class PlayListHelper: HelperBase
     {
-        public static void AddToPlayListClick(object sender, RoutedEventArgs e)
+        public static async void AddToPlayListClick(object sender, RoutedEventArgs e)
         {
             var button = (Button)sender;
             var music = button.Tag as MusicItem;
@@ -35,7 +35,7 @@ namespace HotPotPlayer.Pages.Helper
             }
             else
             {
-                foreach (var item in JellyfinMusicService.JellyfinPlayListList)
+                foreach (var item in await JellyfinMusicService.GetJellyfinPlayListList())
                 {
                     i = new MenuFlyoutItem
                     {
