@@ -659,7 +659,6 @@ namespace HotPotPlayer.Services
 
         public override void Dispose()
         {
-            _playerStarter?.Dispose();
             _mpv?.Stop();
             if (_mpv != null)
             {

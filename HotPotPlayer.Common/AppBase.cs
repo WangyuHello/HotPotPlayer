@@ -56,8 +56,8 @@ namespace HotPotPlayer
         {
             //jellyfinMusicService?.Dispose();
             //netEaseMusicService?.Dispose();
-            musicPlayer?.Dispose();
-            videoPlayer?.Dispose();
+            //musicPlayer?.Dispose();
+            //videoPlayer?.Dispose();
         }
 
         public abstract void ShowToast(ToastInfo toast);
