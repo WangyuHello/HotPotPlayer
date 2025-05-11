@@ -23,39 +23,24 @@
     Background="White">
 
     <base:PageBase.Resources>
-        <CollectionViewSource x:Name="LocalAlbumGroupView" Source="{x:Bind JellyfinAlbumGroup}" IsSourceGrouped="True" />
     </base:PageBase.Resources>
 
     <Grid Padding="36,28,0,0" SizeChanged="Root_SizeChanged">
         <Pivot HeaderTemplate="{StaticResource GeneralPivotHeaderTemplate}" >
             <PivotItem Header="专辑" Margin="0" >
-                <SemanticZoom Visibility="{x:Bind GetAlbumListVisibility(LoadingState), Mode=OneWay}">
-                    <SemanticZoom.ZoomedInView>
-                        <GridView x:Name="AlbumGridView" ItemsSource="{x:Bind LocalAlbumGroupView.View}" Style="{StaticResource AlbumCardViewWithFooterStyle}" ItemClick="AlbumGridView_ItemClick" >
-                            <GridView.GroupStyle>
-                                <GroupStyle HeaderTemplate="{StaticResource GeneralZoomedInGroupHeaderTemplate}" />
-                            </GridView.GroupStyle>
-                            <GridView.ItemContainerTransitions>
-                                <TransitionCollection>
+                <GridView x:Name="AlbumGridView" 
+                          Margin="0,8,0,0"
+                          IncrementalLoadingTrigger="Edge"
+                          IncrementalLoadingThreshold="1"
+                          ItemsSource="{x:Bind JellyfinAlbumList, Mode=OneWay}" 
+                          Style="{StaticResource AlbumCardViewWithFooterStyle}" 
+                          ItemClick="AlbumGridView_ItemClick" >
+                    <GridView.ItemContainerTransitions>
+                        <TransitionCollection>
 
-                                </TransitionCollection>
-                            </GridView.ItemContainerTransitions>
-                        </GridView>
-                    </SemanticZoom.ZoomedInView>
-                    <SemanticZoom.ZoomedOutView>
-                        <GridView ItemsSource="{x:Bind LocalAlbumGroupView.View.CollectionGroups}" Style="{StaticResource GeneralZoomOutGridViewStyle}"/>
-                    </SemanticZoom.ZoomedOutView>
-
-                    <!--<animations:Implicit.ShowAnimations>
-                        <animations:TranslationAnimation Duration="0:0:2" From="0,800,0" To="0" EasingMode="EaseOut"/>
-                    </animations:Implicit.ShowAnimations>-->
-                </SemanticZoom>
-            </PivotItem>
-            <PivotItem Header="建议" Margin="0">
-
-            </PivotItem>
-            <PivotItem Header="专辑艺术家" Margin="0">
-
+                        </TransitionCollection>
+                    </GridView.ItemContainerTransitions>
+                </GridView>
             </PivotItem>
             <PivotItem Header="艺术家" Margin="0">
                 <GridView
@@ -71,6 +56,8 @@
             <PivotItem Header="播放列表" Margin="0" >
                 <GridView 
                     x:Name="PlayListGridView" 
+                    IncrementalLoadingTrigger="Edge"
+                    IncrementalLoadingThreshold="1"
                     ItemsSource="{x:Bind JellyfinPlayListList, Mode=OneWay}" 
                     Style="{StaticResource PlayListCardViewWithFooterStyle}" 
                     ItemClick="PlayListGridView_ItemClick"
@@ -78,9 +65,6 @@
                 </GridView>
             </PivotItem>
             <PivotItem Header="歌曲" Margin="0">
-
-            </PivotItem>
-            <PivotItem Header="类型" Margin="0">
 
             </PivotItem>
         </Pivot>

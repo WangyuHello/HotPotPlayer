@@ -103,7 +103,16 @@
                     ToolTipService.ToolTip="{x:Bind AlbumArtist}" 
                     x:Phase="1" 
                     FontFamily="{ThemeResource MiSansRegular}"
-            />
+                />
+                <TextBlock 
+                    Margin="8,0" 
+                    Text="{x:Bind ProductionYear}" 
+                    Foreground="Gray" 
+                    ToolTipService.ToolTip="{x:Bind ProductionYear}" 
+                    FontSize="14"
+                    x:Phase="3" 
+                    FontFamily="{ThemeResource MiSansNormal}"
+                />
             </StackPanel>
             <Grid x:Name="HiddenContent" Visibility="Collapsed">
                 <Button Style="{StaticResource TransparentButton}"
@@ -322,14 +331,11 @@
             ui:VisualExtensions.NormalizedCenterPoint="0.5"
             Background="White"
             >
-            <Grid Background="#0f000000">
-                <FontIcon FontFamily="{ThemeResource SegoeIcons}" Glyph="&#xE77B;" FontSize="32" Foreground="Gray"/>
-                <cont2:ImageEx2 
-                    Source="{x:Bind helper2:BaseItemDtoHelper.GetPrimaryJellyfinImageWithBlur(ImageTags, ImageBlurHashes, Id)}" 
-                    Style="{StaticResource LocalMusicImageStyle}"
-                    x:Phase="1"
-                />
-            </Grid>
+            <cont2:ImageEx2 
+                Source="{x:Bind helper2:BaseItemDtoHelper.GetPrimaryJellyfinImageWithBlur(ImageTags, ImageBlurHashes, Id)}" 
+                Style="{StaticResource LocalMusicImageStyle}"
+                x:Phase="1"
+            />
             <TextBlock 
                 Margin="8,0" 
                 Text="{x:Bind Name}" 
@@ -339,6 +345,7 @@
                 TextWrapping="Wrap" 
                 MaxLines="2"
                 Height="48"
+                x:Phase="0"
                 ToolTipService.ToolTip="{x:Bind Name}" 
                 FontFamily="{ThemeResource MiSansMedium}"
                 />
@@ -717,6 +724,7 @@
                 <cont2:ImageEx2 
                     Source="{x:Bind helper2:BaseItemDtoHelper.GetPrimaryJellyfinImageWithBlur(ImageTags, ImageBlurHashes, Id)}" 
                     Style="{StaticResource SeriesImageStyle}" 
+                    x:Phase="2"
                 />
                 <TextBlock 
                     Margin="8,0" 
@@ -727,6 +735,7 @@
                     TextTrimming="CharacterEllipsis" 
                     TextWrapping="Wrap" 
                     Height="40" 
+                    x:Phase="0"
                     ToolTipService.ToolTip="{x:Bind Name}" 
                     FontFamily="{ThemeResource MiSansMedium}"
                 />
@@ -740,6 +749,7 @@
                     TextWrapping="Wrap" 
                     ToolTipService.ToolTip="{x:Bind ProductionYear}" 
                     FontFamily="{ThemeResource MiSansNormal}"
+                    x:Phase="1"
                 />
 
             </StackPanel>

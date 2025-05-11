@@ -13,6 +13,7 @@ using System.Linq;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Reflection;
+using System.Threading;
 using System.Threading.Tasks;
 using SortOrder = Jellyfin.Sdk.Generated.Models.SortOrder;
 
@@ -133,24 +134,6 @@ namespace HotPotPlayer.Services
         }
 
 
-        public async Task<IEnumerable<IGrouping<int, BaseItemDto>>> GetJellyfinAlbumGroupsAsync()
-        {
-            if (!IsLogin)
-            {
-                var pw = Config.GetConfig<string>("JellyfinPassword");
-                if (string.IsNullOrEmpty(pw))
-                {
-                    return null;
-                }
-                await JellyfinLoginAsync();
-            }
-
-            var albumsResult = await GetAlbums().ConfigureAwait(false);
-            var albumGroups = GroupAllAlbumByYear(albumsResult);
-
-            return albumGroups;
-        }
-
         private async Task GetViews()
         {
             var views = await JellyfinApiClient.UserViews.GetAsync().ConfigureAwait(false);
@@ -188,69 +171,7 @@ namespace HotPotPlayer.Services
             return VideoLibraryDto;
         }
 
-        private async Task<BaseItemDtoQueryResult> GetAlbums()
-        {
-            var result = await JellyfinApiClient.Items.GetAsync(param =>
-            {
-                param.QueryParameters = new ItemsRequestBuilder.ItemsRequestBuilderGetQueryParameters
-                {
-                    UserId = UserDto.Id,
-                    ParentId = SelectedMusicLibraryDto.Id,
-                    SortBy = [ItemSortBy.ProductionYear, ItemSortBy.PremiereDate, ItemSortBy.SortName],
-                    SortOrder = [SortOrder.Descending],
-                    IncludeItemTypes = [BaseItemKind.MusicAlbum],
-                    Recursive = true,
-                    Fields = [ItemFields.PrimaryImageAspectRatio, ItemFields.SortName],
-                    ImageTypeLimit = 1,
-                    EnableImageTypes = [ImageType.Primary, ImageType.Backdrop, ImageType.Banner, ImageType.Thumb],
-                    StartIndex = 0,
-                    //Limit = 100,
-                };
-            }).ConfigureAwait(false);
-            return result;
-        }
-
-        public async Task<List<BaseItemDto>> GetJellyfinPlayListsAsync()
-        {
-            var result = await JellyfinApiClient.Items.GetAsync(param =>
-            {
-                param.QueryParameters = new ItemsRequestBuilder.ItemsRequestBuilderGetQueryParameters
-                {
-                    UserId = UserDto.Id,
-                    SortBy = [ItemSortBy.SortName],
-                    SortOrder = [SortOrder.Ascending],
-                    IncludeItemTypes = [BaseItemKind.Playlist],
-                    Recursive = true,
-                    Fields = [ItemFields.PrimaryImageAspectRatio, ItemFields.SortName, ItemFields.CanDelete],
-                    StartIndex = 0,
-                    //Limit = 100,
-                };
-            }).ConfigureAwait(false);
-            JellyfinPlayListList = result.Items;
-            return result.Items;
-        }
-
-        public async Task<List<BaseItemDto>> GetJellyfinArtistListAsync(int startIndex = 0, int limit = 50)
-        {
-            var result = await JellyfinApiClient.Artists.GetAsync(param =>
-            {
-                param.QueryParameters = new ArtistsRequestBuilder.ArtistsRequestBuilderGetQueryParameters
-                {
-                    UserId = UserDto.Id,
-                    ParentId = SelectedMusicLibraryDto.Id,
-                    SortBy = [ItemSortBy.SortName],
-                    SortOrder = [SortOrder.Ascending],
-                    Fields = [ItemFields.PrimaryImageAspectRatio, ItemFields.SortName],
-                    ImageTypeLimit = 1,
-                    StartIndex = startIndex,
-                    EnableImageTypes = [ImageType.Primary, ImageType.Backdrop, ImageType.Banner, ImageType.Thumb],
-                    Limit = limit,
-                };
-            }).ConfigureAwait(false);
-            return result.Items;
-        }
-
-        public async Task<List<BaseItemDto>> GetJellyfinVideoListAsync(BaseItemDto library, int startIndex = 0, int limit = 50)
+        public async Task<List<BaseItemDto>> GetJellyfinAlbumListAsync(Func<BaseItemDto> library, CancellationToken token, int startIndex = 0, int limit = 50)
         {
             if (!IsLogin)
             {
@@ -267,7 +188,89 @@ namespace HotPotPlayer.Services
                 param.QueryParameters = new ItemsRequestBuilder.ItemsRequestBuilderGetQueryParameters
                 {
                     UserId = UserDto.Id,
-                    ParentId = library.Id,
+                    ParentId = library().Id,
+                    SortBy = [ItemSortBy.ProductionYear, ItemSortBy.PremiereDate, ItemSortBy.SortName],
+                    SortOrder = [SortOrder.Descending],
+                    IncludeItemTypes = [BaseItemKind.MusicAlbum],
+                    Recursive = true,
+                    Fields = [ItemFields.PrimaryImageAspectRatio, ItemFields.SortName],
+                    ImageTypeLimit = 1,
+                    EnableImageTypes = [ImageType.Primary, ImageType.Backdrop, ImageType.Banner, ImageType.Thumb],
+                    StartIndex = startIndex,
+                    Limit = limit,
+                };
+            }, token).ConfigureAwait(false);
+            return result.Items;
+        }
+
+        public async Task<List<BaseItemDto>> GetJellyfinPlayListsAsync(Func<BaseItemDto> library, CancellationToken token, int startIndex = 0, int limit = 50)
+        {
+            var result = await JellyfinApiClient.Items.GetAsync(param =>
+            {
+                param.QueryParameters = new ItemsRequestBuilder.ItemsRequestBuilderGetQueryParameters
+                {
+                    UserId = UserDto.Id,
+                    SortBy = [ItemSortBy.SortName],
+                    SortOrder = [SortOrder.Ascending],
+                    IncludeItemTypes = [BaseItemKind.Playlist],
+                    Recursive = true,
+                    Fields = [ItemFields.PrimaryImageAspectRatio, ItemFields.SortName, ItemFields.CanDelete],
+                    StartIndex = startIndex,
+                    Limit = limit,
+                };
+            }, token).ConfigureAwait(false);
+            JellyfinPlayListList = result.Items;
+            return result.Items;
+        }
+
+        public async Task<List<BaseItemDto>> GetJellyfinArtistListAsync(Func<BaseItemDto> library, CancellationToken token, int startIndex = 0, int limit = 50)
+        {
+            if (!IsLogin)
+            {
+                var pw = Config.GetConfig<string>("JellyfinPassword");
+                if (string.IsNullOrEmpty(pw))
+                {
+                    return null;
+                }
+                await JellyfinLoginAsync();
+            }
+
+            var result = await JellyfinApiClient.Artists.GetAsync(param =>
+            {
+                param.QueryParameters = new ArtistsRequestBuilder.ArtistsRequestBuilderGetQueryParameters
+                {
+                    UserId = UserDto.Id,
+                    ParentId = library().Id,
+                    SortBy = [ItemSortBy.SortName],
+                    SortOrder = [SortOrder.Ascending],
+                    Fields = [ItemFields.PrimaryImageAspectRatio, ItemFields.SortName],
+                    ImageTypeLimit = 1,
+                    EnableImageTypes = [ImageType.Primary, ImageType.Backdrop, ImageType.Banner, ImageType.Thumb],
+                    StartIndex = startIndex,
+                    Limit = limit,
+                };
+            }, token).ConfigureAwait(false);
+            return result.Items;
+        }
+
+        public async Task<List<BaseItemDto>> GetJellyfinVideoListAsync(Func<BaseItemDto> library, CancellationToken token, int startIndex = 0, int limit = 50)
+        {
+            if (!IsLogin)
+            {
+                var pw = Config.GetConfig<string>("JellyfinPassword");
+                if (string.IsNullOrEmpty(pw))
+                {
+                    return null;
+                }
+                await JellyfinLoginAsync();
+            }
+
+            var result = await JellyfinApiClient.Items.GetAsync(param =>
+            {
+                param.QueryParameters = new ItemsRequestBuilder.ItemsRequestBuilderGetQueryParameters
+                {
+                    UserId = UserDto.Id,
+                    ParentId = library().Id,
                     SortBy = [ItemSortBy.ProductionYear, ItemSortBy.PremiereDate, ItemSortBy.SortName],
                     SortOrder = [SortOrder.Descending],
                     Fields = [ItemFields.PrimaryImageAspectRatio, ItemFields.SortName, ItemFields.Path, ItemFields.ChildCount, ItemFields.MediaSourceCount, ],
@@ -275,13 +278,13 @@ namespace HotPotPlayer.Services
                     StartIndex = startIndex,
                     Limit = limit,
                 };
-            }).ConfigureAwait(false);
+            }, token).ConfigureAwait(false);
             return result.Items;
         }
 
-        static IEnumerable<IGrouping<int, BaseItemDto>> GroupAllAlbumByYear(BaseItemDtoQueryResult albums)
+        static IEnumerable<IGrouping<int, BaseItemDto>> GroupAllAlbumByYear(List<BaseItemDto> albums)
         {
-            var r = albums.Items.GroupBy(a => a.ProductionYear ?? 0).OrderByDescending(g => g.Key);
+            var r = albums.GroupBy(a => a.ProductionYear ?? 0).OrderByDescending(g => g.Key);
             return r;
         }
 

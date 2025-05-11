@@ -43,7 +43,7 @@ namespace HotPotPlayer.Pages
         }
 
         private List<BaseItemDto> videoViews;
-        private List<VideoCollection> videoLists;
+        private List<JellyfinItemCollection> videoLists;
         private List<GridView> videoGridViews;
 
         [ObservableProperty]
@@ -69,7 +69,7 @@ namespace HotPotPlayer.Pages
                 }
                 NoJellyfinVisible = false;
                 videoGridViews = [];
-                videoLists = [.. videoViews.Select(v => new VideoCollection(JellyfinMusicService, v))];
+                videoLists = [.. videoViews.Select(v => new JellyfinItemCollection(() => v, JellyfinMusicService.GetJellyfinVideoListAsync))];
 
                 Style style = this.FindResource("SeriesCardViewStyle") as Style;
 

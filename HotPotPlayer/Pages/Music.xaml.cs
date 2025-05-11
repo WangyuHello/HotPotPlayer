@@ -45,17 +45,18 @@ namespace HotPotPlayer.Pages
             InitializeComponent();
         }
 
-        private readonly ObservableGroupedCollection<int, BaseItemDto> _jellyfinAlbumGroup = new();
-        private ReadOnlyObservableGroupedCollection<int, BaseItemDto> JellyfinAlbumGroup => new(_jellyfinAlbumGroup);
 
         [ObservableProperty]
         private bool noJellyfinVisible;
 
         [ObservableProperty]
-        private ObservableCollection<BaseItemDto> jellyfinPlayListList;
+        private JellyfinItemCollection jellyfinAlbumList;
 
         [ObservableProperty]
-        private ArtistCollection jellfinArtistList;
+        private JellyfinItemCollection jellyfinPlayListList;
+
+        [ObservableProperty]
+        private JellyfinItemCollection jellfinArtistList;
 
         [ObservableProperty]
         private BaseItemDto selectedAlbum;
@@ -85,23 +86,10 @@ namespace HotPotPlayer.Pages
             if (JellyfinMusicService.IsMusicPageFirstNavigate)
             {
                 JellyfinMusicService.IsMusicPageFirstNavigate = false;
-                LoadingState = LocalServiceState.Loading;
-                var albumsGroups = await JellyfinMusicService.GetJellyfinAlbumGroupsAsync();
-                if (albumsGroups == null)
-                {
-                    NoJellyfinVisible = true;
-                    goto complete;
-                }
-                NoJellyfinVisible = false;
-                foreach (var album in albumsGroups)
-                {
-                    _jellyfinAlbumGroup.AddGroup(album);
-                }
-                JellyfinPlayListList = [.. await JellyfinMusicService.GetJellyfinPlayListsAsync()];
-                JellfinArtistList = new ArtistCollection(JellyfinMusicService);
 
-                complete:
-                LoadingState = LocalServiceState.Complete;
+                JellyfinAlbumList = new JellyfinItemCollection(() => JellyfinMusicService.SelectedMusicLibraryDto, JellyfinMusicService.GetJellyfinAlbumListAsync);
+                JellyfinPlayListList = new JellyfinItemCollection(() => JellyfinMusicService.SelectedMusicLibraryDto, JellyfinMusicService.GetJellyfinPlayListsAsync);
+                JellfinArtistList = new JellyfinItemCollection(() => JellyfinMusicService.SelectedMusicLibraryDto, JellyfinMusicService.GetJellyfinArtistListAsync);
             }
         }
 
