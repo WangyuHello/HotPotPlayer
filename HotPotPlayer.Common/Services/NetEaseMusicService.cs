@@ -42,31 +42,31 @@ namespace HotPotPlayer.Services
         }
 
         [ObservableProperty]
-        private CloudUserItem self;
+        public partial CloudUserItem Self { get; set; }
 
         [ObservableProperty]
-        private LevelItem level;
+        public partial LevelItem Level { get; set; }
 
         [ObservableProperty]
-        private CloudPlayListItem likeList;
+        public partial CloudPlayListItem LikeList { get; set; }
 
         [ObservableProperty]
-        private ObservableCollection<CloudPlayListItem> userPlayLists;
+        public partial ObservableCollection<CloudPlayListItem> UserPlayLists { get; set; }
 
         [ObservableProperty]
-        private ObservableCollection<CloudPlayListItem> subscribePlayLists;
+        public partial ObservableCollection<CloudPlayListItem> SubscribePlayLists { get; set; }
 
         [ObservableProperty]
-        private ObservableCollection<CloudMusicItem> recommedList;
+        public partial ObservableCollection<CloudMusicItem> RecommedList { get; set; }
 
         [ObservableProperty]
-        private ObservableCollection<CloudPlayListItem> recommedPlayList;
+        public partial ObservableCollection<CloudPlayListItem> RecommedPlayList { get; set; }
 
         [ObservableProperty]
-        private ObservableCollection<Toplist> topList;
+        public partial ObservableCollection<Toplist> TopList { get; set; }
 
         [ObservableProperty]
-        private ObservableCollection<CloudArtistItem> topArtists;
+        public partial ObservableCollection<CloudArtistItem> TopArtists { get; set; }
 
         public async Task InitAsync()
         {

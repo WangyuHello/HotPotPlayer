@@ -20,13 +20,13 @@ namespace HotPotPlayer.Services
     public partial class MusicPlayerService(ConfigBase config, DispatcherQueue queue, AppBase app) : PlayerService(config, queue, app)
     {
         [ObservableProperty]
-        private bool isPlayBarVisible;
+        public partial bool IsPlayBarVisible {  get; set; }
 
         [ObservableProperty]
-        private bool isPlayListBarVisible;
+        public partial bool IsPlayListBarVisible { get; set; }
 
         [ObservableProperty]
-        private bool isPlayScreenVisible;
+        public partial bool IsPlayScreenVisible { get; set; }
 
         public bool EnableReplayGain => Config.GetConfig("EnableReplayGain", true, true);
         public bool SuppressTogglePlayListBar { get; set; }

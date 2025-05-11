@@ -7,6 +7,7 @@
     <UseWinUI>true</UseWinUI>
     <Platforms>x86;x64;arm64</Platforms>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+	<LangVersion>Preview</LangVersion>
   </PropertyGroup>
   <ItemGroup>
     <None Remove="UI\Controls\DanmakuRenderer.xaml" />

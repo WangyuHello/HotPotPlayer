@@ -47,39 +47,39 @@ namespace HotPotPlayer.Pages
 
 
         [ObservableProperty]
-        private bool noJellyfinVisible;
+        public partial bool NoJellyfinVisible { get; set; }
 
         [ObservableProperty]
-        private JellyfinItemCollection jellyfinAlbumList;
+        public partial JellyfinItemCollection JellyfinAlbumList { get; set; }
 
         [ObservableProperty]
-        private JellyfinItemCollection jellyfinPlayListList;
+        public partial JellyfinItemCollection JellyfinPlayListList { get; set; }
 
         [ObservableProperty]
-        private JellyfinItemCollection jellfinArtistList;
+        public partial JellyfinItemCollection JellfinArtistList { get; set; }
 
         [ObservableProperty]
-        private BaseItemDto selectedAlbum;
+        public partial BaseItemDto SelectedAlbum { get; set; }
 
         [ObservableProperty]
-        private BaseItemDto selectedAlbumInfo;
+        public partial BaseItemDto SelectedAlbumInfo { get; set; }
 
         [ObservableProperty]
-        private List<BaseItemDto> selectedAlbumMusicItems;
+        public partial List<BaseItemDto> SelectedAlbumMusicItems { get; set; }
 
         [ObservableProperty]
-        private BaseItemDto selectedPlayList;
+        public partial BaseItemDto SelectedPlayList { get; set; }
 
         [ObservableProperty]
-        private BaseItemDto selectedPlayListInfo;
+        public partial BaseItemDto SelectedPlayListInfo { get; set; }
 
         [ObservableProperty]
-        private List<BaseItemDto> selectedPlayListMusicItems;
+        public partial List<BaseItemDto> SelectedPlayListMusicItems { get; set; }
 
         [ObservableProperty]
-        private LocalServiceState loadingState = LocalServiceState.Idle;
+        public partial LocalServiceState LoadingState { get; set; }
 
-        protected override async void OnNavigatedTo(NavigationEventArgs e)
+        protected override void OnNavigatedTo(NavigationEventArgs e)
         {
             base.OnNavigatedTo(e);
 

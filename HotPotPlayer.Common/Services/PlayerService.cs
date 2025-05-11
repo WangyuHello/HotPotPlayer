@@ -46,21 +46,25 @@ namespace HotPotPlayer.Services
         }
 
         [ObservableProperty]
-        private PlayerState state;
+        public partial PlayerState State { get; set; }
 
         [ObservableProperty]
-        private BaseItemDto currentPlaying;
+        public partial BaseItemDto CurrentPlaying { get; set; }
 
         public TimeSpan? CurrentPlayingDuration
         {
             get => _mpv?.Duration;
         }
 
-        [ObservableProperty]
         private int currentPlayingIndex = -1;
+        public int CurrentPlayingIndex
+        {
+            get => currentPlayingIndex;
+            set => SetProperty(ref currentPlayingIndex, value);
+        }
 
         [ObservableProperty]
-        private ObservableCollection<BaseItemDto> currentPlayList;
+        public partial ObservableCollection<BaseItemDto> CurrentPlayList { get; set; }
 
         public bool SuppressCurrentTimeTrigger { get; set; }
 
@@ -99,7 +103,7 @@ namespace HotPotPlayer.Services
         }
 
         [ObservableProperty]
-        private bool hasError;
+        public partial bool HasError { get; set; }
 
         public int Volume
         {
@@ -134,7 +138,7 @@ namespace HotPotPlayer.Services
         }
 
         [ObservableProperty]
-        private PlayMode playMode;
+        public partial PlayMode PlayMode { get; set; }
 
         public virtual void PlayNext(BaseItemDto video) { }
 

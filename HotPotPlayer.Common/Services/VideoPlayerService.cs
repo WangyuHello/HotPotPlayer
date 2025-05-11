@@ -39,7 +39,7 @@ namespace HotPotPlayer.Services
     public partial class VideoPlayerService(ConfigBase config, DispatcherQueue uiThread = null, AppBase app = null) : PlayerService(config, uiThread, app)
     {
         [ObservableProperty]
-        private VideoPlayVisualState visualState;
+        public partial VideoPlayVisualState VisualState {  get; set; }
 
         public event EventHandler<MpvVideoGeometryInitEventArgs> VideoGeometryInit;
         public event EventHandler<IntPtr> SwapChainInited;

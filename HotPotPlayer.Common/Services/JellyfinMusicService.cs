@@ -24,12 +24,12 @@ namespace HotPotPlayer.Services
 
         #region State
         [ObservableProperty]
-        private LocalServiceState state = LocalServiceState.Idle;
+        public partial LocalServiceState State { get; set; }
 
         #endregion
         #region Property
         [ObservableProperty]
-        private PublicSystemInfo systemInfo;
+        public partial PublicSystemInfo SystemInfo { get; set; }
 
         #endregion
         #region Field
@@ -105,20 +105,20 @@ namespace HotPotPlayer.Services
         }
 
         [ObservableProperty]
-        private UserDto userDto;
+        public partial UserDto UserDto { get; set; }
 
         [ObservableProperty]
-        private BaseItemDto selectedMusicLibraryDto;
+        public partial BaseItemDto SelectedMusicLibraryDto { get; set; }
 
         [ObservableProperty]
-        private List<BaseItemDto> musicLibraryDto;
+        public partial List<BaseItemDto> MusicLibraryDto { get; set; }
 
         [ObservableProperty]
-        private List<BaseItemDto> videoLibraryDto;
+        public partial List<BaseItemDto> VideoLibraryDto { get; set; }
 
         [ObservableProperty]
-        private SessionInfoDto session;
-        
+        public partial SessionInfoDto Session { get; set; }
+
         private bool IsLogin = false;
         public bool IsMusicPageFirstNavigate { get; set; } = true;
         public bool IsVideoPageFirstNavigate { get; set; } = true;

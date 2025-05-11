@@ -47,13 +47,13 @@ namespace HotPotPlayer.Pages
         private List<GridView> videoGridViews;
 
         [ObservableProperty]
-        private BaseItemDto selectedSeries;
+        public partial BaseItemDto SelectedSeries { get; set; }
 
         [ObservableProperty]
-        private int selectedPivotIndex;
+        public partial int SelectedPivotIndex { get; set; }
 
         [ObservableProperty]
-        private bool noJellyfinVisible;
+        public partial bool NoJellyfinVisible { get; set; }
 
         protected override async void OnNavigatedTo(NavigationEventArgs e)
         {

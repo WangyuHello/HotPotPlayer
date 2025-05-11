@@ -17,6 +17,7 @@ using Microsoft.UI.Xaml.Navigation;
 using Mpv.NET.API;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Diagnostics;
 using System.Drawing;
 using System.IO;
@@ -149,7 +150,7 @@ namespace HotPotPlayer.Video.UI.Controls
         }
 
         [ObservableProperty]
-        private bool isFullScreen;
+        public partial bool IsFullScreen {  get; set; }
 
         private bool isVideoInfoOn;
         public bool IsVideoInfoOn
