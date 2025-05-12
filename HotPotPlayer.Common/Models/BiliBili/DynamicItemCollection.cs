@@ -12,7 +12,7 @@ using Windows.Foundation;
 
 namespace HotPotPlayer.Models.BiliBili
 {
-    public class DynamicItemCollection : ObservableCollection<DynamicItem>, ISupportIncrementalLoading
+    public partial class DynamicItemCollection : ObservableCollection<DynamicItem>, ISupportIncrementalLoading
     {
         int _pageNum;
         string _prevOffset;

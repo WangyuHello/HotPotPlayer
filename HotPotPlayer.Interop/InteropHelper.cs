@@ -12,32 +12,32 @@ namespace HotPotPlayer.Interop
 {
     public static class InteropHelper
     {
-        public static Guid GetIID<T>()
-        {
-#if NET5_0_OR_GREATER
-            if (TryGetDefaultInterfaceTypeForRuntimeClassType(typeof(T), out Type defaultInterfaceType))
-                return GuidGenerator.GetIID(defaultInterfaceType);
-            return GuidGenerator.GetIID(typeof(T));
-#else
-            return typeof(T).GetInterface("I" + typeof(T).Name)?.GUID ?? typeof(T).GUID;
-#endif
-        }
+//        public static Guid GetIID<T>()
+//        {
+//#if NET5_0_OR_GREATER
+//            if (TryGetDefaultInterfaceTypeForRuntimeClassType(typeof(T), out Type defaultInterfaceType))
+//                return GuidGenerator.GetIID(defaultInterfaceType);
+//            return GuidGenerator.GetIID(typeof(T));
+//#else
+//            return typeof(T).GetInterface("I" + typeof(T).Name)?.GUID ?? typeof(T).GUID;
+//#endif
+//        }
 
 #if NET5_0_OR_GREATER
         /// <summary>
         /// <see href="https://github.com/microsoft/CsWinRT/blob/master/src/WinRT.Runtime/Projections.cs#L378-L397"/>
         /// </summary>
-        public static bool TryGetDefaultInterfaceTypeForRuntimeClassType(Type runtimeClass, out Type defaultInterface)
+        public static bool TryGetDefaultInterfaceTypeForRuntimeClassType(Type runtimeClass, out Type? defaultInterface)
         {
             runtimeClass = runtimeClass.GetRuntimeClassCCWType() ?? runtimeClass;
             defaultInterface = null;
 
-            ProjectedRuntimeClassAttribute attr = runtimeClass.GetCustomAttribute<ProjectedRuntimeClassAttribute>();
+            ProjectedRuntimeClassAttribute? attr = runtimeClass.GetCustomAttribute<ProjectedRuntimeClassAttribute>();
             if (attr is null)
                 return false;
 
             if (attr.DefaultInterfaceProperty != null)
-                defaultInterface = runtimeClass.GetProperty(attr.DefaultInterfaceProperty, BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.DeclaredOnly).PropertyType;
+                defaultInterface = runtimeClass?.GetProperty(attr.DefaultInterfaceProperty, BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.DeclaredOnly).PropertyType;
             else
                 defaultInterface = attr.DefaultInterface;
 

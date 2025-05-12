@@ -5,6 +5,7 @@
 	<TargetPlatformMinVersion>10.0.19041.0</TargetPlatformMinVersion>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
+	<IsAotCompatible>true</IsAotCompatible>
   </PropertyGroup>
   <ItemGroup>
 	<None Remove="NativeMethods.txt" />

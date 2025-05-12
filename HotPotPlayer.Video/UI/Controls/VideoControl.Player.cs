@@ -141,38 +141,38 @@ namespace HotPotPlayer.Video.UI.Controls
             });
         }
 
-        private void D3DInitCallback(IntPtr d3d11Device, IntPtr swapChain)
-        {
-            _swapChain1Ptr = swapChain;
-            _devicePtr = d3d11Device;
-            if (_swapChain1Ptr == IntPtr.Zero || _devicePtr == IntPtr.Zero)
-            {
-                return;
-            }
-            UIQueue.TryEnqueue(() =>
-            {
-                try
-                {
-                    _swapChain1 = (IDXGISwapChain1)Marshal.GetObjectForIUnknown(_swapChain1Ptr);
-                    _device = (ID3D11Device)Marshal.GetObjectForIUnknown(_devicePtr);
-                    //_swapChain1 = ObjectReference<IDXGISwapChain1>.FromAbi(swapChain).Vftbl;
-                    if (Host == null || !Host.IsLoaded)
-                    {
-                        return;
-                    }
-                    var nativepanel = Host.As<ISwapChainPanelNative>();
-                    if (nativepanel == null) { return; }
-                    _swapChain1.GetDesc1(out var desp);
-                    nativepanel.SetSwapChain(_swapChain1);
-                    _swapChainLoaded = true;
-                }
-                catch (Exception)
-                {
+        //private void D3DInitCallback(IntPtr d3d11Device, IntPtr swapChain)
+        //{
+        //    _swapChain1Ptr = swapChain;
+        //    _devicePtr = d3d11Device;
+        //    if (_swapChain1Ptr == IntPtr.Zero || _devicePtr == IntPtr.Zero)
+        //    {
+        //        return;
+        //    }
+        //    UIQueue.TryEnqueue(() =>
+        //    {
+        //        try
+        //        {
+        //            _swapChain1 = (IDXGISwapChain1)Marshal.GetObjectForIUnknown(_swapChain1Ptr);
+        //            _device = (ID3D11Device)Marshal.GetObjectForIUnknown(_devicePtr);
+        //            //_swapChain1 = ObjectReference<IDXGISwapChain1>.FromAbi(swapChain).Vftbl;
+        //            if (Host == null || !Host.IsLoaded)
+        //            {
+        //                return;
+        //            }
+        //            var nativepanel = Host.As<ISwapChainPanelNative>();
+        //            if (nativepanel == null) { return; }
+        //            _swapChain1.GetDesc1(out var desp);
+        //            nativepanel.SetSwapChain(_swapChain1);
+        //            _swapChainLoaded = true;
+        //        }
+        //        catch (Exception)
+        //        {
 
-                }
+        //        }
 
-            });
-        }
+        //    });
+        //}
 
         public void SetPlayerFence()
         {
