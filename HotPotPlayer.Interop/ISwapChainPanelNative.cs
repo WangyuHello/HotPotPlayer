@@ -1,6 +1,4 @@
-﻿using DirectN;
-using System;
-using System.Runtime.InteropServices;
+﻿using System.Runtime.InteropServices;
 
 namespace HotPotPlayer.Interop
 {

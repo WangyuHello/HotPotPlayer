@@ -55,7 +55,7 @@ namespace HotPotPlayer.Video.UI.Controls
         float _currentScaleX;
         float _currentScaleY;
         Rectangle _currentWindowBounds;
-        IDXGISwapChain1 _swapchain;
+        Interop.IDXGISwapChain1 _swapchain;
         Interop.ISwapChainPanelNative _swapChainPanelNative;
 
         bool _isSwapchainInited = false;
@@ -91,7 +91,7 @@ namespace HotPotPlayer.Video.UI.Controls
         {
             if (VideoPlayer.SwapChain != IntPtr.Zero)
             {
-                _swapchain = (IDXGISwapChain1)Marshal.GetObjectForIUnknown(VideoPlayer.SwapChain);
+                _swapchain = (Interop.IDXGISwapChain1)Marshal.GetObjectForIUnknown(VideoPlayer.SwapChain);
                 _swapChainPanelNative = Host.As<Interop.ISwapChainPanelNative>();
                 _swapChainPanelNative.SetSwapChain(_swapchain);
                 _isSwapchainInited = true;
@@ -116,7 +116,7 @@ namespace HotPotPlayer.Video.UI.Controls
         {
             _uiQueue.TryEnqueue(() =>
             {
-                _swapchain = (IDXGISwapChain1)Marshal.GetObjectForIUnknown(ptr);
+                _swapchain = (Interop.IDXGISwapChain1)Marshal.GetObjectForIUnknown(ptr);
                 _swapChainPanelNative = Host.As<Interop.ISwapChainPanelNative>();
                 _swapChainPanelNative.SetSwapChain(_swapchain);
                 _isSwapchainInited = true;
