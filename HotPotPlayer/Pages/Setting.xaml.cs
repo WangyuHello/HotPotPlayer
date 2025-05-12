@@ -1,33 +1,20 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.WinUI.Controls;
-using Grpc.Core;
-using HotPotPlayer.Bilibili.Models.Search;
 using HotPotPlayer.Models;
 using HotPotPlayer.Pages.SettingSub;
 using HotPotPlayer.Services;
 using Jellyfin.Sdk.Generated.Models;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
-using Microsoft.UI.Xaml.Controls.Primitives;
-using Microsoft.UI.Xaml.Data;
-using Microsoft.UI.Xaml.Input;
-using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Navigation;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.ComponentModel;
 using System.Diagnostics;
 using System.Drawing;
 using System.IO;
 using System.Linq;
-using System.Runtime.CompilerServices;
-using System.Runtime.InteropServices.WindowsRuntime;
-using System.Threading.Tasks;
-using Windows.Foundation;
-using Windows.Foundation.Collections;
 using Windows.Storage;
-using Windows.Storage.Pickers;
 
 // To learn more about WinUI, the WinUI project structure,
 // and more about our project templates, see: http://aka.ms/winui-project-info.
@@ -45,13 +32,13 @@ namespace HotPotPlayer.Pages
         }
 
         [ObservableProperty]
-        private ObservableCollection<PublicSystemInfo> jellyfinServers;
+        public partial ObservableCollection<PublicSystemInfo> JellyfinServers { get; set; }
 
         [ObservableProperty]
-        private BaseItemDto selectedMusicLibraryDto;
+        public partial BaseItemDto SelectedMusicLibraryDto { get; set; }
 
         [ObservableProperty]
-        private List<BaseItemDto> musicLibraryDto;
+        public partial List<BaseItemDto> MusicLibraryDto { get; set; }
 
         private bool enableReplayGain;
 
@@ -77,9 +64,9 @@ namespace HotPotPlayer.Pages
         }
 
         [ObservableProperty]
-        private string mpvVersion;
+        public partial string MpvVersion { get; set; }
 
-        private string GetMpvVersion()
+        private static string GetMpvVersion()
         {
             FileVersionInfo myFileVersionInfo =
                 FileVersionInfo.GetVersionInfo(Path.Combine(Windows.ApplicationModel.Package.Current.InstalledLocation.Path, "NativeLibs/mpv-2.dll"));

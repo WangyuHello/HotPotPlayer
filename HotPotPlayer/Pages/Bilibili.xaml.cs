@@ -36,16 +36,16 @@ namespace HotPotPlayer.Pages
         }
 
         [ObservableProperty]
-        int selectedSubPage;
+        public partial int SelectedSubPage { get; set; }
 
         [ObservableProperty]
-        NavData navData;
+        public partial NavData NavData { get; set; }
 
         [ObservableProperty]
-        NavStatData navStatData;
+        public partial NavStatData NavStatData { get; set; }
 
         [ObservableProperty]
-        EntranceData entranceData;
+        public partial EntranceData EntranceData { get; set; }
 
         partial void OnSelectedSubPageChanged(int value)
         {

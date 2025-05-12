@@ -43,13 +43,13 @@ namespace HotPotPlayer.Pages.MusicSub
         public ObservableCollection<MusicItem> LocalArtistMusic { get; set; } = new();
 
         [ObservableProperty]
-        private BaseItemDto theArtist;
+        public partial BaseItemDto TheArtist { get; set; }
 
         [ObservableProperty]
-        private List<BaseItemDto> artistAlbums;
+        public partial List<BaseItemDto> ArtistAlbums { get; set; }
 
         [ObservableProperty]
-        private BaseItemDto selectedAlbum;
+        public partial BaseItemDto SelectedAlbum { get; set; }
 
         protected override async void OnNavigatedTo(NavigationEventArgs e)
         {

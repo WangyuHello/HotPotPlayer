@@ -6,7 +6,6 @@
     xmlns:base="using:HotPotPlayer"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:local="using:HotPotPlayer.Pages.BiliBiliSub"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:vcont="using:HotPotPlayer.Video.UI.Controls"
@@ -33,7 +32,7 @@
                 <RowDefinition Height="{x:Bind GetTitleHeight(IsFullPage)}" />
             </Grid.RowDefinitions>
             <FontIcon FontFamily="{ThemeResource BiliIcons}" Glyph="&#xEA10;" FontSize="120" Foreground="#dbdcdc"/>
-            <vcont:VideoControl x:Name="VideoPlayer" 
+            <vcont:VideoControl x:Name="VideoPlayerControl" 
                                 Source="{x:Bind Source}" 
                                 DmData="{x:Bind DmData}" 
                                 Pbp="{x:Bind Pbp}"

@@ -35,10 +35,10 @@ namespace HotPotPlayer.Pages.BilibiliSub
         }
 
         [ObservableProperty]
-        private UserCardBundle userCardBundle;
+        public partial UserCardBundle UserCardBundle { get; set; }
 
         [ObservableProperty]
-        private UserVideoInfoItemCollection userVideoInfoItems;
+        public partial UserVideoInfoItemCollection UserVideoInfoItems { get; set; }
 
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {

@@ -45,7 +45,7 @@ namespace HotPotPlayer.Controls.BilibiliSub
         }
 
         [ObservableProperty]
-        private UserCardBundle userCardBundle;
+        public partial UserCardBundle UserCardBundle { get; set; }
 
         public string GetFollowStr(bool isFollow)
         {

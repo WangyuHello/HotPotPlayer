@@ -38,7 +38,7 @@ namespace HotPotPlayer.Pages.BilibiliSub
         }
 
         [ObservableProperty]
-        List<SearchResultData> videoResult;
+        public partial List<SearchResultData> VideoResult { get; set; }
 
         protected override async void OnNavigatedTo(NavigationEventArgs e)
         {

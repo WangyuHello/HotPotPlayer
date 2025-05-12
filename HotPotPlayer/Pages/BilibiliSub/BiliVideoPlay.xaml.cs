@@ -40,64 +40,64 @@ namespace HotPotPlayer.Pages.BilibiliSub
         public Window PlayWindow { get; set; }
 
         [ObservableProperty]
-        VideoContent video;
+        public partial VideoContent Video { get; set; }
 
         [ObservableProperty]
-        VideoPlayInfo source;
+        public partial VideoPlayInfo Source { get; set; }
 
         [ObservableProperty]
-        bool isFullPage;
+        public partial bool IsFullPage { get; set; }
 
         [ObservableProperty]
-        bool isFullScreen;
+        public partial bool IsFullScreen { get; set; }
 
         [ObservableProperty]
-        string onLineCount;
+        public partial string OnLineCount { get; set; }
 
         [ObservableProperty]
-        ReplyItemCollection replies;
+        public partial ReplyItemCollection Replies { get; set; }
 
         [ObservableProperty]
-        List<VideoContent> relatedVideos;
+        public partial List<VideoContent> RelatedVideos { get; set; }
 
         [ObservableProperty]
-        bool isLike;
+        public partial bool IsLike { get; set; }
 
         [ObservableProperty]
-        int likes;
+        public partial int Likes { get; set; }
 
         [ObservableProperty]
-        int coin;
+        public partial int Coin { get; set; }
 
         [ObservableProperty]
-        int coins;
+        public partial int Coins { get; set; }
 
         [ObservableProperty]
-        int favors;
+        public partial int Favors { get; set; }
 
         [ObservableProperty]
-        bool isFavor;
+        public partial bool IsFavor { get; set; }
 
         [ObservableProperty]
-        DMData dmData;
+        public partial DMData DmData { get; set; }
 
         [ObservableProperty]
-        Pbp pbp;
+        public partial Pbp Pbp { get; set; }
 
         [ObservableProperty]
-        List<Tag> tags;
+        public partial List<Tag> Tags { get; set; }
 
         [ObservableProperty]
-        bool isLoading = true;
+        public partial bool IsLoading { get; set; }
 
         [ObservableProperty]
-        bool isAdditionLoading = true;
+        public partial bool IsAdditionLoading { get; set; }
 
         [ObservableProperty]
-        int selectedPage;
+        public partial int SelectedPage { get; set; }
 
         [ObservableProperty]
-        int selectedEpisode;
+        public partial int SelectedEpisode { get; set; }
 
         string aid;
         string cid;
@@ -115,7 +115,7 @@ namespace HotPotPlayer.Pages.BilibiliSub
             IsAdditionLoading = true;
             if (!immediateLoad)
             {
-                VideoPlayer.SetPlayerFence();
+                VideoPlayerControl.SetPlayerFence();
             }
 
             if (para is string b) //bvid
@@ -171,7 +171,7 @@ namespace HotPotPlayer.Pages.BilibiliSub
 
             if (!immediateLoad)
             {
-                VideoPlayer.ReleasePlayerFence();
+                VideoPlayerControl.ReleasePlayerFence();
             }
 
             await Task.Delay(2000);
@@ -211,7 +211,7 @@ namespace HotPotPlayer.Pages.BilibiliSub
 
         public void StopPlay()
         {
-            VideoPlayer.Close();
+            VideoPlayerControl.Close();
         }
 
         GridLength GetCommentWidth(bool isFullPage)

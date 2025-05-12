@@ -38,10 +38,10 @@ namespace HotPotPlayer.Pages.BilibiliSub
         }
 
         [ObservableProperty]
-        private PopularVideoCollection popularVideos;
+        public partial PopularVideoCollection PopularVideos { get; set; }
 
         [ObservableProperty]
-        private RecVideoCollection recVideos;
+        public partial RecVideoCollection RecVideos { get; set; }
 
         public async void LoadPopularVideosAsync()
         {

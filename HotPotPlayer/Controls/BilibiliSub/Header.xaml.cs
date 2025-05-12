@@ -111,7 +111,7 @@ namespace HotPotPlayer.Controls.BilibiliSub
         public event Action OnRefreshClick;
 
         [ObservableProperty]
-        string searchDefault;
+        public partial string SearchDefault {  get; set; }
 
         private async void RootLoaded(object sender, RoutedEventArgs args)
         {

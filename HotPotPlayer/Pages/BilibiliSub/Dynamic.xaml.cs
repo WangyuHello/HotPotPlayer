@@ -36,15 +36,15 @@ namespace HotPotPlayer.Pages.BilibiliSub
         }
 
         [ObservableProperty]
-        private DynamicItemCollection dynamicItems;
+        public partial DynamicItemCollection DynamicItems {  get; set; }
 
         [ObservableProperty]
-        private ReplyItemCollection replies;
+        public partial ReplyItemCollection Replies { get; set; }
 
         private DynamicItem currentOpen;
 
         [ObservableProperty]
-        private bool isCommentsOpen;
+        public partial bool IsCommentsOpen { get; set; }
 
         bool isFirstLoad = true;
 

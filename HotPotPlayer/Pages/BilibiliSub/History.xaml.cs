@@ -34,7 +34,7 @@ namespace HotPotPlayer.Pages.BilibiliSub
         }
 
         [ObservableProperty]
-        HistoryCollection historyItems;
+        public partial HistoryCollection HistoryItems { get; set; }
 
         bool isFirstLoad = true;
         public async void LoadHistoryAsync(bool force = false)

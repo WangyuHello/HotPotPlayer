@@ -152,7 +152,7 @@ namespace HotPotPlayer.Video.UI.Controls
         #region ObsProp
         [ObservableProperty]
         //[AlsoNotifyChangeFor(nameof(CurrentPlayItem))]
-        private ObservableCollection<VideoItem> currentPlayList;
+        public partial ObservableCollection<VideoItem> CurrentPlayList { get; set; }
 
         private int currentPlayIndex;
         public int CurrentPlayIndex
@@ -186,13 +186,13 @@ namespace HotPotPlayer.Video.UI.Controls
         }
 
         [ObservableProperty]
-        private List<string> definitions;
+        public partial List<string> Definitions { get; set; }
 
         [ObservableProperty]
-        private string title;
+        public partial string Title { get; set; }
 
         [ObservableProperty]
-        private bool isPlaying;
+        public partial bool IsPlaying { get; set; }
 
         private TimeSpan _currentTime;
         public TimeSpan CurrentTime
@@ -206,10 +206,10 @@ namespace HotPotPlayer.Video.UI.Controls
         }
 
         [ObservableProperty]
-        private TimeSpan? currentPlayingDuration;
+        public partial TimeSpan? CurrentPlayingDuration { get; set; }
 
         [ObservableProperty]
-        private PlayMode playMode;
+        public partial PlayMode PlayMode { get; set; }
 
         public int Volume
         {

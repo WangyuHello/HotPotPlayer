@@ -39,10 +39,10 @@ namespace HotPotPlayer.Pages.MusicSub
         }
 
         [ObservableProperty]
-        private BaseItemDto selectedAlbum;
+        public partial BaseItemDto SelectedAlbum { get; set; }
 
         [ObservableProperty]
-        private List<BaseItemDto> selectedAlbumMusicItems;
+        public partial List<BaseItemDto> SelectedAlbumMusicItems { get; set; }
 
         protected override async void OnNavigatedTo(NavigationEventArgs e)
         {

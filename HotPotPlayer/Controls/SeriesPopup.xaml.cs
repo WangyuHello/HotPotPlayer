@@ -41,19 +41,19 @@ namespace HotPotPlayer.Controls
             DependencyProperty.Register("Series", typeof(BaseItemDto), typeof(SeriesPopup), new PropertyMetadata(default(BaseItemDto), SeriesChanged));
 
         [ObservableProperty]
-        private BaseItemDto seriesInfo;
+        public partial BaseItemDto SeriesInfo { get; set; }
 
         [ObservableProperty]
-        private List<BaseItemDto> seasons;
+        public partial List<BaseItemDto> Seasons { get; set; }
 
         [ObservableProperty]
-        private List<BaseItemDto> selectedSeasonVideoItems;
+        public partial List<BaseItemDto> SelectedSeasonVideoItems { get; set; }
 
         [ObservableProperty]
-        private IEnumerable<CustomChapterInfo> customChapters;
+        public partial IEnumerable<CustomChapterInfo> CustomChapters { get; set; }
 
         [ObservableProperty]
-        private bool isBackdropExpanded;
+        public partial bool IsBackdropExpanded { get; set; }
 
         private static async void SeriesChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
