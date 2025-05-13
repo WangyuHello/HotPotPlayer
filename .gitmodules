@@ -4,9 +4,3 @@
 [submodule "NeteaseCloudMusicApi"]
 	path = ThirdParty/NeteaseCloudMusicApi
 	url = git@github.com:WangyuHello/NeteaseCloudMusicApi.git
-[submodule "Bili.Uwp"]
-	path = ThirdParty/Bili.Uwp
-	url = git@github.com:WangyuHello/Bili.Uwp.git
-[submodule "ThirdParty/BiliBiliAccount"]
-	path = ThirdParty/BiliBiliAccount
-	url = git@github.com:WangyuHello/BiliBiliAccount.git

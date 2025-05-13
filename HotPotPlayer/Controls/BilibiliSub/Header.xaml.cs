@@ -115,8 +115,8 @@ namespace HotPotPlayer.Controls.BilibiliSub
 
         private async void RootLoaded(object sender, RoutedEventArgs args)
         {
-            var def = await BiliBiliService.API.GetSearchDefaultAsync();
-            SearchDefault = def.Data.ShowName;
+            //var def = await BiliBiliService.API.GetSearchDefaultAsync();
+            //SearchDefault = def.Data.ShowName;
         }
 
         private void RefreshClick(object sender, RoutedEventArgs args)

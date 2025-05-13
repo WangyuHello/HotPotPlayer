@@ -5,6 +5,7 @@
     xmlns:models="using:HotPotPlayer.Models"
     xmlns:modelsC="using:HotPotPlayer.Models.CloudMusic"
     xmlns:jmodel="using:Jellyfin.Sdk.Generated.Models"
+    xmlns:bmodel="using:Richasy.BiliKernel.Models.Media"
     xmlns:bili="using:HotPotPlayer.Bilibili.Models.HomeVideo"
     xmlns:bili2="using:HotPotPlayer.Bilibili.Models.Video"
     xmlns:bili3="using:HotPotPlayer.Bilibili.Models.User"
@@ -389,7 +390,7 @@
         </StackPanel>
     </DataTemplate>
 
-    <DataTemplate x:Key="BiliVideoCardViewTemplate" x:DataType="bili:RecommendVideoItem">
+    <DataTemplate x:Key="BiliVideoCardViewTemplate" x:DataType="bmodel:VideoInformation">
         <StackPanel 
             Width="300"
             Padding="0,0,0,12"
@@ -402,7 +403,7 @@
             >
             <cont2:ImageEx2 
                 CornerRadius="6"
-                Source="{x:Bind Cover}" 
+                Source="{x:Bind Identifier.Cover.Uri}" 
                 Style="{StaticResource LocalVideoImageStyle}"
                 />
             <Grid Margin="0,-38,0,0" Height="38" Padding="8,0">
@@ -426,21 +427,21 @@
                     <ColumnDefinition Width="Auto" />
                 </Grid.ColumnDefinitions>
                 <FontIcon Grid.Row="1" FontFamily="{ThemeResource BiliIcons}" Glyph="&#xEA0F;" Foreground="White" FontSize="18" Margin="0,-1,4,0"/>
-                <TextBlock Grid.Column="1" Grid.Row="1" Text="{x:Bind Stat.GetViews()}" FontSize="13" Foreground="White" FontFamily="{ThemeResource MiSansRegular}" />
+                <!--<TextBlock Grid.Column="1" Grid.Row="1" Text="{x:Bind Stat.GetViews()}" FontSize="13" Foreground="White" FontFamily="{ThemeResource MiSansRegular}" />-->
                 <FontIcon Grid.Column="2" Grid.Row="1" FontFamily="{ThemeResource BiliIcons}" Glyph="&#xEA05;" Foreground="White" FontSize="18" Margin="12,-1,4,0" />
-                <TextBlock Grid.Column="3" Grid.Row="1" Text="{x:Bind Stat.Danmaku}" FontSize="13" Foreground="White" FontFamily="{ThemeResource MiSansRegular}" />
-                <TextBlock Grid.Column="5" Grid.Row="1" Text="{x:Bind GetDuration()}" FontSize="13" Foreground="White" FontFamily="{ThemeResource MiSansRegular}" />
+                <!--<TextBlock Grid.Column="3" Grid.Row="1" Text="{x:Bind Stat.Danmaku}" FontSize="13" Foreground="White" FontFamily="{ThemeResource MiSansRegular}" />-->
+                <!--<TextBlock Grid.Column="5" Grid.Row="1" Text="{x:Bind GetDuration()}" FontSize="13" Foreground="White" FontFamily="{ThemeResource MiSansRegular}" />-->
             </Grid>
             <TextBlock 
                 Margin="8,8" 
-                Text="{x:Bind Title}" 
+                Text="{x:Bind Identifier.Title}" 
                 LineStackingStrategy="BaselineToBaseline" 
                 FontSize="14" 
                 MaxLines="2" 
                 TextTrimming="CharacterEllipsis" 
                 TextWrapping="Wrap" 
                 Height="40" 
-                ToolTipService.ToolTip="{x:Bind Title}" 
+                ToolTipService.ToolTip="{x:Bind Identifier.Title}" 
                 FontFamily="{ThemeResource MiSansMedium}"
                 />
             <Grid>
@@ -449,12 +450,12 @@
                     <ColumnDefinition Width="Auto" />
                 </Grid.ColumnDefinitions>
                 <StackPanel Orientation="Horizontal" Padding="8,0" HorizontalAlignment="Stretch">
-                    <Border Visibility="{x:Bind HasRcmdReasonContent}" CornerRadius="2" Background="#fef1e2" Padding="6,0" Margin="0,0,8,0">
+                    <!--<Border Visibility="{x:Bind HasRcmdReasonContent}" CornerRadius="2" Background="#fef1e2" Padding="6,0" Margin="0,0,8,0">
                         <TextBlock Text="{x:Bind GetRcmdReason}" Foreground="#ff7f23" FontFamily="{ThemeResource MiSansRegular}" VerticalAlignment="Center"/>
-                    </Border>
-                    <FontIcon Visibility="{x:Bind NoRcmdReasonContent}" FontFamily="{ThemeResource BiliIcons}" Foreground="Gray" FontSize="13" Margin="0,0,6,-2" Glyph="&#xEA1D;" />
-                    <TextBlock Text="{x:Bind Owner.UpName}" Foreground="Gray" FontFamily="{ThemeResource MiSansRegular}" />
-                    <TextBlock Visibility="{x:Bind NoRcmdReasonContent}" Margin="12,0" Text="{x:Bind GetUpDateTime()}" Foreground="Gray" FontFamily="{ThemeResource MiSansRegular}" />
+                    </Border>-->
+                    <!--<FontIcon Visibility="{x:Bind NoRcmdReasonContent}" FontFamily="{ThemeResource BiliIcons}" Foreground="Gray" FontSize="13" Margin="0,0,6,-2" Glyph="&#xEA1D;" />-->
+                    <TextBlock Text="{x:Bind Publisher.User.Name}" Foreground="Gray" FontFamily="{ThemeResource MiSansRegular}" />
+                    <!--<TextBlock Visibility="{x:Bind NoRcmdReasonContent}" Margin="12,0" Text="{x:Bind GetUpDateTime()}" Foreground="Gray" FontFamily="{ThemeResource MiSansRegular}" />-->
 
                 </StackPanel>
                 <Button Grid.Column="1" Style="{StaticResource TransparentButton}" Margin="0,0,8,0" Foreground="Gray">

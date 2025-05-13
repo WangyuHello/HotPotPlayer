@@ -3,12 +3,14 @@ using HotPotPlayer.Bilibili.Models.Dynamic;
 using HotPotPlayer.Bilibili.Models.Nav;
 using HotPotPlayer.Models.BiliBili;
 using HotPotPlayer.Video;
+using Microsoft.UI.Dispatching;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Controls.Primitives;
 using Microsoft.UI.Xaml.Data;
 using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Media;
+using Microsoft.UI.Xaml.Media.Imaging;
 using Microsoft.UI.Xaml.Navigation;
 using System;
 using System.Collections.Generic;
@@ -19,6 +21,7 @@ using System.Runtime.InteropServices.WindowsRuntime;
 using System.Threading.Tasks;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
+using Windows.Storage.Streams;
 
 // To learn more about WinUI, the WinUI project structure,
 // and more about our project templates, see: http://aka.ms/winui-project-info.
@@ -33,7 +36,10 @@ namespace HotPotPlayer.Pages
         public Bilibili()
         {
             this.InitializeComponent();
+            _ui = DispatcherQueue.GetForCurrentThread();
         }
+
+        DispatcherQueue _ui;
 
         [ObservableProperty]
         public partial int SelectedSubPage { get; set; }
@@ -49,14 +55,14 @@ namespace HotPotPlayer.Pages
 
         partial void OnSelectedSubPageChanged(int value)
         {
-            if (value == 1)
-            {
-                BiliDynamic.LoadDynamicAsync();
-            }
-            else if (value == 2)
-            {
-                BiliHistory.LoadHistoryAsync();
-            }
+            //if (value == 1)
+            //{
+            //    BiliDynamic.LoadDynamicAsync();
+            //}
+            //else if (value == 2)
+            //{
+            //    BiliHistory.LoadHistoryAsync();
+            //}
         }
 
         bool IsFirstNavigate = true;
@@ -65,49 +71,70 @@ namespace HotPotPlayer.Pages
             base.OnNavigatedTo(e);
             if (!IsFirstNavigate)
             {
-                await LoadEntranceDataAsync();
+                //await LoadEntranceDataAsync();
                 return;
             }
-            if (!(await BiliBiliService.IsLoginAsync()))
+            BiliBiliService.SetQrcodeRenderFunc(ShowQrcode);
+            if (!await BiliBiliService.CheckAuthorizeStatusAsync())
             {
-                NavigateTo("BilibiliSub.Login");
+                await BiliBiliService.SignInAsync();
             }
-            BiliMain.LoadPopularVideosAsync();
-            NavData = (await BiliBiliService.API.GetNav()).Data;
-            NavStatData = (await BiliBiliService.API.GetNavStat()).Data;
-            await LoadEntranceDataAsync();
+            BiliMain.LoadRecVideosAsync();
+
+            //NavData = (await BiliBiliService.API.GetNav()).Data;
+            //NavStatData = (await BiliBiliService.API.GetNavStat()).Data;
+            //await LoadEntranceDataAsync();
             IsFirstNavigate = false;
-            await BiliBiliService.API.GetBiliBili();
+            //await BiliBiliService.API.GetBiliBili();
         }
 
-        private async Task LoadEntranceDataAsync()
+        private Task ShowQrcode(byte[] bytes)
         {
-            if (Config.HasConfig("BiliDynamicOffset"))
+            _ui.TryEnqueue(async () =>
             {
-                EntranceData = (await BiliBiliService.API.GetDynamicEntrance(Config.GetConfig<string>("BiliDynamicOffset"))).Data;
-            }
+                BitmapImage image = new();
+                var stream = new InMemoryRandomAccessStream();
+                await stream.WriteAsync(bytes.AsBuffer());
+                stream.Seek(0);
+                await image.SetSourceAsync(stream);
+                QR.Source = image;
+            });
+            return Task.CompletedTask;
         }
 
-        private async void LoadDynamicCompleted(string offset)
+        Visibility GetQRVisible(bool isLogin)
         {
-            await LoadEntranceDataAsync();
+            return isLogin ? Visibility.Collapsed : Visibility.Visible;
         }
 
-        private async void RefreshClick()
+        private void LoadEntranceDataAsync()
+        {
+            //if (Config.HasConfig("BiliDynamicOffset"))
+            //{
+            //    EntranceData = (await BiliBiliService.API.GetDynamicEntrance(Config.GetConfig<string>("BiliDynamicOffset"))).Data;
+            //}
+        }
+
+        private void LoadDynamicCompleted(string offset)
+        {
+            //await LoadEntranceDataAsync();
+        }
+
+        private void RefreshClick()
         {
             if (SelectedSubPage == 0)
             {
-                BiliMain.LoadPopularVideosAsync();
+                BiliMain.LoadRecVideosAsync();
             }
-            else if(SelectedSubPage == 1)
-            {
-                BiliDynamic.LoadDynamicAsync(true);
-            }
-            else if(SelectedSubPage == 2)
-            {
-                BiliHistory.LoadHistoryAsync(true);
-            }
-            await LoadEntranceDataAsync();
+            //else if (SelectedSubPage == 1)
+            //{
+            //    BiliDynamic.LoadDynamicAsync(true);
+            //}
+            //else if (SelectedSubPage == 2)
+            //{
+            //    BiliHistory.LoadHistoryAsync(true);
+            //}
+            //await LoadEntranceDataAsync();
         }
 
         //private async void BVPlay(object sender, RoutedEventArgs args)

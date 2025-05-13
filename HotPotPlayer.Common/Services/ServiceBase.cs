@@ -31,17 +31,10 @@ namespace HotPotPlayer.Services
         public virtual void Dispose() { }
     }
 
-    public class ServiceBaseWithConfig: ServiceBase
+    public class ServiceBaseWithConfig(ConfigBase config, DispatcherQueue uiThread = null, AppBase app = null) : ServiceBase
     {
-        protected ConfigBase Config { get; init; }
-        protected DispatcherQueue UIQueue { get; init; }
-        protected AppBase App { get; init; }
-
-        public ServiceBaseWithConfig(ConfigBase config, DispatcherQueue uiThread = null, AppBase app = null)
-        {
-            Config = config;
-            UIQueue = uiThread;
-            App = app;
-        }
+        protected ConfigBase Config { get; init; } = config;
+        protected DispatcherQueue UIQueue { get; init; } = uiThread;
+        protected AppBase App { get; init; } = app;
     }
 }

@@ -1,21 +1,57 @@
-﻿using HotPotPlayer.Bilibili.Models.Video;
+﻿using CommunityToolkit.Mvvm.ComponentModel;
+using HotPotPlayer.Bilibili.Models.Video;
 using HotPotPlayer.BiliBili;
 using HotPotPlayer.Common.Extension;
 using Microsoft.UI.Dispatching;
 using Newtonsoft.Json.Linq;
 using QRCoder;
+using Richasy.BiliKernel.Authenticator;
+using Richasy.BiliKernel.Authorizers.TV;
+using Richasy.BiliKernel.Bili.Authorization;
+using Richasy.BiliKernel.Http;
+using Richasy.BiliKernel.Models.Media;
+using Richasy.BiliKernel.Resolvers.NativeCookies;
+using Richasy.BiliKernel.Resolvers.NativeQRCode;
+using Richasy.BiliKernel.Resolvers.NativeToken;
+using Richasy.BiliKernel.Resolvers.WinUICookies;
+using Richasy.BiliKernel.Resolvers.WinUIQRCode;
+using Richasy.BiliKernel.Resolvers.WinUIToken;
+using Richasy.BiliKernel.Services.Media;
+using System;
+using System.Collections.Generic;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace HotPotPlayer.Services
 {
-    public class BiliBiliService : ServiceBaseWithConfig
+    public partial class BiliBiliService : ServiceBaseWithConfig
     {
         public BiliBiliService(ConfigBase config, DispatcherQueue uiThread = null, AppBase app = null) : base(config, uiThread, app)
         {
-            Config.SaveConfigWhenExit(() => _api.SaveCookies(Config));
+            //Config.SaveConfigWhenExit(() => _api.SaveCookies(Config));
+
+            cookieResolver = new WinUIBiliCookiesResolver();
+            tokenResolver = new WinUIBiliTokenResolver();
+            authenticator = new BiliAuthenticator(cookieResolver, tokenResolver);
+            qrcodeResolver = new WinUIQRCodeResolver(QRCodeResolverRender);
+            biliClient = new BiliHttpClient();
+            authentication = new TVAuthenticationService(biliClient, qrcodeResolver, cookieResolver, tokenResolver, authenticator);
+            videoDiscovery = new VideoDiscoveryService(biliClient, authenticator, tokenResolver);
         }
 
-        public bool? IsLogin { get; set; }
+        [ObservableProperty]
+        public partial bool IsLogin { get; set; }
+
+        private async Task QRCodeResolverRender(byte[] bytes)
+        {
+            await _render(bytes);
+        }
+
+        Func<byte[], Task> _render;
+        public void SetQrcodeRenderFunc(Func<byte[], Task> render)
+        {
+            _render = render;
+        }
 
         private BiliAPI _api;
         public BiliAPI API
@@ -30,6 +66,14 @@ namespace HotPotPlayer.Services
                 return _api;
             }
         }
+
+        readonly WinUIBiliCookiesResolver cookieResolver;
+        readonly WinUIBiliTokenResolver tokenResolver;
+        readonly BiliAuthenticator authenticator;
+        readonly WinUIQRCodeResolver qrcodeResolver;
+        readonly BiliHttpClient biliClient;
+        readonly TVAuthenticationService authentication;
+        readonly VideoDiscoveryService videoDiscovery;
 
         public async ValueTask<(int code, string message)> GetQrCheckAsync(string key)
         {
@@ -48,13 +92,36 @@ namespace HotPotPlayer.Services
             return qrCodeAsBitmapByteArr;
         }
 
-        public async Task<bool> IsLoginAsync()
+        public async Task<bool> CheckAuthorizeStatusAsync(CancellationToken token = default)
         {
-            if ((IsLogin != null) && (bool)IsLogin) { return true; }
-            var r = await API.GetLoginInfoAsync();
-            var code = r["code"].Value<int>();
-            IsLogin = code == 0;
-            return (bool)IsLogin;
+            try
+            {
+                await authentication.EnsureTokenAsync(token).ConfigureAwait(false);
+                IsLogin = true;
+                return true;
+            }
+            catch (Exception)
+            {
+
+            }
+            IsLogin = false;
+            return false;
+        }
+
+        public async Task SignInAsync(CancellationToken token = default)
+        {
+            await authentication.SignInAsync(cancellationToken: token).ConfigureAwait(false);
+            IsLogin = true;
+        }
+
+        public async Task SignOutAsync(CancellationToken token = default)
+        {
+            await authentication.SignOutAsync(token).ConfigureAwait(false);
+        }
+
+        public async Task<(IReadOnlyList<VideoInformation>, long)> GetRecommendVideoListAsync(long offset, CancellationToken token = default)
+        {
+            return await videoDiscovery.GetRecommendVideoListAsync(offset, token);
         }
 
         public async Task<VideoInfo> GetVideoUrlAsync(string bvid, string aid, string cid)

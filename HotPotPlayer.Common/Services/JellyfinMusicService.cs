@@ -779,6 +779,7 @@ namespace HotPotPlayer.Services
 
         public async Task Logout()
         {
+            if(!IsLogin) return;
             await JellyfinApiClient.Sessions.Logout.PostAsync().ConfigureAwait(false);
         }
         public void AddAlbumToPlayList(BaseItemDto playList, AlbumItem album)

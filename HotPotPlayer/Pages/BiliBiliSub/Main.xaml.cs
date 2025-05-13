@@ -15,6 +15,7 @@ using Microsoft.UI.Xaml.Data;
 using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Navigation;
+using Richasy.BiliKernel.Models.Media;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -38,23 +39,24 @@ namespace HotPotPlayer.Pages.BilibiliSub
         }
 
         [ObservableProperty]
-        public partial PopularVideoCollection PopularVideos { get; set; }
-
-        [ObservableProperty]
         public partial RecVideoCollection RecVideos { get; set; }
 
-        public async void LoadPopularVideosAsync()
+        public void LoadRecVideosAsync()
         {
-            var popularVideos = (await BiliBiliService.API.GetPopularVideo()).Data;
-            PopularVideos = new PopularVideoCollection(popularVideos, BiliBiliService);
-            var recVideos = (await BiliBiliService.API.GetRecVideo()).Data;
-            RecVideos = new RecVideoCollection(recVideos, BiliBiliService);
+            if (RecVideos == null)
+            {
+                RecVideos = new RecVideoCollection(BiliBiliService);
+            }
+            else
+            {
+                RecVideos.Clear();
+            }
         }
 
         private void BiliVideoClick(object sender, ItemClickEventArgs e)
         {
-            var v = e.ClickedItem as RecommendVideoItem;
-            PlayVideoInNewWindow(v.Bvid);
+            var v = e.ClickedItem as VideoInformation;
+            //PlayVideoInNewWindow(v.Bvid);
         }
     }
 }

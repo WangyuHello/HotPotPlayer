@@ -30,6 +30,20 @@
 	  <PackageReference Include="Microsoft.WindowsAppSDK" Version="1.7.250310001" />
 	  <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
 	  <PackageReference Include="QRCoder" Version="1.6.0" />
+	  <PackageReference Include="Richasy.BiliKernel.Authorizers.TV" Version="0.0.1-preview5" />
+	  <PackageReference Include="Richasy.BiliKernel.Core" Version="0.0.1-preview5" />
+	  <PackageReference Include="Richasy.BiliKernel.Resolvers.NativeCookies" Version="0.0.1-preview5" />
+	  <PackageReference Include="Richasy.BiliKernel.Resolvers.NativeQRCode" Version="0.0.1-preview5" />
+	  <PackageReference Include="Richasy.BiliKernel.Resolvers.NativeToken" Version="0.0.1-preview5" />
+	  <PackageReference Include="Richasy.BiliKernel.Resolvers.WinUICookies" Version="0.0.1-preview5" />
+	  <PackageReference Include="Richasy.BiliKernel.Resolvers.WinUIQRCode" Version="0.0.1-preview5" />
+	  <PackageReference Include="Richasy.BiliKernel.Resolvers.WinUIToken" Version="0.0.1-preview5" />
+	  <PackageReference Include="Richasy.BiliKernel.Services.Article" Version="0.0.1-preview5" />
+	  <PackageReference Include="Richasy.BiliKernel.Services.Comment" Version="0.0.1-preview5" />
+	  <PackageReference Include="Richasy.BiliKernel.Services.Media" Version="0.0.1-preview5" />
+	  <PackageReference Include="Richasy.BiliKernel.Services.Moment" Version="0.0.1-preview5" />
+	  <PackageReference Include="Richasy.BiliKernel.Services.Search" Version="0.0.1-preview5" />
+	  <PackageReference Include="Richasy.BiliKernel.Services.User" Version="0.0.1-preview5" />
       <PackageReference Include="System.Management" Version="10.0.0-preview.2.25163.2" />
       <PackageReference Include="SixLabors.ImageSharp" Version="3.1.7" />
       <PackageReference Include="SixLabors.ImageSharp.Drawing" Version="2.1.5" />
