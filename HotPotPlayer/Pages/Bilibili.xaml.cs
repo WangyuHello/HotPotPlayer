@@ -57,7 +57,7 @@ namespace HotPotPlayer.Pages
         {
             if (value == 1)
             {
-                BiliDynamic.LoadDynamicAsync();
+                BiliDynamic.LoadDynamic();
             }
             //else if (value == 2)
             //{
@@ -115,7 +115,7 @@ namespace HotPotPlayer.Pages
             //}
         }
 
-        private void LoadDynamicCompleted(string offset)
+        private void LoadDynamicCompleted()
         {
             //await LoadEntranceDataAsync();
         }
@@ -128,7 +128,7 @@ namespace HotPotPlayer.Pages
             }
             else if (SelectedSubPage == 1)
             {
-                BiliDynamic.LoadDynamicAsync(true);
+                BiliDynamic.LoadDynamic(true);
             }
             //else if (SelectedSubPage == 2)
             //{

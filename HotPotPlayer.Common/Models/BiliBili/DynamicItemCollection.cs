@@ -16,8 +16,8 @@ namespace HotPotPlayer.Models.BiliBili
     public partial class DynamicItemCollection(BiliBiliService service) : ObservableCollection<MomentInformation>, ISupportIncrementalLoading
     {
         readonly BiliBiliService _service = service;
-        string _prevOffset;
-        string _prevBaseline;
+        public string Offset { get; set; }
+        public string BaseLine { get; set; }
         private bool _hasMore = true;
         public bool HasMoreItems => _hasMore;
 
@@ -25,10 +25,10 @@ namespace HotPotPlayer.Models.BiliBili
         {
             return AsyncInfo.Run(async (token) =>
             {
-                var dyn = await _service.GetComprehensiveMomentsAsync(_prevOffset, _prevBaseline, token);
-                _prevOffset = dyn.Offset;
+                var dyn = await _service.GetComprehensiveMomentsAsync(Offset, BaseLine, token);
+                Offset = dyn.Offset;
                 _hasMore = dyn.HasMoreMoments ?? true;
-                _prevBaseline = dyn.UpdateBaseline ?? null;
+                BaseLine = dyn.UpdateBaseline ?? null;
                 foreach (var item in dyn.Moments)
                 {
                     Add(item);

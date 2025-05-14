@@ -48,7 +48,7 @@ namespace HotPotPlayer.Pages.BilibiliSub
 
         bool isFirstLoad = true;
 
-        public void LoadDynamicAsync(bool force = false)
+        public void LoadDynamic(bool force = false)
         {
             if (!force && !isFirstLoad)
             {
@@ -60,13 +60,15 @@ namespace HotPotPlayer.Pages.BilibiliSub
             }
             else
             {
+                DynamicItems.Offset = null;
+                DynamicItems.BaseLine = null;
                 DynamicItems.Clear();
             }
-            //LoadDynamicCompleted?.Invoke(null);
+            LoadDynamicCompleted?.Invoke();
             isFirstLoad = false;
         }
 
-        public event Action<string> LoadDynamicCompleted;
+        public event Action LoadDynamicCompleted;
 
         public void ToggleComment(DynamicItem dyn)
         {

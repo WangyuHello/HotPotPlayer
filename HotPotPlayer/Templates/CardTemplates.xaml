@@ -21,6 +21,7 @@
     xmlns:conv="using:HotPotPlayer.UI.Converters"
     xmlns:helper="using:HotPotPlayer.Pages.Helper"
     xmlns:helper2="using:HotPotPlayer.Helpers"
+    xmlns:ext="using:HotPotPlayer.UI.Extensions"
     >
 
     <helper:LikeGlyphConverter x:Key="LikeGlyphConverter" />
@@ -427,10 +428,10 @@
                     <ColumnDefinition Width="Auto" />
                 </Grid.ColumnDefinitions>
                 <FontIcon Grid.Row="1" FontFamily="{ThemeResource BiliIcons}" Glyph="&#xEA0F;" Foreground="White" FontSize="18" Margin="0,-1,4,0"/>
-                <!--<TextBlock Grid.Column="1" Grid.Row="1" Text="{x:Bind Stat.GetViews()}" FontSize="13" Foreground="White" FontFamily="{ThemeResource MiSansRegular}" />-->
+                <TextBlock Grid.Column="1" Grid.Row="1" Text="{x:Bind ext:BiliUIExtensions.GetPlayCount((bmodel:VideoInformation))}" FontSize="13" Foreground="White" FontFamily="{ThemeResource MiSansRegular}" />
                 <FontIcon Grid.Column="2" Grid.Row="1" FontFamily="{ThemeResource BiliIcons}" Glyph="&#xEA05;" Foreground="White" FontSize="18" Margin="12,-1,4,0" />
-                <!--<TextBlock Grid.Column="3" Grid.Row="1" Text="{x:Bind Stat.Danmaku}" FontSize="13" Foreground="White" FontFamily="{ThemeResource MiSansRegular}" />-->
-                <!--<TextBlock Grid.Column="5" Grid.Row="1" Text="{x:Bind GetDuration()}" FontSize="13" Foreground="White" FontFamily="{ThemeResource MiSansRegular}" />-->
+                <TextBlock Grid.Column="3" Grid.Row="1" Text="{x:Bind ext:BiliUIExtensions.GetDanmakuCount((bmodel:VideoInformation))}" FontSize="13" Foreground="White" FontFamily="{ThemeResource MiSansRegular}" />
+                <TextBlock Grid.Column="5" Grid.Row="1" Text="{x:Bind ext:BiliUIExtensions.GetDuration((bmodel:VideoInformation))}" FontSize="13" Foreground="White" FontFamily="{ThemeResource MiSansRegular}" />
             </Grid>
             <TextBlock 
                 Margin="8,8" 

@@ -107,6 +107,41 @@ namespace HotPotPlayer.UI.Extensions
         //    return double.NaN;
         //}
 
+        public static string GetDuration(VideoInformation v)
+        {
+            var t = TimeSpan.FromSeconds(v.Duration ?? 0);
+            var str = t.ToString("mm\\:ss");
+            return str;
+        }
+
+        public static string GetPlayCount(VideoInformation video)
+        {
+            double v = video.CommunityInformation.PlayCount ?? 0;
+            if (v >= 10000)
+            {
+                var v2 = v / 10000;
+                return $"{v2:F1}万";
+            }
+            else
+            {
+                return v.ToString();
+            }
+        }
+
+        public static string GetDanmakuCount(VideoInformation video)
+        {
+            double v = video.CommunityInformation.DanmakuCount ?? 0;
+            if (v >= 10000)
+            {
+                var v2 = v / 10000;
+                return $"{v2:F1}万";
+            }
+            else
+            {
+                return v.ToString();
+            }
+        }
+
         public static RichTextBlock GenRichTextBlock(this EmoteText node)
         {
             var b = new RichTextBlock
