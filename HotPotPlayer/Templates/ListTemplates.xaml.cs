@@ -23,10 +23,10 @@ namespace HotPotPlayer.Templates
 
         private void UserAvatarClick(object sender, RoutedEventArgs e)
         {
-            var flyout = ((UIElement)sender).ContextFlyout as Flyout;
-            var card = flyout.Content as UserCard;
-            card.LoadUserCardBundle();
-            flyout.ShowAt(sender as FrameworkElement);
+            //var flyout = ((UIElement)sender).ContextFlyout as Flyout;
+            //var card = flyout.Content as UserCard;
+            //card.LoadUserCardBundle();
+            //flyout.ShowAt(sender as FrameworkElement);
         }
 
         private void DynamicCommentClick(object sender, RoutedEventArgs e)

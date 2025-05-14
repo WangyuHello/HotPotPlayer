@@ -67,6 +67,46 @@ namespace HotPotPlayer.UI.Extensions
             return null;
         }
 
+        public static double GetSingleImageWidth(MomentInformation moment)
+        {
+            var isImage = moment.MomentType == Richasy.BiliKernel.Models.MomentItemType.Image;
+            if (isImage && moment.Data is List<BiliImage> images)
+            {
+                return images[0].Width > 560 ? double.NaN : images[0].Width;
+            }
+            var isVideo = moment.MomentType == Richasy.BiliKernel.Models.MomentItemType.Video;
+            if (isVideo && moment.Data is VideoInformation v)
+            {
+                return v.Identifier.Cover.Width > 560 ? double.NaN : v.Identifier.Cover.Width;
+            }
+            var isArticle = moment.MomentType == Richasy.BiliKernel.Models.MomentItemType.Article;
+            if (isArticle)
+            {
+
+            }
+            return double.NaN;
+        }
+
+        //public static double GetSingleImageHeight(MomentInformation moment)
+        //{
+        //    var isImage = moment.MomentType == Richasy.BiliKernel.Models.MomentItemType.Image;
+        //    if (isImage && moment.Data is List<BiliImage> images)
+        //    {
+        //        return images[0].Height > 560 ? double.NaN : images[0].Height;
+        //    }
+        //    var isVideo = moment.MomentType == Richasy.BiliKernel.Models.MomentItemType.Video;
+        //    if (isVideo && moment.Data is VideoInformation v)
+        //    {
+        //        return v.Identifier.Cover.Height;
+        //    }
+        //    var isArticle = moment.MomentType == Richasy.BiliKernel.Models.MomentItemType.Article;
+        //    if (isArticle)
+        //    {
+
+        //    }
+        //    return double.NaN;
+        //}
+
         public static RichTextBlock GenRichTextBlock(this EmoteText node)
         {
             var b = new RichTextBlock
