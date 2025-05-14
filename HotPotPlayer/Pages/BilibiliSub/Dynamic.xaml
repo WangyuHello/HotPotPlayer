@@ -15,7 +15,7 @@
 
     <Grid Background="#f0f0f2">
         <SplitView IsPaneOpen="{x:Bind IsCommentsOpen}" OpenPaneLength="636" DisplayMode="Inline" PanePlacement="Right">
-            <SplitView.Pane>
+            <!--<SplitView.Pane>
                 <Grid Background="White" Margin="0,0,36,0" >
                     <ListView 
                         Margin="-8,0" 
@@ -30,7 +30,7 @@
 
                     </ListView>
                 </Grid>
-            </SplitView.Pane>
+            </SplitView.Pane>-->
             
             <ListView Width="600" ItemsSource="{x:Bind DynamicItems, Mode=OneWay}" 
                   Padding="0,72,0,0"

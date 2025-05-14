@@ -5,8 +5,11 @@
     xmlns:models="using:HotPotPlayer.Models"
     xmlns:modelsC="using:HotPotPlayer.Models.CloudMusic"
     xmlns:jmodel="using:Jellyfin.Sdk.Generated.Models"
+    xmlns:bmodel="using:Richasy.BiliKernel.Models"
+    xmlns:bmodelMoment="using:Richasy.BiliKernel.Models.Moment"
     xmlns:helper="using:HotPotPlayer.Pages.Helper"
     xmlns:helper2="using:HotPotPlayer.Helpers"
+    xmlns:momentHelper="using:HotPotPlayer.Common.Helper.Bilibili"
     xmlns:conv="using:HotPotPlayer.UI.Converters"
     xmlns:cont2="using:HotPotPlayer.UI.Controls"
     xmlns:cont3="using:HotPotPlayer.Controls.BilibiliSub"
@@ -518,15 +521,15 @@
             <FontIcon Margin="8,0" Grid.Column="1" FontFamily="{ThemeResource BiliIcons}" Glyph="{x:Bind GetIcon()}" FontSize="15" VerticalAlignment="Center" Foreground="Gray"/>
             <!--<TextBlock Grid.Column="2" VerticalAlignment="Center" Text="{x:Bind Desc.SimpleText}" FontFamily="{ThemeResource MiSansRegular}" />-->
             <!--<RichTextBlock Grid.Column="2" VerticalAlignment="Center" DataContext="{x:Bind }" Loaded="RichTextBlock_Loaded" FontFamily="{ThemeResource MiSansRegular}" />-->
-            <ContentControl Grid.Column="2" VerticalAlignment="Center" DataContext="{x:Bind }"
+            <!--<ContentControl Grid.Column="2" VerticalAlignment="Center" DataContext="{x:Bind }"
                                 FontFamily="{ThemeResource MiSansRegular}"
                                 Foreground="Gray"
                                 Content="{x:Bind ext:BiliUIExtensions.GenRichTextBlock(Desc)}"
-                                />
+                                />-->
         </Grid>
     </DataTemplate>
 
-    <DataTemplate x:Key="DynamicTemplate" x:DataType="dyn:DynamicItem">
+    <DataTemplate x:Key="DynamicTemplate" x:DataType="bmodelMoment:MomentInformation">
         <StackPanel Padding="16" Background="White">
             <!--Header-->
             <Grid >
@@ -540,44 +543,48 @@
                     <ColumnDefinition Width="Auto" />
                 </Grid.ColumnDefinitions>
                 <Button Grid.RowSpan="2" Margin="0,0,8,0" Click="UserAvatarClick" Style="{StaticResource TransparentButton}">
-                    <cont2:ImageEx2  Width="40" Height="40" Source="{x:Bind Modules.ModuleAuthor.Face}" CornerRadius="20" Style="{StaticResource LocalMusicImageStyle}" />
+                    <cont2:ImageEx2  Width="40" Height="40" Source="{x:Bind User.Avatar.Uri}" CornerRadius="20" Style="{StaticResource LocalMusicImageStyle}" />
                     <Button.ContextFlyout>
                         <Flyout>
-                            <cont3:UserCard Margin="-16" Mid="{x:Bind Modules.ModuleAuthor.Mid}" />
+                            <cont3:UserCard Margin="-16" Mid="{x:Bind User.Id}" />
                         </Flyout>
                     </Button.ContextFlyout>
                 </Button>
-                <TextBlock Grid.Column="1" VerticalAlignment="Bottom" FontFamily="{ThemeResource MiSansMedium}" Text="{x:Bind Modules.ModuleAuthor.Name}" Foreground="#fb799d"/>
-                <TextBlock Grid.Column="1" VerticalAlignment="Top" Margin="0,2,0,0" Grid.Row="1" FontFamily="{ThemeResource MiSansRegular}" FontSize="12" Foreground="Gray" Text="{x:Bind Modules.ModuleAuthor.GetPubTime}"/>
+                <TextBlock Grid.Column="1" VerticalAlignment="Bottom" FontFamily="{ThemeResource MiSansMedium}" Text="{x:Bind User.Name}" Foreground="#fb799d"/>
+                <TextBlock Grid.Column="1" VerticalAlignment="Top" Margin="0,2,0,0" Grid.Row="1" FontFamily="{ThemeResource MiSansRegular}" FontSize="12" Foreground="Gray" Text="{x:Bind Tip}"/>
                 <Button Grid.Column="2" Grid.RowSpan="2" Style="{StaticResource TransparentButton}" CornerRadius="4" Padding="4" Tag="{x:Bind }">
                     <SymbolIcon Symbol="More" />
                 </Button>
             </Grid>
             <!--Content-->
-            <ContentControl Margin="0,8,0,0" Visibility="{x:Bind Modules.ModuleDynamic.HasDesc}" DataContext="{x:Bind }"
+            <ContentControl Margin="0,8,0,0" Visibility="{x:Bind ext:BiliUIExtensions.IsDescVisible((bmodelMoment:MomentInformation))}" DataContext="{x:Bind }"
                             FontFamily="{ThemeResource MiSansRegular}"
-                            Content="{x:Bind ext:BiliUIExtensions.GenRichTextBlock(Modules.ModuleDynamic.Desc)}"
+                            Content="{x:Bind ext:BiliUIExtensions.GenRichTextBlock(Description)}"
                             />
             <!--<TextBlock Margin="0,8,0,0" Visibility="{x:Bind Modules.ModuleDynamic.HasDesc}" FontFamily="{ThemeResource MiSansRegular}" TextWrapping="Wrap" Text="{x:Bind Modules.ModuleDynamic.Desc.Text}"/>-->
-            <!--<RichTextBlock  Loaded="RichTextBlock_Loaded2" FontFamily="{ThemeResource MiSansRegular}" TextWrapping="Wrap" IsTextSelectionEnabled="False"/>-->
+            <!--<RichTextBlock Loaded="RichTextBlock_Loaded2" FontFamily="{ThemeResource MiSansRegular}" TextWrapping="Wrap" IsTextSelectionEnabled="False"/>-->
 
             <!--Article-->
-            <StackPanel Margin="0,8,0,0" Visibility="{x:Bind Modules.ModuleDynamic.HasArticle}"
+            <StackPanel Margin="0,8,0,0" Visibility="{x:Bind ext:BiliUIExtensions.IsArticleVisible((bmodelMoment:MomentInformation))}"
                         Padding="16,8" 
                         Background="#f4f5f7" CornerRadius="4">
-                <TextBlock FontFamily="{ThemeResource MiSansMedium}" Text="{x:Bind Modules.ModuleDynamic.Major.Article.Title}" TextWrapping="Wrap" />
+                <!--<TextBlock FontFamily="{ThemeResource MiSansMedium}" Text="{x:Bind Modules.ModuleDynamic.Major.Article.Title}" TextWrapping="Wrap" />-->
                 <!--<ccont:AdaptiveGridView Margin="0,8,0,0" Visibility="{x:Bind Modules.ModuleDynamic.HasArticleCover}" 
                                     DesiredWidth="200"
                                     ItemTemplate="{StaticResource ArticleCoverTemplate}"
                                     ItemsSource="{x:Bind Modules.ModuleDynamic.Major.Article.Covers}" >
 
                 </ccont:AdaptiveGridView>-->
-                <TextBlock Margin="0,4" FontFamily="{ThemeResource MiSansRegular}" Text="{x:Bind Modules.ModuleDynamic.Major.Article.Desc}" Foreground="Gray" TextWrapping="Wrap" MaxLines="4" TextTrimming="CharacterEllipsis"/>
-                <TextBlock FontFamily="{ThemeResource MiSansRegular}" Text="{x:Bind Modules.ModuleDynamic.Major.Article.Label}" Foreground="LightGray" FontSize="13" TextWrapping="Wrap" />
+                <!--<TextBlock Margin="0,4" FontFamily="{ThemeResource MiSansRegular}" Text="{x:Bind Modules.ModuleDynamic.Major.Article.Desc}" Foreground="Gray" TextWrapping="Wrap" MaxLines="4" TextTrimming="CharacterEllipsis"/>-->
+                <!--<TextBlock FontFamily="{ThemeResource MiSansRegular}" Text="{x:Bind Modules.ModuleDynamic.Major.Article.Label}" Foreground="LightGray" FontSize="13" TextWrapping="Wrap" />-->
             </StackPanel>
 
-            <!--OneImage-->
-            <cont2:ImageEx2 Margin="0,8,0,0" Source="{x:Bind Modules.ModuleDynamic.Major.Draw.Items[0].Source}" Visibility="{x:Bind Modules.ModuleDynamic.IsSingleDraw}" CornerRadius="4" Style="{StaticResource DynamicImageStyle}"/>
+            <!--OneImage (Article/Video/Image)-->
+            <cont2:ImageEx2 Margin="0,8,0,0" 
+                            Source="{x:Bind ext:BiliUIExtensions.GetSingleImageSource((bmodelMoment:MomentInformation))}" 
+                            Visibility="{x:Bind ext:BiliUIExtensions.IsSingleImage((bmodelMoment:MomentInformation))}" 
+                            CornerRadius="4" 
+                            Style="{StaticResource DynamicImageStyle}"/>
 
             <!--MultiImage-->
             <!--<ccont:AdaptiveGridView Margin="0,8,0,0" Visibility="{x:Bind Modules.ModuleDynamic.IsMultiDraw}" 
@@ -589,7 +596,7 @@
 
 
             <!--Origin-->
-            <StackPanel Margin="36,8,8,0" Padding="16,8" Visibility="{x:Bind HasOrigin}" Background="#f4f5f7" CornerRadius="4">
+            <!--<StackPanel Margin="36,8,8,0" Padding="16,8" Visibility="{x:Bind HasOrigin}" Background="#f4f5f7" CornerRadius="4">
                 <StackPanel Orientation="Horizontal" Spacing="4">
                     <cont2:ImageEx2 Grid.RowSpan="2" Width="28" Height="28" Source="{x:Bind Origin.Modules.ModuleAuthor.Face}" CornerRadius="20" Style="{StaticResource LocalMusicImageStyle}"/>
                     <TextBlock VerticalAlignment="Center" Text="{x:Bind Origin.Modules.ModuleAuthor.Name}" FontFamily="{ThemeResource MiSansRegular}" Foreground="#00a1d6"/>
@@ -620,16 +627,16 @@
                     </Grid>
                     <TextBlock Grid.Row="1" Margin="0,4,0,0" FontSize="14" Text="{x:Bind Origin.Modules.ModuleDynamic.Major.Archive.Title}" FontFamily="{ThemeResource MiSansMedium}" TextWrapping="Wrap"/>
                 </Grid>
-                <!--<ccont:AdaptiveGridView Margin="0,8,0,0" Visibility="{x:Bind Origin.Modules.ModuleDynamic.IsMultiDraw}" 
+                --><!--<ccont:AdaptiveGridView Margin="0,8,0,0" Visibility="{x:Bind Origin.Modules.ModuleDynamic.IsMultiDraw}" 
                                     DesiredWidth="160"
                                     ItemTemplate="{StaticResource DynamicMultiDrawTemplate}"
                                     ItemsSource="{x:Bind Origin.Modules.ModuleDynamic.Major.Draw.Items}">
 
-                </ccont:AdaptiveGridView>-->
-            </StackPanel>
+                </ccont:AdaptiveGridView>--><!--
+            </StackPanel>-->
 
             <!--Archive-->
-            <Grid Margin="0,8,0,0" Visibility="{x:Bind Modules.ModuleDynamic.HasArchive}">
+            <!--<Grid Margin="0,8,0,0" Visibility="{x:Bind Modules.ModuleDynamic.HasArchive}">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto" />
                     <RowDefinition Height="Auto" />
@@ -653,10 +660,10 @@
                     </StackPanel>
                 </Grid>
                 <TextBlock Grid.Row="1" Margin="0,4,0,0" FontSize="14" Text="{x:Bind Modules.ModuleDynamic.Major.Archive.Title}" FontFamily="{ThemeResource MiSansMedium}" TextWrapping="Wrap"/>
-            </Grid>
+            </Grid>-->
             
             <!--Reserve-->
-            <Grid Margin="0,8,0,0" Padding="16,8" Visibility="{x:Bind Modules.ModuleDynamic.HasReserve}" Background="#f4f5f7" CornerRadius="4">
+            <!--<Grid Margin="0,8,0,0" Padding="16,8" Visibility="{x:Bind Modules.ModuleDynamic.HasReserve}" Background="#f4f5f7" CornerRadius="4">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto" />
                     <RowDefinition Height="Auto" />
@@ -673,10 +680,10 @@
                 <Button Grid.Column="1" Grid.RowSpan="2" Margin="8" FontFamily="{ThemeResource MiSansRegular}" Style="{ThemeResource AccentButtonStyle}">
                     预约
                 </Button>
-            </Grid>
+            </Grid>-->
 
             <!--Live-->
-            <Grid Margin="0,8,0,0" Visibility="{x:Bind Modules.ModuleDynamic.HasLive}">
+            <!--<Grid Margin="0,8,0,0" Visibility="{x:Bind Modules.ModuleDynamic.HasLive}">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto" />
                     <RowDefinition Height="Auto" />
@@ -701,17 +708,17 @@
                     </Grid.Background>
                     <TextBlock VerticalAlignment="Bottom" Margin="8,64,8,8" FontSize="14" Foreground="White" Text="{x:Bind Modules.ModuleDynamic.Major.LiveRcmd.AreaName}" FontFamily="{ThemeResource MiSansRegular}" />
                 </Grid>
-            </Grid>
+            </Grid>-->
 
             <!--Interaction-->
-            <ListView Margin="0,12,0,0" Visibility="{x:Bind Modules.HasInteraction}"
+            <!--<ListView Margin="0,12,0,0" Visibility="{x:Bind Modules.HasInteraction}"
                       ItemsSource="{x:Bind Modules.ModuleInteraction.Items}"
                       Style="{StaticResource GeneralListViewStyle}"
                       ItemContainerStyle="{StaticResource GeneralListContainerCompactStyle}"
                       ItemTemplate="{StaticResource InteractionItemTemplate}"
                       >
 
-            </ListView>
+            </ListView>-->
 
             <!--ThreeButton-->
             <Grid Margin="0,16,0,0">
@@ -724,19 +731,19 @@
                 <Button HorizontalAlignment="Center" Style="{StaticResource TransparentButton}">
                     <StackPanel Orientation="Horizontal" Spacing="4">
                         <ImageIcon Source="ms-appx:///Assets/Icon/Forward.svg" Margin="0,0,0,0" Width="18" Foreground="Gray"/>
-                        <TextBlock Text="{x:Bind Modules.ModuleState.Forward.Count}" FontFamily="{ThemeResource MiSansRegular}" Foreground="Gray"/>
+                        <!--<TextBlock Text="{x:Bind Modules.ModuleState.Forward.Count}" FontFamily="{ThemeResource MiSansRegular}" Foreground="Gray"/>-->
                     </StackPanel>
                 </Button>
                 <Button Grid.Column="1" HorizontalAlignment="Center" Style="{StaticResource TransparentButton}" Click="DynamicCommentClick">
                     <StackPanel Orientation="Horizontal" Spacing="4">
                         <ImageIcon Source="ms-appx:///Assets/Icon/Comment2.svg" Margin="0,0,0,0" Width="18" Foreground="Gray"/>
-                        <TextBlock Text="{x:Bind Modules.ModuleState.Comment.Count}" FontFamily="{ThemeResource MiSansRegular}" Foreground="Gray"/>
+                        <TextBlock Text="{x:Bind CommunityInformation.CommentCount}" FontFamily="{ThemeResource MiSansRegular}" Foreground="Gray"/>
                     </StackPanel>
                 </Button>
                 <Button Grid.Column="2" HorizontalAlignment="Center" Style="{StaticResource TransparentButton}">
                     <StackPanel Orientation="Horizontal" Spacing="4">
                         <ImageIcon Source="ms-appx:///Assets/Icon/Like2.svg" Margin="0,0,0,0" Width="18" Foreground="Gray"/>
-                        <TextBlock Text="{x:Bind Modules.ModuleState.Like.Count}" FontFamily="{ThemeResource MiSansRegular}" Foreground="Gray"/>
+                        <TextBlock Text="{x:Bind CommunityInformation.LikeCount}" FontFamily="{ThemeResource MiSansRegular}" Foreground="Gray"/>
                     </StackPanel>
                 </Button>
             </Grid>

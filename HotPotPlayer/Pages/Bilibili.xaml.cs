@@ -55,10 +55,10 @@ namespace HotPotPlayer.Pages
 
         partial void OnSelectedSubPageChanged(int value)
         {
-            //if (value == 1)
-            //{
-            //    BiliDynamic.LoadDynamicAsync();
-            //}
+            if (value == 1)
+            {
+                BiliDynamic.LoadDynamicAsync();
+            }
             //else if (value == 2)
             //{
             //    BiliHistory.LoadHistoryAsync();
@@ -126,10 +126,10 @@ namespace HotPotPlayer.Pages
             {
                 BiliMain.LoadRecVideosAsync();
             }
-            //else if (SelectedSubPage == 1)
-            //{
-            //    BiliDynamic.LoadDynamicAsync(true);
-            //}
+            else if (SelectedSubPage == 1)
+            {
+                BiliDynamic.LoadDynamicAsync(true);
+            }
             //else if (SelectedSubPage == 2)
             //{
             //    BiliHistory.LoadHistoryAsync(true);

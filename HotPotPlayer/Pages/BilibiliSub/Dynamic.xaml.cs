@@ -36,7 +36,7 @@ namespace HotPotPlayer.Pages.BilibiliSub
         }
 
         [ObservableProperty]
-        public partial DynamicItemCollection DynamicItems {  get; set; }
+        public partial DynamicItemCollection DynamicItems { get; set; }
 
         [ObservableProperty]
         public partial ReplyItemCollection Replies { get; set; }
@@ -48,16 +48,21 @@ namespace HotPotPlayer.Pages.BilibiliSub
 
         bool isFirstLoad = true;
 
-        public async void LoadDynamicAsync(bool force = false)
+        public void LoadDynamicAsync(bool force = false)
         {
             if (!force && !isFirstLoad)
             {
                 return;
             }
-            var dynamicData = (await BiliBiliService.API.GetDynamic(DynamicType.All)).Data;
-            DynamicItems = new DynamicItemCollection(dynamicData, BiliBiliService);
-            Config.SetConfig("BiliDynamicOffset", dynamicData.OffSet);
-            LoadDynamicCompleted?.Invoke(dynamicData.OffSet);
+            if (DynamicItems == null)
+            {
+                DynamicItems = new DynamicItemCollection(BiliBiliService);
+            }
+            else
+            {
+                DynamicItems.Clear();
+            }
+            //LoadDynamicCompleted?.Invoke(null);
             isFirstLoad = false;
         }
 
@@ -65,73 +70,73 @@ namespace HotPotPlayer.Pages.BilibiliSub
 
         public void ToggleComment(DynamicItem dyn)
         {
-            if (IsCommentsOpen)
-            {
-                if (dyn != currentOpen)
-                {
-                    LoadReplies(dyn);
-                }
-                else
-                {
-                    IsCommentsOpen = !IsCommentsOpen;
-                }
-            }
-            else
-            {
-                LoadReplies(dyn);
-                IsCommentsOpen = !IsCommentsOpen;
-            }
+            //if (IsCommentsOpen)
+            //{
+            //    if (dyn != currentOpen)
+            //    {
+            //        LoadReplies(dyn);
+            //    }
+            //    else
+            //    {
+            //        IsCommentsOpen = !IsCommentsOpen;
+            //    }
+            //}
+            //else
+            //{
+            //    LoadReplies(dyn);
+            //    IsCommentsOpen = !IsCommentsOpen;
+            //}
         }
 
-        public async void LoadReplies(DynamicItem dyn)
+        public void LoadReplies(DynamicItem dyn)
         {
-            Replies re;
-            if (dyn.Modules.ModuleDynamic.HasArchive)
-            {
-                re = (await BiliBiliService.API.GetVideoReplyAsync(dyn.Modules.ModuleDynamic.Major.Archive.Aid)).Data;
-                Replies = new ReplyItemCollection(re, "1", dyn.Modules.ModuleDynamic.Major.Archive.Aid, BiliBiliService);
-            }
-            else if (dyn.Modules.ModuleDynamic.HasArticle)
-            {
-                re = (await BiliBiliService.API.GetArtileDynamicReplyAsync(dyn.Modules.ModuleDynamic.Major.Article.Id)).Data;
-                Replies = new ReplyItemCollection(re, "12", dyn.Modules.ModuleDynamic.Major.Article.Id, BiliBiliService);
-            }
-            else if (dyn.Modules.ModuleDynamic.HasDraw)
-            {
-                re = (await BiliBiliService.API.GetPictureDynamicReplyAsync(dyn.Modules.ModuleDynamic.Major.Draw.ID)).Data;
-                Replies = new ReplyItemCollection(re, "11", dyn.Modules.ModuleDynamic.Major.Draw.ID, BiliBiliService);
-            }
-            else
-            {
-                re = (await BiliBiliService.API.GetTextDynamicReplyAsync(dyn.Id)).Data;
-                Replies = new ReplyItemCollection(re, "17", dyn.Id, BiliBiliService);
-            }
-            currentOpen = dyn;
+            //Replies re;
+            //if (dyn.Modules.ModuleDynamic.HasArchive)
+            //{
+            //    re = (await BiliBiliService.API.GetVideoReplyAsync(dyn.Modules.ModuleDynamic.Major.Archive.Aid)).Data;
+            //    Replies = new ReplyItemCollection(re, "1", dyn.Modules.ModuleDynamic.Major.Archive.Aid, BiliBiliService);
+            //}
+            //else if (dyn.Modules.ModuleDynamic.HasArticle)
+            //{
+            //    re = (await BiliBiliService.API.GetArtileDynamicReplyAsync(dyn.Modules.ModuleDynamic.Major.Article.Id)).Data;
+            //    Replies = new ReplyItemCollection(re, "12", dyn.Modules.ModuleDynamic.Major.Article.Id, BiliBiliService);
+            //}
+            //else if (dyn.Modules.ModuleDynamic.HasDraw)
+            //{
+            //    re = (await BiliBiliService.API.GetPictureDynamicReplyAsync(dyn.Modules.ModuleDynamic.Major.Draw.ID)).Data;
+            //    Replies = new ReplyItemCollection(re, "11", dyn.Modules.ModuleDynamic.Major.Draw.ID, BiliBiliService);
+            //}
+            //else
+            //{
+            //    re = (await BiliBiliService.API.GetTextDynamicReplyAsync(dyn.Id)).Data;
+            //    Replies = new ReplyItemCollection(re, "17", dyn.Id, BiliBiliService);
+            //}
+            //currentOpen = dyn;
         }
 
-        private async void DynamicItemClick(object sender, ItemClickEventArgs e)
+        private void DynamicItemClick(object sender, ItemClickEventArgs e)
         {
-            var v = e.ClickedItem as DynamicItem;
-            if (v.Modules.ModuleDynamic?.Major?.Archive != null)
-            {
-                var bvid = v.Modules.ModuleDynamic.Major.Archive.Bvid;
-                PlayVideoInNewWindow(bvid);
-            }
-            else if(v.HasOrigin && v.Origin.Modules.ModuleDynamic?.Major?.Archive != null)
-            {
-                var bvid = v.Origin.Modules.ModuleDynamic.Major.Archive.Bvid;
-                PlayVideoInNewWindow(bvid);
-            }
-            else if(v.Modules.ModuleDynamic?.Major?.Article != null)
-            {
-                var url = v.Modules.ModuleDynamic.Major.Article.JumpUrl;
-                await Launcher.LaunchUriAsync(new Uri("https:" + url));
-            }
-            else if(v.Modules.ModuleDynamic?.Major?.LiveRcmd != null)
-            {
-                var url = v.Modules.ModuleDynamic.Major.LiveRcmd.GetLink;
-                await Launcher.LaunchUriAsync(new Uri(url));
-            }
+            //var v = e.ClickedItem as DynamicItem;
+            //if (v.Modules.ModuleDynamic?.Major?.Archive != null)
+            //{
+            //    var bvid = v.Modules.ModuleDynamic.Major.Archive.Bvid;
+            //    PlayVideoInNewWindow(bvid);
+            //}
+            //else if(v.HasOrigin && v.Origin.Modules.ModuleDynamic?.Major?.Archive != null)
+            //{
+            //    var bvid = v.Origin.Modules.ModuleDynamic.Major.Archive.Bvid;
+            //    PlayVideoInNewWindow(bvid);
+            //}
+            //else if(v.Modules.ModuleDynamic?.Major?.Article != null)
+            //{
+            //    var url = v.Modules.ModuleDynamic.Major.Article.JumpUrl;
+            //    await Launcher.LaunchUriAsync(new Uri("https:" + url));
+            //}
+            //else if(v.Modules.ModuleDynamic?.Major?.LiveRcmd != null)
+            //{
+            //    var url = v.Modules.ModuleDynamic.Major.LiveRcmd.GetLink;
+            //    await Launcher.LaunchUriAsync(new Uri(url));
+            //}
 
         }
     }

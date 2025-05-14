@@ -10,6 +10,7 @@ using Richasy.BiliKernel.Authorizers.TV;
 using Richasy.BiliKernel.Bili.Authorization;
 using Richasy.BiliKernel.Http;
 using Richasy.BiliKernel.Models.Media;
+using Richasy.BiliKernel.Models.Moment;
 using Richasy.BiliKernel.Resolvers.NativeCookies;
 using Richasy.BiliKernel.Resolvers.NativeQRCode;
 using Richasy.BiliKernel.Resolvers.NativeToken;
@@ -17,6 +18,7 @@ using Richasy.BiliKernel.Resolvers.WinUICookies;
 using Richasy.BiliKernel.Resolvers.WinUIQRCode;
 using Richasy.BiliKernel.Resolvers.WinUIToken;
 using Richasy.BiliKernel.Services.Media;
+using Richasy.BiliKernel.Services.Moment;
 using System;
 using System.Collections.Generic;
 using System.Threading;
@@ -37,6 +39,7 @@ namespace HotPotPlayer.Services
             biliClient = new BiliHttpClient();
             authentication = new TVAuthenticationService(biliClient, qrcodeResolver, cookieResolver, tokenResolver, authenticator);
             videoDiscovery = new VideoDiscoveryService(biliClient, authenticator, tokenResolver);
+            momentDiscovery = new MomentDiscoveryService(biliClient, authenticator, tokenResolver);
         }
 
         [ObservableProperty]
@@ -74,6 +77,7 @@ namespace HotPotPlayer.Services
         readonly BiliHttpClient biliClient;
         readonly TVAuthenticationService authentication;
         readonly VideoDiscoveryService videoDiscovery;
+        readonly MomentDiscoveryService momentDiscovery;
 
         public async ValueTask<(int code, string message)> GetQrCheckAsync(string key)
         {
@@ -122,6 +126,12 @@ namespace HotPotPlayer.Services
         public async Task<(IReadOnlyList<VideoInformation>, long)> GetRecommendVideoListAsync(long offset, CancellationToken token = default)
         {
             return await videoDiscovery.GetRecommendVideoListAsync(offset, token);
+        }
+
+        public async Task<MomentView> GetComprehensiveMomentsAsync(string offset = null, string baseline = null, CancellationToken token = default)
+        {
+            var result = await momentDiscovery.GetComprehensiveMomentsAsync(offset, baseline, token);
+            return result;
         }
 
         public async Task<VideoInfo> GetVideoUrlAsync(string bvid, string aid, string cid)
