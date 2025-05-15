@@ -120,8 +120,10 @@ namespace HotPotPlayer.Services
                     {
                         var dash = App.BiliBiliService.GetVideoPlayDetailAsync(page.Information.Identifier, Convert.ToInt64(part.Identifier.Id)).Result;
                         var bestFormats = dash.Formats[0].Quality.ToString();
-                        bestVideo = dash.Videos.Where(v => v.Id == bestFormats).LastOrDefault().BackupUrls.FirstOrDefault();
-                        bestAudio = dash.Audios.FirstOrDefault().BackupUrls.FirstOrDefault();
+                        var bestVideoDash = dash.Videos.Where(v => v.Id == bestFormats).LastOrDefault();
+                        var bestAudioDash = dash.Audios.FirstOrDefault();
+                        bestVideo = GetNonPcdnUrl(bestVideoDash);
+                        bestAudio = GetNonPcdnUrl(bestAudioDash);
                         break;
                     }
                     if (isBilibili)
@@ -145,6 +147,19 @@ namespace HotPotPlayer.Services
             });
 
             return lists;
+        }
+
+        private static string GetNonPcdnUrl(DashSegmentInformation dash)
+        {
+            if (!dash.BaseUrl.Contains("mcdn"))
+            {
+                return dash.BaseUrl;
+            }
+            else
+            {
+                var backup = dash.BackupUrls.Where(s => !s.Contains("mcdn")).FirstOrDefault();
+                return backup;
+            }
         }
 
         private string GetCookieFile()
