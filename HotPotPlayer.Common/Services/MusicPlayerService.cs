@@ -220,9 +220,9 @@ namespace HotPotPlayer.Services
             }
         }
 
-        protected override IEnumerable<string> GetMediaSources(ObservableCollection<BaseItemDto> list)
+        protected override IEnumerable<(string, string)> GetMediaSources(ObservableCollection<BaseItemDto> list)
         {
-            return list.Select(App.JellyfinMusicService.GetMusicStream);
+            return list.Select(b => (App.JellyfinMusicService.GetMusicStream(b), string.Empty));
         }
         protected override void DoAfterPlay(int index)
         {

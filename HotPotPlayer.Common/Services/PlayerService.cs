@@ -1,6 +1,7 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using HotPotPlayer.Helpers;
 using HotPotPlayer.Models;
+using HotPotPlayer.Models.BiliBili;
 using Jellyfin.Sdk.Generated.Models;
 using Microsoft.UI.Dispatching;
 using Mpv.NET.API;
@@ -11,6 +12,7 @@ using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.IO;
 using System.Linq;
+using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Timers;
@@ -450,7 +452,7 @@ namespace HotPotPlayer.Services
 
         protected virtual void SetupMpvInitProperty(MpvPlayer mpv) { }
         protected virtual void SetupMpvPropertyBeforePlay(MpvPlayer mpv, BaseItemDto media) { }
-        protected virtual IEnumerable<string> GetMediaSources(ObservableCollection<BaseItemDto> list) { return []; }
+        protected virtual IEnumerable<(string video, string audio)> GetMediaSources(ObservableCollection<BaseItemDto> list) { return []; }
         protected virtual void DoAfterPlay(int index) { }
         protected virtual void SetupMpvEvent(MpvPlayer mpv) { }
         protected virtual bool UpdateDetailedInfo => true;
@@ -470,7 +472,7 @@ namespace HotPotPlayer.Services
                     {
                         AutoPlay = false,
                         Volume = Volume,
-                        LogLevel = MpvLogLevel.None,
+                        LogLevel = MpvLogLevel.Debug,
                         Loop = false,
                         LoopPlaylist = false,
                     };
@@ -489,8 +491,16 @@ namespace HotPotPlayer.Services
                 }
 
                 SetupMpvPropertyBeforePlay(_mpv, media);
-                var lists = GetMediaSources(CurrentPlayList);
-                _mpv.LoadPlaylist(lists, true);
+                var lists = GetMediaSources(CurrentPlayList).ToArray();
+                if (string.IsNullOrEmpty(lists[0].audio))
+                {
+                    _mpv.LoadPlaylist(lists.Select(l => l.video), true);
+                }
+                else
+                {
+                    var edl = GetEdlProtocal(lists[0].video, lists[0].audio);
+                    _mpv.Load(edl, true);
+                }
                 _mpv.PlaylistPlayIndex(index);
 
                 BaseItemDto info = null;
@@ -525,6 +535,22 @@ namespace HotPotPlayer.Services
             }
 
             _isMediaSwitching = false;
+        }
+
+        private static string GetEdlProtocal(string vurl, string aurl)
+        {
+            var sb = new StringBuilder();
+            sb.Append("edl://!new_stream;!no_clip;!no_chapters;");
+            var url = vurl;
+            var urlLen = url.Length;
+            sb.Append($"%{urlLen}%{url}");
+            sb.Append(";!new_stream;!no_clip;!no_chapters;");
+            url = aurl;
+            urlLen = url.Length;
+            sb.Append($"%{urlLen}%{url}");
+            //sb.Append(";");
+
+            return sb.ToString();
         }
 
         protected virtual void OnPlayerStaterComplete() { }

@@ -8,6 +8,7 @@ using QRCoder;
 using Richasy.BiliKernel.Authenticator;
 using Richasy.BiliKernel.Authorizers.TV;
 using Richasy.BiliKernel.Bili.Authorization;
+using Richasy.BiliKernel.Bili.Media;
 using Richasy.BiliKernel.Http;
 using Richasy.BiliKernel.Models.Media;
 using Richasy.BiliKernel.Models.Moment;
@@ -40,6 +41,7 @@ namespace HotPotPlayer.Services
             authentication = new TVAuthenticationService(biliClient, qrcodeResolver, cookieResolver, tokenResolver, authenticator);
             videoDiscovery = new VideoDiscoveryService(biliClient, authenticator, tokenResolver);
             momentDiscovery = new MomentDiscoveryService(biliClient, authenticator, tokenResolver);
+            playerService = new Richasy.BiliKernel.Services.Media.PlayerService(biliClient, authenticator, tokenResolver);
         }
 
         [ObservableProperty]
@@ -78,6 +80,32 @@ namespace HotPotPlayer.Services
         readonly TVAuthenticationService authentication;
         readonly VideoDiscoveryService videoDiscovery;
         readonly MomentDiscoveryService momentDiscovery;
+        readonly Richasy.BiliKernel.Services.Media.PlayerService playerService;
+
+        /// <summary>
+        /// 视频用户代理.
+        /// </summary>
+        public const string VideoUserAgent = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/116.0.0.0 Safari/537.36 Edg/116.0.1938.69";
+
+        /// <summary>
+        /// 直播用户代理.
+        /// </summary>
+        public const string LiveUserAgent = "Mozilla/5.0 BiliDroid/1.12.0 (bbcallen@gmail.com)";
+
+        /// <summary>
+        /// 视频来源.
+        /// </summary>
+        public const string VideoReferer = "https://www.bilibili.com";
+
+        /// <summary>
+        /// 直播来源.
+        /// </summary>
+        public const string LiveReferer = "https://live.bilibili.com";
+
+        public string GetCookieString()
+        {
+            return cookieResolver.GetCookieString();
+        }
 
         public async ValueTask<(int code, string message)> GetQrCheckAsync(string key)
         {
@@ -138,6 +166,16 @@ namespace HotPotPlayer.Services
         {
             var res = await API.GetVideoUrl(bvid, aid, cid, DashEnum.Dash8K, FnvalEnum.Dash | FnvalEnum.HDR | FnvalEnum.Fn8K | FnvalEnum.Fn4K | FnvalEnum.AV1 | FnvalEnum.FnDBAudio | FnvalEnum.FnDBVideo);
             return res.Data;
+        }
+
+        public async Task<VideoPlayerView> GetVideoPageDetailAsync(MediaIdentifier video, CancellationToken token = default)
+        {
+            return await playerService.GetVideoPageDetailAsync(video, token).ConfigureAwait(false);
+        }
+
+        public async Task<DashMediaInformation> GetVideoPlayDetailAsync(MediaIdentifier video, long cid, CancellationToken token = default)
+        {
+            return await playerService.GetVideoPlayDetailAsync(video, cid, token).ConfigureAwait(false);
         }
     }
 }

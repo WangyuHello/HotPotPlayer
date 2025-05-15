@@ -4,6 +4,7 @@
 using CommunityToolkit.Mvvm.ComponentModel;
 using HotPotPlayer.Bilibili.Models.HomeVideo;
 using HotPotPlayer.Bilibili.Models.Video;
+using HotPotPlayer.Extensions;
 using HotPotPlayer.Models.BiliBili;
 using HotPotPlayer.Services;
 using HotPotPlayer.Video;
@@ -56,7 +57,8 @@ namespace HotPotPlayer.Pages.BilibiliSub
         private void BiliVideoClick(object sender, ItemClickEventArgs e)
         {
             var v = e.ClickedItem as VideoInformation;
-            //PlayVideoInNewWindow(v.Bvid);
+            var dto = v.ToBaseItemDto();
+            VideoPlayer.PlayNext(dto);
         }
     }
 }

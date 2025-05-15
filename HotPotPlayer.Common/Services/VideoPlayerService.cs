@@ -2,12 +2,16 @@
 using DirectN;
 using DirectN.Extensions;
 using DirectN.Extensions.Com;
+using HotPotPlayer.BiliBili;
+using HotPotPlayer.Extensions;
 using HotPotPlayer.Helpers;
 using HotPotPlayer.Models;
 using Jellyfin.Sdk.Generated.Models;
 using Microsoft.UI.Dispatching;
 using Mpv.NET.API;
 using Mpv.NET.Player;
+using Newtonsoft.Json;
+using Richasy.BiliKernel.Models.Media;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -100,20 +104,55 @@ namespace HotPotPlayer.Services
             _mpv.API.SwapChainInited += OnSwapChainInited;
         }
 
-        protected override IEnumerable<string> GetMediaSources(ObservableCollection<BaseItemDto> list)
+        protected override IEnumerable<(string video, string audio)> GetMediaSources(ObservableCollection<BaseItemDto> list)
         {
+            var isBilibili = false;
             var lists = list.Select(v =>
             {
-                if (v.Path != null && v.Id == null)
+                if(v.Etag == "Bilibili")
                 {
-                    return v.Path;
+                    isBilibili = true;
+                    var ident = new MediaIdentifier(v.PlaylistItemId, v.Name, null);
+                    var page = App.BiliBiliService.GetVideoPageDetailAsync(ident).Result;
+                    string bestVideo = string.Empty;
+                    string bestAudio = string.Empty;
+                    foreach (var part in page.Parts)
+                    {
+                        var dash = App.BiliBiliService.GetVideoPlayDetailAsync(page.Information.Identifier, Convert.ToInt64(part.Identifier.Id)).Result;
+                        var bestFormats = dash.Formats[0].Quality.ToString();
+                        bestVideo = dash.Videos.Where(v => v.Id == bestFormats).LastOrDefault().BackupUrls.FirstOrDefault();
+                        bestAudio = dash.Audios.FirstOrDefault().BackupUrls.FirstOrDefault();
+                        break;
+                    }
+                    if (isBilibili)
+                    {
+                        _mpv.API.SetPropertyString("ytdl", "no");
+                        _mpv.API.SetPropertyString("user-agent", BiliBiliService.VideoUserAgent);
+                        _mpv.API.SetPropertyString("cookies", "yes");
+                        _mpv.API.SetPropertyString("cookies-file", GetCookieFile());
+                        _mpv.API.SetPropertyString("http-header-fields", $"Referer:{BiliBiliService.VideoReferer}");
+                    }
+                    return (bestVideo, bestAudio);
+                }
+                else if (v.Path != null && v.Id == null)
+                {
+                    return (v.Path, null);
                 }
                 else
                 {
-                    return App.JellyfinMusicService.GetVideoStream(v);
+                    return (App.JellyfinMusicService.GetVideoStream(v), null);
                 }
             });
+
             return lists;
+        }
+
+        private string GetCookieFile()
+        {
+            var cookieFile = Path.Combine(Config.CookieFolder, "mpvCookie.txt");
+            var cookie = App.BiliBiliService.GetCookieString();
+            File.WriteAllText(cookieFile, cookie);
+            return cookieFile;
         }
 
         private void OnSwapChainInited(object sender, IntPtr swapchain)
