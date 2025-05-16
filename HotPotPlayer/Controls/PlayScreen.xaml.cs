@@ -206,7 +206,7 @@ namespace HotPotPlayer.Controls
         {
             var music = e.ClickedItem as BaseItemDto;
             MusicPlayer.AddToPlayListNext(music);
-            MusicPlayer.PlayNext();
+            MusicPlayer.PlayNextInPlayList();
         }
     }
 }

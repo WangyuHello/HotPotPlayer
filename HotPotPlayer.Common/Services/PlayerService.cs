@@ -212,7 +212,7 @@ namespace HotPotPlayer.Services
         }
 
         Random random;
-        public void PlayNext()
+        public void PlayNextInPlayList()
         {
             if (CurrentPlayingIndex != -1)
             {
@@ -404,9 +404,12 @@ namespace HotPotPlayer.Services
             {
                 IsPlaying = false;
             });
-            if (!_isMediaSwitching)
+            if (PlayMode != PlayMode.Single)
             {
-                UIQueue.TryEnqueue(PlayNext);
+                if (!_isMediaSwitching)
+                {
+                    UIQueue.TryEnqueue(PlayNextInPlayList);
+                }
             }
         }
 
@@ -585,7 +588,7 @@ namespace HotPotPlayer.Services
                     if (index2 != CurrentPlayList.Count - 1)
                     {
                         CurrentPlayingIndex = index2;
-                        PlayNext();
+                        PlayNextInPlayList();
                     }
                 }
                 else
@@ -662,7 +665,7 @@ namespace HotPotPlayer.Services
                     break;
 
                 case SystemMediaTransportControlsButton.Next:
-                    UIQueue.TryEnqueue(PlayNext);
+                    UIQueue.TryEnqueue(PlayNextInPlayList);
                     break;
 
                 case SystemMediaTransportControlsButton.Previous:

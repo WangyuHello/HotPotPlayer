@@ -96,6 +96,7 @@ namespace HotPotPlayer.Services
             _mpv.API.SetPropertyString("hwdec", "d3d11va");
             _mpv.API.SetPropertyString("d3d11-composition", "yes");
             //_mpv.API.SetPropertyString("target-colorspace-hint", "yes"); //HDR passthrough
+            _mpv.API.SetPropertyString("loop-playlist", "inf");
         }
 
         protected override void SetupMpvEvent(MpvPlayer _mpv)
@@ -104,14 +105,25 @@ namespace HotPotPlayer.Services
             _mpv.API.SwapChainInited += OnSwapChainInited;
         }
 
+        protected override void SetupMpvPropertyBeforePlay(MpvPlayer mpv, BaseItemDto media)
+        {
+            if (media.Etag == "Bilibili")
+            {
+                mpv.API.SetPropertyString("ytdl", "no");
+                mpv.API.SetPropertyString("user-agent", BiliBiliService.VideoUserAgent);
+                mpv.API.SetPropertyString("cookies", "yes");
+                var cookieStr = $"Cookie: {App.BiliBiliService.GetCookieString()}";
+                var refererStr = $"Referer:{BiliBiliService.VideoReferer}";
+                mpv.API.SetPropertyString("http-header-fields", $"{cookieStr}\n{refererStr}");
+            }
+        }
+
         protected override IEnumerable<(string video, string audio)> GetMediaSources(ObservableCollection<BaseItemDto> list)
         {
-            var isBilibili = false;
             var lists = list.Select(v =>
             {
                 if(v.Etag == "Bilibili")
                 {
-                    isBilibili = true;
                     var ident = new MediaIdentifier(v.PlaylistItemId, v.Name, null);
                     var page = App.BiliBiliService.GetVideoPageDetailAsync(ident).Result;
                     string bestVideo = string.Empty;
@@ -120,19 +132,11 @@ namespace HotPotPlayer.Services
                     {
                         var dash = App.BiliBiliService.GetVideoPlayDetailAsync(page.Information.Identifier, Convert.ToInt64(part.Identifier.Id)).Result;
                         var bestFormats = dash.Formats[0].Quality.ToString();
-                        var bestVideoDash = dash.Videos.Where(v => v.Id == bestFormats).LastOrDefault();
+                        var bestVideoDash = GetBestVideo(dash.Videos, bestFormats);
                         var bestAudioDash = dash.Audios.FirstOrDefault();
                         bestVideo = GetNonPcdnUrl(bestVideoDash);
                         bestAudio = GetNonPcdnUrl(bestAudioDash);
                         break;
-                    }
-                    if (isBilibili)
-                    {
-                        _mpv.API.SetPropertyString("ytdl", "no");
-                        _mpv.API.SetPropertyString("user-agent", BiliBiliService.VideoUserAgent);
-                        _mpv.API.SetPropertyString("cookies", "yes");
-                        _mpv.API.SetPropertyString("cookies-file", GetCookieFile());
-                        _mpv.API.SetPropertyString("http-header-fields", $"Referer:{BiliBiliService.VideoReferer}");
                     }
                     return (bestVideo, bestAudio);
                 }
@@ -149,6 +153,28 @@ namespace HotPotPlayer.Services
             return lists;
         }
 
+        private DashSegmentInformation GetBestVideo(IList<DashSegmentInformation> list, string format)
+        {
+            var maxSupportFormat = Config.GetConfig("MaxSupportFormat", "HEVC", true);
+            string[] filter = ["av01", "hevc"];
+            int filterIndex = maxSupportFormat == "AV1" ? 0 : maxSupportFormat == "HEVC" ? 1 : 2;
+            var l = list.Where(d => d.Id == format).Where(d =>
+            {
+                var found = false;
+                for (int i = 0; i < filterIndex; i++)
+                {
+                    if (d.Codecs.Contains(filter[i]))
+                    {
+                        found = true;
+                        break;
+                    }
+                }
+                return !found;
+            });
+            var result = l.LastOrDefault();
+            return result;
+        }
+
         private static string GetNonPcdnUrl(DashSegmentInformation dash)
         {
             if (!dash.BaseUrl.Contains("mcdn"))
@@ -160,14 +186,6 @@ namespace HotPotPlayer.Services
                 var backup = dash.BackupUrls.Where(s => !s.Contains("mcdn")).FirstOrDefault();
                 return backup;
             }
-        }
-
-        private string GetCookieFile()
-        {
-            var cookieFile = Path.Combine(Config.CookieFolder, "mpvCookie.txt");
-            var cookie = App.BiliBiliService.GetCookieString();
-            File.WriteAllText(cookieFile, cookie);
-            return cookieFile;
         }
 
         private void OnSwapChainInited(object sender, IntPtr swapchain)

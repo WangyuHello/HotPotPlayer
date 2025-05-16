@@ -228,7 +228,7 @@ namespace HotPotPlayer.Video.UI.Controls
 
         private void PlayNextButtonClick(object sender, RoutedEventArgs e)
         {
-            VideoPlayer.PlayNext();
+            VideoPlayer.PlayNextInPlayList();
         }
 
         private void PlayModeButtonClick(object sender, RoutedEventArgs e)

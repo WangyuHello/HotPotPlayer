@@ -8,8 +8,9 @@ namespace HotPotPlayer.Models
 {
     public enum PlayMode
     {
+        Single,
         Loop,
         SingleLoop,
-        Shuffle
+        Shuffle,
     }
 }

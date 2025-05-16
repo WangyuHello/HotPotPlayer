@@ -137,7 +137,7 @@ namespace HotPotPlayer.Controls
 
         private void PlayNextButtonClick(object sender, RoutedEventArgs e)
         {
-            MusicPlayer.PlayNext();
+            MusicPlayer.PlayNextInPlayList();
         }
 
         private void PlayModeButtonClick(object sender, RoutedEventArgs e)
