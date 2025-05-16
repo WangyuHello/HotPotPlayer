@@ -113,7 +113,7 @@ namespace HotPotPlayer.Controls.BilibiliSub
         [ObservableProperty]
         public partial string SearchDefault {  get; set; }
 
-        private async void RootLoaded(object sender, RoutedEventArgs args)
+        private void RootLoaded(object sender, RoutedEventArgs args)
         {
             //var def = await BiliBiliService.API.GetSearchDefaultAsync();
             //SearchDefault = def.Data.ShowName;

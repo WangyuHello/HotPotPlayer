@@ -392,102 +392,128 @@
     </DataTemplate>
 
     <DataTemplate x:Key="BiliVideoCardViewTemplate" x:DataType="bmodel:VideoInformation">
-        <StackPanel 
-            Width="300"
-            Padding="0,0,0,12"
-            x:Name="BiliVideoCardConnectedElement"
-            BorderBrush="{ThemeResource ButtonBorderBrush}"
-            BorderThickness="{ThemeResource ButtonBorderThemeThickness}"
-            CornerRadius="6"
-            ui:VisualExtensions.NormalizedCenterPoint="0.5"
-            Background="White"
-            >
-            <cont2:ImageEx2 
+        <Grid Width="300"
+                Padding="0,0,0,12"
+                x:Name="BiliVideoCardConnectedElement"
+                BorderBrush="{ThemeResource ButtonBorderBrush}"
+                BorderThickness="{ThemeResource ButtonBorderThemeThickness}"
                 CornerRadius="6"
-                Source="{x:Bind Identifier.Cover.Uri}" 
-                Style="{StaticResource LocalVideoImageStyle}"
-                />
-            <Grid Margin="0,-38,0,0" Height="38" Padding="8,0">
-                <Grid.Background>
-                    <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
-                        <GradientStop Offset="0" Color="Transparent"/>
-                        <GradientStop Offset="1" Color="#CC000000"/>
-                    </LinearGradientBrush>
-                </Grid.Background>
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="*" />
-                    <RowDefinition Height="Auto" />
-                    <RowDefinition Height="4" />
-                </Grid.RowDefinitions>
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="Auto" />
-                    <ColumnDefinition Width="Auto" />
-                    <ColumnDefinition Width="Auto" />
-                    <ColumnDefinition Width="Auto" />
-                    <ColumnDefinition Width="*" />
-                    <ColumnDefinition Width="Auto" />
-                </Grid.ColumnDefinitions>
-                <FontIcon Grid.Row="1" FontFamily="{ThemeResource BiliIcons}" Glyph="&#xEA0F;" Foreground="White" FontSize="18" Margin="0,-1,4,0"/>
-                <TextBlock Grid.Column="1" Grid.Row="1" Text="{x:Bind ext:BiliUIExtensions.GetPlayCount((bmodel:VideoInformation))}" FontSize="13" Foreground="White" FontFamily="{ThemeResource MiSansRegular}" />
-                <FontIcon Grid.Column="2" Grid.Row="1" FontFamily="{ThemeResource BiliIcons}" Glyph="&#xEA05;" Foreground="White" FontSize="18" Margin="12,-1,4,0" />
-                <TextBlock Grid.Column="3" Grid.Row="1" Text="{x:Bind ext:BiliUIExtensions.GetDanmakuCount((bmodel:VideoInformation))}" FontSize="13" Foreground="White" FontFamily="{ThemeResource MiSansRegular}" />
-                <TextBlock Grid.Column="5" Grid.Row="1" Text="{x:Bind ext:BiliUIExtensions.GetDuration((bmodel:VideoInformation))}" FontSize="13" Foreground="White" FontFamily="{ThemeResource MiSansRegular}" />
-            </Grid>
-            <TextBlock 
-                Margin="8,8" 
-                Text="{x:Bind Identifier.Title}" 
-                LineStackingStrategy="BaselineToBaseline" 
-                FontSize="14" 
-                MaxLines="2" 
-                TextTrimming="CharacterEllipsis" 
-                TextWrapping="Wrap" 
-                Height="40" 
-                ToolTipService.ToolTip="{x:Bind Identifier.Title}" 
-                FontFamily="{ThemeResource MiSansMedium}"
-                />
-            <Grid>
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="*" />
-                    <ColumnDefinition Width="Auto" />
-                </Grid.ColumnDefinitions>
-                <StackPanel Orientation="Horizontal" Padding="8,0" HorizontalAlignment="Stretch">
-                    <Border Visibility="{x:Bind ext:BiliUIExtensions.HasRcmdReasonContent((bmodel:VideoInformation))}" CornerRadius="2" Background="#fef1e2" Padding="6,0" Margin="0,0,8,0">
-                        <TextBlock Text="{x:Bind ext:BiliUIExtensions.GetRcmdReason((bmodel:VideoInformation))}" Foreground="#ff7f23" FontFamily="{ThemeResource MiSansRegular}" VerticalAlignment="Center"/>
-                    </Border>
-                    <FontIcon Visibility="{x:Bind ext:BiliUIExtensions.NoRcmdReasonContent((bmodel:VideoInformation))}" FontFamily="{ThemeResource BiliIcons}" Foreground="Gray" FontSize="13" Margin="0,0,6,-2" Glyph="&#xEA1D;" />
-                    <TextBlock Text="{x:Bind Publisher.User.Name}" Foreground="Gray" FontFamily="{ThemeResource MiSansRegular}" />
-                    <TextBlock Visibility="{x:Bind ext:BiliUIExtensions.NoRcmdReasonContent((bmodel:VideoInformation))}" Margin="12,0" Text="{x:Bind ext:BiliUIExtensions.GetUpDateTime((bmodel:VideoInformation))}" Foreground="Gray" FontFamily="{ThemeResource MiSansRegular}" />
-                </StackPanel>
-                <Button Grid.Column="1" Style="{StaticResource TransparentButton}" Margin="0,0,8,0" Foreground="Gray">
-                    <FontIcon HorizontalAlignment="Right" FontFamily="{ThemeResource SegoeIcons}" Glyph="&#xE10C;" />
-                    <Button.Flyout>
-                        <Flyout>
-                            <Grid Width="300">
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="1*" />
-                                    <ColumnDefinition Width="1*" />
-                                </Grid.ColumnDefinitions>
-                                <Grid.RowDefinitions>
-                                    <RowDefinition Height="Auto" />
-                                    <RowDefinition Height="Auto" />
-                                    <RowDefinition Height="Auto" />
-                                    <RowDefinition Height="Auto" />
-                                    <RowDefinition Height="Auto" />
-                                </Grid.RowDefinitions>
-                                <Button Margin="0,0,0,16" Grid.ColumnSpan="2" HorizontalAlignment="Stretch">添加至稍后再看</Button>
-                                <TextBlock Grid.Row="1" Grid.ColumnSpan="2" Text="反馈" FontFamily="{ThemeResource MiSansRegular}" />
-                                <TextBlock Grid.Row="1" Grid.ColumnSpan="2" Margin="28,0,0,0" Text="（选择后将优化首页此类内容）" VerticalAlignment="Center" FontFamily="{ThemeResource MiSansRegular}" Foreground="Gray" FontSize="13"/>
-                                <Button Grid.Row="2" Margin="0,16,4,8" HorizontalAlignment="Stretch">恐怖血腥</Button>
-                                <Button Grid.Row="2" Margin="4,16,0,8" Grid.Column="1" HorizontalAlignment="Stretch">色情低俗</Button>
-                                <Button Grid.Row="3" Margin="0,0,4,16" HorizontalAlignment="Stretch">封面恶心</Button>
-                                <Button Grid.Row="3" Margin="4,0,0,16" Grid.Column="1" HorizontalAlignment="Stretch">标题党/封面党</Button>
-                                <TextBlock Grid.Row="4" Grid.ColumnSpan="2" Text="我不想看" FontFamily="{ThemeResource MiSansRegular}" />
-                                <TextBlock Grid.Row="4" Grid.ColumnSpan="2" Margin="56,0,0,0" Text="（选择后将减少相似内容推荐）" VerticalAlignment="Center" FontFamily="{ThemeResource MiSansRegular}" Foreground="Gray" FontSize="13"/>
-                            </Grid>
-                        </Flyout>
-                    </Button.Flyout>
+                ui:VisualExtensions.NormalizedCenterPoint="0.5"
+                Background="White">
+            <StackPanel >
+                <cont2:ImageEx2 
+                    CornerRadius="6"
+                    Source="{x:Bind Identifier.Cover.Uri}" 
+                    Style="{StaticResource LocalVideoImageStyle}"
+                    />
+                <Grid Margin="0,-38,0,0" Height="38" Padding="8,0">
+                    <Grid.Background>
+                        <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
+                            <GradientStop Offset="0" Color="Transparent"/>
+                            <GradientStop Offset="1" Color="#CC000000"/>
+                        </LinearGradientBrush>
+                    </Grid.Background>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="*" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="4" />
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
+                    <FontIcon Grid.Row="1" FontFamily="{ThemeResource BiliIcons}" Glyph="&#xEA0F;" Foreground="White" FontSize="18" Margin="0,-1,4,0"/>
+                    <TextBlock Grid.Column="1" Grid.Row="1" Text="{x:Bind ext:BiliUIExtensions.GetPlayCount((bmodel:VideoInformation))}" FontSize="13" Foreground="White" FontFamily="{ThemeResource MiSansRegular}" />
+                    <FontIcon Grid.Column="2" Grid.Row="1" FontFamily="{ThemeResource BiliIcons}" Glyph="&#xEA05;" Foreground="White" FontSize="18" Margin="12,-1,4,0" />
+                    <TextBlock Grid.Column="3" Grid.Row="1" Text="{x:Bind ext:BiliUIExtensions.GetDanmakuCount((bmodel:VideoInformation))}" FontSize="13" Foreground="White" FontFamily="{ThemeResource MiSansRegular}" />
+                    <TextBlock Grid.Column="5" Grid.Row="1" Text="{x:Bind ext:BiliUIExtensions.GetDuration((bmodel:VideoInformation))}" FontSize="13" Foreground="White" FontFamily="{ThemeResource MiSansRegular}" />
+                </Grid>
+                <TextBlock 
+                    Margin="8,8" 
+                    Text="{x:Bind Identifier.Title}" 
+                    LineStackingStrategy="BaselineToBaseline" 
+                    FontSize="14" 
+                    MaxLines="2" 
+                    TextTrimming="CharacterEllipsis" 
+                    TextWrapping="Wrap" 
+                    Height="40" 
+                    ToolTipService.ToolTip="{x:Bind Identifier.Title}" 
+                    FontFamily="{ThemeResource MiSansMedium}"
+                    />
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
+                    <StackPanel Orientation="Horizontal" Padding="8,0" HorizontalAlignment="Stretch">
+                        <Border Visibility="{x:Bind ext:BiliUIExtensions.HasRcmdReasonContent((bmodel:VideoInformation))}" CornerRadius="2" Background="#fef1e2" Padding="6,0" Margin="0,0,8,0">
+                            <TextBlock Text="{x:Bind ext:BiliUIExtensions.GetRcmdReason((bmodel:VideoInformation))}" Foreground="#ff7f23" FontFamily="{ThemeResource MiSansRegular}" VerticalAlignment="Center"/>
+                        </Border>
+                        <FontIcon Visibility="{x:Bind ext:BiliUIExtensions.NoRcmdReasonContent((bmodel:VideoInformation))}" FontFamily="{ThemeResource BiliIcons}" Foreground="Gray" FontSize="13" Margin="0,0,6,-2" Glyph="&#xEA1D;" />
+                        <TextBlock Text="{x:Bind Publisher.User.Name}" Foreground="Gray" FontFamily="{ThemeResource MiSansRegular}" />
+                        <TextBlock Visibility="{x:Bind ext:BiliUIExtensions.NoRcmdReasonContent((bmodel:VideoInformation))}" Margin="12,0" Text="{x:Bind ext:BiliUIExtensions.GetUpDateTime((bmodel:VideoInformation))}" Foreground="Gray" FontFamily="{ThemeResource MiSansRegular}" />
+                    </StackPanel>
+                    <Button Grid.Column="1" Style="{StaticResource TransparentButton}" Margin="0,0,8,0" Foreground="Gray">
+                        <FontIcon HorizontalAlignment="Right" FontFamily="{ThemeResource SegoeIcons}" Glyph="&#xE10C;" />
+                        <Button.Flyout>
+                            <Flyout>
+                                <Grid Width="300">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="1*" />
+                                        <ColumnDefinition Width="1*" />
+                                    </Grid.ColumnDefinitions>
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="Auto" />
+                                        <RowDefinition Height="Auto" />
+                                        <RowDefinition Height="Auto" />
+                                        <RowDefinition Height="Auto" />
+                                        <RowDefinition Height="Auto" />
+                                    </Grid.RowDefinitions>
+                                    <Button Margin="0,0,0,16" Grid.ColumnSpan="2" HorizontalAlignment="Stretch">添加至稍后再看</Button>
+                                    <TextBlock Grid.Row="1" Grid.ColumnSpan="2" Text="反馈" FontFamily="{ThemeResource MiSansRegular}" />
+                                    <TextBlock Grid.Row="1" Grid.ColumnSpan="2" Margin="28,0,0,0" Text="（选择后将优化首页此类内容）" VerticalAlignment="Center" FontFamily="{ThemeResource MiSansRegular}" Foreground="Gray" FontSize="13"/>
+                                    <Button Grid.Row="2" Margin="0,16,4,8" HorizontalAlignment="Stretch">恐怖血腥</Button>
+                                    <Button Grid.Row="2" Margin="4,16,0,8" Grid.Column="1" HorizontalAlignment="Stretch">色情低俗</Button>
+                                    <Button Grid.Row="3" Margin="0,0,4,16" HorizontalAlignment="Stretch">封面恶心</Button>
+                                    <Button Grid.Row="3" Margin="4,0,0,16" Grid.Column="1" HorizontalAlignment="Stretch">标题党/封面党</Button>
+                                    <TextBlock Grid.Row="4" Grid.ColumnSpan="2" Text="我不想看" FontFamily="{ThemeResource MiSansRegular}" />
+                                    <TextBlock Grid.Row="4" Grid.ColumnSpan="2" Margin="56,0,0,0" Text="（选择后将减少相似内容推荐）" VerticalAlignment="Center" FontFamily="{ThemeResource MiSansRegular}" Foreground="Gray" FontSize="13"/>
+                                </Grid>
+                            </Flyout>
+                        </Button.Flyout>
+                    </Button>
+                </Grid>
+            </StackPanel>
+            <Grid x:Name="HiddenContent" Visibility="Collapsed">
+                <Button Style="{StaticResource TransparentButton}"
+                            HorizontalAlignment="Center"
+                            Padding="12"
+                            Margin="0,-70,0,0"
+                            CornerRadius="32"
+                            Background="#99FFFFFF"
+                            Tag="{x:Bind }"
+                            >
+                    <FontIcon FontFamily="{ThemeResource SegoeIcons}" Glyph="&#xE768;" FontSize="24"/>
                 </Button>
+                <!--<StackPanel 
+                        Margin="0,0,8,0"
+                        HorizontalAlignment="Right" 
+                        VerticalAlignment="Bottom" 
+                        Orientation="Horizontal"
+                        Spacing="8">
+                    <Button Style="{StaticResource TransparentButton}" Foreground="Gray" >
+                        <FontIcon FontFamily="{ThemeResource SegoeIcons}" Glyph="&#xE734;" FontSize="18"/>
+                    </Button>
+                    <Button Style="{StaticResource TransparentButton}" Foreground="Gray" >
+                        <FontIcon FontFamily="{ThemeResource SegoeIcons}" Glyph="&#xE712;" FontSize="18"/>
+                    </Button>
+                </StackPanel>-->
             </Grid>
+
             <ani:Explicit.Animations>
                 <ani:AnimationSet x:Name="ScaleEnterAnimation" >
                     <!--<ani:OffsetDropShadowAnimation To="12"/>-->
@@ -503,15 +529,15 @@
                 <interactivity:EventTriggerBehavior EventName="PointerEntered">
                     <!--<behaviors:StartAnimationAction Animation="{x:Bind ShadowEnterAnimation}"/>-->
                     <behaviors:StartAnimationAction Animation="{Binding ElementName=ScaleEnterAnimation}"/>
-                    <!--<interactivity:ChangePropertyAction TargetObject="{Binding ElementName=HiddenContent}" PropertyName="Visibility" Value="Visible" />-->
+                    <interactivity:ChangePropertyAction TargetObject="{Binding ElementName=HiddenContent}" PropertyName="Visibility" Value="Visible" />
                 </interactivity:EventTriggerBehavior>
                 <interactivity:EventTriggerBehavior EventName="PointerExited">
                     <!--<behaviors:StartAnimationAction Animation="{x:Bind ShadowExitAnimation}"/>-->
                     <behaviors:StartAnimationAction Animation="{Binding ElementName=ScaleExitAnimation}"/>
-                    <!--<interactivity:ChangePropertyAction TargetObject="{Binding ElementName=HiddenContent}" PropertyName="Visibility" Value="Collapsed" />-->
+                    <interactivity:ChangePropertyAction TargetObject="{Binding ElementName=HiddenContent}" PropertyName="Visibility" Value="Collapsed" />
                 </interactivity:EventTriggerBehavior>
             </interactivity:Interaction.Behaviors>
-        </StackPanel>
+        </Grid>
     </DataTemplate>
 
     <DataTemplate x:Key="BiliVideoCardViewTemplate2" x:DataType="bili2:VideoContent">
