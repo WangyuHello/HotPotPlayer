@@ -118,6 +118,8 @@ namespace HotPotPlayer.Services
             }
         }
 
+        private string _currentCid = string.Empty;
+
         protected override IEnumerable<(string video, string audio)> GetMediaSources(ObservableCollection<BaseItemDto> list)
         {
             var lists = list.Select(v =>
@@ -130,6 +132,7 @@ namespace HotPotPlayer.Services
                     string bestAudio = string.Empty;
                     foreach (var part in page.Parts)
                     {
+                        _currentCid = part.Identifier.Id;
                         var dash = App.BiliBiliService.GetVideoPlayDetailAsync(page.Information.Identifier, Convert.ToInt64(part.Identifier.Id)).Result;
                         var bestFormats = dash.Formats[0].Quality.ToString();
                         var bestVideoDash = GetBestVideo(dash.Videos, bestFormats);
@@ -185,6 +188,14 @@ namespace HotPotPlayer.Services
             {
                 var backup = dash.BackupUrls.Where(s => !s.Contains("mcdn")).FirstOrDefault();
                 return backup;
+            }
+        }
+
+        protected override async void CustomReportProgress(BaseItemDto currentPlaying, TimeSpan CurrentTime, TimeSpan? CurrentTimeDuration)
+        {
+            if (currentPlaying.Etag == "Bilibili")
+            {
+                await App.BiliBiliService.ReportVideoProgressAsync(currentPlaying.PlaylistItemId, _currentCid, CurrentTime.Seconds);
             }
         }
 

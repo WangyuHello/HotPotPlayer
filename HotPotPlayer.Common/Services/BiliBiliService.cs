@@ -176,7 +176,7 @@ namespace HotPotPlayer.Services
             return await player.GetVideoPageDetailAsync(video, token).ConfigureAwait(false);
         }
 
-        public async Task<ViewHistoryGroup> GetVideoHistoryAsync(long offset, CancellationToken token)
+        public async Task<ViewHistoryGroup> GetVideoHistoryAsync(long offset, CancellationToken token = default)
         {
             return await viewHistory.GetViewHistoryAsync(Richasy.BiliKernel.Models.ViewHistoryTabType.Video, offset, token);
         }
@@ -184,6 +184,11 @@ namespace HotPotPlayer.Services
         public async Task<DashMediaInformation> GetVideoPlayDetailAsync(MediaIdentifier video, long cid, CancellationToken token = default)
         {
             return await player.GetVideoPlayDetailAsync(video, cid, token).ConfigureAwait(false);
+        }
+
+        public async Task ReportVideoProgressAsync(string aid, string cid, int progress, CancellationToken token = default)
+        {
+            await player.ReportVideoProgressAsync(aid, cid, progress, token);
         }
     }
 }

@@ -357,6 +357,12 @@ namespace HotPotPlayer.Services
             });
             App.SetSmtcPosition(CurrentTime, CurrentPlayingDuration);
             UpdateJellyfinPosition();
+            CustomReportProgress(CurrentPlaying, CurrentTime, CurrentPlayingDuration);
+        }
+
+        protected virtual void CustomReportProgress(BaseItemDto currentPlaying, TimeSpan CurrentTime, TimeSpan? CurrentPlayingDuration)
+        {
+
         }
 
         private async void UpdateJellyfinPosition()
@@ -515,7 +521,7 @@ namespace HotPotPlayer.Services
                     }
                     else
                     {
-                        info = media;
+                        info = SetCustomInfo(media);
                     }
                 }
                 else
@@ -538,6 +544,11 @@ namespace HotPotPlayer.Services
             }
 
             _isMediaSwitching = false;
+        }
+
+        protected virtual BaseItemDto SetCustomInfo(BaseItemDto info)
+        {
+            return info;
         }
 
         private static string GetEdlProtocal(string vurl, string aurl)
