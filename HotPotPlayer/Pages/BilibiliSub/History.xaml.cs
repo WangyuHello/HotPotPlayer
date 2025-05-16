@@ -5,6 +5,7 @@ using CommunityToolkit.Mvvm.ComponentModel;
 using HotPotPlayer.Bilibili.Models.Dynamic;
 using HotPotPlayer.Bilibili.Models.History;
 using HotPotPlayer.Bilibili.Models.HomeVideo;
+using HotPotPlayer.Extensions;
 using HotPotPlayer.Models.BiliBili;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
@@ -13,6 +14,7 @@ using Microsoft.UI.Xaml.Data;
 using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Navigation;
+using Richasy.BiliKernel.Models.Media;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -37,21 +39,29 @@ namespace HotPotPlayer.Pages.BilibiliSub
         public partial HistoryCollection HistoryItems { get; set; }
 
         bool isFirstLoad = true;
-        public async void LoadHistoryAsync(bool force = false)
+        public void LoadHistoryAsync(bool force = false)
         {
             if (!force && !isFirstLoad)
             {
                 return;
             }
-            var data = (await BiliBiliService.API.History()).Data;
-            HistoryItems = new HistoryCollection(data, BiliBiliService);
+            if (HistoryItems == null)
+            {
+                HistoryItems = new HistoryCollection(BiliBiliService);
+            }
+            else
+            {
+                HistoryItems.Offset = 0;
+                HistoryItems.Clear();
+            }
             isFirstLoad = false;
         }
 
         private void BiliHistoryClick(object sender, ItemClickEventArgs e)
         {
-            var v = e.ClickedItem as HistoryItem;
-            NavigateTo("BilibiliSub.BiliVideoPlay", v.History.Bvid);
+            var v = e.ClickedItem as VideoInformation;
+            var dto = v.ToBaseItemDto();
+            VideoPlayer.PlayNext(dto);
         }
     }
 }

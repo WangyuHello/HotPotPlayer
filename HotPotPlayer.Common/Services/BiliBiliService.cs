@@ -20,6 +20,7 @@ using Richasy.BiliKernel.Resolvers.WinUIQRCode;
 using Richasy.BiliKernel.Resolvers.WinUIToken;
 using Richasy.BiliKernel.Services.Media;
 using Richasy.BiliKernel.Services.Moment;
+using Richasy.BiliKernel.Services.User;
 using System;
 using System.Collections.Generic;
 using System.Threading;
@@ -41,7 +42,8 @@ namespace HotPotPlayer.Services
             authentication = new TVAuthenticationService(biliClient, qrcodeResolver, cookieResolver, tokenResolver, authenticator);
             videoDiscovery = new VideoDiscoveryService(biliClient, authenticator, tokenResolver);
             momentDiscovery = new MomentDiscoveryService(biliClient, authenticator, tokenResolver);
-            playerService = new Richasy.BiliKernel.Services.Media.PlayerService(biliClient, authenticator, tokenResolver);
+            player = new Richasy.BiliKernel.Services.Media.PlayerService(biliClient, authenticator, tokenResolver);
+            viewHistory = new ViewHistoryService(biliClient, authentication, authenticator);
         }
 
         [ObservableProperty]
@@ -80,7 +82,8 @@ namespace HotPotPlayer.Services
         readonly TVAuthenticationService authentication;
         readonly VideoDiscoveryService videoDiscovery;
         readonly MomentDiscoveryService momentDiscovery;
-        readonly Richasy.BiliKernel.Services.Media.PlayerService playerService;
+        readonly Richasy.BiliKernel.Services.Media.PlayerService player;
+        readonly ViewHistoryService viewHistory;
 
         /// <summary>
         /// 视频用户代理.
@@ -170,12 +173,17 @@ namespace HotPotPlayer.Services
 
         public async Task<VideoPlayerView> GetVideoPageDetailAsync(MediaIdentifier video, CancellationToken token = default)
         {
-            return await playerService.GetVideoPageDetailAsync(video, token).ConfigureAwait(false);
+            return await player.GetVideoPageDetailAsync(video, token).ConfigureAwait(false);
+        }
+
+        public async Task<ViewHistoryGroup> GetVideoHistoryAsync(long offset, CancellationToken token)
+        {
+            return await viewHistory.GetViewHistoryAsync(Richasy.BiliKernel.Models.ViewHistoryTabType.Video, offset, token);
         }
 
         public async Task<DashMediaInformation> GetVideoPlayDetailAsync(MediaIdentifier video, long cid, CancellationToken token = default)
         {
-            return await playerService.GetVideoPlayDetailAsync(video, cid, token).ConfigureAwait(false);
+            return await player.GetVideoPlayDetailAsync(video, cid, token).ConfigureAwait(false);
         }
     }
 }

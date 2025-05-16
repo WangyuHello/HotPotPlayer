@@ -451,13 +451,12 @@
                     <ColumnDefinition Width="Auto" />
                 </Grid.ColumnDefinitions>
                 <StackPanel Orientation="Horizontal" Padding="8,0" HorizontalAlignment="Stretch">
-                    <!--<Border Visibility="{x:Bind HasRcmdReasonContent}" CornerRadius="2" Background="#fef1e2" Padding="6,0" Margin="0,0,8,0">
-                        <TextBlock Text="{x:Bind GetRcmdReason}" Foreground="#ff7f23" FontFamily="{ThemeResource MiSansRegular}" VerticalAlignment="Center"/>
-                    </Border>-->
-                    <!--<FontIcon Visibility="{x:Bind NoRcmdReasonContent}" FontFamily="{ThemeResource BiliIcons}" Foreground="Gray" FontSize="13" Margin="0,0,6,-2" Glyph="&#xEA1D;" />-->
+                    <Border Visibility="{x:Bind ext:BiliUIExtensions.HasRcmdReasonContent((bmodel:VideoInformation))}" CornerRadius="2" Background="#fef1e2" Padding="6,0" Margin="0,0,8,0">
+                        <TextBlock Text="{x:Bind ext:BiliUIExtensions.GetRcmdReason((bmodel:VideoInformation))}" Foreground="#ff7f23" FontFamily="{ThemeResource MiSansRegular}" VerticalAlignment="Center"/>
+                    </Border>
+                    <FontIcon Visibility="{x:Bind ext:BiliUIExtensions.NoRcmdReasonContent((bmodel:VideoInformation))}" FontFamily="{ThemeResource BiliIcons}" Foreground="Gray" FontSize="13" Margin="0,0,6,-2" Glyph="&#xEA1D;" />
                     <TextBlock Text="{x:Bind Publisher.User.Name}" Foreground="Gray" FontFamily="{ThemeResource MiSansRegular}" />
-                    <!--<TextBlock Visibility="{x:Bind NoRcmdReasonContent}" Margin="12,0" Text="{x:Bind GetUpDateTime()}" Foreground="Gray" FontFamily="{ThemeResource MiSansRegular}" />-->
-
+                    <TextBlock Visibility="{x:Bind ext:BiliUIExtensions.NoRcmdReasonContent((bmodel:VideoInformation))}" Margin="12,0" Text="{x:Bind ext:BiliUIExtensions.GetUpDateTime((bmodel:VideoInformation))}" Foreground="Gray" FontFamily="{ThemeResource MiSansRegular}" />
                 </StackPanel>
                 <Button Grid.Column="1" Style="{StaticResource TransparentButton}" Margin="0,0,8,0" Foreground="Gray">
                     <FontIcon HorizontalAlignment="Right" FontFamily="{ThemeResource SegoeIcons}" Glyph="&#xE10C;" />
@@ -489,7 +488,29 @@
                     </Button.Flyout>
                 </Button>
             </Grid>
+            <ani:Explicit.Animations>
+                <ani:AnimationSet x:Name="ScaleEnterAnimation" >
+                    <!--<ani:OffsetDropShadowAnimation To="12"/>-->
+                    <ani:ScaleAnimation To="1.1" Duration="0:0:0.3"/>
+                </ani:AnimationSet>
 
+                <ani:AnimationSet x:Name="ScaleExitAnimation">
+                    <!--<ani:OffsetDropShadowAnimation To="4"/>-->
+                    <ani:ScaleAnimation To="1.0" Duration="0:0:0.3"/>
+                </ani:AnimationSet>
+            </ani:Explicit.Animations>
+            <interactivity:Interaction.Behaviors>
+                <interactivity:EventTriggerBehavior EventName="PointerEntered">
+                    <!--<behaviors:StartAnimationAction Animation="{x:Bind ShadowEnterAnimation}"/>-->
+                    <behaviors:StartAnimationAction Animation="{Binding ElementName=ScaleEnterAnimation}"/>
+                    <!--<interactivity:ChangePropertyAction TargetObject="{Binding ElementName=HiddenContent}" PropertyName="Visibility" Value="Visible" />-->
+                </interactivity:EventTriggerBehavior>
+                <interactivity:EventTriggerBehavior EventName="PointerExited">
+                    <!--<behaviors:StartAnimationAction Animation="{x:Bind ShadowExitAnimation}"/>-->
+                    <behaviors:StartAnimationAction Animation="{Binding ElementName=ScaleExitAnimation}"/>
+                    <!--<interactivity:ChangePropertyAction TargetObject="{Binding ElementName=HiddenContent}" PropertyName="Visibility" Value="Collapsed" />-->
+                </interactivity:EventTriggerBehavior>
+            </interactivity:Interaction.Behaviors>
         </StackPanel>
     </DataTemplate>
 
@@ -1035,7 +1056,7 @@
         </Grid>
     </DataTemplate>
 
-    <DataTemplate x:Key="BiliHistoryCardViewTemplate" x:DataType="biliHis:HistoryItem">
+    <DataTemplate x:Key="BiliHistoryCardViewTemplate" x:DataType="bmodel:VideoInformation">
         <StackPanel 
             Width="300"
             Padding="0,0,0,12"
@@ -1048,7 +1069,7 @@
             >
             <cont2:ImageEx2 
                 CornerRadius="4"
-                Source="{x:Bind Cover}" 
+                Source="{x:Bind Identifier.Cover.Uri}" 
                 Style="{StaticResource LocalVideoImageStyle}"
                 />
             <Grid Margin="0,-24,0,0" Height="24" Padding="8,0">
@@ -1068,25 +1089,27 @@
                     <ColumnDefinition Width="Auto" />
                 </Grid.ColumnDefinitions>
                 <FontIcon FontFamily="{ThemeResource SegoeIcons}" Foreground="White" FontSize="13" Margin="0,-6,4,0" Glyph="&#xE102;" />
+                <TextBlock Grid.Column="1" Grid.Row="1" Text="{x:Bind ext:BiliUIExtensions.GetPlayCount((bmodel:VideoInformation))}" FontSize="13" Foreground="White" FontFamily="{ThemeResource MiSansRegular}" />
                 <FontIcon Grid.Column="2" FontFamily="{ThemeResource SegoeIcons}" Foreground="White" FontSize="13" Margin="12,-6,4,0" Glyph="&#xE134;" />
-                <TextBlock Grid.Column="5" Text="{x:Bind biliext:TimeExtensions.GetDuration(Duration)}" FontSize="13" Foreground="White" FontFamily="{ThemeResource MiSansRegular}" />
+                <TextBlock Grid.Column="3" Grid.Row="1" Text="{x:Bind ext:BiliUIExtensions.GetCommentCount((bmodel:VideoInformation))}" FontSize="13" Foreground="White" FontFamily="{ThemeResource MiSansRegular}" />
+                <TextBlock Grid.Column="5" Text="{x:Bind ext:BiliUIExtensions.GetDuration((bmodel:VideoInformation))}" FontSize="13" Foreground="White" FontFamily="{ThemeResource MiSansRegular}" />
             </Grid>
             <TextBlock 
                 Margin="8,8" 
-                Text="{x:Bind Title}" 
+                Text="{x:Bind Identifier.Title}" 
                 LineStackingStrategy="BaselineToBaseline" 
                 FontSize="14" 
                 MaxLines="2" 
                 TextTrimming="CharacterEllipsis" 
                 TextWrapping="Wrap" 
                 Height="40" 
-                ToolTipService.ToolTip="{x:Bind Title}" 
+                ToolTipService.ToolTip="{x:Bind Identifier.Title}" 
                 FontFamily="{ThemeResource MiSansMedium}"
                 />
             <StackPanel Orientation="Horizontal" Padding="8,0">
                 <FontIcon Grid.Column="2" FontFamily="{ThemeResource BiliIcons}" Foreground="Gray" FontSize="13" Margin="0,0,6,-2" Glyph="&#xEA1D;" />
-                <TextBlock Text="{x:Bind AuthorName}" Foreground="Gray" FontFamily="{ThemeResource MiSansRegular}" />
-                <TextBlock Margin="12,0" Text="{x:Bind biliext:TimeExtensions.GetDateTime(ViewAt)}" Foreground="Gray" FontFamily="{ThemeResource MiSansRegular}" />
+                <TextBlock Text="{x:Bind Publisher.User.Name}" Foreground="Gray" FontFamily="{ThemeResource MiSansRegular}" />
+                <!--<TextBlock Margin="12,0" Text="{x:Bind  }" Foreground="Gray" FontFamily="{ThemeResource MiSansRegular}" />-->
             </StackPanel>
         </StackPanel>
     </DataTemplate>

@@ -59,10 +59,10 @@ namespace HotPotPlayer.Pages
             {
                 BiliDynamic.LoadDynamic();
             }
-            //else if (value == 2)
-            //{
-            //    BiliHistory.LoadHistoryAsync();
-            //}
+            else if (value == 2)
+            {
+                BiliHistory.LoadHistoryAsync();
+            }
         }
 
         bool IsFirstNavigate = true;

@@ -1,62 +1,39 @@
-﻿using HotPotPlayer.Bilibili.Models.History;
-using HotPotPlayer.Bilibili.Models.Video;
-using HotPotPlayer.Services;
+﻿using HotPotPlayer.Services;
 using Microsoft.UI.Xaml.Data;
-using System;
-using System.Collections.Generic;
+using Richasy.BiliKernel.Models.Media;
 using System.Collections.ObjectModel;
-using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
-using System.Text;
-using System.Threading.Tasks;
 using Windows.Foundation;
 
 namespace HotPotPlayer.Models.BiliBili
 {
-    public class HistoryCollection : ObservableCollection<HistoryItem>, ISupportIncrementalLoading
+    public partial class HistoryCollection(BiliBiliService service) : ObservableCollection<VideoInformation>, ISupportIncrementalLoading
     {
-        HistoryCursor _cursor;
-        readonly BiliBiliService _service;
-
-        public HistoryCollection(HistoryData data, BiliBiliService service) : base(data == null ? Enumerable.Empty<HistoryItem>() : data.List)
-        {
-            if (data == null)
-            {
-                _hasMore = false;
-            }
-            else
-            {
-                _hasMore = true;
-                _cursor = data.Cursor;
-            }
-            _service = service;
-        }
-
-        private bool _hasMore;
+        public long Offset { get; set; }
+        readonly BiliBiliService _service = service;
+        private bool _hasMore = true;
         public bool HasMoreItems => _hasMore;
 
         public IAsyncOperation<LoadMoreItemsResult> LoadMoreItemsAsync(uint count)
         {
             return AsyncInfo.Run(async (token) =>
             {
-                var his = await _service.API.History(_cursor.Max, _cursor.Business, _cursor.ViewAt);
-                if (his.Data == null)
+                var hist = await _service.GetVideoHistoryAsync(Offset, token);
+                Offset = hist.Offset ?? 0;
+
+                if (hist.Videos == null || hist.Videos.Count == 0)
                 {
                     _hasMore = false;
-                    foreach (var item in his.Data.List)
-                    {
-                        Add(item);
-                    }
                     return new LoadMoreItemsResult() { Count = 0 };
                 }
                 else
                 {
-                    _cursor = his.Data.Cursor;
-                    foreach (var item in his.Data.List)
+                    _hasMore = true;
+                    foreach (var item in hist.Videos)
                     {
                         Add(item);
                     }
-                    return new LoadMoreItemsResult() { Count = (uint)his.Data.List.Count };
+                    return new LoadMoreItemsResult() { Count = (uint)hist.Videos.Count };
                 }
 
             });

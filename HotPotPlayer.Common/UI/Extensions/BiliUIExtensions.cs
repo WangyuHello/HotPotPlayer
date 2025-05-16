@@ -1,4 +1,5 @@
 ﻿using HotPotPlayer.Bilibili.Models.Dynamic;
+using Microsoft.Kiota.Abstractions;
 using Microsoft.UI.Text;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
@@ -110,13 +111,65 @@ namespace HotPotPlayer.UI.Extensions
         public static string GetDuration(VideoInformation v)
         {
             var t = TimeSpan.FromSeconds(v.Duration ?? 0);
-            var str = t.ToString("mm\\:ss");
-            return str;
+            if (t.Hours > 0)
+            {
+                return t.ToString("hh\\:mm\\:ss");
+            }
+            else
+            {
+                return t.ToString("mm\\:ss");
+            }
+        }
+
+        public static string GetDateTime(this int i)
+        {
+            var ts = TimeSpan.FromSeconds(i);
+            var time = new DateTime(ts.Ticks);
+            time = time.AddYears(1969);
+            var t2 = time.ToLocalTime();
+            return $"{time.Year}-{time.Month}-{time.Day} {t2:HH\\:mm\\:ss}";
+        }
+
+        //public static string GetViewDateTime(VideoInformation video)
+        //{
+            
+        //}
+
+        public static Visibility HasRcmdReasonContent(this VideoInformation v)
+        {
+            return v.ExtensionData.ContainsKey("RecommendReason") ? Visibility.Visible : Visibility.Collapsed;
+        }
+
+        public static Visibility NoRcmdReasonContent(this VideoInformation v)
+        {
+            return v.ExtensionData.ContainsKey("RecommendReason") ? Visibility.Collapsed : Visibility.Visible;
+        }
+
+        public static string GetRcmdReason(this VideoInformation v)
+        {
+            v.ExtensionData.TryGetValue("RecommendReason", out var s);
+            if (s != null) return s.ToString();
+            return string.Empty;
+        }
+
+        public static string GetUpDateTime(this VideoInformation v)
+        {
+            var time = v.PublishTime;
+            if (time is DateTimeOffset d)
+            {
+                return $"{d.Month}-{d.Day}";
+            }
+            return string.Empty;
         }
 
         public static string GetPlayCount(VideoInformation video)
         {
             double v = video.CommunityInformation.PlayCount ?? 0;
+            return NumberFormat(v);
+        }
+
+        private static string NumberFormat(double v)
+        {
             if (v >= 10000)
             {
                 var v2 = v / 10000;
@@ -131,15 +184,13 @@ namespace HotPotPlayer.UI.Extensions
         public static string GetDanmakuCount(VideoInformation video)
         {
             double v = video.CommunityInformation.DanmakuCount ?? 0;
-            if (v >= 10000)
-            {
-                var v2 = v / 10000;
-                return $"{v2:F1}万";
-            }
-            else
-            {
-                return v.ToString();
-            }
+            return NumberFormat(v);
+        }
+
+        public static string GetCommentCount(VideoInformation video)
+        {
+            double v = video.CommunityInformation.CommentCount ?? 0;
+            return NumberFormat(v);
         }
 
         public static RichTextBlock GenRichTextBlock(this EmoteText node)
