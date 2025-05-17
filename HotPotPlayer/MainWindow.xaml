@@ -79,6 +79,7 @@
         </controls:PlayBar>
 
         <pages:VideoPlay x:Name="VideoPlay" 
+                         CurrentPlaying="{x:Bind VideoPlayer.CurrentPlaying, Mode=OneWay}"
                          HorizontalAlignment="{x:Bind GetVideoPlayHorizontalAlignment(VideoPlayer.VisualState), Mode=OneWay}"
                          VerticalAlignment="{x:Bind GetVideoPlayVerticalAlignment(VideoPlayer.VisualState), Mode=OneWay}"
                          Margin="{x:Bind GetVideoPlayMargin(VideoPlayer.VisualState), Mode=OneWay}"

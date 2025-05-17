@@ -19,10 +19,8 @@
     <base:UserControlBase.Resources>
         <convs:SliderThumbConverter x:Key="SliderThumbConverter" TotalTime="{x:Bind VideoPlayer.CurrentPlayingDuration, Mode=OneWay}"/>
         <convs:SliderVolumeIntConverter x:Key="SliderVolumeConverter" />
-        <convs:ColorConverter x:Key="ColorConverter" />
-        <convs:ClipConverter x:Key="ClipConverter" />
 
-        <AcrylicBrush x:Key="PlayBarBackground" TintOpacity="0.8" TintLuminosityOpacity="0.3" TintColor="Transparent" FallbackColor="Transparent" />
+        <!--<AcrylicBrush x:Key="PlayBarBackground" TintOpacity="0.8" TintLuminosityOpacity="0.3" TintColor="Transparent" FallbackColor="Transparent" />-->
 
         <Style x:Key="VolumePopupStyle" TargetType="FlyoutPresenter">
             <Setter Property="MinWidth" Value="160" />
@@ -137,7 +135,7 @@
                 <Button Margin="8,0,0,0" Style="{StaticResource VideoPlayOtherButton}" Click="TogglePlayListBarVisibilityClick" Visibility="{x:Bind GetTogglePlayListBarVisibility(IsFullPageHost)}">
                     <FontIcon FontFamily="{ThemeResource SegoeIcons}" Glyph="&#xE762;" />
                 </Button>
-                <Button Margin="8,0,0,0" Style="{StaticResource VideoPlayOtherButton}" Visibility="{x:Bind GetToggleFullPageVisibility(IsFullPageHost)}">
+                <Button Margin="8,0,0,0" Style="{StaticResource VideoPlayOtherButton}" Click="ToggleFullPageClick" Visibility="{x:Bind GetToggleFullPageVisibility(IsFullPageHost)}">
                     <FontIcon FontFamily="{ThemeResource SegoeIcons}" Glyph="{x:Bind GetFullPageIcon(IsFullPage)}" />
                 </Button>
             </StackPanel>

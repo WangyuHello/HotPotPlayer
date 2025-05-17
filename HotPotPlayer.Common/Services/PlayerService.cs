@@ -178,7 +178,7 @@ namespace HotPotPlayer.Services
             }
         }
 
-        protected virtual void OnPlayNextStateChange() { }
+        protected virtual void OnPlayNextStateChange(int? index) { }
 
         /// <summary>
         /// 主方法
@@ -204,7 +204,7 @@ namespace HotPotPlayer.Services
                 CurrentTime = TimeSpan.Zero;
                 IsPlaying = false;
 
-                OnPlayNextStateChange();
+                OnPlayNextStateChange(index);
                 State = PlayerState.Loading;
 
                 _playerStarter.RunWorkerAsync(index);

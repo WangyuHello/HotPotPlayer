@@ -6,8 +6,437 @@
     xmlns:base="using:HotPotPlayer"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:cont2="using:HotPotPlayer.UI.Controls"
+    xmlns:ext="using:HotPotPlayer.UI.Extensions"
+    xmlns:animations="using:CommunityToolkit.WinUI.Animations"
+    xmlns:ui="using:CommunityToolkit.WinUI"
     mc:Ignorable="d"
+    x:DefaultBindMode="OneWay"
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
 
-    <vcont:VideoHost x:Name="TheHost" Loaded="OnVideoHostLoaded"/>
+    <Grid x:Name="Root">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="{x:Bind GetCommentWidth(VideoPlayer.VisualState)}" />
+        </Grid.ColumnDefinitions>
+
+        <Grid Background="#f9f9fb" Padding="{x:Bind GetRootPadding(VideoPlayer.VisualState)}">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*" />
+                <RowDefinition Height="{x:Bind GetTitleHeight(VideoPlayer.VisualState)}" />
+                <RowDefinition Height="{x:Bind GetTitleHeight(VideoPlayer.VisualState)}" />
+                <RowDefinition Height="{x:Bind GetTitleHeight(VideoPlayer.VisualState)}" />
+                <RowDefinition Height="{x:Bind GetTitleHeight(VideoPlayer.VisualState)}" />
+            </Grid.RowDefinitions>
+            <FontIcon FontFamily="{ThemeResource BiliIcons}" Glyph="&#xEA10;" FontSize="120" Foreground="#dbdcdc"/>
+
+            <vcont:VideoHost x:Name="TheHost" IsFullPageHost="{x:Bind IsFullPageHost}"/>
+
+            <Grid Grid.Row="1" Margin="0,20,0,20">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+                <TextBlock Text="{x:Bind CurrentPlaying.Name}" 
+                           FontSize="28" 
+                           FontFamily="{ThemeResource MiSansMedium}" 
+                           MaxLines="2" 
+                           TextWrapping="Wrap" 
+                           IsTextSelectionEnabled="True" 
+                           TextTrimming="CharacterEllipsis"/>
+                <Rectangle Grid.Column="1" Width="230"/>
+            </Grid>
+            <StackPanel x:Name="ThreeButton" 
+                        Grid.Row="1" 
+                        Grid.RowSpan="2" 
+                        HorizontalAlignment="Right" 
+                        Margin="0,16,0,0" 
+                        Orientation="Horizontal" 
+                        Spacing="8">
+                <ToggleButton 
+                    Padding="8,0" 
+                    CornerRadius="4" 
+                    Style="{StaticResource BiliToggleButton}" 
+                    VerticalAlignment="Top" 
+                    Click="LikeClick" 
+                    IsChecked="{x:Bind IsLike}">
+                    <StackPanel Spacing="4" 
+                                Padding="0,4">
+                        <FontIcon FontFamily="{ThemeResource BiliIcons}" 
+                                  Glyph="&#xEA09;" 
+                                  FontSize="22"/>
+                        <TextBlock HorizontalAlignment="Center" 
+                                   Text="{x:Bind ext:BiliUIExtensions.NumberFormat(Video.CommunityInformation.LikeCount)}" 
+                                   FontFamily="{ThemeResource MiSansRegular}" />
+                    </StackPanel>
+                </ToggleButton>
+                <ToggleButton x:Name="CoinToggleButton" 
+                              Padding="8,0" 
+                              CornerRadius="4" 
+                              Style="{StaticResource BiliToggleButton}" 
+                              VerticalAlignment="Top" 
+                              Click="CoinClick">
+                    <StackPanel Spacing="4" Padding="0,4">
+                        <PathIcon Data="{StaticResource CoinPath}" 
+                                  HorizontalAlignment="Center" 
+                                  Margin="0,2,0,2"/>
+                        <TextBlock HorizontalAlignment="Center" 
+                                   Text="{x:Bind ext:BiliUIExtensions.NumberFormat(Video.CommunityInformation.CoinCount)}" 
+                                   FontFamily="{ThemeResource MiSansRegular}" />
+                    </StackPanel>
+                    <!--<ToggleButton.ContextFlyout>
+                        <Flyout>
+                            <cont3:CoinFlyout CopyRight="{x:Bind Video.CopyRight}" CoinConfirmed="CoinConfirmClick"/>
+                        </Flyout>
+                    </ToggleButton.ContextFlyout>-->
+                </ToggleButton>
+                <ToggleButton Padding="8,0" 
+                              CornerRadius="4" 
+                              Style="{StaticResource BiliToggleButton}" 
+                              VerticalAlignment="Top" 
+                              IsChecked="{x:Bind IsFavor}" 
+                              Click="FavorClick">
+                    <StackPanel Spacing="4" Padding="0,4" >
+                        <FontIcon FontFamily="{ThemeResource BiliIcons}" 
+                                  Glyph="&#xEA03;" 
+                                  FontSize="22"/>
+                        <TextBlock HorizontalAlignment="Center" 
+                                   Text="{x:Bind ext:BiliUIExtensions.NumberFormat(Video.CommunityInformation.FavoriteCount)}" 
+                                   FontFamily="{ThemeResource MiSansRegular}" />
+                    </StackPanel>
+                </ToggleButton>
+                <Button Padding="8,0" 
+                        CornerRadius="4" 
+                        Style="{StaticResource BiliButton}" 
+                        VerticalAlignment="Top" 
+                        Click="ShareClick" >
+                    <StackPanel Spacing="4" Padding="0,4">
+                        <FontIcon FontFamily="{ThemeResource BiliIcons}" Glyph="&#xEA0D;" FontSize="22"/>
+                        <TextBlock HorizontalAlignment="Center" 
+                                   Text="{x:Bind ext:BiliUIExtensions.NumberFormat(Video.CommunityInformation.ShareCount)}" 
+                                   FontFamily="{ThemeResource MiSansRegular}" />
+                    </StackPanel>
+                    <!--<Button.ContextFlyout>
+                        <Flyout>
+                            <Flyout.FlyoutPresenterStyle>
+                                <Style TargetType="FlyoutPresenter">
+                                    <Setter Property="MinWidth" Value="600" />
+                                    <Setter Property="CornerRadius" Value="8" />
+                                </Style>
+                            </Flyout.FlyoutPresenterStyle>
+                            <cont3:ShareFlyout x:Name="ShareFl" Video="{x:Bind Video}"/>
+                        </Flyout>
+                    </Button.ContextFlyout>-->
+                </Button>
+            </StackPanel>
+            <Grid Grid.Row="2" Margin="0,0,0,12">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+                <cont2:ImageEx2 Grid.Column="0" 
+                                x:Name="UserAvatar" 
+                                Source="{x:Bind Video.Publisher.User.Avatar.Uri}" 
+                                Style="{StaticResource LocalMusicImageStyle}" 
+                                Width="24" Height="24" 
+                                DecodePixelWidth="24" DecodePixelHeight="24"
+                                Tapped="UserAvatar_Tapped" 
+                                Visibility="{x:Bind IsSingleStaff(Video)}"
+                                CornerRadius="16" >
+                    <!--<cont2:ImageEx2.ContextFlyout>
+                        <Flyout>
+                            <cont3:UserCard x:Name="UserAvatarFlyout" Margin="-16" Mid="{x:Bind Video.Up.Mid}" />
+                        </Flyout>
+                    </cont2:ImageEx2.ContextFlyout>-->
+                </cont2:ImageEx2>
+                <TextBlock Grid.Column="1" 
+                           VerticalAlignment="Center" 
+                           Margin="8,0" 
+                           Text="{x:Bind Video.Publisher.User.Name}" 
+                           Visibility="{x:Bind IsSingleStaff(Video)}" 
+                           FontFamily="{ThemeResource MiSansRegular}" 
+                           FontSize="15" 
+                           IsTextSelectionEnabled="True"/>
+
+                <!--<ListView Grid.Column="0" 
+                          Visibility="{x:Bind Video.IsMultiStaff}" 
+                          MaxWidth="260" 
+                          ItemsSource="{x:Bind Video.Staff}" 
+                          Style="{StaticResource HorizontalListViewStyle}" 
+                          ItemTemplate="{StaticResource StaffTemplate}" 
+                          ItemContainerStyle="{StaticResource TransparentListContainerCompactHPaddingStyle}"/>-->
+
+                <!--<StackPanel Grid.Column="2" 
+                            CornerRadius="2" 
+                            Background="#ffeff4" 
+                            Orientation="Horizontal" 
+                            Spacing="4" Padding="8,2" 
+                            Visibility="{x:Bind Video.HasHonorToDisplay}" 
+                            VerticalAlignment="Center">
+                    <FontIcon FontFamily="{ThemeResource BiliIcons}" 
+                              Glyph="&#xEA1C;" 
+                              Foreground="#ff6698" 
+                              FontSize="13"/>
+                    <TextBlock VerticalAlignment="Center" 
+                               Text="{x:Bind Video.HonorReply.Honor[0].Desc}" 
+                               Foreground="#ff6698" 
+                               FontFamily="{ThemeResource MiSansRegular}" />
+                </StackPanel>-->
+                <ImageIcon Grid.Column="3" 
+                           Source="ms-appx:///Assets/Icon/View.svg" 
+                           Margin="12,0,0,0" 
+                           Width="20" 
+                           Foreground="Gray"/>
+                <TextBlock Grid.Column="4" 
+                           VerticalAlignment="Center" 
+                           Margin="4,0" 
+                           Text="{x:Bind ext:BiliUIExtensions.NumberFormat(Video.CommunityInformation.PlayCount)}" 
+                           Foreground="Gray" 
+                           FontFamily="{ThemeResource MiSansRegular}" />
+                <ImageIcon Grid.Column="5" 
+                           Source="ms-appx:///Assets/Icon/Dan.svg" 
+                           Margin="12,0,0,0" 
+                           Width="20" 
+                           Foreground="Gray"/>
+                <TextBlock Grid.Column="6" 
+                           VerticalAlignment="Center" 
+                           Margin="4,0" 
+                           Text="{x:Bind ext:BiliUIExtensions.NumberFormat(Video.CommunityInformation.DanmakuCount)}" 
+                           Foreground="Gray" 
+                           FontFamily="{ThemeResource MiSansRegular}" />
+                <ImageIcon Grid.Column="7" 
+                           Source="ms-appx:///Assets/Icon/Time.svg" 
+                           Margin="12,0,0,0" 
+                           Width="20" 
+                           Foreground="Gray"/>
+                <TextBlock Grid.Column="8" 
+                           VerticalAlignment="Center" 
+                           Margin="4,0" 
+                           Text="{x:Bind ext:BiliUIExtensions.GetUpDateTime(Video)}" 
+                           Foreground="Gray" 
+                           FontFamily="{ThemeResource MiSansRegular}" />
+                <FontIcon Grid.Column="9" 
+                          FontFamily="{ThemeResource SegoeIcons}" 
+                          Margin="12,0,0,0" 
+                          Glyph="&#xE18B;" 
+                          Foreground="Gray" 
+                          FontSize="16"/>
+                <TextBlock Grid.Column="10" 
+                           VerticalAlignment="Center" 
+                           Margin="6,0" 
+                           Text="{x:Bind OnLineCount}" 
+                           Foreground="Gray" 
+                           FontFamily="{ThemeResource MiSansRegular}" />
+
+                <!--<ListView Grid.Column="11" 
+                          ItemsSource="{x:Bind Tags}" 
+                          Height="28" 
+                          Margin="12,0,0,0" 
+                          Style="{StaticResource HorizontalListViewStyle}" 
+                          ItemTemplate="{StaticResource TagTemplate}" 
+                          ItemContainerStyle="{StaticResource TransparentListContainerCompactHPaddingStyle}" 
+                          ItemClick="TagClick"/>-->
+            </Grid>
+            <ScrollViewer Grid.Row="3" 
+                          MaxHeight="58" 
+                          MinHeight="26">
+                <!--<TextBlock Text="{x:Bind Video.VideoDEsc}" 
+                           IsTextSelectionEnabled="True" 
+                           FontFamily="{ThemeResource MiSansRegular}" 
+                           TextWrapping="Wrap" />-->
+            </ScrollViewer>
+            <ListView x:Name="RelatedList" 
+                      Grid.Row="4" 
+                      Margin="-36,2,-28,0" 
+                      Padding="36,0,28,0" 
+                      Height="220" 
+                      ItemsSource="{x:Bind RelatedVideos}" 
+                      Style="{StaticResource HorizontalListViewStyle}" 
+                      ItemContainerStyle="{StaticResource GeneralListContainerCompactPaddingStyle}" 
+                      ItemTemplate="{StaticResource BiliVideoCardViewTemplate2}" 
+                      ItemClick="RelateVideoClick">
+
+            </ListView>
+            <!--<Grid Grid.Row="4" 
+                  Margin="-36,2,-28,0" 
+                  Height="220" 
+                  Visibility="{x:Bind IsAdditionLoading}" 
+                  ui:VisualExtensions.NormalizedCenterPoint="0.5" >
+                <Grid.Background>
+                    <AcrylicBrush TintOpacity="0.0" TintLuminosityOpacity="0.0" TintColor="#FFFFFF" FallbackColor="#0FFFFFFF" />
+                </Grid.Background>
+                <animations:Implicit.ShowAnimations>
+                    <animations:OpacityAnimation From="0" To="1" Duration="0:0:0.3" />
+                </animations:Implicit.ShowAnimations>
+                <animations:Implicit.HideAnimations>
+                    <animations:OpacityAnimation From="1" To="0" Duration="0:0:0.3" />
+                </animations:Implicit.HideAnimations>
+
+                <ProgressRing  Width="80" Height="80">
+
+                </ProgressRing>
+            </Grid>-->
+        </Grid>
+
+        <Grid Grid.Column="1" Margin="16,28,16,0">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
+
+            <!--<Grid Visibility="{x:Bind GetMultiPageVisible(Video)}" 
+                  MaxHeight="200" 
+                  CornerRadius="8" 
+                  Padding="16,8,16,8" 
+                  Margin="0,0,0,8" 
+                  Background="#f1f2f3" >
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="*" />
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+                <TextBlock Text="视频选集" FontSize="18" VerticalAlignment="Center" FontFamily="{ThemeResource MiSansMedium}"/>
+                <TextBlock Grid.Column="1" Margin="4,0,0,0" Text="{x:Bind GetSelectedPageAndAll(SelectedPage, Video)}" Foreground="Gray" FontSize="14" VerticalAlignment="Center" FontFamily="{ThemeResource MiSansRegular}"/>
+                <TextBlock Grid.Column="3" Foreground="Gray" Text="自动连播" FontSize="14" VerticalAlignment="Center" FontFamily="{ThemeResource MiSansRegular}"/>
+                <ToggleSwitch Grid.Column="4" Margin="8,0,-114,0" VerticalAlignment="Center" OffContent="" OnContent=""/>
+                <ListView 
+                    x:Name="PageList"
+                    Grid.Row="1"
+                    Grid.ColumnSpan="5"
+                    Margin="-16,4,-16,0" 
+                    Padding="0,0" 
+                    ItemsSource="{x:Bind Video.Pages}" 
+                    Style="{StaticResource GeneralListViewStyle}" 
+                    ItemContainerStyle="{StaticResource BiliPageListContainerStyle}" 
+                    ItemTemplate="{StaticResource VideoPageTemplate}"
+                    IsItemClickEnabled="True"
+                    SelectionMode="Single"
+                    SelectedIndex="{x:Bind SelectedPage, Mode=TwoWay}"
+                    >
+
+                </ListView>
+            </Grid>-->
+
+            <!--<Grid Visibility="{x:Bind GetUgcSeasonVisible(Video)}" 
+                  MaxHeight="200" 
+                  CornerRadius="8" 
+                  Padding="16,8,16,8" 
+                  Margin="0,0,0,8" 
+                  Background="#f1f2f3" >
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="*" />
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+                <TextBlock Text="{x:Bind Video.UgcSeason.Title}" FontSize="16" VerticalAlignment="Center" FontFamily="{ThemeResource MiSansMedium}"/>
+                <TextBlock Grid.Column="1" Margin="4,0,0,0" Text="{x:Bind GetSelectedEpisodeAndAll(SelectedEpisode, Video)}" Foreground="Gray" FontSize="14" VerticalAlignment="Center" FontFamily="{ThemeResource MiSansRegular}"/>
+                <TextBlock Grid.Column="3" Foreground="Gray" Text="自动连播" FontSize="14" VerticalAlignment="Center" FontFamily="{ThemeResource MiSansRegular}"/>
+                <ToggleSwitch Grid.Column="4" Margin="8,0,-114,0" VerticalAlignment="Center" OffContent="" OnContent=""/>
+                <TextBlock Grid.Row="1" Grid.ColumnSpan="5" Text="{x:Bind Video.UgcSeason.Stat.GetViews2()}" FontSize="14" Foreground="Gray" VerticalAlignment="Center" FontFamily="{ThemeResource MiSansRegular}"/>
+                <ListView 
+                    x:Name="UgcSeasonList"
+                    Grid.Row="2"
+                    Grid.ColumnSpan="5"
+                    Margin="-16,4,-16,0" 
+                    Padding="0,0" 
+                    ItemsSource="{x:Bind Video.UgcSeason.GetAllEpisodes}" 
+                    Style="{StaticResource GeneralListViewStyle}" 
+                    ItemContainerStyle="{StaticResource BiliPageListContainerStyle}" 
+                    ItemTemplate="{StaticResource VideoEpisodeTemplate}"
+                    IsItemClickEnabled="True"
+                    SelectionMode="Single"
+                    SelectedIndex="{x:Bind SelectedEpisode, Mode=TwoWay}"
+                    >
+
+                </ListView>
+            </Grid>-->
+
+            <StackPanel Orientation="Horizontal" 
+                        Grid.Row="1" 
+                        Spacing="8" 
+                        Margin="0,0,0,16" >
+                <TextBlock Text="评论" 
+                           FontSize="18" 
+                           FontFamily="{ThemeResource MiSansMedium}" />
+                <Border CornerRadius="4" 
+                        Background="#4e4f67" 
+                        Padding="6,0">
+                    <!--<TextBlock Text="{x:Bind Video.Stat.GetReply()}" 
+                               Foreground="White" 
+                               FontSize="12" 
+                               VerticalAlignment="Center" 
+                               FontFamily="{ThemeResource MiSansMedium}" />-->
+                </Border>
+            </StackPanel>
+            <Grid Grid.Row="2" >
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+                <TextBox PlaceholderText="发一条友善的评论" 
+                         FontFamily="{ThemeResource MiSansRegular}"/>
+                <Button Grid.Column="1" 
+                        Margin="4,0,0,0" 
+                        Background="#40C5F1" 
+                        Foreground="White" 
+                        FontFamily="{ThemeResource MiSansRegular}">
+                    发布
+                </Button>
+            </Grid>
+            <ListView 
+                Grid.Row="3" 
+                Margin="-16,12,-16,0" 
+                Padding="0,0" 
+                ItemsSource="{x:Bind Replies}" 
+                Style="{StaticResource GeneralListViewStyle}" 
+                ItemContainerStyle="{StaticResource GeneralListContainerStyle}" 
+                ItemTemplate="{StaticResource VideoReplyTemplate}"
+                IncrementalLoadingTrigger="Edge"
+                IncrementalLoadingThreshold="2"
+                >
+
+            </ListView>
+        </Grid>
+
+        <!--<Grid Grid.Column="1" Visibility="{x:Bind IsAdditionLoading}" ui:VisualExtensions.NormalizedCenterPoint="0.5" >
+            <Grid.Background>
+                <AcrylicBrush TintOpacity="0.0" TintLuminosityOpacity="0.0" TintColor="#FFFFFF" FallbackColor="#0FFFFFFF" />
+            </Grid.Background>
+            <animations:Implicit.ShowAnimations>
+                <animations:OpacityAnimation From="0" To="1" Duration="0:0:0.3" />
+            </animations:Implicit.ShowAnimations>
+            <animations:Implicit.HideAnimations>
+                <animations:OpacityAnimation From="1" To="0" Duration="0:0:0.3" />
+            </animations:Implicit.HideAnimations>
+
+            <ProgressRing  Width="80" Height="80">
+
+            </ProgressRing>
+        </Grid>-->
+    </Grid>
 </base:PageBase>

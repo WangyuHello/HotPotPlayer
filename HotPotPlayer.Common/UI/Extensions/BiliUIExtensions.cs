@@ -1,4 +1,5 @@
 ﻿using HotPotPlayer.Bilibili.Models.Dynamic;
+using HotPotPlayer.Extensions;
 using Microsoft.Kiota.Abstractions;
 using Microsoft.UI.Text;
 using Microsoft.UI.Xaml;
@@ -195,12 +196,21 @@ namespace HotPotPlayer.UI.Extensions
 
         public static string GetUpDateTime(this VideoInformation v)
         {
+            if (v == null)
+            {
+                return string.Empty;
+            }
             var time = v.PublishTime;
             if (time is DateTimeOffset d)
             {
-                return $"{d.Month}-{d.Day}";
+                return GetDateTimeStr(d);
             }
             return string.Empty;
+        }
+
+        public static string GetDateTimeStr(DateTimeOffset d)
+        {
+            return $"{d.Year}-{d.Month}-{d.Day}";
         }
 
         public static string GetPlayCount(VideoInformation video)
@@ -209,8 +219,22 @@ namespace HotPotPlayer.UI.Extensions
             return NumberFormat(v);
         }
 
-        private static string NumberFormat(double v)
+        public static string NumberFormat(int v)
         {
+            if (v >= 10000)
+            {
+                var v2 = v / 10000;
+                return $"{v2:F1}万";
+            }
+            else
+            {
+                return v.ToString();
+            }
+        }
+
+        public static string NumberFormat(double? v)
+        {
+            v ??= 0;
             if (v >= 10000)
             {
                 var v2 = v / 10000;

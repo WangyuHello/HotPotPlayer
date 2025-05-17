@@ -83,9 +83,17 @@ namespace HotPotPlayer.Services
             PlayNext(0);
         }
 
-        protected override void OnPlayNextStateChange()
+        protected override void OnPlayNextStateChange(int? index)
         {
-            VisualState = VideoPlayVisualState.FullWindow;
+            var v = CurrentPlayList[index ?? 0];
+            if (v.Etag == "Bilibili")
+            {
+                VisualState = VideoPlayVisualState.FullHost;
+            }
+            else
+            {
+                VisualState = VideoPlayVisualState.FullWindow;
+            }
         }
 
         protected override void SetupMpvInitProperty(MpvPlayer _mpv)
@@ -204,11 +212,17 @@ namespace HotPotPlayer.Services
             }
         }
 
+        protected override BaseItemDto SetCustomInfo(BaseItemDto info)
+        {
+            info.ProgramId = _currentCid;
+            return info;
+        }
+
         protected override async void CustomReportProgress(BaseItemDto currentPlaying, TimeSpan CurrentTime, TimeSpan? CurrentTimeDuration)
         {
             if (currentPlaying.Etag == "Bilibili")
             {
-                await App.BiliBiliService.ReportVideoProgressAsync(currentPlaying.PlaylistItemId, _currentCid, CurrentTime.Seconds);
+                await App.BiliBiliService.ReportVideoProgressAsync(currentPlaying.PlaylistItemId, currentPlaying.ProgramId, CurrentTime.Seconds);
             }
         }
 

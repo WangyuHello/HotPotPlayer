@@ -1,6 +1,9 @@
-﻿using HotPotPlayer.Bilibili.Models.Reply;
+﻿using DirectN;
+using HotPotPlayer.Bilibili.Models.Reply;
 using HotPotPlayer.Services;
 using Microsoft.UI.Xaml.Data;
+using Richasy.BiliKernel.Models;
+using Richasy.BiliKernel.Models.Comment;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -12,36 +15,39 @@ using Windows.Foundation;
 
 namespace HotPotPlayer.Models.BiliBili
 {
-    public class ReplyItemCollection : ObservableCollection<Reply>, ISupportIncrementalLoading
+    public partial class ReplyItemCollection(BiliBiliService service) : ObservableCollection<CommentInformation>, ISupportIncrementalLoading
     {
-        int _pageNum;
-        readonly BiliBiliService _service;
-        readonly string _type;
-        readonly string _oid;
-        public ReplyItemCollection(Replies data, string type, string oid, BiliBiliService service) : base(data.TheReplies)
-        {
-            _pageNum = 0;
-            _service = service;
-            _hasMore = !data.Cursor.IsEnd;
-            _type = type;
-            _oid = oid;
-        }
+        readonly BiliBiliService _service = service;
 
-        private bool _hasMore;
+        public long Offset { get; set; }
+        public CommentTargetType Type { get; set; }
+        public string Oid { get; set; }
+
+        private bool _hasMore = true;
         public bool HasMoreItems => _hasMore;
+
+        public void Reset()
+        {
+            Offset = 0;
+            _hasMore = true;
+        }
 
         public IAsyncOperation<LoadMoreItemsResult> LoadMoreItemsAsync(uint count)
         {
             return AsyncInfo.Run(async (token) =>
             {
-                _pageNum++;
-                var dyn = await _service.API.GetReplyAsync(_type, _oid, _pageNum);
-                foreach (var item in dyn.Data.TheReplies)
+                var dyn = await _service.GetCommentsAsync(Oid, Type, CommentSortType.Hot, Offset, token);
+                Offset = dyn.NextOffset;
+                _hasMore = !dyn.IsEnd;
+
+                if (dyn.Comments != null && dyn.Comments.Count > 0)
                 {
-                    Add(item);
+                    foreach (var item in dyn.Comments)
+                    {
+                        Add(item);
+                    }
                 }
-                _hasMore = !dyn.Data.Cursor.IsEnd;
-                return new LoadMoreItemsResult() { Count = (uint)dyn.Data.TheReplies.Count };
+                return new LoadMoreItemsResult() { Count = (uint)dyn.Comments?.Count };
             });
         }
     }

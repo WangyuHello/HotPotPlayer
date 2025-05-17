@@ -7,6 +7,7 @@
     xmlns:jmodel="using:Jellyfin.Sdk.Generated.Models"
     xmlns:bmodel="using:Richasy.BiliKernel.Models"
     xmlns:bmodelMoment="using:Richasy.BiliKernel.Models.Moment"
+    xmlns:bmodelComment="using:Richasy.BiliKernel.Models.Comment"
     xmlns:helper="using:HotPotPlayer.Pages.Helper"
     xmlns:helper2="using:HotPotPlayer.Helpers"
     xmlns:momentHelper="using:HotPotPlayer.Common.Helper.Bilibili"
@@ -347,7 +348,7 @@
         </Grid>
     </DataTemplate>
 
-    <DataTemplate x:Key="VideoReplyTemplate" x:DataType="brep:Reply">
+    <DataTemplate x:Key="VideoReplyTemplate" x:DataType="bmodelComment:CommentInformation">
         <Grid Padding="16,8,16,8" >
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto" />
@@ -365,10 +366,10 @@
                     <RowDefinition Height="*" />
                     <RowDefinition Height="*" />
                 </Grid.RowDefinitions>
-                <cont2:ImageEx2 Margin="0,0,8,0" Grid.RowSpan="2" Source="{x:Bind Member.Avatar}" Height="40" Width="40" CornerRadius="8" Style="{StaticResource LocalMusicImageStyle}"/>
-                <TextBlock Grid.Column="1" Text="{x:Bind Member.UName}" FontFamily="{StaticResource MiSansRegular}"/>
-                <TextBlock Grid.Column="1" Margin="0,2,0,0" Grid.Row="1" Text="{x:Bind TimeStr}" Foreground="Gray" FontSize="12" FontFamily="{StaticResource MiSansRegular}"/>
-                <TextBlock Grid.Column="2" Grid.RowSpan="2" Text="{x:Bind Like}" VerticalAlignment="Center" Foreground="Gray" FontSize="12" FontFamily="{StaticResource MiSansRegular}"/>
+                <cont2:ImageEx2 Margin="0,0,8,0" Grid.RowSpan="2" Source="{x:Bind User.User.Avatar.Uri}" Height="40" Width="40" DecodePixelWidth="40" DecodePixelHeight="40" CornerRadius="8" Style="{StaticResource LocalMusicImageStyle}"/>
+                <TextBlock Grid.Column="1" Text="{x:Bind User.User.Name}" FontFamily="{StaticResource MiSansRegular}"/>
+                <TextBlock Grid.Column="1" Margin="0,2,0,0" Grid.Row="1" Text="{x:Bind ext:BiliUIExtensions.GetDateTimeStr(PublishTime)}" Foreground="Gray" FontSize="12" FontFamily="{StaticResource MiSansRegular}"/>
+                <TextBlock Grid.Column="2" Grid.RowSpan="2" Text="{x:Bind CommunityInformation.LikeCount}" VerticalAlignment="Center" Foreground="Gray" FontSize="12" FontFamily="{StaticResource MiSansRegular}"/>
 
                 <StackPanel Grid.Column="3" Grid.RowSpan="2" Margin="4,0,8,0" VerticalAlignment="Center" Orientation="Horizontal" Spacing="8">
                     <Button Style="{StaticResource FullTransparentButton}" >
@@ -380,10 +381,10 @@
                 </StackPanel>
 
             </Grid>
-            <TextBlock Grid.Row="1" Margin="48,8,0,0" Text="{x:Bind Content.Message}" TextWrapping="Wrap" FontFamily="{StaticResource MiSansRegular}"/>
-            <StackPanel Grid.Row="2" Margin="48,8,8,0" Visibility="{x:Bind HasNestedReply}">
+            <TextBlock Grid.Row="1" Margin="48,8,0,0" Text="{x:Bind Content.Text}" TextWrapping="Wrap" FontFamily="{StaticResource MiSansRegular}"/>
+            <!--<StackPanel Grid.Row="2" Margin="48,8,8,0" Visibility="{x:Bind HasNestedReply}">
                 <HyperlinkButton Margin="-10,0,0,0" Content="{x:Bind GetNestedReplyStr}" Click="{x:Bind helper:CommentHelper.ShowNestedReply}"/>
-            </StackPanel>
+            </StackPanel>-->
         </Grid>
     </DataTemplate>
 

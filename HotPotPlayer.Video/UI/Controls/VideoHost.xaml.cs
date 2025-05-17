@@ -242,6 +242,17 @@ namespace HotPotPlayer.Video.UI.Controls
             OnToggleFullScreen?.Invoke();
             AppWindow.SetPresenter(IsFullScreen ? AppWindowPresenterKind.FullScreen : AppWindowPresenterKind.Default);
         }
+        private void ToggleFullPageClick(object sender, RoutedEventArgs e)
+        {
+            if(VideoPlayer.VisualState == VideoPlayVisualState.FullHost)
+            {
+                VideoPlayer.VisualState = VideoPlayVisualState.FullWindow;
+            }
+            else
+            {
+                VideoPlayer.VisualState = VideoPlayVisualState.FullHost;
+            }
+        }
 
         private void TogglePlayListBarVisibilityClick(object sender, RoutedEventArgs e)
         {

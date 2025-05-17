@@ -155,7 +155,7 @@ namespace HotPotPlayer.Pages.BilibiliSub
             await BiliBiliService.API.Report(aid, cid, 0);
             OnLineCount = await BiliBiliService.API.GetOnlineCount(Video.Bvid, Video.FirstCid);
             var replies = (await BiliBiliService.API.GetVideoReplyAsync(Video.Aid)).Data;
-            Replies = new ReplyItemCollection(replies, "1", Video.Aid, BiliBiliService);
+            //Replies = new ReplyItemCollection(replies, "1", Video.Aid, BiliBiliService);
             RelatedVideos = (await BiliBiliService.API.GetRelatedVideo(Video.Bvid)).Data;
             IsLike = await BiliBiliService.API.IsLike(Video.Aid);
             Coin = await BiliBiliService.API.GetCoin(Video.Aid);

@@ -10,14 +10,14 @@ using Richasy.BiliKernel.Authorizers.TV;
 using Richasy.BiliKernel.Bili.Authorization;
 using Richasy.BiliKernel.Bili.Media;
 using Richasy.BiliKernel.Http;
+using Richasy.BiliKernel.Models;
+using Richasy.BiliKernel.Models.Comment;
 using Richasy.BiliKernel.Models.Media;
 using Richasy.BiliKernel.Models.Moment;
-using Richasy.BiliKernel.Resolvers.NativeCookies;
-using Richasy.BiliKernel.Resolvers.NativeQRCode;
-using Richasy.BiliKernel.Resolvers.NativeToken;
 using Richasy.BiliKernel.Resolvers.WinUICookies;
 using Richasy.BiliKernel.Resolvers.WinUIQRCode;
 using Richasy.BiliKernel.Resolvers.WinUIToken;
+using Richasy.BiliKernel.Services.Comment;
 using Richasy.BiliKernel.Services.Media;
 using Richasy.BiliKernel.Services.Moment;
 using Richasy.BiliKernel.Services.User;
@@ -44,6 +44,8 @@ namespace HotPotPlayer.Services
             momentDiscovery = new MomentDiscoveryService(biliClient, authenticator, tokenResolver);
             player = new Richasy.BiliKernel.Services.Media.PlayerService(biliClient, authenticator, tokenResolver);
             viewHistory = new ViewHistoryService(biliClient, authentication, authenticator);
+            relationship = new RelationshipService(biliClient, authentication, tokenResolver, authenticator);
+            comment = new CommentService(biliClient, authenticator);
         }
 
         [ObservableProperty]
@@ -84,6 +86,10 @@ namespace HotPotPlayer.Services
         readonly MomentDiscoveryService momentDiscovery;
         readonly Richasy.BiliKernel.Services.Media.PlayerService player;
         readonly ViewHistoryService viewHistory;
+        readonly RelationshipService relationship;
+        readonly CommentService comment;
+
+        private Dictionary<string, VideoInformation> videoInfoCache = new();
 
         /// <summary>
         /// 视频用户代理.
@@ -173,7 +179,15 @@ namespace HotPotPlayer.Services
 
         public async Task<VideoPlayerView> GetVideoPageDetailAsync(MediaIdentifier video, CancellationToken token = default)
         {
-            return await player.GetVideoPageDetailAsync(video, token).ConfigureAwait(false);
+            var r = await player.GetVideoPageDetailAsync(video, token).ConfigureAwait(false);
+            videoInfoCache[r.Information.Identifier.Id] = r.Information;
+            return r;
+        }
+
+        public VideoInformation GetVideoInfoFromCache(string id)
+        {
+            videoInfoCache.TryGetValue(id, out var info);
+            return info;
         }
 
         public async Task<ViewHistoryGroup> GetVideoHistoryAsync(long offset, CancellationToken token = default)
@@ -189,6 +203,17 @@ namespace HotPotPlayer.Services
         public async Task ReportVideoProgressAsync(string aid, string cid, int progress, CancellationToken token = default)
         {
             await player.ReportVideoProgressAsync(aid, cid, progress, token);
+        }
+
+        public async Task<string> GetOnlineViewerAsync(string aid, string cid, CancellationToken token = default)
+        {
+            var re = await player.GetOnlineViewerAsync(aid, cid, token);
+            return re.Text;
+        }
+
+        public async Task<CommentView> GetCommentsAsync(string targetId, CommentTargetType type, CommentSortType sort, long offset = 0, CancellationToken cancellationToken = default)
+        {
+            return await comment.GetCommentsAsync(targetId, type, sort, offset, cancellationToken);
         }
     }
 }
