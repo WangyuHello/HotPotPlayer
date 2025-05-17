@@ -105,6 +105,15 @@
                         <ToggleSwitch OffContent="关闭" OnContent="开启" IsOn="{x:Bind EnableReplayGain, Mode=TwoWay}" FontFamily="{ThemeResource MiSansNormal}"/>
                     </controls:SettingsCard>
 
+                    <!--<controls:SettingsCard Description=""
+                                           Header="播放测试视频"
+                                           FontFamily="{ThemeResource MiSansNormal}">
+                        <controls:SettingsCard.HeaderIcon>
+                            <FontIcon FontFamily="{ThemeResource SegoeIcons}" Glyph="&#xE8D6;" />
+                        </controls:SettingsCard.HeaderIcon>
+                        <Button Content="播放" Click="TestPlayClick" FontFamily="{ThemeResource MiSansNormal}"/>
+                    </controls:SettingsCard>-->
+
                     <controls:SettingsCard Description="{x:Bind MpvVersion, Mode=OneWay}"
                                            Header="版本"
                                            FontFamily="{ThemeResource MiSansNormal}"

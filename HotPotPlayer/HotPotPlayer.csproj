@@ -33,6 +33,7 @@
     <Content Remove="Assets\Emoji\[吃瓜].webp" />
     <Content Remove="Assets\Emoji\[脱单doge].webp" />
     <Content Remove="Assets\Icon\Icons.xaml" />
+    <Content Remove="Assets\LoadingScreen.png" />
   </ItemGroup>
 
   <ItemGroup>
@@ -435,6 +436,11 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Remove="Pages\BilibiliSub\User.xaml" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Update="Assets\LoadingScreen.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <Page Update="Controls\SeriesPopup.xaml">

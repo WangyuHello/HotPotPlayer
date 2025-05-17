@@ -87,6 +87,12 @@ namespace HotPotPlayer.Pages
             MpvVersion ??= GetMpvVersion();
         }
 
+        private void TestPlayClick(object sender, RoutedEventArgs e)
+        {
+            var loc = Windows.ApplicationModel.Package.Current.InstalledLocation.Path;
+            VideoPlayer.PlayNext([new FileInfo(Path.Combine(loc, "Assets", "Media", "test.mp4"))], 0);
+        }
+
         private async void OpenInstalledLocationClick(object sender, RoutedEventArgs e)
         {
             var loc = Windows.ApplicationModel.Package.Current.InstalledLocation;

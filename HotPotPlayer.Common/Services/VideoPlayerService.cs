@@ -54,6 +54,7 @@ namespace HotPotPlayer.Services
         private int _currentWidth;
         private int _currentHeight;
         private Rectangle _currentBounds;
+        private bool _swapChainInited;
 
         private IComObject<ID3D11Device> _device;
         private IComObject<ID3D11DeviceContext> _deviceContext;
@@ -115,6 +116,12 @@ namespace HotPotPlayer.Services
                 var cookieStr = $"Cookie: {App.BiliBiliService.GetCookieString()}";
                 var refererStr = $"Referer:{BiliBiliService.VideoReferer}";
                 mpv.API.SetPropertyString("http-header-fields", $"{cookieStr}\n{refererStr}");
+
+                if (!_swapChainInited)
+                {
+                    var loc = Windows.ApplicationModel.Package.Current.InstalledLocation.Path;
+                    mpv.LoadPlaylist([Path.Combine(loc, "Assets", "LoadingScreen.png")], true);
+                }
             }
         }
 
@@ -202,6 +209,7 @@ namespace HotPotPlayer.Services
         private void OnSwapChainInited(object sender, IntPtr swapchain)
         {
             SwapChain = swapchain;
+            _swapChainInited = true;
             SwapChainInited?.Invoke(sender, swapchain);
         }
 
