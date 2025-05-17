@@ -618,7 +618,7 @@ namespace HotPotPlayer.Services
         {
             updater.Type = MediaPlaybackType.Video;
             updater.VideoProperties.Title = media.Name;
-            updater.VideoProperties.Subtitle = media.Id == null ? "文件" : "Jellyfin";
+            updater.VideoProperties.Subtitle = media.Etag == "Bilibili" ? "Bilibili" : media.Id == null ? "文件" : "Jellyfin";
         }
 
         /// <summary>
@@ -637,6 +637,14 @@ namespace HotPotPlayer.Services
             {
                 var uri = App.JellyfinMusicService.GetPrimaryJellyfinImageSmall(media.ImageTags, media.Id);
 
+                if (uri != null)
+                {
+                    updater.Thumbnail = RandomAccessStreamReference.CreateFromUri(uri);
+                }
+            }
+            else if(media.Etag == "Bilibili")
+            {
+                var uri = new Uri(media.Overview);
                 if (uri != null)
                 {
                     updater.Thumbnail = RandomAccessStreamReference.CreateFromUri(uri);

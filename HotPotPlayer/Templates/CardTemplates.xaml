@@ -496,6 +496,7 @@
                             CornerRadius="32"
                             Background="#99FFFFFF"
                             Tag="{x:Bind }"
+                            Click="{x:Bind helper:BangumiHelper.BiliPlay}"
                             >
                     <FontIcon FontFamily="{ThemeResource SegoeIcons}" Glyph="&#xE768;" FontSize="24"/>
                 </Button>

@@ -19,6 +19,7 @@ namespace HotPotPlayer.Extensions
                 PlaylistItemId = v.Identifier.Id,
                 IsFolder = false,
                 Etag = "Bilibili",
+                Overview = v.Identifier.Cover.Uri.ToString()
             };
         }
     }
