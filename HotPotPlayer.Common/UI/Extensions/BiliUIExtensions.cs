@@ -107,6 +107,38 @@ namespace HotPotPlayer.UI.Extensions
         //    }
         //    return double.NaN;
         //}
+        public static Visibility GetVideoStatVisible(MomentInformation moment)
+        {
+            var isVideo = moment.MomentType == Richasy.BiliKernel.Models.MomentItemType.Video;
+            return isVideo ? Visibility.Visible : Visibility.Collapsed;
+        }
+
+        public static string GetVideoDuration(MomentInformation moment)
+        {
+            if (moment.Data is VideoInformation video)
+            {
+                return GetDuration(video);
+            }
+            return string.Empty;
+        }
+
+        public static string GetVideoPlayCount(MomentInformation moment)
+        {
+            if (moment.Data is VideoInformation video)
+            {
+                return GetPlayCount(video) + "观看";
+            }
+            return string.Empty;
+        }
+
+        public static string GetVideoDanmakuCount(MomentInformation moment)
+        {
+            if (moment.Data is VideoInformation video)
+            {
+                return GetDanmakuCount(video) + "弹幕";
+            }
+            return string.Empty;
+        }
 
         public static string GetDuration(VideoInformation v)
         {

@@ -580,12 +580,42 @@
             </StackPanel>
 
             <!--OneImage (Article/Video/Image)-->
-            <cont2:ImageEx2 Margin="0,8,0,0" 
+            <Grid>
+                <cont2:ImageEx2 Margin="0,8,0,0" 
                             Source="{x:Bind ext:BiliUIExtensions.GetSingleImageSource((bmodelMoment:MomentInformation))}" 
                             Visibility="{x:Bind ext:BiliUIExtensions.IsSingleImage((bmodelMoment:MomentInformation))}" 
                             CornerRadius="4" 
                             Width="{x:Bind ext:BiliUIExtensions.GetSingleImageWidth((bmodelMoment:MomentInformation))}"
                             Style="{StaticResource DynamicImageStyle}"/>
+
+                <Grid VerticalAlignment="Bottom" Padding="12,8"
+                      Visibility="{x:Bind ext:BiliUIExtensions.GetVideoStatVisible((bmodelMoment:MomentInformation))}" >
+                    <Grid.Background>
+                        <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
+                            <GradientStop Offset="0" Color="Transparent"/>
+                            <GradientStop Offset="0.2" Color="#10000000"/>
+                            <GradientStop Offset="0.9" Color="#50000000"/>
+                        </LinearGradientBrush>
+                    </Grid.Background>
+                    <StackPanel Orientation="Horizontal" Spacing="16">
+                        <Border Background="#80000000" CornerRadius="4" Padding="8,4">
+                            <TextBlock Foreground="White" FontSize="13" Text="{x:Bind ext:BiliUIExtensions.GetVideoDuration((bmodelMoment:MomentInformation))}" FontFamily="{ThemeResource MiSansRegular}" />
+                        </Border>
+                        <TextBlock VerticalAlignment="Center" FontSize="13" Foreground="White" Text="{x:Bind ext:BiliUIExtensions.GetVideoPlayCount((bmodelMoment:MomentInformation))}" FontFamily="{ThemeResource MiSansRegular}" />
+                        <TextBlock VerticalAlignment="Center" FontSize="13" Foreground="White" Text="{x:Bind ext:BiliUIExtensions.GetVideoDanmakuCount((bmodelMoment:MomentInformation))}" FontFamily="{ThemeResource MiSansRegular}" />
+                    </StackPanel>
+                </Grid>
+
+                <FontIcon VerticalAlignment="Bottom" 
+                          HorizontalAlignment="Right" 
+                          Margin="0,0,28,16" 
+                          FontSize="48"
+                          Foreground="#80ffffff"
+                          Visibility="{x:Bind ext:BiliUIExtensions.GetVideoStatVisible((bmodelMoment:MomentInformation))}"
+                          FontFamily="{ThemeResource SegoeIcons}" 
+                          Glyph="&#xEB49;" />
+            </Grid>
+
 
             <!--MultiImage-->
             <!--<ccont:AdaptiveGridView Margin="0,8,0,0" Visibility="{x:Bind Modules.ModuleDynamic.IsMultiDraw}" 
@@ -628,12 +658,12 @@
                     </Grid>
                     <TextBlock Grid.Row="1" Margin="0,4,0,0" FontSize="14" Text="{x:Bind Origin.Modules.ModuleDynamic.Major.Archive.Title}" FontFamily="{ThemeResource MiSansMedium}" TextWrapping="Wrap"/>
                 </Grid>
-                --><!--<ccont:AdaptiveGridView Margin="0,8,0,0" Visibility="{x:Bind Origin.Modules.ModuleDynamic.IsMultiDraw}" 
+                <ccont:AdaptiveGridView Margin="0,8,0,0" Visibility="{x:Bind Origin.Modules.ModuleDynamic.IsMultiDraw}" 
                                     DesiredWidth="160"
                                     ItemTemplate="{StaticResource DynamicMultiDrawTemplate}"
                                     ItemsSource="{x:Bind Origin.Modules.ModuleDynamic.Major.Draw.Items}">
 
-                </ccont:AdaptiveGridView>--><!--
+                </ccont:AdaptiveGridView>
             </StackPanel>-->
 
             <!--Archive-->
@@ -732,7 +762,7 @@
                 <Button HorizontalAlignment="Center" Style="{StaticResource TransparentButton}">
                     <StackPanel Orientation="Horizontal" Spacing="4">
                         <ImageIcon Source="ms-appx:///Assets/Icon/Forward.svg" Margin="0,0,0,0" Width="18" Foreground="Gray"/>
-                        <!--<TextBlock Text="{x:Bind Modules.ModuleState.Forward.Count}" FontFamily="{ThemeResource MiSansRegular}" Foreground="Gray"/>-->
+                        <TextBlock Text="转发" FontFamily="{ThemeResource MiSansRegular}" Foreground="Gray"/>
                     </StackPanel>
                 </Button>
                 <Button Grid.Column="1" HorizontalAlignment="Center" Style="{StaticResource TransparentButton}" Click="DynamicCommentClick">

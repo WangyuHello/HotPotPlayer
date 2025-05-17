@@ -4,6 +4,7 @@
 using CommunityToolkit.Mvvm.ComponentModel;
 using HotPotPlayer.Bilibili.Models.Dynamic;
 using HotPotPlayer.Bilibili.Models.Reply;
+using HotPotPlayer.Extensions;
 using HotPotPlayer.Models.BiliBili;
 using HotPotPlayer.Services;
 using Microsoft.UI.Xaml;
@@ -13,6 +14,8 @@ using Microsoft.UI.Xaml.Data;
 using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Navigation;
+using Richasy.BiliKernel.Models.Media;
+using Richasy.BiliKernel.Models.Moment;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -118,7 +121,17 @@ namespace HotPotPlayer.Pages.BilibiliSub
 
         private void DynamicItemClick(object sender, ItemClickEventArgs e)
         {
-            //var v = e.ClickedItem as DynamicItem;
+            var m = e.ClickedItem as MomentInformation;
+            switch (m.MomentType)
+            {
+                case Richasy.BiliKernel.Models.MomentItemType.Video:
+                    var v = m.Data as VideoInformation;
+                    var dto = v.ToBaseItemDto();
+                    VideoPlayer.PlayNext(dto);
+                    break;
+                default:
+                    break;
+            }
             //if (v.Modules.ModuleDynamic?.Major?.Archive != null)
             //{
             //    var bvid = v.Modules.ModuleDynamic.Major.Archive.Bvid;
