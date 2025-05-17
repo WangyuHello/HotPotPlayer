@@ -2,6 +2,7 @@
 using DirectN;
 using DirectN.Extensions;
 using DirectN.Extensions.Com;
+using HotPotPlayer.Bilibili.Models.Video;
 using HotPotPlayer.BiliBili;
 using HotPotPlayer.Extensions;
 using HotPotPlayer.Helpers;
@@ -142,10 +143,15 @@ namespace HotPotPlayer.Services
                         _currentCid = part.Identifier.Id;
                         var dash = App.BiliBiliService.GetVideoPlayDetailAsync(page.Information.Identifier, Convert.ToInt64(part.Identifier.Id)).Result;
                         var bestFormats = dash.Formats[0].Quality.ToString();
+                        var formats = dash.Formats.Select(f => (DashEnum)f.Quality).ToList();
                         var bestVideoDash = GetBestVideo(dash.Videos, bestFormats);
                         var bestAudioDash = dash.Audios.FirstOrDefault();
                         bestVideo = GetNonPcdnUrl(bestVideoDash);
                         bestAudio = GetNonPcdnUrl(bestAudioDash);
+                        if (string.IsNullOrEmpty(bestVideo))
+                        {
+                            throw new NullReferenceException("无法找到视频地址");
+                        }
                         break;
                     }
                     return (bestVideo, bestAudio);

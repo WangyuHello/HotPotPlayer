@@ -581,6 +581,11 @@
 
             <!--OneImage (Article/Video/Image)-->
             <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
+
                 <cont2:ImageEx2 Margin="0,8,0,0" 
                             Source="{x:Bind ext:BiliUIExtensions.GetSingleImageSource((bmodelMoment:MomentInformation))}" 
                             Visibility="{x:Bind ext:BiliUIExtensions.IsSingleImage((bmodelMoment:MomentInformation))}" 
@@ -614,6 +619,14 @@
                           Visibility="{x:Bind ext:BiliUIExtensions.GetVideoStatVisible((bmodelMoment:MomentInformation))}"
                           FontFamily="{ThemeResource SegoeIcons}" 
                           Glyph="&#xEB49;" />
+
+                <TextBlock Grid.Row="1" 
+                           Margin="0,4,0,0" 
+                           FontSize="14" 
+                           Visibility="{x:Bind ext:BiliUIExtensions.GetVideoStatVisible((bmodelMoment:MomentInformation))}"
+                           Text="{x:Bind ext:BiliUIExtensions.GetTitle((bmodelMoment:MomentInformation))}" 
+                           FontFamily="{ThemeResource MiSansMedium}" 
+                           TextWrapping="Wrap"/>
             </Grid>
 
 

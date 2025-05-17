@@ -140,6 +140,15 @@ namespace HotPotPlayer.UI.Extensions
             return string.Empty;
         }
 
+        public static string GetTitle(MomentInformation moment)
+        {
+            if (moment.Data is VideoInformation video)
+            {
+                return video.Identifier.Title;
+            }
+            return string.Empty;
+        }
+
         public static string GetDuration(VideoInformation v)
         {
             var t = TimeSpan.FromSeconds(v.Duration ?? 0);
