@@ -23,6 +23,7 @@ using Richasy.BiliKernel.Services.Moment;
 using Richasy.BiliKernel.Services.User;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -202,7 +203,14 @@ namespace HotPotPlayer.Services
 
         public async Task ReportVideoProgressAsync(string aid, string cid, int progress, CancellationToken token = default)
         {
-            await player.ReportVideoProgressAsync(aid, cid, progress, token);
+            try
+            {
+                await player.ReportVideoProgressAsync(aid, cid, progress, token);
+            }
+            catch (Exception e)
+            {
+                Debug.WriteLine(e);
+            }
         }
 
         public async Task<string> GetOnlineViewerAsync(string aid, string cid, CancellationToken token = default)

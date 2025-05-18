@@ -37,9 +37,10 @@ namespace HotPotPlayer.Pages
         {
             this.InitializeComponent();
             _ui = DispatcherQueue.GetForCurrentThread();
+            BiliBiliService.SetQrcodeRenderFunc(ShowQrcode);
         }
 
-        DispatcherQueue _ui;
+        readonly DispatcherQueue _ui;
 
         [ObservableProperty]
         public partial int SelectedSubPage { get; set; }
@@ -74,7 +75,6 @@ namespace HotPotPlayer.Pages
                 //await LoadEntranceDataAsync();
                 return;
             }
-            BiliBiliService.SetQrcodeRenderFunc(ShowQrcode);
             if (!await BiliBiliService.CheckAuthorizeStatusAsync())
             {
                 await BiliBiliService.SignInAsync();

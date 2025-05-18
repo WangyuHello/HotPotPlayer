@@ -422,6 +422,7 @@ namespace HotPotPlayer.Services
         public Action OnMediaLoaded;
 
         protected readonly ManualResetEvent _event = new(false);
+        protected virtual void CustomMediaLoaded() { }
         private void MediaLoaded(object sender, EventArgs e)
         {
             var restore = Config.GetConfig("EnableRestorePrevLocation", false, true);
@@ -440,6 +441,7 @@ namespace HotPotPlayer.Services
                 OnPropertyChanged(nameof(Volume));
                 OnPropertyChanged(nameof(CurrentPlayingDuration));
             });
+            CustomMediaLoaded();
             OnMediaLoaded?.Invoke();
         }
 
@@ -451,12 +453,15 @@ namespace HotPotPlayer.Services
             });
         }
 
+        protected virtual void CustomMediaResumed() { }
+
         private void MediaResumed(object sender, EventArgs e)
         {
             UIQueue.TryEnqueue(() =>
             {
                 IsPlaying = true;
             });
+            CustomMediaResumed();
         }
 
         protected virtual void SetupMpvInitProperty(MpvPlayer mpv) { }

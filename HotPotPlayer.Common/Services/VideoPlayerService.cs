@@ -169,7 +169,7 @@ namespace HotPotPlayer.Services
                         var bestAudioDash = dash.Audios.FirstOrDefault();
                         bestVideo = GetNonPcdnUrl(bestVideoDash);
                         bestAudio = GetNonPcdnUrl(bestAudioDash);
-                        if (string.IsNullOrEmpty(bestVideo))
+                        if (bestVideoDash == null || string.IsNullOrEmpty(bestVideo))
                         {
                             throw new NullReferenceException("无法找到视频地址");
                         }
@@ -238,6 +238,13 @@ namespace HotPotPlayer.Services
             {
                 await App.BiliBiliService.ReportVideoProgressAsync(currentPlaying.PlaylistItemId, currentPlaying.ProgramId, CurrentTime.Seconds);
             }
+        }
+
+        protected override void CustomMediaResumed()
+        {
+            var geoArgs = new MpvVideoGeometryInitEventArgs();
+            VideoGeometryInit?.Invoke(this, geoArgs);
+            UpdatePanelSize(geoArgs.Width, geoArgs.Height);
         }
 
         private void OnSwapChainInited(object sender, long swapchain)
