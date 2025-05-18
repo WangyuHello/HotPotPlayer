@@ -130,10 +130,10 @@ namespace HotPotPlayer.Pages
             {
                 BiliDynamic.LoadDynamic(true);
             }
-            //else if (SelectedSubPage == 2)
-            //{
-            //    BiliHistory.LoadHistoryAsync(true);
-            //}
+            else if (SelectedSubPage == 2)
+            {
+                BiliHistory.LoadHistoryAsync(true);
+            }
             //await LoadEntranceDataAsync();
         }
 
