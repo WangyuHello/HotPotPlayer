@@ -111,12 +111,25 @@ namespace HotPotPlayer.Services
 
         protected override void SetupMpvEvent(MpvPlayer _mpv)
         {
-            _mpv.API.VideoGeometryInit += VideoGeometryInit;
+            //_mpv.API.VideoGeometryInit += VideoGeometryInit;
             _mpv.API.SwapChainInited += OnSwapChainInited;
         }
 
         protected override void SetupMpvPropertyBeforePlay(MpvPlayer mpv, BaseItemDto media)
         {
+            var geoArgs = new MpvVideoGeometryInitEventArgs();
+            VideoGeometryInit?.Invoke(this, geoArgs);
+            mpv.API.SetPropertyLong("d3d11-init-panel-width", geoArgs.Width);
+            mpv.API.SetPropertyLong("d3d11-init-panel-height", geoArgs.Height);
+            mpv.API.SetPropertyDouble("d3d11-panel-scalex", geoArgs.ScaleX);
+            mpv.API.SetPropertyDouble("d3d11-panel-scaley", geoArgs.ScaleY);
+            mpv.API.SetPropertyDouble("d3d11-init-panel-scalex", geoArgs.ScaleX);
+            mpv.API.SetPropertyDouble("d3d11-init-panel-scaley", geoArgs.ScaleY);
+            mpv.API.SetPropertyLong("d3d11-bounds-left", geoArgs.Bounds.X);
+            mpv.API.SetPropertyLong("d3d11-bounds-right", geoArgs.Bounds.Y);
+            mpv.API.SetPropertyLong("d3d11-bounds-top", geoArgs.Bounds.Width);
+            mpv.API.SetPropertyLong("d3d11-bounds-bottom", geoArgs.Bounds.Height);
+
             if (media.Etag == "Bilibili")
             {
                 mpv.API.SetPropertyString("ytdl", "no");
@@ -227,11 +240,15 @@ namespace HotPotPlayer.Services
             }
         }
 
-        private void OnSwapChainInited(object sender, IntPtr swapchain)
+        private void OnSwapChainInited(object sender, long swapchain)
         {
-            SwapChain = swapchain;
-            _swapChainInited = true;
-            SwapChainInited?.Invoke(sender, swapchain);
+            var _swapChain = (nint)swapchain;
+            if (SwapChain != _swapChain)
+            {
+                _swapChainInited = true;
+                SwapChain = _swapChain;
+                SwapChainInited?.Invoke(sender, _swapChain);
+            }
         }
 
         public void UpdatePanelScale(float scaleX, float scaleY)
