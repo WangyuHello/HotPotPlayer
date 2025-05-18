@@ -160,6 +160,7 @@ namespace HotPotPlayer.Services
                         {
                             throw new NullReferenceException("无法找到视频地址");
                         }
+                        _ = App.BiliBiliService.ReportVideoProgressAsync(v.PlaylistItemId, _currentCid, 0);
                         break;
                     }
                     return (bestVideo, bestAudio);

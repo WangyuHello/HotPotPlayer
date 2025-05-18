@@ -115,12 +115,13 @@ namespace HotPotPlayer.Video.UI.Controls
 
         private void VideoPlayer_SwapchainInited(object sender, nint ptr)
         {
+            _isSwapchainInited = true;
             _uiQueue.TryEnqueue(() =>
             {
                 _swapchain = (Interop.IDXGISwapChain1)Marshal.GetObjectForIUnknown(ptr);
                 _swapChainPanelNative = Host.As<Interop.ISwapChainPanelNative>();
                 _swapChainPanelNative.SetSwapChain(_swapchain);
-                _isSwapchainInited = true;
+                //_isSwapchainInited = true;
                 PlayBarVisible = true;
             });
         }

@@ -27,8 +27,24 @@ namespace HotPotPlayer
         public JellyfinMusicService JellyfinMusicService => ((IComponentServiceLocator)Application.Current).JellyfinMusicService;
         public BiliBiliService BiliBiliService => ((IComponentServiceLocator)Application.Current).BiliBiliService;
 
-        public MusicPlayerService MusicPlayer => ((IComponentServiceLocator)Application.Current).MusicPlayer;
-        public VideoPlayerService VideoPlayer => ((IComponentServiceLocator)Application.Current).VideoPlayer;
+        public MusicPlayerService MusicPlayer
+        {
+            get
+            {
+                var app = Application.Current;
+                if (app == null) return null;
+                return ((IComponentServiceLocator)app).MusicPlayer;
+            }
+        }
+        public VideoPlayerService VideoPlayer 
+        {
+            get
+            {
+                var app = Application.Current;
+                if (app == null) return null;
+                return ((IComponentServiceLocator)app).VideoPlayer;
+            }
+        }
 
         public AppWindow AppWindow => ((IComponentServiceLocator)Application.Current).AppWindow;
         public Window MainWindow => ((IComponentServiceLocator)Application.Current).MainWindow;
