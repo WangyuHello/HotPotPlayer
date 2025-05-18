@@ -27,6 +27,7 @@ using System.Runtime.InteropServices.WindowsRuntime;
 using System.Threading.Tasks;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
+using Windows.UI;
 using WinRT;
 using PlayerState = HotPotPlayer.Models.PlayerState;
 
@@ -377,6 +378,38 @@ namespace HotPotPlayer.Video.UI.Controls
                 state == VideoPlayVisualState.FullWindow ||
                 state == VideoPlayVisualState.FullScreen ||
                 state == VideoPlayVisualState.SmallHost)) ? Visibility.Visible : Visibility.Collapsed;
+        }
+
+        public SolidColorBrush GetTitleBarBackground(bool isFullPageHost, VideoPlayVisualState state)
+        {
+            var dark = new SolidColorBrush(new Windows.UI.Color 
+            { 
+                A = 0xe0,
+                R = 0x42,
+                G = 0x40,
+                B = 0x47
+            });
+            var trans = new SolidColorBrush(Windows.UI.Color.FromArgb(0,0,0,0));
+            if (!isFullPageHost)
+            {
+                return state == VideoPlayVisualState.FullHost ? trans : dark;
+            }
+            else
+            {
+                return dark;
+            }
+        }
+
+        public Visibility GetTitleBarTitleVisible(bool isFullPageHost, VideoPlayVisualState state)
+        {
+            if (!isFullPageHost)
+            {
+                return state == VideoPlayVisualState.FullHost ? Visibility.Collapsed : Visibility.Visible;
+            }
+            else
+            {
+                return Visibility.Visible;
+            }
         }
 
         public Visibility GetTitleBarPlayButtonVisible(VideoPlayVisualState state)

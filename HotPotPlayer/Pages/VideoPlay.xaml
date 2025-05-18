@@ -75,6 +75,7 @@
                               CornerRadius="4" 
                               Style="{StaticResource BiliToggleButton}" 
                               VerticalAlignment="Top" 
+                              IsChecked="{x:Bind IsCoined, Mode=OneWay}"
                               Click="CoinClick">
                     <StackPanel Spacing="4" Padding="0,4">
                         <PathIcon Data="{StaticResource CoinPath}" 
@@ -238,22 +239,22 @@
                            Foreground="Gray" 
                            FontFamily="{ThemeResource MiSansRegular}" />
 
-                <!--<ListView Grid.Column="11" 
+                <ListView Grid.Column="11" 
                           ItemsSource="{x:Bind Tags}" 
                           Height="28" 
                           Margin="12,0,0,0" 
                           Style="{StaticResource HorizontalListViewStyle}" 
                           ItemTemplate="{StaticResource TagTemplate}" 
                           ItemContainerStyle="{StaticResource TransparentListContainerCompactHPaddingStyle}" 
-                          ItemClick="TagClick"/>-->
+                          ItemClick="TagClick"/>
             </Grid>
             <ScrollViewer Grid.Row="3" 
                           MaxHeight="58" 
                           MinHeight="26">
-                <!--<TextBlock Text="{x:Bind Video.VideoDEsc}" 
+                <TextBlock Text="{x:Bind GetDescription(Video)}" 
                            IsTextSelectionEnabled="True" 
                            FontFamily="{ThemeResource MiSansRegular}" 
-                           TextWrapping="Wrap" />-->
+                           TextWrapping="Wrap" />
             </ScrollViewer>
             <ListView x:Name="RelatedList" 
                       Grid.Row="4" 

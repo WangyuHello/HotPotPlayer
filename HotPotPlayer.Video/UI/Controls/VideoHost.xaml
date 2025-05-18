@@ -144,7 +144,7 @@
         <!--Title-->
         <Grid VerticalAlignment="Top" 
               Padding="8,8" 
-              Background="#e0424047" 
+              Background="{x:Bind GetTitleBarBackground(IsFullPageHost, VideoPlayer.VisualState), Mode=OneWay}" 
               Visibility="{x:Bind GetTitleBarVisible(PlayBarVisible, VideoPlayer.VisualState), Mode=OneWay}" 
               PointerEntered="PlayBar_PointerEntered" 
               PointerExited="PlayBar_PointerExited">
@@ -168,7 +168,14 @@
             <Button Grid.Column="1" Style="{StaticResource VideoPlayOtherButton}" Click="ToggleSmallWindowClick">
                 <FontIcon FontFamily="{ThemeResource SegoeIcons}" Glyph="&#xE66C;" />
             </Button>
-            <TextBlock Margin="8,0" Grid.Column="2" Foreground="White" VerticalAlignment="Center" Text="{x:Bind VideoPlayer.CurrentPlaying.Name}" FontFamily="{ThemeResource MiSansRegular}" FontSize="14"/>
+            <TextBlock Margin="8,0" 
+                       Grid.Column="2" 
+                       Foreground="White" 
+                       VerticalAlignment="Center" 
+                       Text="{x:Bind VideoPlayer.CurrentPlaying.Name}" 
+                       Visibility="{x:Bind GetTitleBarTitleVisible(IsFullPageHost, VideoPlayer.VisualState), Mode=OneWay}"
+                       FontFamily="{ThemeResource MiSansRegular}" 
+                       FontSize="14"/>
 
             <Button Grid.Column="3" Click="PlayButtonClick" Style="{StaticResource VideoPlayOtherButton}" Visibility="{x:Bind GetTitleBarPlayButtonVisible(VideoPlayer.VisualState)}">
                 <FontIcon FontFamily="{ThemeResource SegoeIcons}" Glyph="{x:Bind GetPlayButtonIcon(VideoPlayer.IsPlaying, VideoPlayer.HasError), Mode=OneWay}" />

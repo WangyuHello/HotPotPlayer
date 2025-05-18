@@ -541,7 +541,7 @@
         </Grid>
     </DataTemplate>
 
-    <DataTemplate x:Key="BiliVideoCardViewTemplate2" x:DataType="bili2:VideoContent">
+    <DataTemplate x:Key="BiliVideoCardViewTemplate2" x:DataType="bmodel:VideoInformation">
         <StackPanel 
             Width="240"
             x:Name="BiliVideoCardConnectedElement"
@@ -553,9 +553,10 @@
             >
             <cont2:ImageEx2 
                 CornerRadius="4"
-                Source="{x:Bind VideoImage}" 
+                Source="{x:Bind Identifier.Cover.Uri}" 
                 Style="{StaticResource LocalVideoImageStyle}"
-                Width="240" Height="120"
+                Width="240" Height="120" 
+                DecodePixelWidth="240" DecodePixelHeight="240"
                 />
             <Grid Margin="0,-38,0,0" Height="38" Padding="8,0">
                 <Grid.Background>
@@ -578,27 +579,27 @@
                     <ColumnDefinition Width="Auto" />
                 </Grid.ColumnDefinitions>
                 <FontIcon Grid.Row="1" FontFamily="{ThemeResource BiliIcons}" Glyph="&#xEA0F;" Foreground="White" FontSize="18" Margin="0,-1,4,0"/>
-                <TextBlock Grid.Column="1" Grid.Row="1" Text="{x:Bind Stat.GetViews()}" FontSize="13" Foreground="White" FontFamily="{ThemeResource MiSansRegular}" />
+                <TextBlock Grid.Column="1" Grid.Row="1" Text="{x:Bind ext:BiliUIExtensions.GetPlayCount((bmodel:VideoInformation))}" FontSize="13" Foreground="White" FontFamily="{ThemeResource MiSansRegular}" />
                 <FontIcon Grid.Column="2" Grid.Row="1" FontFamily="{ThemeResource BiliIcons}" Glyph="&#xEA05;" Foreground="White" FontSize="18" Margin="12,-1,4,0" />
-                <TextBlock Grid.Column="3" Grid.Row="1" Text="{x:Bind Stat.DanMaku}" FontSize="13" Foreground="White" FontFamily="{ThemeResource MiSansRegular}" />
-                <TextBlock Grid.Column="5" Grid.Row="1" Text="{x:Bind GetDuration()}" FontSize="13" Foreground="White" FontFamily="{ThemeResource MiSansRegular}" />
+                <TextBlock Grid.Column="3" Grid.Row="1" Text="{x:Bind ext:BiliUIExtensions.GetDanmakuCount((bmodel:VideoInformation))}" FontSize="13" Foreground="White" FontFamily="{ThemeResource MiSansRegular}" />
+                <TextBlock Grid.Column="5" Grid.Row="1" Text="{x:Bind ext:BiliUIExtensions.GetDuration((bmodel:VideoInformation))}" FontSize="13" Foreground="White" FontFamily="{ThemeResource MiSansRegular}" />
             </Grid>
             <TextBlock 
                 Margin="8,8" 
-                Text="{x:Bind Title}" 
+                Text="{x:Bind Identifier.Title}" 
                 LineStackingStrategy="BaselineToBaseline" 
                 FontSize="14" 
                 MaxLines="2" 
                 TextTrimming="CharacterEllipsis" 
                 TextWrapping="Wrap" 
                 Height="40" 
-                ToolTipService.ToolTip="{x:Bind Title}" 
+                ToolTipService.ToolTip="{x:Bind Identifier.Title}" 
                 FontFamily="{ThemeResource MiSansMedium}"
                 />
             <StackPanel Orientation="Horizontal" Padding="8,0" >
                 <FontIcon Grid.Column="2" FontFamily="{ThemeResource BiliIcons}" Foreground="Gray" FontSize="13" Margin="0,0,6,-2" Glyph="&#xEA1D;" />
-                <TextBlock Text="{x:Bind Up.Name}" Foreground="Gray" FontFamily="{ThemeResource MiSansRegular}" />
-                <TextBlock Margin="12,0" Text="{x:Bind GetUpDateTime()}" Foreground="Gray" FontFamily="{ThemeResource MiSansRegular}" />
+                <TextBlock Text="{x:Bind Publisher.User.Name}" Foreground="Gray" FontFamily="{ThemeResource MiSansRegular}" />
+                <TextBlock Margin="12,0" Text="{x:Bind ext:BiliUIExtensions.GetUpDateTime((bmodel:VideoInformation))}" Foreground="Gray" FontFamily="{ThemeResource MiSansRegular}" />
             </StackPanel>
 
             <ani:Explicit.Animations>

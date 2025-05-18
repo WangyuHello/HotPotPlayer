@@ -89,7 +89,7 @@ namespace HotPotPlayer.Services
         readonly RelationshipService relationship;
         readonly CommentService comment;
 
-        private Dictionary<string, VideoInformation> videoInfoCache = new();
+        private Dictionary<string, VideoPlayerView> videoPlayerViewCache = new();
 
         /// <summary>
         /// 视频用户代理.
@@ -180,13 +180,13 @@ namespace HotPotPlayer.Services
         public async Task<VideoPlayerView> GetVideoPageDetailAsync(MediaIdentifier video, CancellationToken token = default)
         {
             var r = await player.GetVideoPageDetailAsync(video, token).ConfigureAwait(false);
-            videoInfoCache[r.Information.Identifier.Id] = r.Information;
+            videoPlayerViewCache[r.Information.Identifier.Id] = r;
             return r;
         }
 
-        public VideoInformation GetVideoInfoFromCache(string id)
+        public VideoPlayerView GetVideoInfoFromCache(string id)
         {
-            videoInfoCache.TryGetValue(id, out var info);
+            videoPlayerViewCache.TryGetValue(id, out var info);
             return info;
         }
 
@@ -214,6 +214,21 @@ namespace HotPotPlayer.Services
         public async Task<CommentView> GetCommentsAsync(string targetId, CommentTargetType type, CommentSortType sort, long offset = 0, CancellationToken cancellationToken = default)
         {
             return await comment.GetCommentsAsync(targetId, type, sort, offset, cancellationToken);
+        }
+
+        public async Task CoinVideoAsync(string aid, int number, bool alsoLike, CancellationToken cancellationToken = default)
+        {
+            await player.CoinVideoAsync(aid, number, alsoLike, cancellationToken);
+        }
+
+        public async Task FavoriteVideoAsync(string aid, IList<string> favoriteIds, IList<string> unfavoriteIds, bool isVideo, CancellationToken cancellationToken = default)
+        {
+            await player.FavoriteVideoAsync(aid, favoriteIds, unfavoriteIds, cancellationToken);
+        }
+
+        public async Task ToggleVideoLikeAsync(string aid, bool isLike, CancellationToken cancellationToken = default)
+        {
+            await player.ToggleVideoLikeAsync(aid, isLike, cancellationToken);
         }
     }
 }

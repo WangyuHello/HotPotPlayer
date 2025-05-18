@@ -1,4 +1,5 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
+using DirectN.Extensions.Utilities;
 using HotPotPlayer.Bilibili.Models.Video;
 using HotPotPlayer.Extensions;
 using HotPotPlayer.Models.BiliBili;
@@ -15,6 +16,7 @@ using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Navigation;
 using Richasy.BiliKernel.Http;
+using Richasy.BiliKernel.Models.Base;
 using Richasy.BiliKernel.Models.Media;
 using System;
 using System.Collections.Generic;
@@ -70,6 +72,9 @@ namespace HotPotPlayer.Pages
         public partial bool IsLike { get; set; }
 
         [ObservableProperty]
+        public partial bool IsCoined { get; set; }
+
+        [ObservableProperty]
         public partial bool IsFavor { get; set; }
 
         [ObservableProperty]
@@ -81,6 +86,9 @@ namespace HotPotPlayer.Pages
         [ObservableProperty]
         public partial ReplyItemCollection Replies { get; set; }
 
+        [ObservableProperty]    
+        public partial ObservableCollection<BiliTag> Tags { get; set; }
+
         [ObservableProperty]
         public partial bool IsAdditionLoading { get; set; }
 
@@ -89,7 +97,29 @@ namespace HotPotPlayer.Pages
             if (CurrentPlaying.Etag == "Bilibili")
             {
                 IsFullPageHost = false;
-                Video = BiliBiliService.GetVideoInfoFromCache(@new.PlaylistItemId);
+                var view = BiliBiliService.GetVideoInfoFromCache(@new.PlaylistItemId);
+                Video = view.Information;
+                IsLike = view.Operation.IsLiked;
+                IsCoined = view.Operation.IsCoined;
+                IsFavor = view.Operation.IsFavorited;
+                if (RelatedVideos == null)
+                {
+                    RelatedVideos = new ObservableCollection<VideoInformation>(view.Recommends);
+                }
+                else
+                {
+                    RelatedVideos.Clear();
+                    RelatedVideos.AddRange(view.Recommends);
+                }
+                if(Tags == null)
+                {
+                    Tags = new ObservableCollection<BiliTag>(view.Tags);
+                }
+                else
+                {
+                    Tags.Clear();
+                    Tags.AddRange(view.Tags);
+                }
                 OnLineCount = await BiliBiliService.GetOnlineViewerAsync(@new.PlaylistItemId, @new.ProgramId);
                 if (Replies == null)
                 {
@@ -140,8 +170,9 @@ namespace HotPotPlayer.Pages
             //});
         }
 
-        private void LikeClick(object sender, RoutedEventArgs e)
+        private async void LikeClick(object sender, RoutedEventArgs e)
         {
+            await BiliBiliService.ToggleVideoLikeAsync(Video.Identifier.Id, !IsLike);
             //var r = await BiliBiliService.API.Like(aid, bvid, !IsLike);
             //if (r.Code == 0)
             //{
@@ -155,8 +186,8 @@ namespace HotPotPlayer.Pages
             //        Likes--;
             //    }
             //}
-            //var b = sender as ToggleButton;
-            //b.IsChecked = IsLike;
+            var b = sender as ToggleButton;
+            b.IsChecked = !IsLike;
         }
         private void CoinClick(object sender, RoutedEventArgs e)
         {
@@ -189,6 +220,19 @@ namespace HotPotPlayer.Pages
             //ShareFl.Init();
             //var b = sender as FrameworkElement;
             //b.ContextFlyout.ShowAt(b);
+        }
+
+        private async void CoinConfirmClick(object sender, int c)
+        {
+            CoinToggleButton.ContextFlyout.Hide();
+            await BiliBiliService.CoinVideoAsync(Video.Identifier.Id, c, false);
+        }
+
+        string GetDescription(VideoInformation video)
+        {
+            if (video == null) return string.Empty;
+            video.ExtensionData.TryGetValue("Description", out var desc);
+            return desc.ToString();
         }
 
         GridLength GetCommentWidth(VideoPlayVisualState state)

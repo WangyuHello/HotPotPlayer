@@ -210,7 +210,7 @@ namespace HotPotPlayer.UI.Extensions
 
         public static string GetDateTimeStr(DateTimeOffset d)
         {
-            return $"{d.Year}-{d.Month}-{d.Day}";
+            return d.ToString("yyyy-MM-dd HH:mm:ss");
         }
 
         public static string GetPlayCount(VideoInformation video)
