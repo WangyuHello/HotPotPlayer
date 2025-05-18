@@ -139,11 +139,11 @@ namespace HotPotPlayer.Services
                 var refererStr = $"Referer:{BiliBiliService.VideoReferer}";
                 mpv.API.SetPropertyString("http-header-fields", $"{cookieStr}\n{refererStr}");
 
-                if (!_swapChainInited)
-                {
-                    var loc = Windows.ApplicationModel.Package.Current.InstalledLocation.Path;
-                    mpv.LoadPlaylist([Path.Combine(loc, "Assets", "LoadingScreen.png")], true);
-                }
+                //if (!_swapChainInited)
+                //{
+                //    var loc = Windows.ApplicationModel.Package.Current.InstalledLocation.Path;
+                //    mpv.LoadPlaylist([Path.Combine(loc, "Assets", "LoadingScreen.png")], true);
+                //}
             }
         }
 
