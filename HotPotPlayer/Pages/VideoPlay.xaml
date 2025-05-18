@@ -28,7 +28,8 @@
                 <RowDefinition Height="{x:Bind GetTitleHeight(VideoPlayer.VisualState)}" />
                 <RowDefinition Height="{x:Bind GetTitleHeight(VideoPlayer.VisualState)}" />
             </Grid.RowDefinitions>
-            <FontIcon FontFamily="{ThemeResource BiliIcons}" Glyph="&#xEA10;" FontSize="120" Foreground="#dbdcdc"/>
+            <!--<FontIcon FontFamily="{ThemeResource BiliIcons}" Glyph="&#xEA10;" FontSize="120" Foreground="#dbdcdc"/>-->
+            <Image Width="80" Height="80" HorizontalAlignment="Center" VerticalAlignment="Center" Source="ms-appx:///Assets/StoreLogo.scale-400.png"/>
 
             <vcont:VideoHost x:Name="TheHost" IsFullPageHost="{x:Bind IsFullPageHost}"/>
 
