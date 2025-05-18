@@ -121,20 +121,11 @@ namespace HotPotPlayer.Pages
                     Tags.AddRange(view.Tags);
                 }
                 OnLineCount = await BiliBiliService.GetOnlineViewerAsync(@new.PlaylistItemId, @new.ProgramId);
-                if (Replies == null)
+                Replies = new ReplyItemCollection(BiliBiliService)
                 {
-                    Replies = new ReplyItemCollection(BiliBiliService)
-                    {
-                        Oid = @new.PlaylistItemId,
-                        Type = Richasy.BiliKernel.Models.CommentTargetType.Video
-                    };
-                }
-                else
-                {
-                    Replies.Reset();
-                    Replies.Oid = @new.PlaylistItemId;
-                    Replies.Clear();
-                }
+                    Oid = @new.PlaylistItemId,
+                    Type = Richasy.BiliKernel.Models.CommentTargetType.Video
+                };
             }
             else
             {
