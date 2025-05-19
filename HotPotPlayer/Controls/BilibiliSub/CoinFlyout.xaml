@@ -27,7 +27,7 @@
         <ToggleButton x:Name="Coin1" Margin="0,8,8,8" Click="Coin1Click" Grid.Row="1" Width="50" Height="60" >
             <PathIcon Data="{StaticResource CoinPath}" HorizontalAlignment="Center" />
         </ToggleButton>
-        <ToggleButton x:Name="Coin2" Margin="0,8,0,8" Click="Coin2Click" Grid.Row="1" Grid.Column="1" IsEnabled="{x:Bind IsCoin2Enable(CopyRight)}" Width="70" Height="60">
+        <ToggleButton x:Name="Coin2" Margin="0,8,0,8" Click="Coin2Click" Grid.Row="1" Grid.Column="1" IsEnabled="{x:Bind IsOriginal}" Width="70" Height="60">
             <StackPanel Orientation="Horizontal" Spacing="4">
                 <PathIcon Data="{StaticResource CoinPath}" HorizontalAlignment="Center" />
                 <PathIcon Data="{StaticResource CoinPath}" HorizontalAlignment="Center" />

@@ -50,11 +50,11 @@ namespace HotPotPlayer.Templates
 
         private void StaffTapped(object sender, TappedRoutedEventArgs e)
         {
-            var grid = sender as Grid;
-            var flyout = grid.ContextFlyout as Flyout;
-            var f = flyout.Content as UserCard;
-            f.LoadUserCardBundle();
-            flyout.ShowAt(grid);
+            //var grid = sender as Grid;
+            //var flyout = grid.ContextFlyout as Flyout;
+            //var f = flyout.Content as UserCard;
+            //f.LoadUserCardBundle();
+            //flyout.ShowAt(grid);
         }
     }
 }

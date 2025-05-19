@@ -63,11 +63,11 @@
                         <PathIcon Data="{StaticResource CoinPath}" HorizontalAlignment="Center" Margin="0,2,0,2"/>
                         <TextBlock HorizontalAlignment="Center" Text="{x:Bind GetString(Coins)}" FontFamily="{ThemeResource MiSansRegular}" />
                     </StackPanel>
-                    <ToggleButton.ContextFlyout>
+                    <!--<ToggleButton.ContextFlyout>
                         <Flyout>
-                            <cont3:CoinFlyout CopyRight="{x:Bind Video.CopyRight}" CoinConfirmed="CoinConfirmClick"/>
+                            <cont3:CoinFlyout IsOriginal="{x:Bind Video.CopyRight}" CoinConfirmed="CoinConfirmClick"/>
                         </Flyout>
-                    </ToggleButton.ContextFlyout>
+                    </ToggleButton.ContextFlyout>-->
                 </ToggleButton>
                 <ToggleButton Padding="8,0" CornerRadius="4" Style="{StaticResource BiliToggleButton}" VerticalAlignment="Top" IsChecked="{x:Bind IsFavor}" Click="FavorClick">
                     <StackPanel Spacing="4" Padding="0,4" >

@@ -28,14 +28,14 @@ namespace HotPotPlayer.Controls.BilibiliSub
             this.InitializeComponent();
         }
 
-        public int CopyRight
+        public bool IsOriginal
         {
-            get { return (int)GetValue(CopyRightProperty); }
+            get { return (bool)GetValue(CopyRightProperty); }
             set { SetValue(CopyRightProperty, value); }
         }
 
         public static readonly DependencyProperty CopyRightProperty =
-            DependencyProperty.Register("CopyRight", typeof(int), typeof(CoinFlyout), new PropertyMetadata(1));
+            DependencyProperty.Register("IsOriginal", typeof(bool), typeof(CoinFlyout), new PropertyMetadata(true));
 
 
         public event EventHandler<int> CoinConfirmed;
@@ -79,11 +79,5 @@ namespace HotPotPlayer.Controls.BilibiliSub
                 Confirm.IsEnabled = false;
             }
         }
-
-        bool IsCoin2Enable(int copyright)
-        {
-            return copyright == 1;
-        }
-
     }
 }

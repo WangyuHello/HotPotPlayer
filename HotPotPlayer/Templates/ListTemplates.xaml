@@ -7,6 +7,7 @@
     xmlns:jmodel="using:Jellyfin.Sdk.Generated.Models"
     xmlns:bmodel="using:Richasy.BiliKernel.Models"
     xmlns:bmodelBase="using:Richasy.BiliKernel.Models.Base"
+    xmlns:bmodelUser="using:Richasy.BiliKernel.Models.User"
     xmlns:bmodelMoment="using:Richasy.BiliKernel.Models.Moment"
     xmlns:bmodelComment="using:Richasy.BiliKernel.Models.Comment"
     xmlns:helper="using:HotPotPlayer.Pages.Helper"
@@ -831,22 +832,22 @@
         </Grid>
     </DataTemplate>
 
-    <DataTemplate x:Key="StaffTemplate" x:DataType="bv:Staff">
+    <DataTemplate x:Key="StaffTemplate" x:DataType="bmodelUser:PublisherProfile">
         <Grid MinWidth="60" Tapped="StaffTapped">
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto" />
                 <RowDefinition Height="Auto" />
             </Grid.RowDefinitions>
-            <cont2:ImageEx2 Source="{x:Bind Face}" Style="{StaticResource DynamicImageStyle}" CornerRadius="20" Width="40" Height="40" DecodePixelWidth="44" DecodePixelHeight="44"/>
+            <cont2:ImageEx2 Source="{x:Bind User.Avatar.Uri}" Style="{StaticResource DynamicImageStyle}" CornerRadius="20" Width="40" Height="40" DecodePixelWidth="40" DecodePixelHeight="40"/>
             <Border HorizontalAlignment="Right" VerticalAlignment="Top" Background="#9f05aeec" CornerRadius="4" Padding="4,0">
-                <TextBlock Text="{x:Bind Title}" FontSize="12" FontFamily="{ThemeResource MiSansRegular}" Foreground="White"/>
+                <TextBlock Text="{x:Bind Role}" FontSize="12" FontFamily="{ThemeResource MiSansRegular}" Foreground="White"/>
             </Border>
-            <TextBlock Grid.Row="1" Margin="0,4,0,0" FontSize="12" Text="{x:Bind Name}" FontFamily="{ThemeResource MiSansMedium}" HorizontalAlignment="Center" MaxWidth="76" TextTrimming="CharacterEllipsis"/>
-            <Grid.ContextFlyout>
+            <TextBlock Grid.Row="1" Margin="0,4,0,0" FontSize="12" Text="{x:Bind User.Name}" FontFamily="{ThemeResource MiSansMedium}" HorizontalAlignment="Center" MaxWidth="76" TextTrimming="CharacterEllipsis"/>
+            <!--<Grid.ContextFlyout>
                 <Flyout>
-                    <cont3:UserCard Margin="-16" Mid="{x:Bind Mid}" />
+                    <cont3:UserCard Margin="-16" Mid="{x:Bind User.Id}" />
                 </Flyout>
-            </Grid.ContextFlyout>
+            </Grid.ContextFlyout>-->
         </Grid>
     </DataTemplate>
 

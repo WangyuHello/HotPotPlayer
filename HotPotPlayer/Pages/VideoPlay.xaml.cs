@@ -69,15 +69,6 @@ namespace HotPotPlayer.Pages
         public partial VideoInformation Video { get; set; }
 
         [ObservableProperty]
-        public partial bool IsLike { get; set; }
-
-        [ObservableProperty]
-        public partial bool IsCoined { get; set; }
-
-        [ObservableProperty]
-        public partial bool IsFavor { get; set; }
-
-        [ObservableProperty]
         public partial string OnLineCount {  get; set; }
 
         [ObservableProperty]
@@ -99,9 +90,9 @@ namespace HotPotPlayer.Pages
                 IsFullPageHost = false;
                 var view = BiliBiliService.GetVideoInfoFromCache(@new.PlaylistItemId);
                 Video = view.Information;
-                IsLike = view.Operation.IsLiked;
-                IsCoined = view.Operation.IsCoined;
-                IsFavor = view.Operation.IsFavorited;
+                LikeButton.IsChecked = view.Operation.IsLiked;
+                CoinButton.IsChecked = view.Operation.IsCoined;
+                FavorButton.IsChecked = view.Operation.IsFavorited;
                 if (RelatedVideos == null)
                 {
                     RelatedVideos = new ObservableCollection<VideoInformation>(view.Recommends);
@@ -133,12 +124,6 @@ namespace HotPotPlayer.Pages
             }
         }
 
-        private Visibility IsSingleStaff(VideoInformation video)
-        {
-            //var isSingle = !video.Collaborators.Any();
-            return Visibility.Visible;
-        }
-
         private void UserAvatar_Tapped(object sender, TappedRoutedEventArgs e)
         {
             //UserAvatarFlyout.LoadUserCardBundle();
@@ -163,7 +148,8 @@ namespace HotPotPlayer.Pages
 
         private async void LikeClick(object sender, RoutedEventArgs e)
         {
-            await BiliBiliService.ToggleVideoLikeAsync(Video.Identifier.Id, !IsLike);
+            var b = sender as ToggleButton;
+            await BiliBiliService.ToggleVideoLikeAsync(Video.Identifier.Id, b.IsChecked ?? false);
             //var r = await BiliBiliService.API.Like(aid, bvid, !IsLike);
             //if (r.Code == 0)
             //{
@@ -177,14 +163,12 @@ namespace HotPotPlayer.Pages
             //        Likes--;
             //    }
             //}
-            var b = sender as ToggleButton;
-            b.IsChecked = !IsLike;
         }
         private void CoinClick(object sender, RoutedEventArgs e)
         {
-            //var b = sender as ToggleButton;
-            //b.ContextFlyout.ShowAt(b);
-            //b.IsChecked = Coin != 0;
+            var b = sender as ToggleButton;
+            b.ContextFlyout.ShowAt(b);
+            b.IsChecked = false;
         }
 
         private void FavorClick(object sender, RoutedEventArgs e)
@@ -215,8 +199,31 @@ namespace HotPotPlayer.Pages
 
         private async void CoinConfirmClick(object sender, int c)
         {
-            CoinToggleButton.ContextFlyout.Hide();
+            CoinButton.ContextFlyout.Hide();
             await BiliBiliService.CoinVideoAsync(Video.Identifier.Id, c, false);
+            CoinButton.IsChecked = true;
+        }
+
+        Visibility IsSingleStaff(VideoInformation video)
+        {
+            if (video == null) return Visibility.Collapsed;
+            var isSingle = video.Collaborators == null || video.Collaborators.Count == 0;
+            return isSingle ? Visibility.Visible : Visibility.Collapsed;
+        }
+
+        Visibility GetIsMultiStaff(VideoInformation video)
+        {
+            if (video == null) return Visibility.Collapsed;
+            var ismulti = video.Collaborators != null && video.Collaborators.Any();
+            return ismulti ? Visibility.Visible : Visibility.Collapsed;
+        }
+
+        bool GetIsOriginal(VideoInformation video)
+        {
+            if (video == null) return true;
+            video.ExtensionData.TryGetValue("IsOriginal", out var i);
+            if (i is bool b) return b;
+            return true;
         }
 
         string GetDescription(VideoInformation video)
