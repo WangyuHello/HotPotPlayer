@@ -31,6 +31,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\Danmaku.Core\Danmaku.Core.csproj" />
     <ProjectReference Include="..\HotPotPlayer.Common\HotPotPlayer.Common.csproj" />
     <ProjectReference Include="..\HotPotPlayer.Interop\HotPotPlayer.Interop.csproj" />
     <ProjectReference Include="..\HotPotPlayer.Native\HotPotPlayer.Native.csproj" />
