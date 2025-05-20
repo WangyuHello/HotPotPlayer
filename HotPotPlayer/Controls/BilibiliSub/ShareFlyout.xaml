@@ -27,7 +27,7 @@
 
         <Grid Margin="24,24,0,8" VerticalAlignment="Top" Grid.ColumnSpan="2" CornerRadius="4">
 
-            <cont2:ImageEx2 x:Name="Cover" Source="{x:Bind Video.VideoImage}"  Width="320" Height="160" DecodePixelWidth="320" DecodePixelHeight="160" Style="{StaticResource DynamicImageStyle}" />
+            <cont2:ImageEx2 x:Name="Cover" Source="{x:Bind Video.Identifier.Cover.Uri}"  Width="320" Height="160" DecodePixelWidth="320" DecodePixelHeight="160" Style="{StaticResource DynamicImageStyle}" />
             <Grid VerticalAlignment="Bottom" Width="320" Padding="8,24,8,8">
                 <Grid.Background>
                     <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
@@ -36,11 +36,11 @@
                         <GradientStop Offset="1" Color="#b0000000"/>
                     </LinearGradientBrush>
                 </Grid.Background>
-                <TextBlock Text="{x:Bind Video.Title}" Foreground="White" TextTrimming="CharacterEllipsis" FontFamily="{ThemeResource MiSansMedium}"/>
+                <TextBlock Text="{x:Bind Video.Identifier.Title}" Foreground="White" TextTrimming="CharacterEllipsis" FontFamily="{ThemeResource MiSansMedium}"/>
             </Grid>
         </Grid>
-        
-        <TextBlock Grid.Row="1" Text="{x:Bind Video.Bvid}" Foreground="Gray" Margin="24,0,0,0" VerticalAlignment="Center" FontSize="14" FontFamily="{ThemeResource MiSansRegular}" IsTextSelectionEnabled="True"/>
+
+        <TextBlock Grid.Row="1" Text="{x:Bind Video.BvId}" Foreground="Gray" Margin="24,0,0,0" VerticalAlignment="Center" FontSize="14" FontFamily="{ThemeResource MiSansRegular}" IsTextSelectionEnabled="True"/>
 
         <Button Grid.Row="1" Grid.Column="1" Margin="0,0,0,0" HorizontalAlignment="Right" VerticalAlignment="Center" FontFamily="{ThemeResource MiSansRegular}" Style="{StaticResource AccentButtonStyle}" Click="ShareLinkClick">获取视频分享链接</Button>
 

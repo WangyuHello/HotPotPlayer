@@ -470,9 +470,9 @@ namespace HotPotPlayer.Pages.BilibiliSub
 
         private void ShareClick(object sender, RoutedEventArgs e)
         {
-            ShareFl.Init();
-            var b = sender as FrameworkElement;
-            b.ContextFlyout.ShowAt(b);
+            //ShareFl.Init();
+            //var b = sender as FrameworkElement;
+            //b.ContextFlyout.ShowAt(b);
         }
 
         string GetString(int v)

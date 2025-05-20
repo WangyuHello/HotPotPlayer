@@ -126,8 +126,8 @@ namespace HotPotPlayer.Pages
 
         private void UserAvatar_Tapped(object sender, TappedRoutedEventArgs e)
         {
-            //UserAvatarFlyout.LoadUserCardBundle();
-            //UserAvatar.ContextFlyout.ShowAt(UserAvatar);
+            UserAvatarFlyout.LoadUserCardBundle();
+            UserAvatar.ContextFlyout.ShowAt(UserAvatar);
         }
 
         private void RelateVideoClick(object sender, ItemClickEventArgs e)
@@ -149,20 +149,14 @@ namespace HotPotPlayer.Pages
         private async void LikeClick(object sender, RoutedEventArgs e)
         {
             var b = sender as ToggleButton;
-            await BiliBiliService.ToggleVideoLikeAsync(Video.Identifier.Id, b.IsChecked ?? false);
-            //var r = await BiliBiliService.API.Like(aid, bvid, !IsLike);
-            //if (r.Code == 0)
-            //{
-            //    IsLike = !IsLike;
-            //    if (IsLike)
-            //    {
-            //        Likes++;
-            //    }
-            //    else
-            //    {
-            //        Likes--;
-            //    }
-            //}
+            try
+            {
+                await BiliBiliService.ToggleVideoLikeAsync(Video.Identifier.Id, b.IsChecked ?? false);
+            }
+            catch (Exception)
+            {
+                b.IsChecked = !b.IsChecked;
+            }
         }
         private void CoinClick(object sender, RoutedEventArgs e)
         {
@@ -192,16 +186,23 @@ namespace HotPotPlayer.Pages
 
         private void ShareClick(object sender, RoutedEventArgs e)
         {
-            //ShareFl.Init();
-            //var b = sender as FrameworkElement;
-            //b.ContextFlyout.ShowAt(b);
+            ShareFl.Init();
+            var b = sender as FrameworkElement;
+            b.ContextFlyout.ShowAt(b);
         }
 
         private async void CoinConfirmClick(object sender, int c)
         {
             CoinButton.ContextFlyout.Hide();
-            await BiliBiliService.CoinVideoAsync(Video.Identifier.Id, c, false);
-            CoinButton.IsChecked = true;
+            try
+            {
+                await BiliBiliService.CoinVideoAsync(Video.Identifier.Id, c, false);
+                CoinButton.IsChecked = true;
+            }
+            catch (Exception)
+            {
+                CoinButton.IsChecked = false;
+            }
         }
 
         Visibility IsSingleStaff(VideoInformation video)

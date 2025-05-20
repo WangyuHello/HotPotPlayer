@@ -5,6 +5,7 @@ using HotPotPlayer.Bilibili.Models.Video;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Media.Imaging;
 using QRCoder;
+using Richasy.BiliKernel.Models.Media;
 using System;
 using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
@@ -26,18 +27,18 @@ namespace HotPotPlayer.Controls.BilibiliSub
             this.InitializeComponent();
         }
 
-        public VideoContent Video
+        public VideoInformation Video
         {
-            get { return (VideoContent)GetValue(VideoProperty); }
+            get { return (VideoInformation)GetValue(VideoProperty); }
             set { SetValue(VideoProperty, value); }
         }
 
         public static readonly DependencyProperty VideoProperty =
-            DependencyProperty.Register("Video", typeof(VideoContent), typeof(ShareFlyout), new PropertyMetadata(default));
+            DependencyProperty.Register("Video", typeof(VideoInformation), typeof(ShareFlyout), new PropertyMetadata(default));
 
         private async void OpenWebClick(object sender, RoutedEventArgs e)
         {
-            await Launcher.LaunchUriAsync(new Uri("https://www.bilibili.com/video/" + Video.Bvid));
+            await Launcher.LaunchUriAsync(new Uri("https://www.bilibili.com/video/" + Video.BvId));
         }
 
         byte[] GetQrImgByte(string url)
@@ -50,9 +51,9 @@ namespace HotPotPlayer.Controls.BilibiliSub
         }
 
         byte[] qrData;
-        private async Task SetShareQrImage(VideoContent video)
+        private async Task SetShareQrImage(VideoInformation video)
         {
-            qrData = GetQrImgByte("https://m.bilibili.com/video/"+video.Bvid);
+            qrData = GetQrImgByte("https://m.bilibili.com/video/"+video.BvId);
             BitmapImage image = new();
             var stream = new InMemoryRandomAccessStream();
             await stream.WriteAsync(qrData.AsBuffer());
@@ -68,6 +69,7 @@ namespace HotPotPlayer.Controls.BilibiliSub
 
         private async void ShareImageClick(object sender, RoutedEventArgs e)
         {
+            
             //using Image<Rgba32> image = new(1320, 600, new Rgba32(255,255,255,255));
 
             //var coverUrl = Video.VideoImage;
@@ -88,7 +90,7 @@ namespace HotPotPlayer.Controls.BilibiliSub
             //image.Mutate(x => x.DrawText(Video.Title, font2, Color.White, new PointF(104, 476)));
 
             InMemoryRandomAccessStream buf = new();
-            RenderTargetBitmap bitmap = new RenderTargetBitmap();
+            RenderTargetBitmap bitmap = new();
             await bitmap.RenderAsync(this);
             var pixelBuffer = await bitmap.GetPixelsAsync();
             var encoder = await BitmapEncoder.CreateAsync(BitmapEncoder.PngEncoderId, buf);
@@ -118,7 +120,7 @@ namespace HotPotPlayer.Controls.BilibiliSub
             {
                 RequestedOperation = DataPackageOperation.Copy
             };
-            dataPackage.SetText("https://www.bilibili.com/video/" + Video.Bvid);
+            dataPackage.SetText("https://www.bilibili.com/video/" + Video.BvId);
             Clipboard.SetContent(dataPackage);
 
             ShowToast(new Models.ToastInfo { Text = "已复制到剪贴板" });

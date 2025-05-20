@@ -547,11 +547,11 @@
                 </Grid.ColumnDefinitions>
                 <Button Grid.RowSpan="2" Margin="0,0,8,0" Click="UserAvatarClick" Style="{StaticResource TransparentButton}">
                     <cont2:ImageEx2  Width="40" Height="40" Source="{x:Bind User.Avatar.Uri}" CornerRadius="20" Style="{StaticResource LocalMusicImageStyle}" />
-                    <!--<Button.ContextFlyout>
+                    <Button.ContextFlyout>
                         <Flyout>
                             <cont3:UserCard Margin="-16" Mid="{x:Bind User.Id}" />
                         </Flyout>
-                    </Button.ContextFlyout>-->
+                    </Button.ContextFlyout>
                 </Button>
                 <TextBlock Grid.Column="1" VerticalAlignment="Bottom" FontFamily="{ThemeResource MiSansMedium}" Text="{x:Bind User.Name}" Foreground="#fb799d"/>
                 <TextBlock Grid.Column="1" VerticalAlignment="Top" Margin="0,2,0,0" Grid.Row="1" FontFamily="{ThemeResource MiSansRegular}" FontSize="12" Foreground="Gray" Text="{x:Bind Tip}"/>
@@ -843,11 +843,11 @@
                 <TextBlock Text="{x:Bind Role}" FontSize="12" FontFamily="{ThemeResource MiSansRegular}" Foreground="White"/>
             </Border>
             <TextBlock Grid.Row="1" Margin="0,4,0,0" FontSize="12" Text="{x:Bind User.Name}" FontFamily="{ThemeResource MiSansMedium}" HorizontalAlignment="Center" MaxWidth="76" TextTrimming="CharacterEllipsis"/>
-            <!--<Grid.ContextFlyout>
+            <Grid.ContextFlyout>
                 <Flyout>
                     <cont3:UserCard Margin="-16" Mid="{x:Bind User.Id}" />
                 </Flyout>
-            </Grid.ContextFlyout>-->
+            </Grid.ContextFlyout>
         </Grid>
     </DataTemplate>
 

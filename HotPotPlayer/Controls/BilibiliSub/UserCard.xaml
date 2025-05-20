@@ -13,7 +13,7 @@
     x:DefaultBindMode="OneWay"
     mc:Ignorable="d">
 
-    <Grid Width="360">
+    <Grid Width="360" Padding="0,4,0,0">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
@@ -23,22 +23,22 @@
             <ColumnDefinition Width="Auto" />
             <ColumnDefinition Width="*" />
         </Grid.ColumnDefinitions>
-        <cont2:ImageEx2 Height="120" Grid.ColumnSpan="2" Source="{x:Bind UserCardBundle.Space.SmallImage}" Style="{StaticResource DynamicImageStyle}" Stretch="UniformToFill"/>
+        <!--<cont2:ImageEx2 Height="120" Grid.ColumnSpan="2" Source="{x:Bind UserCardBundle.Space.SmallImage}" Style="{StaticResource DynamicImageStyle}" Stretch="UniformToFill"/>-->
 
-        <cont2:ImageEx2 Margin="8" Grid.Row="1" VerticalAlignment="Top" Source="{x:Bind UserCardBundle.Card.Face}" Width="44" Height="44" CornerRadius="22" Style="{StaticResource DynamicImageStyle}" />
+        <cont2:ImageEx2 Margin="8" Grid.Row="1" VerticalAlignment="Top" Source="{x:Bind UserCardBundle.Profile.User.Avatar.Uri}" Width="44" Height="44" CornerRadius="22" Style="{StaticResource DynamicImageStyle}" />
 
         <StackPanel Margin="0,8,16,0" Grid.Row="1" Grid.Column="1" Spacing="8">
-            <TextBlock Text="{x:Bind UserCardBundle.Card.Name}" FontSize="16" FontFamily="{ThemeResource MiSansMedium}" />
+            <TextBlock Text="{x:Bind UserCardBundle.Profile.User.Name}" FontSize="16" FontFamily="{ThemeResource MiSansMedium}" />
             <StackPanel Orientation="Horizontal" Spacing="12">
-                <TextBlock Text="{x:Bind UserCardBundle.GetFriend}" FontSize="13" Foreground="Gray" FontFamily="{ThemeResource MiSansRegular}" />
-                <TextBlock Text="{x:Bind UserCardBundle.GetFans}" FontSize="13" Foreground="Gray" FontFamily="{ThemeResource MiSansRegular}" />
-                <TextBlock Text="{x:Bind UserCardBundle.GetLikeNum}" FontSize="13" Foreground="Gray" FontFamily="{ThemeResource MiSansRegular}" />
+                <TextBlock Text="{x:Bind GetFriend(UserCardBundle)}" FontSize="13" Foreground="Gray" FontFamily="{ThemeResource MiSansRegular}" />
+                <TextBlock Text="{x:Bind GetFans(UserCardBundle)}" FontSize="13" Foreground="Gray" FontFamily="{ThemeResource MiSansRegular}" />
+                <TextBlock Text="{x:Bind GetLikeNum(UserCardBundle)}" FontSize="13" Foreground="Gray" FontFamily="{ThemeResource MiSansRegular}" />
             </StackPanel>
-            <TextBlock Text="{x:Bind UserCardBundle.GetSign}" FontSize="13" Foreground="Gray" FontFamily="{ThemeResource MiSansRegular}" TextWrapping="Wrap"/>
+            <TextBlock Text="{x:Bind GetSign(UserCardBundle)}" FontSize="13" Foreground="Gray" FontFamily="{ThemeResource MiSansRegular}" TextWrapping="Wrap"/>
         </StackPanel>
         
         <StackPanel Grid.Row="2" Grid.ColumnSpan="2" HorizontalAlignment="Center" Margin="0,12,0,12" Orientation="Horizontal" Spacing="16">
-            <Button Width="108" FontFamily="{ThemeResource MiSansRegular}" Style="{StaticResource AccentButtonStyle}" Content="{x:Bind GetFollowStr(UserCardBundle.Following)}"/>
+            <Button Width="108" FontFamily="{ThemeResource MiSansRegular}" Style="{StaticResource AccentButtonStyle}" Content="{x:Bind GetFollowStr(UserCardBundle)}"/>
             <Button Width="108" FontFamily="{ThemeResource MiSansRegular}" Click="UserClick">主页</Button>
         </StackPanel>
     </Grid>

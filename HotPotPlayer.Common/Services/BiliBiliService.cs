@@ -1,4 +1,5 @@
-﻿using CommunityToolkit.Mvvm.ComponentModel;
+﻿using Bilibili.App.Interfaces.V1;
+using CommunityToolkit.Mvvm.ComponentModel;
 using HotPotPlayer.Bilibili.Models.Video;
 using HotPotPlayer.BiliBili;
 using HotPotPlayer.Common.Extension;
@@ -47,6 +48,7 @@ namespace HotPotPlayer.Services
             viewHistory = new ViewHistoryService(biliClient, authentication, authenticator);
             relationship = new RelationshipService(biliClient, authentication, tokenResolver, authenticator);
             comment = new CommentService(biliClient, authenticator);
+            user = new UserService(biliClient, authentication, tokenResolver, authenticator);
         }
 
         [ObservableProperty]
@@ -89,6 +91,7 @@ namespace HotPotPlayer.Services
         readonly ViewHistoryService viewHistory;
         readonly RelationshipService relationship;
         readonly CommentService comment;
+        readonly UserService user;
 
         private Dictionary<string, VideoPlayerView> videoPlayerViewCache = new();
 
@@ -237,6 +240,11 @@ namespace HotPotPlayer.Services
         public async Task ToggleVideoLikeAsync(string aid, bool isLike, CancellationToken cancellationToken = default)
         {
             await player.ToggleVideoLikeAsync(aid, isLike, cancellationToken);
+        }
+
+        public async Task<Richasy.BiliKernel.Models.User.UserCard> GetUserInformationAsync(string id, CancellationToken token = default)
+        {
+            return await user.GetUserInformationAsync(id, token);
         }
     }
 }

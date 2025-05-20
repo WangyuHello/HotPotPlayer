@@ -23,10 +23,10 @@ namespace HotPotPlayer.Templates
 
         private void UserAvatarClick(object sender, RoutedEventArgs e)
         {
-            //var flyout = ((UIElement)sender).ContextFlyout as Flyout;
-            //var card = flyout.Content as UserCard;
-            //card.LoadUserCardBundle();
-            //flyout.ShowAt(sender as FrameworkElement);
+            var flyout = ((UIElement)sender).ContextFlyout as Flyout;
+            var card = flyout.Content as UserCard;
+            card.LoadUserCardBundle();
+            flyout.ShowAt(sender as FrameworkElement);
         }
 
         private void DynamicCommentClick(object sender, RoutedEventArgs e)
@@ -50,11 +50,11 @@ namespace HotPotPlayer.Templates
 
         private void StaffTapped(object sender, TappedRoutedEventArgs e)
         {
-            //var grid = sender as Grid;
-            //var flyout = grid.ContextFlyout as Flyout;
-            //var f = flyout.Content as UserCard;
-            //f.LoadUserCardBundle();
-            //flyout.ShowAt(grid);
+            var grid = sender as Grid;
+            var flyout = grid.ContextFlyout as Flyout;
+            var f = flyout.Content as UserCard;
+            f.LoadUserCardBundle();
+            flyout.ShowAt(grid);
         }
     }
 }

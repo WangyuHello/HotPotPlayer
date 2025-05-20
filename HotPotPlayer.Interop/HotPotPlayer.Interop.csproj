@@ -6,6 +6,7 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
 	<IsAotCompatible>true</IsAotCompatible>
+	<Platforms>AnyCPU;x64</Platforms>
   </PropertyGroup>
   <ItemGroup>
 	<None Remove="NativeMethods.txt" />

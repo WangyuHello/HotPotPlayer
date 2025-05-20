@@ -41,20 +41,45 @@ namespace HotPotPlayer.Controls.BilibiliSub
 
         public async void LoadUserCardBundle()
         {
-            UserCardBundle = (await BiliBiliService.API.GetUserCardBundle(Mid, true)).Data;
+            UserCardBundle = await BiliBiliService.GetUserInformationAsync(Mid);
         }
 
         [ObservableProperty]
-        public partial UserCardBundle UserCardBundle { get; set; }
+        public partial Richasy.BiliKernel.Models.User.UserCard UserCardBundle { get; set; }
 
-        public string GetFollowStr(bool isFollow)
+        public string GetFollowStr(Richasy.BiliKernel.Models.User.UserCard u)
         {
-            return isFollow ? "已关注" : "关注";
+            if (u == null)
+            {
+                return string.Empty;
+            }
+            return u.Community.Relation == Richasy.BiliKernel.Models.User.UserRelationStatus.Following ? "已关注" : "关注";
+        }
+
+        string GetFriend(Richasy.BiliKernel.Models.User.UserCard u) 
+        {
+            if (u == null) return string.Empty;
+            return u.Community.FollowCount + " 关注"; 
+        }
+        string GetFans(Richasy.BiliKernel.Models.User.UserCard u)
+        {
+            if (u == null) return string.Empty;
+            return u.Community.FansCount + " 粉丝";
+        }
+        string GetLikeNum(Richasy.BiliKernel.Models.User.UserCard u)
+        {
+            if (u == null) return string.Empty;
+            return u.Community.LikeCount + " 获赞";
+        }
+        string GetSign(Richasy.BiliKernel.Models.User.UserCard u)
+        {
+            if (u == null) return string.Empty;
+            return string.IsNullOrEmpty(u.Profile.Introduce) ? "这个人不神秘只是不知道该写什么" : u.Profile.Introduce;
         }
 
         void UserClick(object sender, RoutedEventArgs e)
         {
-            NavigateTo("BilibiliSub.User", UserCardBundle);
+            //NavigateTo("BilibiliSub.User", UserCardBundle);
         }
     }
 }

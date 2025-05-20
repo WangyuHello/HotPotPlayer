@@ -80,7 +80,7 @@
                         <FontIcon FontFamily="{ThemeResource BiliIcons}" Glyph="&#xEA0D;" FontSize="22"/>
                         <TextBlock HorizontalAlignment="Center" Text="{x:Bind Video.Stat.GetShare()}" FontFamily="{ThemeResource MiSansRegular}" />
                     </StackPanel>
-                    <Button.ContextFlyout>
+                    <!--<Button.ContextFlyout>
                         <Flyout>
                             <Flyout.FlyoutPresenterStyle>
                                 <Style TargetType="FlyoutPresenter">
@@ -90,7 +90,7 @@
                             </Flyout.FlyoutPresenterStyle>
                             <cont3:ShareFlyout x:Name="ShareFl" Video="{x:Bind Video}"/>
                         </Flyout>
-                    </Button.ContextFlyout>
+                    </Button.ContextFlyout>-->
                 </Button>
             </StackPanel>
             <Grid Grid.Row="2" Margin="0,0,0,12">

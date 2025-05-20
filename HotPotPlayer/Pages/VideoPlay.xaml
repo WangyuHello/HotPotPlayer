@@ -118,7 +118,7 @@
                                    Text="{x:Bind ext:BiliUIExtensions.NumberFormat(Video.CommunityInformation.ShareCount)}" 
                                    FontFamily="{ThemeResource MiSansRegular}" />
                     </StackPanel>
-                    <!--<Button.ContextFlyout>
+                    <Button.ContextFlyout>
                         <Flyout>
                             <Flyout.FlyoutPresenterStyle>
                                 <Style TargetType="FlyoutPresenter">
@@ -128,7 +128,7 @@
                             </Flyout.FlyoutPresenterStyle>
                             <cont3:ShareFlyout x:Name="ShareFl" Video="{x:Bind Video}"/>
                         </Flyout>
-                    </Button.ContextFlyout>-->
+                    </Button.ContextFlyout>
                 </Button>
             </StackPanel>
             <Grid Grid.Row="2" Margin="0,0,0,12">
@@ -155,11 +155,11 @@
                                 Tapped="UserAvatar_Tapped" 
                                 Visibility="{x:Bind IsSingleStaff(Video)}"
                                 CornerRadius="16" >
-                    <!--<cont2:ImageEx2.ContextFlyout>
+                    <cont2:ImageEx2.ContextFlyout>
                         <Flyout>
-                            <cont3:UserCard x:Name="UserAvatarFlyout" Margin="-16" Mid="{x:Bind Video.Up.Mid}" />
+                            <cont3:UserCard x:Name="UserAvatarFlyout" Margin="-16" Mid="{x:Bind Video.Publisher.User.Id}" />
                         </Flyout>
-                    </cont2:ImageEx2.ContextFlyout>-->
+                    </cont2:ImageEx2.ContextFlyout>
                 </cont2:ImageEx2>
                 <TextBlock Grid.Column="1" 
                            VerticalAlignment="Center" 
