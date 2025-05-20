@@ -28,7 +28,6 @@ namespace HotPotPlayer.Controls.BilibiliSub
         public SelfAvatar()
         {
             this.InitializeComponent();
-            
         }
 
         public NavData NavData
@@ -67,6 +66,9 @@ namespace HotPotPlayer.Controls.BilibiliSub
 
         public static readonly DependencyProperty MyCommunityInfoProperty =
             DependencyProperty.Register("MyCommunityInfo", typeof(UserCommunityInformation), typeof(SelfAvatar), new PropertyMetadata(default));
+
+        public string GetCurrentLevel(int? level) => "LV" + (level ?? 0);
+        public string GetNextLevel(int? level) => level == 7 ? "--" : "LV" + (level + 1);
 
         string GetVipTitle(int VipType) => VipType switch
         {

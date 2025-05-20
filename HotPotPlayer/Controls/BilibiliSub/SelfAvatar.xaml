@@ -48,7 +48,7 @@
 
         <StackPanel Grid.Row="3" Margin="0,8,0,0" HorizontalAlignment="Center" Orientation="Horizontal">
             <TextBlock Text="硬币:" FontSize="12" Foreground="Gray" FontFamily="{ThemeResource MiSansRegular}"/>
-            <TextBlock Margin="4,0,0,0" FontSize="12" Text="{x:Bind NavData.Money}" FontFamily="{ThemeResource MiSansRegular}"/>
+            <TextBlock Margin="4,0,0,0" FontSize="12" Text="{x:Bind MyCommunityInfo.CoinCount}" FontFamily="{ThemeResource MiSansRegular}"/>
             <TextBlock Margin="16,0,0,0" FontSize="12" Foreground="Gray" Text="B币:" FontFamily="{ThemeResource MiSansRegular}" />
             <TextBlock Margin="4,0,0,0" FontSize="12" Text="{x:Bind NavData.Wallet.BCoinBalance}" FontFamily="{ThemeResource MiSansRegular}"/>
         </StackPanel>
@@ -61,11 +61,11 @@
             </Grid.ColumnDefinitions>
 
             <Border Background="#ee672a" Padding="4,0">
-                <TextBlock Text="{x:Bind NavData.LevelInfo.GetCurrentLevel}" FontSize="10" Foreground="White" FontFamily="{ThemeResource MiSansBold}"/>
+                <TextBlock Text="{x:Bind GetCurrentLevel(MyProfile.Level)}" FontSize="10" Foreground="White" FontFamily="{ThemeResource MiSansBold}"/>
             </Border>
             <ProgressBar Grid.Column="1" Margin="8,0" Value="{x:Bind NavData.LevelInfo.CurrentExp}" Maximum="{x:Bind NavData.LevelInfo.GetNextExp}"/>
             <Border Grid.Column="2" Background="#c9ccd0" Padding="4,0">
-                <TextBlock Text="{x:Bind NavData.LevelInfo.GetNextLevel}" FontSize="10" Foreground="White" FontFamily="{ThemeResource MiSansBold}"/>
+                <TextBlock Text="{x:Bind GetNextLevel(MyProfile.Level)}" FontSize="10" Foreground="White" FontFamily="{ThemeResource MiSansBold}"/>
             </Border>
         </Grid>
 
