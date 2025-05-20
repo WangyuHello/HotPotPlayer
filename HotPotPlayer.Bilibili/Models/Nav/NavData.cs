@@ -25,11 +25,6 @@ namespace HotPotPlayer.Bilibili.Models.Nav
 
         public bool IsVip => VipStatus == 1;
 
-        public string GetVipTitle => VipType switch
-        {
-            1 => "月度大会员",
-            2 => "年度大会员",
-            _ => ""
-        };
+
     }
 }

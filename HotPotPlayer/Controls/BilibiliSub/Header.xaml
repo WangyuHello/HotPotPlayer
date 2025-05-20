@@ -12,7 +12,7 @@
     xmlns:cont2="using:HotPotPlayer.UI.Controls"
     xmlns:bcont="using:HotPotPlayer.Controls.BilibiliSub"
     xmlns:animations="using:CommunityToolkit.WinUI.Animations"
-    xmlns:controls="using:CommunityToolkit.WinUI.Helpers"
+    xmlns:controls="using:CommunityToolkit.WinUI.Controls"
     x:DefaultBindMode="OneWay"
     mc:Ignorable="d"
     >
@@ -20,8 +20,8 @@
     <Grid Background="{ThemeResource AcrylicInAppFillColorDefaultBrush}" Loaded="RootLoaded">
 
         <Expander x:Name="More" IsExpanded="{x:Bind IsExpanded}" HorizontalAlignment="Stretch" VerticalAlignment="Top" Style="{StaticResource BiliHeaderExpander}">
-            <Expander.Content>
-                <!--<controls:AdaptiveGridView DesiredWidth="120" SelectionMode="None">
+            <!--<Expander.Content>
+                <controls:AdaptiveGridView DesiredWidth="120" SelectionMode="None">
                     <Button Content="动画" Margin="4,0" HorizontalAlignment="Stretch"/>
                     <Button Content="音乐" Margin="4,0" HorizontalAlignment="Stretch"/>
                     <Button Content="舞蹈" Margin="4,0" HorizontalAlignment="Stretch"/>
@@ -38,8 +38,8 @@
                     <Button Content="时尚" Margin="4,0" HorizontalAlignment="Stretch"/>
                     <Button Content="娱乐" Margin="4,0" HorizontalAlignment="Stretch"/>
                     <Button Content="影视" Margin="4,0" HorizontalAlignment="Stretch"/>
-                </controls:AdaptiveGridView>-->
-            </Expander.Content>
+                </controls:AdaptiveGridView>
+            </Expander.Content>-->
         </Expander>
 
         <Grid Height="64" Margin="0,0,0,0" x:Name="HeaderContainer" HorizontalAlignment="Center" VerticalAlignment="Top">
@@ -94,7 +94,7 @@
         <cont2:ImageEx2 x:Name="Avatar"
             VerticalAlignment="Top" HorizontalAlignment="Right"
             Margin="0,12,150,0"
-            Source="{x:Bind NavData.Face}" 
+            Source="{x:Bind MyProfile.User.Avatar.Uri}" 
             Style="{StaticResource LocalMusicImageStyle}" 
             Width="40" Height="40"
             CornerRadius="22"
@@ -102,7 +102,11 @@
             >
             <cont2:ImageEx2.ContextFlyout>
                 <Flyout>
-                    <bcont:SelfAvatar NavData="{x:Bind NavData}" NavStatData="{x:Bind NavStatData}"/>
+                    <bcont:SelfAvatar NavData="{x:Bind NavData}" 
+                                      NavStatData="{x:Bind NavStatData}"
+                                      MyProfile="{x:Bind MyProfile}"
+                                      MyCommunityInfo="{x:Bind MyCommunityInfo}"
+                                      />
                 </Flyout>
             </cont2:ImageEx2.ContextFlyout>
         </cont2:ImageEx2>

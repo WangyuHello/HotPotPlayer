@@ -16,6 +16,7 @@ using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Navigation;
 using HotPotPlayer.Bilibili.Models.Nav;
+using Richasy.BiliKernel.Models.User;
 
 // To learn more about WinUI, the WinUI project structure,
 // and more about our project templates, see: http://aka.ms/winui-project-info.
@@ -27,8 +28,8 @@ namespace HotPotPlayer.Controls.BilibiliSub
         public SelfAvatar()
         {
             this.InitializeComponent();
+            
         }
-
 
         public NavData NavData
         {
@@ -49,6 +50,29 @@ namespace HotPotPlayer.Controls.BilibiliSub
         public static readonly DependencyProperty NavStatDataProperty =
             DependencyProperty.Register("NavStatData", typeof(NavStatData), typeof(SelfAvatar), new PropertyMetadata(null));
 
+        public UserDetailProfile MyProfile
+        {
+            get { return (UserDetailProfile)GetValue(MyProfileProperty); }
+            set { SetValue(MyProfileProperty, value); }
+        }
 
+        public static readonly DependencyProperty MyProfileProperty =
+            DependencyProperty.Register("MyProfile", typeof(UserDetailProfile), typeof(SelfAvatar), new PropertyMetadata(default));
+
+        public UserCommunityInformation MyCommunityInfo
+        {
+            get { return (UserCommunityInformation)GetValue(MyCommunityInfoProperty); }
+            set { SetValue(MyCommunityInfoProperty, value); }
+        }
+
+        public static readonly DependencyProperty MyCommunityInfoProperty =
+            DependencyProperty.Register("MyCommunityInfo", typeof(UserCommunityInformation), typeof(SelfAvatar), new PropertyMetadata(default));
+
+        string GetVipTitle(int VipType) => VipType switch
+        {
+            1 => "月度大会员",
+            2 => "年度大会员",
+            _ => ""
+        };
     }
 }

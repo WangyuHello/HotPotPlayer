@@ -27,23 +27,23 @@
         </Grid.RowDefinitions>
 
         <cont2:ImageEx2 x:Name="Avatar"
-            HorizontalAlignment="Center"
-            Source="{x:Bind NavData.Face}" 
-            Style="{StaticResource LocalMusicImageStyle}" 
-            Width="88" Height="88"
-            CornerRadius="44"
-            >
+                        HorizontalAlignment="Center"
+                        Source="{x:Bind MyProfile.User.Avatar.Uri}" 
+                        Style="{StaticResource LocalMusicImageStyle}" 
+                        Width="88" Height="88"
+                        DecodePixelWidth="88" DecodePixelHeight="88"
+                        CornerRadius="44">
         </cont2:ImageEx2>
 
-        <Grid Margin="0,0,-60,-60" Width="28" Height="28" CornerRadius="14" Background="White" Visibility="{x:Bind NavData.IsVip}">
+        <Grid Margin="0,0,-60,-60" Width="28" Height="28" CornerRadius="14" Background="White" Visibility="{x:Bind MyProfile.IsVip}">
             <FontIcon Margin="0,1,0,0" FontSize="24" FontFamily="{ThemeResource BiliIcons}" Glyph="&#xEA11;" Foreground="#ff6699" 
                       VerticalAlignment="Center" HorizontalAlignment="Center"/>
         </Grid>
 
-        <TextBlock Grid.Row="1" Margin="0,8,0,0" HorizontalAlignment="Center" Text="{x:Bind NavData.UName}" Foreground="#fb7299" FontSize="19" FontFamily="{ThemeResource MiSansMedium}" />
+        <TextBlock Grid.Row="1" Margin="0,8,0,0" HorizontalAlignment="Center" Text="{x:Bind MyProfile.User.Name}" Foreground="#fb7299" FontSize="19" FontFamily="{ThemeResource MiSansMedium}" />
 
-        <Border Grid.Row="2" Margin="0,8,0,0" HorizontalAlignment="Center" Background="#fc568e" CornerRadius="10" Padding="8,1" Visibility="{x:Bind NavData.IsVip}">
-            <TextBlock Text="{x:Bind NavData.GetVipTitle}" Foreground="White" FontSize="11" FontFamily="{ThemeResource MiSansMedium}" />
+        <Border Grid.Row="2" Margin="0,8,0,0" HorizontalAlignment="Center" Background="#fc568e" CornerRadius="10" Padding="8,1" Visibility="{x:Bind MyProfile.IsVip}">
+            <!--<TextBlock Text="{x:Bind NavData.GetVipTitle}" Foreground="White" FontSize="11" FontFamily="{ThemeResource MiSansMedium}" />-->
         </Border>
 
         <StackPanel Grid.Row="3" Margin="0,8,0,0" HorizontalAlignment="Center" Orientation="Horizontal">
@@ -80,19 +80,19 @@
 
             <Button HorizontalAlignment="Center" Style="{StaticResource TransparentButton}" FontFamily="{ThemeResource MiSansRegular}">
                 <StackPanel>
-                    <TextBlock HorizontalAlignment="Center" Text="{x:Bind NavStatData.Following}" FontSize="20" FontFamily="{ThemeResource MiSansMedium}"/>
+                    <TextBlock HorizontalAlignment="Center" Text="{x:Bind MyCommunityInfo.FollowCount}" FontSize="20" FontFamily="{ThemeResource MiSansMedium}"/>
                     <TextBlock HorizontalAlignment="Center" Text="关注" FontSize="13" Foreground="Gray" FontFamily="{ThemeResource MiSansRegular}"/>
                 </StackPanel>
             </Button>
             <Button HorizontalAlignment="Center" Grid.Column="1" Style="{StaticResource TransparentButton}" FontFamily="{ThemeResource MiSansRegular}">
                 <StackPanel>
-                    <TextBlock HorizontalAlignment="Center" Text="{x:Bind NavStatData.Follower}" FontSize="20" FontFamily="{ThemeResource MiSansMedium}"/>
+                    <TextBlock HorizontalAlignment="Center" Text="{x:Bind MyCommunityInfo.FansCount}" FontSize="20" FontFamily="{ThemeResource MiSansMedium}"/>
                     <TextBlock HorizontalAlignment="Center" Text="粉丝" FontSize="13" Foreground="Gray" FontFamily="{ThemeResource MiSansRegular}"/>
                 </StackPanel>
             </Button>
             <Button HorizontalAlignment="Center" Grid.Column="2" Style="{StaticResource TransparentButton}" FontFamily="{ThemeResource MiSansRegular}">
                 <StackPanel>
-                    <TextBlock HorizontalAlignment="Center" Text="{x:Bind NavStatData.DynamicCount}" FontSize="20" FontFamily="{ThemeResource MiSansMedium}"/>
+                    <TextBlock HorizontalAlignment="Center" Text="{x:Bind MyCommunityInfo.MomentCount}" FontSize="20" FontFamily="{ThemeResource MiSansMedium}"/>
                     <TextBlock HorizontalAlignment="Center" Text="动态" FontSize="13" Foreground="Gray" FontFamily="{ThemeResource MiSansRegular}"/>
                 </StackPanel>
             </Button>

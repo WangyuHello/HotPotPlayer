@@ -42,6 +42,8 @@
             NavData="{x:Bind NavData}" 
             NavStatData="{x:Bind NavStatData}" 
             EntranceData="{x:Bind EntranceData}"
+            MyProfile="{x:Bind MyProfile}"
+            MyCommunityInfo="{x:Bind MyCommunityInfo}"
             SelectedIndex="{x:Bind SelectedSubPage, Mode=TwoWay}" 
             OnRefreshClick="RefreshClick"/>
 

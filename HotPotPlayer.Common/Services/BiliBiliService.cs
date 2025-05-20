@@ -15,12 +15,15 @@ using Richasy.BiliKernel.Models;
 using Richasy.BiliKernel.Models.Comment;
 using Richasy.BiliKernel.Models.Media;
 using Richasy.BiliKernel.Models.Moment;
+using Richasy.BiliKernel.Models.Search;
+using Richasy.BiliKernel.Models.User;
 using Richasy.BiliKernel.Resolvers.WinUICookies;
 using Richasy.BiliKernel.Resolvers.WinUIQRCode;
 using Richasy.BiliKernel.Resolvers.WinUIToken;
 using Richasy.BiliKernel.Services.Comment;
 using Richasy.BiliKernel.Services.Media;
 using Richasy.BiliKernel.Services.Moment;
+using Richasy.BiliKernel.Services.Search;
 using Richasy.BiliKernel.Services.User;
 using System;
 using System.Collections.Generic;
@@ -49,6 +52,8 @@ namespace HotPotPlayer.Services
             relationship = new RelationshipService(biliClient, authentication, tokenResolver, authenticator);
             comment = new CommentService(biliClient, authenticator);
             user = new UserService(biliClient, authentication, tokenResolver, authenticator);
+            myProfile = new MyProfileService(biliClient, authentication, tokenResolver, authenticator);
+            search = new SearchService(biliClient, authenticator);
         }
 
         [ObservableProperty]
@@ -92,6 +97,8 @@ namespace HotPotPlayer.Services
         readonly RelationshipService relationship;
         readonly CommentService comment;
         readonly UserService user;
+        readonly MyProfileService myProfile;
+        readonly SearchService search;
 
         private Dictionary<string, VideoPlayerView> videoPlayerViewCache = new();
 
@@ -245,6 +252,21 @@ namespace HotPotPlayer.Services
         public async Task<Richasy.BiliKernel.Models.User.UserCard> GetUserInformationAsync(string id, CancellationToken token = default)
         {
             return await user.GetUserInformationAsync(id, token);
+        }
+
+        public async Task<IReadOnlyList<SearchRecommendItem>> GetSearchRecommendsAsync(CancellationToken token = default)
+        {
+            return await search.GetSearchRecommendsAsync(token);
+        }
+
+        public async Task<UserDetailProfile> GetMyProfileAsync(CancellationToken token = default)
+        {
+            return await myProfile.GetMyProfileAsync(token);
+        }
+
+        public async Task<UserCommunityInformation> GetMyCommunityInformationAsync(CancellationToken token = default)
+        {
+            return await myProfile.GetMyCommunityInformationAsync(token);
         }
     }
 }

@@ -1,13 +1,10 @@
 // Copyright (c) Microsoft Corporation and Contributors.
 // Licensed under the MIT License.
 
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Runtime.InteropServices.WindowsRuntime;
-using Windows.Foundation;
-using Windows.Foundation.Collections;
+using CommunityToolkit.Mvvm.ComponentModel;
+using HotPotPlayer.Bilibili.Models.Dynamic;
+using HotPotPlayer.Bilibili.Models.Nav;
+using HotPotPlayer.Models.BiliBili;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Controls.Primitives;
@@ -15,11 +12,16 @@ using Microsoft.UI.Xaml.Data;
 using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Navigation;
-using HotPotPlayer.Bilibili.Models.Nav;
-using HotPotPlayer.Bilibili.Models.Dynamic;
-using CommunityToolkit.Mvvm.ComponentModel;
+using Richasy.BiliKernel.Models.User;
+using System;
+using System.Collections.Generic;
 using System.ComponentModel.Design;
-using HotPotPlayer.Models.BiliBili;
+using System.IO;
+using System.Linq;
+using System.Runtime.InteropServices.WindowsRuntime;
+using System.Threading.Tasks;
+using Windows.Foundation;
+using Windows.Foundation.Collections;
 
 // To learn more about WinUI, the WinUI project structure,
 // and more about our project templates, see: http://aka.ms/winui-project-info.
@@ -75,6 +77,23 @@ namespace HotPotPlayer.Controls.BilibiliSub
         public static readonly DependencyProperty EntranceDataProperty =
             DependencyProperty.Register("EntranceData", typeof(EntranceData), typeof(Header), new PropertyMetadata(null));
 
+        public UserDetailProfile MyProfile
+        {
+            get { return (UserDetailProfile)GetValue(MyProfileProperty); }
+            set { SetValue(MyProfileProperty, value); }
+        }
+
+        public static readonly DependencyProperty MyProfileProperty =
+            DependencyProperty.Register("MyProfile", typeof(UserDetailProfile), typeof(Header), new PropertyMetadata(default));
+
+        public UserCommunityInformation MyCommunityInfo
+        {
+            get { return (UserCommunityInformation)GetValue(MyCommunityInfoProperty); }
+            set { SetValue(MyCommunityInfoProperty, value); }
+        }
+
+        public static readonly DependencyProperty MyCommunityInfoProperty =
+            DependencyProperty.Register("MyCommunityInfo", typeof(UserDetailProfile), typeof(SelfAvatar), new PropertyMetadata(default));
 
         public bool IsExpanded
         {
@@ -113,10 +132,11 @@ namespace HotPotPlayer.Controls.BilibiliSub
         [ObservableProperty]
         public partial string SearchDefault {  get; set; }
 
-        private void RootLoaded(object sender, RoutedEventArgs args)
+        private async void RootLoaded(object sender, RoutedEventArgs args)
         {
-            //var def = await BiliBiliService.API.GetSearchDefaultAsync();
-            //SearchDefault = def.Data.ShowName;
+            var searchRec = await BiliBiliService.GetSearchRecommendsAsync();
+            SearchDefault = searchRec[0].Text;
+            
         }
 
         private void RefreshClick(object sender, RoutedEventArgs args)

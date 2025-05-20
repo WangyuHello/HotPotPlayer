@@ -12,6 +12,7 @@ using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Media.Imaging;
 using Microsoft.UI.Xaml.Navigation;
+using Richasy.BiliKernel.Models.User;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
@@ -54,6 +55,12 @@ namespace HotPotPlayer.Pages
         [ObservableProperty]
         public partial EntranceData EntranceData { get; set; }
 
+        [ObservableProperty]
+        public partial UserDetailProfile MyProfile { get; set; }
+
+        [ObservableProperty]
+        public partial UserCommunityInformation MyCommunityInfo { get; set; }
+
         partial void OnSelectedSubPageChanged(int value)
         {
             if (value == 1)
@@ -81,6 +88,8 @@ namespace HotPotPlayer.Pages
             }
             BiliMain.LoadRecVideosAsync();
 
+            MyProfile = await BiliBiliService.GetMyProfileAsync();
+            MyCommunityInfo = await BiliBiliService.GetMyCommunityInformationAsync();
             //NavData = (await BiliBiliService.API.GetNav()).Data;
             //NavStatData = (await BiliBiliService.API.GetNavStat()).Data;
             //await LoadEntranceDataAsync();
