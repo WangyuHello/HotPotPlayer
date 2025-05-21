@@ -21,6 +21,9 @@
                 <bili:Main x:Name="BiliMain"/>
             </PivotItem>
             <PivotItem Margin="0">
+                <bili:Hot x:Name="BiliHot"/>
+            </PivotItem>
+            <PivotItem Margin="0">
                 <bili:Dynamic x:Name="BiliDynamic" Margin="-36,0,0,0" LoadDynamicCompleted="LoadDynamicCompleted"/>
             </PivotItem>
             <PivotItem Margin="0">
@@ -32,9 +35,9 @@
             <PivotItem Margin="0">
                 <bili:Message x:Name="BiliMessage" />
             </PivotItem>
-            <PivotItem Margin="0">
+            <!--<PivotItem Margin="0">
 
-            </PivotItem>
+            </PivotItem>-->
         </Pivot>
         
         <bcont:Header 

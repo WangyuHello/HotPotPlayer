@@ -99,6 +99,7 @@
     <None Remove="Pages\BilibiliSub\Dynamic.xaml" />
     <None Remove="Pages\BilibiliSub\Favor.xaml" />
     <None Remove="Pages\BilibiliSub\History.xaml" />
+    <None Remove="Pages\BilibiliSub\Hot.xaml" />
     <None Remove="Pages\BilibiliSub\Login.xaml" />
     <None Remove="Pages\BilibiliSub\Main.xaml" />
     <None Remove="Pages\BilibiliSub\Message.xaml" />
@@ -441,6 +442,9 @@
     <None Update="Assets\LoadingScreen.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <Page Update="Pages\BilibiliSub\Hot.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
   </ItemGroup>
   <ItemGroup>
     <Page Update="Controls\SeriesPopup.xaml">

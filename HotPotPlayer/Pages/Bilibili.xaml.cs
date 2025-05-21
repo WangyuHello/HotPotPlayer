@@ -65,9 +65,13 @@ namespace HotPotPlayer.Pages
         {
             if (value == 1)
             {
-                BiliDynamic.LoadDynamic();
+                BiliHot.LoadHotVideos();
             }
             else if (value == 2)
+            {
+                BiliDynamic.LoadDynamic();
+            }
+            else if (value == 3)
             {
                 BiliHistory.LoadHistoryAsync();
             }
@@ -137,9 +141,13 @@ namespace HotPotPlayer.Pages
             }
             else if (SelectedSubPage == 1)
             {
-                BiliDynamic.LoadDynamic(true);
+                BiliHot.LoadHotVideos(true);
             }
             else if (SelectedSubPage == 2)
+            {
+                BiliDynamic.LoadDynamic(true);
+            }
+            else if (SelectedSubPage == 3)
             {
                 BiliHistory.LoadHistoryAsync(true);
             }

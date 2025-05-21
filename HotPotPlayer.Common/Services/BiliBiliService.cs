@@ -175,6 +175,11 @@ namespace HotPotPlayer.Services
             return await videoDiscovery.GetRecommendVideoListAsync(offset, token);
         }
 
+        public async Task<(IReadOnlyList<VideoInformation>, long)> GetHotVideoListAsync(long offset, CancellationToken token = default)
+        {
+            return await videoDiscovery.GetHotVideoListAsync(offset, token);
+        }
+
         public async Task<MomentView> GetComprehensiveMomentsAsync(string offset = null, string baseline = null, CancellationToken token = default)
         {
             var result = await momentDiscovery.GetComprehensiveMomentsAsync(offset, baseline, token);
