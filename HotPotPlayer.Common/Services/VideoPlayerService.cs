@@ -166,7 +166,7 @@ namespace HotPotPlayer.Services
                         var bestFormats = dash.Formats[0].Quality.ToString();
                         var formats = dash.Formats.Select(f => (DashEnum)f.Quality).ToList();
                         var bestVideoDash = GetBestVideo(dash.Videos, bestFormats);
-                        var bestAudioDash = dash.Audios.FirstOrDefault();
+                        var bestAudioDash = dash.Audios?.FirstOrDefault();
                         bestVideo = GetNonPcdnUrl(bestVideoDash);
                         bestAudio = GetNonPcdnUrl(bestAudioDash);
                         if (bestVideoDash == null || string.IsNullOrEmpty(bestVideo))
@@ -215,6 +215,7 @@ namespace HotPotPlayer.Services
 
         private static string GetNonPcdnUrl(DashSegmentInformation dash)
         {
+            if (dash == null) return string.Empty;
             if (!dash.BaseUrl.Contains("mcdn"))
             {
                 return dash.BaseUrl;

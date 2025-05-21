@@ -563,10 +563,13 @@ namespace HotPotPlayer.Services
             var url = vurl;
             var urlLen = url.Length;
             sb.Append($"%{urlLen}%{url}");
-            sb.Append(";!new_stream;!no_clip;!no_chapters;");
-            url = aurl;
-            urlLen = url.Length;
-            sb.Append($"%{urlLen}%{url}");
+            if (!string.IsNullOrEmpty(aurl))
+            {
+                sb.Append(";!new_stream;!no_clip;!no_chapters;");
+                url = aurl;
+                urlLen = url.Length;
+                sb.Append($"%{urlLen}%{url}");
+            }
             //sb.Append(";");
 
             return sb.ToString();

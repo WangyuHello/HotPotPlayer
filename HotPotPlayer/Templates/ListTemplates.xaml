@@ -818,7 +818,7 @@
                 <ColumnDefinition Width="Auto" />
             </Grid.ColumnDefinitions>
             <TextBlock Grid.Column="0" Margin="0,0,8,0" Text="{x:Bind Identifier.Title}" FontFamily="{ThemeResource MiSansRegular}" TextTrimming="CharacterEllipsis"/>
-            <TextBlock Grid.Column="1" Text="{x:Bind ext:BiliUIExtensions.GetDuration((bmodelMedia:VideoInformation))}" Foreground="Gray" />
+            <TextBlock Grid.Column="1" Text="{x:Bind ext:BiliUIExtensions.GetDuration((bmodelMedia:VideoInformation))}" Foreground="Gray" FontFamily="{ThemeResource MiSansNormal}"/>
         </Grid>
     </DataTemplate>
 

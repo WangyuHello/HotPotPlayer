@@ -205,7 +205,7 @@ namespace HotPotPlayer.Pages
         {
             var b = sender as ToggleButton;
             b.ContextFlyout.ShowAt(b);
-            b.IsChecked = false;
+            b.IsChecked = !b.IsChecked; //保持按钮按下前状态
         }
 
         private void FavorClick(object sender, RoutedEventArgs e)

@@ -341,7 +341,7 @@
                   MaxHeight="320" 
                   CornerRadius="8" 
                   Padding="16,8,16,8" 
-                  Margin="0,0,0,8" 
+                  Margin="0,0,0,16" 
                   Background="#e2e5e7" >
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto" />
@@ -388,11 +388,11 @@
                 <Border CornerRadius="4" 
                         Background="#4e4f67" 
                         Padding="6,0">
-                    <!--<TextBlock Text="{x:Bind Video.Stat.GetReply()}" 
+                    <TextBlock Text="{x:Bind Replies.Count}" 
                                Foreground="White" 
                                FontSize="12" 
                                VerticalAlignment="Center" 
-                               FontFamily="{ThemeResource MiSansMedium}" />-->
+                               FontFamily="{ThemeResource MiSansMedium}" />
                 </Border>
             </StackPanel>
             <Grid Grid.Row="2" >
