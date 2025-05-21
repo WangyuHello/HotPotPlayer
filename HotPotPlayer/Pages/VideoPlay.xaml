@@ -337,12 +337,12 @@
                 </ListView>
             </Grid>-->
 
-            <!--<Grid Visibility="{x:Bind GetUgcSeasonVisible(Video)}" 
-                  MaxHeight="200" 
+            <Grid Visibility="{x:Bind GetSeasonVisible(View)}" 
+                  MaxHeight="320" 
                   CornerRadius="8" 
                   Padding="16,8,16,8" 
                   Margin="0,0,0,8" 
-                  Background="#f1f2f3" >
+                  Background="#e2e5e7" >
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto" />
                     <RowDefinition Height="Auto" />
@@ -355,18 +355,18 @@
                     <ColumnDefinition Width="Auto" />
                     <ColumnDefinition Width="Auto" />
                 </Grid.ColumnDefinitions>
-                <TextBlock Text="{x:Bind Video.UgcSeason.Title}" FontSize="16" VerticalAlignment="Center" FontFamily="{ThemeResource MiSansMedium}"/>
-                <TextBlock Grid.Column="1" Margin="4,0,0,0" Text="{x:Bind GetSelectedEpisodeAndAll(SelectedEpisode, Video)}" Foreground="Gray" FontSize="14" VerticalAlignment="Center" FontFamily="{ThemeResource MiSansRegular}"/>
+                <TextBlock Text="{x:Bind View.Seasons[0].Title}" FontSize="16" VerticalAlignment="Center" FontFamily="{ThemeResource MiSansMedium}"/>
+                <TextBlock Grid.Column="1" Margin="4,0,0,0" Text="{x:Bind GetSelectedEpisodeAndAll(SelectedEpisode, View)}" Foreground="Gray" FontSize="14" VerticalAlignment="Center" FontFamily="{ThemeResource MiSansRegular}"/>
                 <TextBlock Grid.Column="3" Foreground="Gray" Text="自动连播" FontSize="14" VerticalAlignment="Center" FontFamily="{ThemeResource MiSansRegular}"/>
                 <ToggleSwitch Grid.Column="4" Margin="8,0,-114,0" VerticalAlignment="Center" OffContent="" OnContent=""/>
-                <TextBlock Grid.Row="1" Grid.ColumnSpan="5" Text="{x:Bind Video.UgcSeason.Stat.GetViews2()}" FontSize="14" Foreground="Gray" VerticalAlignment="Center" FontFamily="{ThemeResource MiSansRegular}"/>
+                <!--<TextBlock Grid.Row="1" Grid.ColumnSpan="5" Text="{x:Bind Video.UgcSeason.Stat.GetViews2()}" FontSize="14" Foreground="Gray" VerticalAlignment="Center" FontFamily="{ThemeResource MiSansRegular}"/>-->
                 <ListView 
                     x:Name="UgcSeasonList"
                     Grid.Row="2"
                     Grid.ColumnSpan="5"
                     Margin="-16,4,-16,0" 
                     Padding="0,0" 
-                    ItemsSource="{x:Bind Video.UgcSeason.GetAllEpisodes}" 
+                    ItemsSource="{x:Bind View.Seasons[0].Videos}" 
                     Style="{StaticResource GeneralListViewStyle}" 
                     ItemContainerStyle="{StaticResource BiliPageListContainerStyle}" 
                     ItemTemplate="{StaticResource VideoEpisodeTemplate}"
@@ -376,7 +376,7 @@
                     >
 
                 </ListView>
-            </Grid>-->
+            </Grid>
 
             <StackPanel Orientation="Horizontal" 
                         Grid.Row="1" 

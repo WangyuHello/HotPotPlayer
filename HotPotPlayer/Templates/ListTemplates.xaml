@@ -10,6 +10,7 @@
     xmlns:bmodelUser="using:Richasy.BiliKernel.Models.User"
     xmlns:bmodelMoment="using:Richasy.BiliKernel.Models.Moment"
     xmlns:bmodelComment="using:Richasy.BiliKernel.Models.Comment"
+    xmlns:bmodelMedia="using:Richasy.BiliKernel.Models.Media"
     xmlns:helper="using:HotPotPlayer.Pages.Helper"
     xmlns:helper2="using:HotPotPlayer.Helpers"
     xmlns:momentHelper="using:HotPotPlayer.Common.Helper.Bilibili"
@@ -810,14 +811,14 @@
         </Grid>
     </DataTemplate>
 
-    <DataTemplate x:Key="VideoEpisodeTemplate" x:DataType="dyn:UGCSeasonEpisode">
+    <DataTemplate x:Key="VideoEpisodeTemplate" x:DataType="bmodelMedia:VideoInformation">
         <Grid VerticalAlignment="Center" Padding="16,0">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*" />
                 <ColumnDefinition Width="Auto" />
             </Grid.ColumnDefinitions>
-            <TextBlock Grid.Column="0" Margin="0,0,8,0" Text="{x:Bind Title}" FontFamily="{ThemeResource MiSansRegular}" TextTrimming="CharacterEllipsis"/>
-            <TextBlock Grid.Column="1" Text="{x:Bind Arc.GetDuration()}" Foreground="Gray" />
+            <TextBlock Grid.Column="0" Margin="0,0,8,0" Text="{x:Bind Identifier.Title}" FontFamily="{ThemeResource MiSansRegular}" TextTrimming="CharacterEllipsis"/>
+            <TextBlock Grid.Column="1" Text="{x:Bind ext:BiliUIExtensions.GetDuration((bmodelMedia:VideoInformation))}" Foreground="Gray" />
         </Grid>
     </DataTemplate>
 

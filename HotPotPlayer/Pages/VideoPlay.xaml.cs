@@ -1,4 +1,5 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.WinUI;
 using DirectN.Extensions.Utilities;
 using HotPotPlayer.Bilibili.Models.Video;
 using HotPotPlayer.Extensions;
@@ -66,6 +67,9 @@ namespace HotPotPlayer.Pages
         public partial bool IsFullPageHost { get; set; }
 
         [ObservableProperty]
+        public partial VideoPlayerView View { get; set; }
+
+        [ObservableProperty]
         public partial VideoInformation Video { get; set; }
 
         [ObservableProperty]
@@ -83,33 +87,36 @@ namespace HotPotPlayer.Pages
         [ObservableProperty]
         public partial bool IsAdditionLoading { get; set; }
 
+        [ObservableProperty]
+        public partial int SelectedEpisode { get; set; }
+
         private async void OnCurrentPlayingChanged(BaseItemDto @new)
         {
             if (CurrentPlaying.Etag == "Bilibili")
             {
                 IsFullPageHost = false;
-                var view = BiliBiliService.GetVideoInfoFromCache(@new.PlaylistItemId);
-                Video = view.Information;
-                LikeButton.IsChecked = view.Operation.IsLiked;
-                CoinButton.IsChecked = view.Operation.IsCoined;
-                FavorButton.IsChecked = view.Operation.IsFavorited;
+                View = BiliBiliService.GetVideoInfoFromCache(@new.PlaylistItemId);
+                Video = View.Information;
+                LikeButton.IsChecked = View.Operation.IsLiked;
+                CoinButton.IsChecked = View.Operation.IsCoined;
+                FavorButton.IsChecked = View.Operation.IsFavorited;
                 if (RelatedVideos == null)
                 {
-                    RelatedVideos = new ObservableCollection<VideoInformation>(view.Recommends);
+                    RelatedVideos = new ObservableCollection<VideoInformation>(View.Recommends);
                 }
                 else
                 {
                     RelatedVideos.Clear();
-                    RelatedVideos.AddRange(view.Recommends);
+                    RelatedVideos.AddRange(View.Recommends);
                 }
                 if(Tags == null)
                 {
-                    Tags = new ObservableCollection<BiliTag>(view.Tags);
+                    Tags = new ObservableCollection<BiliTag>(View.Tags);
                 }
                 else
                 {
                     Tags.Clear();
-                    Tags.AddRange(view.Tags);
+                    Tags.AddRange(View.Tags);
                 }
                 OnLineCount = await BiliBiliService.GetOnlineViewerAsync(@new.PlaylistItemId, @new.ProgramId);
                 Replies = new ReplyItemCollection(BiliBiliService)
@@ -117,11 +124,47 @@ namespace HotPotPlayer.Pages
                     Oid = @new.PlaylistItemId,
                     Type = Richasy.BiliKernel.Models.CommentTargetType.Video
                 };
+
+                if (View.Seasons != null)
+                {
+                    DetermineSelectedEpisode();
+                }
             }
             else
             {
                 IsFullPageHost = true;
             }
+        }
+
+        private async void DetermineSelectedEpisode()
+        {
+            for (int i = 0; i < View.Seasons[0].Videos.Count; i++)
+            {
+                if (View.Seasons[0].Videos[i].Identifier.Id == Video.Identifier.Id)
+                {
+                    selectedEpisodeGurad = true;
+                    SelectedEpisode = i;
+                    selectedEpisodeGurad = false;
+                    await UgcSeasonList.SmoothScrollIntoViewWithIndexAsync(i, itemPlacement: ScrollItemPlacement.Center);
+                    break;
+                }
+            }
+        }
+
+        bool selectedEpisodeGurad;
+
+        partial void OnSelectedEpisodeChanged(int value)
+        {
+            if (selectedEpisodeGurad)
+            {
+                return;
+            }
+            if (value == -1)
+            {
+                return;
+            }
+            var sel = View.Seasons[0].Videos[value];
+            VideoPlayer.PlayNext(sel.ToBaseItemDto());
         }
 
         private void UserAvatar_Tapped(object sender, TappedRoutedEventArgs e)
@@ -203,6 +246,22 @@ namespace HotPotPlayer.Pages
             {
                 CoinButton.IsChecked = false;
             }
+        }
+
+        Visibility GetSeasonVisible(VideoPlayerView view)
+        {
+            if(view == null) return Visibility.Collapsed;
+            var isSeason = view.Seasons != null && view.Seasons.Count > 0;
+            return isSeason ? Visibility.Visible : Visibility.Collapsed;
+        }
+
+        string GetSelectedEpisodeAndAll(int selectedEpisode, VideoPlayerView view)
+        {
+            if (view?.Seasons == null)
+            {
+                return "-";
+            }
+            return $"({selectedEpisode + 1}/{view.Seasons[0].Videos.Count})";
         }
 
         Visibility IsSingleStaff(VideoInformation video)

@@ -1,6 +1,4 @@
-﻿using Bilibili.App.Interfaces.V1;
-using Bilibili.App.Show.Popular.V1;
-using CommunityToolkit.Mvvm.ComponentModel;
+﻿using CommunityToolkit.Mvvm.ComponentModel;
 using HotPotPlayer.Bilibili.Models.Video;
 using HotPotPlayer.BiliBili;
 using HotPotPlayer.Common.Extension;
