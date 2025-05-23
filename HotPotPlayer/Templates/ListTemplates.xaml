@@ -385,7 +385,10 @@
                 </StackPanel>
 
             </Grid>
-            <TextBlock Grid.Row="1" Margin="48,8,0,0" Text="{x:Bind Content.Text}" TextWrapping="Wrap" FontFamily="{StaticResource MiSansRegular}"/>
+            <ContentControl Grid.Row="1" 
+                           Margin="48,8,0,0" 
+                           Content="{x:Bind ext:BiliUIExtensions.GenRichTextBlock(Content)}"
+                           FontFamily="{StaticResource MiSansRegular}" />
             <!--<StackPanel Grid.Row="2" Margin="48,8,8,0" Visibility="{x:Bind HasNestedReply}">
                 <HyperlinkButton Margin="-10,0,0,0" Content="{x:Bind GetNestedReplyStr}" Click="{x:Bind helper:CommentHelper.ShowNestedReply}"/>
             </StackPanel>-->
@@ -637,7 +640,7 @@
 
             <!--MultiImage-->
             <GridView Margin="0,8,0,0" 
-                      HorizontalAlignment="Center"
+                      HorizontalAlignment="Left"
                       Visibility="{x:Bind ext:BiliUIExtensions.IsMultiImage((bmodelMoment:MomentInformation))}" 
                       ItemTemplate="{StaticResource DynamicMultiDrawTemplate}"
                       ItemsSource="{x:Bind ext:BiliUIExtensions.GetMultiImageSource((bmodelMoment:MomentInformation))}">

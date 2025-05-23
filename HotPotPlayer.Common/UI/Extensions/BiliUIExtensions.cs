@@ -306,6 +306,78 @@ namespace HotPotPlayer.UI.Extensions
         public static Paragraph GenRichText(this EmoteText node)
         {
             var par = new Paragraph();
+            if (node.Emotes == null || node.Emotes.Count == 0)
+            {
+                var inline = new Run
+                {
+                    Text = node.Text,
+                };
+                par.Inlines.Add(inline);
+                return par;
+            }
+            var inlines = new List<Inline>();
+            var text = node.Text;
+            int state = 0;
+            int start = -1;
+            int end = 0;
+            int end2 = -1;
+            string token = string.Empty;
+
+            for (int i = 0; i < text.Length; i++)
+            {
+                var c = text[i];
+                if (state == 0)
+                {
+                    if (c == '[')
+                    {
+                        state = 1;
+                        start = i;
+                    }
+                    if (i == text.Length - 1)
+                    {
+                        // Last one
+                        inlines.Add(new Run
+                        {
+                            Text = text[(end+1)..]
+                        });
+                    }
+                }
+                else
+                {
+                    if (c == ']')
+                    {
+                        state = 0;
+                        end2 = i;
+                        token = text[start..(end2+1)];
+                        var has = node.Emotes.TryGetValue(token, out var image);
+                        if (has)
+                        {
+                            if (start > end + 1)
+                            {
+                                inlines.Add(new Run
+                                {
+                                    Text = text[end..start]
+                                });
+                            }
+                            inlines.Add(new InlineUIContainer
+                            {
+                                Child = new Image
+                                {
+                                    Source = new BitmapImage(image.Uri)
+                                    {
+                                        DecodePixelWidth = 48,
+                                        DecodePixelHeight = 48,
+                                    },
+                                    Width = 48,
+                                    Height = 48,
+                                }
+                            });
+                        }
+                        end = end2;
+                    }
+                }
+            }
+
             //IEnumerable<Inline> inlines = node.RichTextNodes.Select<DescNodes, Inline>(r =>
             //    r.Type switch
             //    {
@@ -334,15 +406,11 @@ namespace HotPotPlayer.UI.Extensions
             //    }
             //);
 
-            //foreach (var item in inlines)
-            //{
-            //    par.Inlines.Add(item);
-            //}
-            var inline = new Run
+            foreach (var item in inlines)
             {
-                Text = node.Text,
-            };
-            par.Inlines.Add(inline);
+                par.Inlines.Add(item);
+            }
+
             return par;
         }
     }
