@@ -11,6 +11,7 @@
     xmlns:bmodelMoment="using:Richasy.BiliKernel.Models.Moment"
     xmlns:bmodelComment="using:Richasy.BiliKernel.Models.Comment"
     xmlns:bmodelMedia="using:Richasy.BiliKernel.Models.Media"
+    xmlns:bmodelAppera="using:Richasy.BiliKernel.Models.Appearance"
     xmlns:helper="using:HotPotPlayer.Pages.Helper"
     xmlns:helper2="using:HotPotPlayer.Helpers"
     xmlns:momentHelper="using:HotPotPlayer.Common.Helper.Bilibili"
@@ -506,8 +507,8 @@
 
     <UniformGridLayout x:Key="DynamicUniformGridLayout" Orientation="Horizontal" MinRowSpacing="4" MinColumnSpacing="4" MinItemHeight="200" MinItemWidth="200"/>
 
-    <DataTemplate x:Key="DynamicMultiDrawTemplate" x:DataType="dyn:DrawItem">
-        <cont2:ImageEx2 Source="{x:Bind Source}" MaxHeight="180" CornerRadius="4" Style="{StaticResource DynamicImageStyle}"/>
+    <DataTemplate x:Key="DynamicMultiDrawTemplate" x:DataType="bmodelAppera:BiliImage">
+        <cont2:ImageEx2 Source="{x:Bind Uri}" Width="180" Height="180" CornerRadius="4" Style="{StaticResource DynamicImageStyle}"/>
     </DataTemplate>
 
     <DataTemplate x:Key="ArticleCoverTemplate" x:DataType="x:String">
@@ -635,12 +636,27 @@
 
 
             <!--MultiImage-->
-            <!--<ccont:AdaptiveGridView Margin="0,8,0,0" Visibility="{x:Bind Modules.ModuleDynamic.IsMultiDraw}" 
-                                    DesiredWidth="200"
-                                    ItemTemplate="{StaticResource DynamicMultiDrawTemplate}"
-                                    ItemsSource="{x:Bind Modules.ModuleDynamic.Major.Draw.Items}">
+            <GridView Margin="0,8,0,0" 
+                      HorizontalAlignment="Center"
+                      Visibility="{x:Bind ext:BiliUIExtensions.IsMultiImage((bmodelMoment:MomentInformation))}" 
+                      ItemTemplate="{StaticResource DynamicMultiDrawTemplate}"
+                      ItemsSource="{x:Bind ext:BiliUIExtensions.GetMultiImageSource((bmodelMoment:MomentInformation))}">
+                
+                <GridView.ItemContainerStyle>
+                    <Style TargetType="GridViewItem" BasedOn="{StaticResource DefaultGridViewItemStyle}">
+                        <Setter Property="Margin" Value="4,4,4,4"/>
+                    </Style>
+                </GridView.ItemContainerStyle>
 
-            </ccont:AdaptiveGridView>-->
+                <GridView.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <ItemsWrapGrid
+                           MaximumRowsOrColumns="3"
+                           Orientation="Horizontal"/>
+                    </ItemsPanelTemplate>
+                </GridView.ItemsPanel>
+
+            </GridView>
 
 
             <!--Origin-->

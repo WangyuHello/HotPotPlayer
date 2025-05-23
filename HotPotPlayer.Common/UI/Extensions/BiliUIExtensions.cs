@@ -48,6 +48,26 @@ namespace HotPotPlayer.UI.Extensions
             }
             return isImage ? Visibility.Visible : Visibility.Collapsed;
         }
+        public static Visibility IsMultiImage(MomentInformation moment)
+        {
+            var isImage = moment.MomentType == Richasy.BiliKernel.Models.MomentItemType.Image;
+            if (isImage && moment.Data is List<BiliImage> images)
+            {
+                var isMulti = images.Count != 1;
+                return isMulti ? Visibility.Visible : Visibility.Collapsed;
+            }
+            var isVideo = moment.MomentType == Richasy.BiliKernel.Models.MomentItemType.Video;
+            if (isVideo)
+            {
+                return isVideo ? Visibility.Collapsed : Visibility.Visible;
+            }
+            var isArticle = moment.MomentType == Richasy.BiliKernel.Models.MomentItemType.Article;
+            if (isArticle)
+            {
+
+            }
+            return Visibility.Collapsed;
+        }
 
         public static Uri GetSingleImageSource(MomentInformation moment)
         {
@@ -65,6 +85,16 @@ namespace HotPotPlayer.UI.Extensions
             if (isArticle)
             {
 
+            }
+            return null;
+        }
+
+        public static List<BiliImage> GetMultiImageSource(MomentInformation moment)
+        {
+            var isImage = moment.MomentType == Richasy.BiliKernel.Models.MomentItemType.Image;
+            if (isImage && moment.Data is List<BiliImage> images)
+            {
+                return images;
             }
             return null;
         }
