@@ -15,13 +15,13 @@ namespace HotPotPlayer.Bilibili.Models.Video
         Dash360 = 16,
         Dash480 = 32,
         Dash720 = 64,
-        Dash720P60=74,
-        Dash1080=80,
-        Dash1080More = 112,
+        Dash720P60 = 74,
+        Dash1080 = 80,
+        Dash1080Plus = 112,
         Dash1080P60 = 116,
         Dash4K= 120,
         DashHDR = 125,
-        DashDB = 126,
+        DashDolbyVision = 126,
         Dash8K = 127,
         None = 0
     }

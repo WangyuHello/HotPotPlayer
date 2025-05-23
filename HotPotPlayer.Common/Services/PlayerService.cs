@@ -396,10 +396,10 @@ namespace HotPotPlayer.Services
 
         private void PositionChanged(object sender, MpvPlayerPositionChangedEventArgs e)
         {
-            UIQueue.TryEnqueue(() =>
-            {
-                CurrentTime = e.NewPosition;
-            });
+            //UIQueue.TryEnqueue(() =>
+            //{
+            //    CurrentTime = e.NewPosition;
+            //});
             //UpdateSmtcPosition();
         }
 

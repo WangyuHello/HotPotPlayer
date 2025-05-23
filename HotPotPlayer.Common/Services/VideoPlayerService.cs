@@ -163,8 +163,7 @@ namespace HotPotPlayer.Services
                     {
                         _currentCid = part.Identifier.Id;
                         var dash = App.BiliBiliService.GetVideoPlayDetailAsync(page.Information.Identifier, Convert.ToInt64(part.Identifier.Id)).Result;
-                        var bestFormats = dash.Formats[0].Quality.ToString();
-                        var formats = dash.Formats.Select(f => (DashEnum)f.Quality).ToList();
+                        var bestFormats = GetBestQuality(dash.Formats);
                         var bestVideoDash = GetBestVideo(dash.Videos, bestFormats);
                         var bestAudioDash = dash.Audios?.FirstOrDefault();
                         bestVideo = GetNonPcdnUrl(bestVideoDash);
@@ -191,11 +190,35 @@ namespace HotPotPlayer.Services
             return lists;
         }
 
+        private string GetBestQuality(IList<PlayerFormatInformation> formats)
+        {
+            var maxPreferQuality = Config.GetConfig("MaxPreferQuality", "8K", true);
+            var maxPreferQ = maxPreferQuality switch
+            {
+                "240" => 6,
+                "360" => 16,
+                "480" => 32,
+                "720" => 64,
+                "720P60" => 74,
+                "1080" => 80,
+                "1080Plus" => 112,
+                "1080P60" => 116,
+                "4K" => 120,
+                "HDR" => 125,
+                "DolbyVision" => 126,
+                "8K" => 127,
+                _ => 999
+            };
+            //var formats2 = formats.Select(f => (DashEnum)f.Quality).ToList();
+            var sels = formats.Where(f => f.Quality <= maxPreferQ).Select(f => f.Quality).ToList();
+            sels.Sort();
+            return sels[^1].ToString();
+        }
         private DashSegmentInformation GetBestVideo(IList<DashSegmentInformation> list, string format)
         {
-            var maxSupportFormat = Config.GetConfig("MaxSupportFormat", "HEVC", true);
+            var maxPreferFormat = Config.GetConfig("MaxPreferFormat", "HEVC", true);
             string[] filter = ["av01", "hevc"];
-            int filterIndex = maxSupportFormat == "AV1" ? 0 : maxSupportFormat == "HEVC" ? 1 : 2;
+            int filterIndex = maxPreferFormat == "AV1" ? 0 : maxPreferFormat == "HEVC" ? 1 : 2;
             var l = list.Where(d => d.Id == format).Where(d =>
             {
                 var found = false;
