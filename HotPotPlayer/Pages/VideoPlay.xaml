@@ -394,6 +394,10 @@
                                VerticalAlignment="Center" 
                                FontFamily="{ThemeResource MiSansMedium}" />
                 </Border>
+                <SelectorBar Margin="8,-12,0,-16" x:Name="CommentSortSelector" SelectionChanged="CommentSortSelectionChanged">
+                    <SelectorBarItem x:Name="CommentSortHot" Text="最热" IsSelected="True" FontFamily="{ThemeResource MiSansRegular}"/>
+                    <SelectorBarItem Text="最新" FontFamily="{ThemeResource MiSansRegular}"/>
+                </SelectorBar>
             </StackPanel>
             <Grid Grid.Row="2" >
                 <Grid.ColumnDefinitions>

@@ -22,6 +22,7 @@ namespace HotPotPlayer.Models.BiliBili
         public long Offset { get; set; }
         public CommentTargetType Type { get; set; }
         public string Oid { get; set; }
+        public CommentSortType Sort { get; set; }
 
         private bool _hasMore = true;
         public bool HasMoreItems => _hasMore;
@@ -36,7 +37,7 @@ namespace HotPotPlayer.Models.BiliBili
         {
             return AsyncInfo.Run(async (token) =>
             {
-                var dyn = await _service.GetCommentsAsync(Oid, Type, CommentSortType.Hot, Offset, token);
+                var dyn = await _service.GetCommentsAsync(Oid, Type, Sort, Offset, token);
                 Offset = dyn.NextOffset;
                 _hasMore = !dyn.IsEnd;
 

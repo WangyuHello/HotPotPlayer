@@ -253,7 +253,7 @@ namespace HotPotPlayer.Services
             await player.ToggleVideoLikeAsync(aid, isLike, cancellationToken);
         }
 
-        public async Task<Richasy.BiliKernel.Models.User.UserCard> GetUserInformationAsync(string id, CancellationToken token = default)
+        public async Task<UserCard> GetUserInformationAsync(string id, CancellationToken token = default)
         {
             return await user.GetUserInformationAsync(id, token);
         }

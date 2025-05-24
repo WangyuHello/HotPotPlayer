@@ -122,8 +122,12 @@ namespace HotPotPlayer.Pages
                 Replies = new ReplyItemCollection(BiliBiliService)
                 {
                     Oid = @new.PlaylistItemId,
-                    Type = Richasy.BiliKernel.Models.CommentTargetType.Video
+                    Type = Richasy.BiliKernel.Models.CommentTargetType.Video,
+                    Sort = Richasy.BiliKernel.Models.CommentSortType.Hot
                 };
+                sortSelectGuard = true;
+                CommentSortSelector.SelectedItem = CommentSortHot;
+                sortSelectGuard = false;
 
                 if (View.Seasons != null)
                 {
@@ -246,6 +250,21 @@ namespace HotPotPlayer.Pages
             {
                 CoinButton.IsChecked = false;
             }
+        }
+
+        bool sortSelectGuard = false;
+        private void CommentSortSelectionChanged(SelectorBar sender, SelectorBarSelectionChangedEventArgs args)
+        {
+            if (sortSelectGuard) return;
+            if (Replies == null) { return; }
+            SelectorBarItem selectedItem = sender.SelectedItem;
+            int currentSelectedIndex = sender.Items.IndexOf(selectedItem);
+            Replies = new ReplyItemCollection(BiliBiliService)
+            {
+                Oid = Video.Identifier.Id,
+                Type = Richasy.BiliKernel.Models.CommentTargetType.Video,
+                Sort = currentSelectedIndex == 0 ? Richasy.BiliKernel.Models.CommentSortType.Hot : Richasy.BiliKernel.Models.CommentSortType.Time
+            };
         }
 
         Visibility GetSeasonVisible(VideoPlayerView view)
