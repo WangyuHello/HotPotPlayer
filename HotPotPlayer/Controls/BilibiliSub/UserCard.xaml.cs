@@ -53,28 +53,28 @@ namespace HotPotPlayer.Controls.BilibiliSub
             {
                 return string.Empty;
             }
-            return u.Community.Relation == Richasy.BiliKernel.Models.User.UserRelationStatus.Following ? "ÒÑ¹Ø×¢" : "¹Ø×¢";
+            return u.Community.Relation == Richasy.BiliKernel.Models.User.UserRelationStatus.Following ? "å·²å…³æ³¨" : "å…³æ³¨";
         }
 
         string GetFriend(Richasy.BiliKernel.Models.User.UserCard u) 
         {
             if (u == null) return string.Empty;
-            return u.Community.FollowCount + " ¹Ø×¢"; 
+            return u.Community.FollowCount + " å…³æ³¨"; 
         }
         string GetFans(Richasy.BiliKernel.Models.User.UserCard u)
         {
             if (u == null) return string.Empty;
-            return u.Community.FansCount + " ·ÛË¿";
+            return u.Community.FansCount + " ç²‰ä¸";
         }
         string GetLikeNum(Richasy.BiliKernel.Models.User.UserCard u)
         {
             if (u == null) return string.Empty;
-            return u.Community.LikeCount + " »ñÔŞ";
+            return u.Community.LikeCount + " è·èµ";
         }
         string GetSign(Richasy.BiliKernel.Models.User.UserCard u)
         {
             if (u == null) return string.Empty;
-            return string.IsNullOrEmpty(u.Profile.Introduce) ? "Õâ¸öÈË²»ÉñÃØÖ»ÊÇ²»ÖªµÀ¸ÃĞ´Ê²Ã´" : u.Profile.Introduce;
+            return string.IsNullOrEmpty(u.Profile.Introduce) ? "è¿™ä¸ªäººä¸ç¥ç§˜åªæ˜¯ä¸çŸ¥é“è¯¥å†™ä»€ä¹ˆ" : u.Profile.Introduce;
         }
 
         void UserClick(object sender, RoutedEventArgs e)

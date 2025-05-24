@@ -233,6 +233,11 @@ namespace HotPotPlayer.Services
             return re.Text;
         }
 
+        public async Task<CommentView> GetDetailCommentsAsync(string targetId, CommentTargetType type, CommentSortType sort, string rootId, long offset = 0, CancellationToken cancellationToken = default)
+        {
+            return await comment.GetDetailCommentsAsync(targetId, type, sort, rootId, offset, cancellationToken);
+        }
+
         public async Task<CommentView> GetCommentsAsync(string targetId, CommentTargetType type, CommentSortType sort, long offset = 0, CancellationToken cancellationToken = default)
         {
             return await comment.GetCommentsAsync(targetId, type, sort, offset, cancellationToken);
