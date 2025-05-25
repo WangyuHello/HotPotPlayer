@@ -292,30 +292,46 @@ namespace HotPotPlayer.Services
         }
 
         private readonly List<DanmakuInformation> _cachedDanmakus = [];
+        private AutoResetEvent _danmankuInitFence;
+        private readonly AutoResetEvent _danmankuSwapChainFence = new(false);
+
+        public void OnSwapChainConfigured()
+        {
+            _danmankuSwapChainFence?.Set();
+        }
 
         public override async void CustomMediaInited(BaseItemDto current)
         {
             if (current.Etag == "Bilibili")
             {
-                await LoadDanmakuAsync(current);
-
-                if (_danmakuController == null)
+                await Task.Run(async () =>
                 {
-                    var host = DanmakuInit?.Invoke();
-                    _danmakuController = new DanmakuFrostMaster(host);
-                    _danmakuController.AddDanmakuList(BilibiliDanmakuParser.GetDanmakuList(_cachedDanmakus, true));
-                    _danmakuController.UpdateTime(0);
-                    //_danmakuController.SetRollingDensity(2);
-                    _danmakuController.SetOpacity(0.8);
-                    _danmakuController.SetRollingAreaRatio(2);
-                    _danmakuController.SetFontFamilyName("ms-appx:///Assets/Font/MiSans-Medium.ttf#MiSans");
-                }
-                else
-                {
-                    _danmakuController.Clear();
-                    _danmakuController.AddDanmakuList(BilibiliDanmakuParser.GetDanmakuList(_cachedDanmakus, true));
-                    _danmakuController.UpdateTime(0);
-                }
+                    _danmankuInitFence ??= new AutoResetEvent(false);
+                    await LoadDanmakuAsync(current);
+                    if (_danmakuController == null)
+                    {
+                        var host = DanmakuInit?.Invoke();
+                        _danmankuSwapChainFence.WaitOne();
+                        UIQueue.TryEnqueue(DispatcherQueuePriority.Low, () =>
+                        {
+                            _danmakuController = new DanmakuFrostMaster(host);
+                            _danmankuInitFence.Set();
+                        });
+                        _danmankuInitFence.WaitOne();
+                        _danmakuController.AddDanmakuList(BilibiliDanmakuParser.GetDanmakuList(_cachedDanmakus, true));
+                        _danmakuController.UpdateTime(0);
+                        //_danmakuController.SetRollingDensity(2);
+                        _danmakuController.SetOpacity(0.8);
+                        _danmakuController.SetRollingAreaRatio(2);
+                        _danmakuController.SetFontFamilyName("ms-appx:///Assets/Font/MiSans-Medium.ttf#MiSans");
+                    }
+                    else
+                    {
+                        _danmakuController.Clear();
+                        _danmakuController.AddDanmakuList(BilibiliDanmakuParser.GetDanmakuList(_cachedDanmakus, true));
+                        _danmakuController.UpdateTime(0);
+                    }
+                });
             }
         }
 

@@ -321,7 +321,7 @@ namespace HotPotPlayer.UI.Extensions
             var text = node.Text;
             int state = 0;
             int start = -1;
-            int end = 0;
+            int end = -1;
             int end2 = -1;
             string token = string.Empty;
 
@@ -358,7 +358,7 @@ namespace HotPotPlayer.UI.Extensions
                             {
                                 inlines.Add(new Run
                                 {
-                                    Text = text[end..start]
+                                    Text = text[(end+1)..start]
                                 });
                             }
                             inlines.Add(new InlineUIContainer

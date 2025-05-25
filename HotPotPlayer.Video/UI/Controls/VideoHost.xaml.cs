@@ -130,6 +130,7 @@ namespace HotPotPlayer.Video.UI.Controls
                 _swapChainPanelNative.SetSwapChain(_swapchain);
                 //_isSwapchainInited = true;
                 PlayBarVisible = true;
+                VideoPlayer.OnSwapChainConfigured();
             });
         }
 
