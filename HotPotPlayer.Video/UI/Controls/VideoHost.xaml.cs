@@ -43,12 +43,12 @@ namespace HotPotPlayer.Video.UI.Controls
             this.InitializeComponent();
             PlaySlider.AddHandler(PointerReleasedEvent, new PointerEventHandler(PlaySlider_OnPointerReleased), true);
             PlaySlider.AddHandler(PointerPressedEvent, new PointerEventHandler(PlaySlider_OnPointerPressed), true);
-            _uiQueue = DispatcherQueue.GetForCurrentThread();
+            _uiQueue = DispatcherQueue;
         }
 
         public event Action OnToggleFullScreen;
 
-        private DispatcherQueue _uiQueue;
+        readonly DispatcherQueue _uiQueue;
         DispatcherTimer _inActiveTimer;
 
         int _currentWidth;
@@ -104,12 +104,19 @@ namespace HotPotPlayer.Video.UI.Controls
             GetScalingFactor(out _currentScaleX, out _currentScaleY);
             VideoPlayer.SwapChainInited += VideoPlayer_SwapchainInited;
             VideoPlayer.VideoGeometryInit += VideoPlayer_VideoGeometryInit;
+            VideoPlayer.DanmakuInit += VideoPlayer_DanmakuInit;
+        }
+
+        private Grid VideoPlayer_DanmakuInit()
+        {
+            return DanmakuHost;
         }
 
         private void UserControlBase_Unloaded(object sender, RoutedEventArgs e)
         {
             VideoPlayer.SwapChainInited -= VideoPlayer_SwapchainInited;
             VideoPlayer.VideoGeometryInit -= VideoPlayer_VideoGeometryInit;
+            VideoPlayer.DanmakuInit -= VideoPlayer_DanmakuInit;
             _isSwapchainInited = false;
         }
 

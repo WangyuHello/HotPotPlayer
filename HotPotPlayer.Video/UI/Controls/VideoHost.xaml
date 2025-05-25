@@ -40,12 +40,14 @@
     <Grid PointerEntered="Grid_PointerEntered" 
           PointerMoved="Grid_PointerMoved" 
           ui:UIElementExtensions.ClipToBounds="True">
-        
+
         <!--SwapChainHost-->
         <SwapChainPanel x:Name="Host" 
                         CompositionScaleChanged="Host_CompositionScaleChanged" 
                         SizeChanged="Host_SizeChanged" 
                         />
+
+        <Grid x:Name="DanmakuHost" Margin="1"/>
 
         <!--PlayBar-->
         <Grid Background="#e0424047" 

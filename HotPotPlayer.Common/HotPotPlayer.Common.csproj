@@ -57,6 +57,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\Danmaku.Core\Danmaku.Core.csproj" />
     <ProjectReference Include="..\HotPotPlayer.Bilibili\HotPotPlayer.Bilibili.csproj" />
     <ProjectReference Include="..\HotPotPlayer.Interop\HotPotPlayer.Interop.csproj" />
     <ProjectReference Include="..\HotPotPlayer.Native\HotPotPlayer.Native.csproj" />

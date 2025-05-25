@@ -91,6 +91,7 @@ namespace HotPotPlayer.Services
             {
                 Task.Run(async () =>
                 {
+                    CustomPlayOrPause(nowPlaying);
                     if (nowPlaying)
                     {
                         App.SetSmtcStatus(MediaPlaybackStatus.Playing);
@@ -103,6 +104,8 @@ namespace HotPotPlayer.Services
                 });
             });
         }
+
+        protected virtual void CustomPlayOrPause(bool playing) { }
 
         [ObservableProperty]
         public partial bool HasError { get; set; }
@@ -619,8 +622,11 @@ namespace HotPotPlayer.Services
             {
 
             }
+            CustomMediaInited(CurrentPlaying);
             _event.Set();
         }
+
+        public virtual void CustomMediaInited(BaseItemDto current) { }
 
         protected virtual void SetupMstcInfo(BaseItemDto media, SystemMediaTransportControlsDisplayUpdater updater)
         {

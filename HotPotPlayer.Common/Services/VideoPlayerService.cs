@@ -1,4 +1,5 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
+using Danmaku.Core;
 using DirectN;
 using DirectN.Extensions;
 using DirectN.Extensions.Com;
@@ -9,14 +10,17 @@ using HotPotPlayer.Helpers;
 using HotPotPlayer.Models;
 using Jellyfin.Sdk.Generated.Models;
 using Microsoft.UI.Dispatching;
+using Microsoft.UI.Xaml.Controls;
 using Mpv.NET.API;
 using Mpv.NET.Player;
 using Newtonsoft.Json;
+using Richasy.BiliKernel.Models.Danmaku;
 using Richasy.BiliKernel.Models.Media;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.Drawing;
 using System.IO;
 using System.Linq;
@@ -48,7 +52,10 @@ namespace HotPotPlayer.Services
 
         public event EventHandler<MpvVideoGeometryInitEventArgs> VideoGeometryInit;
         public event EventHandler<IntPtr> SwapChainInited;
+        public event Func<Grid> DanmakuInit;
         public IntPtr SwapChain { get; set; }
+
+        private DanmakuFrostMaster _danmakuController;
 
         private float _currentScaleX;
         private float _currentScaleY;
@@ -260,7 +267,20 @@ namespace HotPotPlayer.Services
         {
             if (currentPlaying.Etag == "Bilibili")
             {
+                _danmakuController?.UpdateTime((uint)CurrentTime.TotalMilliseconds);
                 await App.BiliBiliService.ReportVideoProgressAsync(currentPlaying.PlaylistItemId, currentPlaying.ProgramId, CurrentTime.Seconds);
+            }
+        }
+
+        protected override void CustomPlayOrPause(bool playing)
+        {
+            if (playing)
+            {
+                _danmakuController?.Resume();
+            }
+            else
+            {
+                _danmakuController?.Pause();
             }
         }
 
@@ -269,6 +289,54 @@ namespace HotPotPlayer.Services
             var geoArgs = new MpvVideoGeometryInitEventArgs();
             VideoGeometryInit?.Invoke(this, geoArgs);
             UpdatePanelSize(geoArgs.Width, geoArgs.Height);
+        }
+
+        private readonly List<DanmakuInformation> _cachedDanmakus = [];
+
+        public override async void CustomMediaInited(BaseItemDto current)
+        {
+            if (current.Etag == "Bilibili")
+            {
+                await LoadDanmakuAsync(current);
+
+                if (_danmakuController == null)
+                {
+                    var host = DanmakuInit?.Invoke();
+                    _danmakuController = new DanmakuFrostMaster(host);
+                    _danmakuController.AddDanmakuList(BilibiliDanmakuParser.GetDanmakuList(_cachedDanmakus, true));
+                    _danmakuController.UpdateTime(0);
+                }
+                else
+                {
+                    _danmakuController.Clear();
+                    _danmakuController.AddDanmakuList(BilibiliDanmakuParser.GetDanmakuList(_cachedDanmakus, true));
+                    _danmakuController.UpdateTime(0);
+                }
+            }
+        }
+
+        private async Task LoadDanmakuAsync(BaseItemDto current)
+        {
+            var count = Convert.ToInt32(Math.Ceiling(CurrentPlayingDuration.Value.TotalSeconds / 360d));
+            if (count == 0)
+            {
+                count = 1;
+            }
+
+            _cachedDanmakus.Clear();
+            for (var i = 0; i < count; i++)
+            {
+                try
+                {
+                    var danmakus = await App.BiliBiliService.GetSegmentDanmakusAsync(current.PlaylistItemId, current.ProgramId, i + 1);
+                    _cachedDanmakus.AddRange(danmakus);
+                }
+                catch (Exception ex)
+                {
+                    Debug.WriteLine(ex);
+                    break;
+                }
+            }
         }
 
         private void OnSwapChainInited(object sender, long swapchain)

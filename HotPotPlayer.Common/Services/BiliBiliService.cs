@@ -12,6 +12,7 @@ using Richasy.BiliKernel.Bili.Media;
 using Richasy.BiliKernel.Http;
 using Richasy.BiliKernel.Models;
 using Richasy.BiliKernel.Models.Comment;
+using Richasy.BiliKernel.Models.Danmaku;
 using Richasy.BiliKernel.Models.Media;
 using Richasy.BiliKernel.Models.Moment;
 using Richasy.BiliKernel.Models.Search;
@@ -53,6 +54,7 @@ namespace HotPotPlayer.Services
             user = new UserService(biliClient, authentication, tokenResolver, authenticator);
             myProfile = new MyProfileService(biliClient, authentication, tokenResolver, authenticator);
             search = new SearchService(biliClient, authenticator);
+            danmaku = new DanmakuService(biliClient, authenticator, tokenResolver);
         }
 
         [ObservableProperty]
@@ -98,6 +100,7 @@ namespace HotPotPlayer.Services
         readonly UserService user;
         readonly MyProfileService myProfile;
         readonly SearchService search;
+        readonly DanmakuService danmaku;
 
         private Dictionary<string, VideoPlayerView> videoPlayerViewCache = new();
 
@@ -276,6 +279,11 @@ namespace HotPotPlayer.Services
         public async Task<UserCommunityInformation> GetMyCommunityInformationAsync(CancellationToken token = default)
         {
             return await myProfile.GetMyCommunityInformationAsync(token);
+        }
+
+        public async Task<IReadOnlyList<DanmakuInformation>> GetSegmentDanmakusAsync(string aid, string cid, int segid, CancellationToken token = default)
+        {
+            return await danmaku.GetSegmentDanmakusAsync(aid, cid, segid, token);
         }
     }
 }
