@@ -305,6 +305,10 @@ namespace HotPotPlayer.Services
                     _danmakuController = new DanmakuFrostMaster(host);
                     _danmakuController.AddDanmakuList(BilibiliDanmakuParser.GetDanmakuList(_cachedDanmakus, true));
                     _danmakuController.UpdateTime(0);
+                    //_danmakuController.SetRollingDensity(2);
+                    _danmakuController.SetOpacity(0.8);
+                    _danmakuController.SetRollingAreaRatio(2);
+                    _danmakuController.SetFontFamilyName("ms-appx:///Assets/Font/MiSans-Medium.ttf#MiSans");
                 }
                 else
                 {
@@ -337,6 +341,12 @@ namespace HotPotPlayer.Services
                     break;
                 }
             }
+        }
+
+        protected override void CustomPauseAsStop()
+        {
+            _danmakuController?.Clear();
+            _danmakuController?.UpdateTime(0);
         }
 
         private void OnSwapChainInited(object sender, long swapchain)

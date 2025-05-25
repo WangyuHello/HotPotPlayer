@@ -314,9 +314,12 @@ namespace HotPotPlayer.Services
             _playerTimer.Stop();
             _mpv.Pause();
             IsPlaying = false;
+            CustomPauseAsStop();
             App.SetSmtcStatus(MediaPlaybackStatus.Stopped);
             App.JellyfinMusicService.ReportStop(CurrentPlaying, CurrentTime.Ticks);
         }
+
+        protected virtual void CustomPauseAsStop() { }
 
         public void TogglePlayMode()
         {
