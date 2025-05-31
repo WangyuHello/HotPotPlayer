@@ -8,6 +8,7 @@ using Microsoft.UI.Xaml.Documents;
 using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Media.Imaging;
 using Richasy.BiliKernel.Models.Appearance;
+using Richasy.BiliKernel.Models.Comment;
 using Richasy.BiliKernel.Models.Media;
 using Richasy.BiliKernel.Models.Moment;
 using System;
@@ -20,6 +21,11 @@ namespace HotPotPlayer.UI.Extensions
     {
         public static Visibility IsDescVisible(MomentInformation moment)
         {
+            if (moment.MomentType == Richasy.BiliKernel.Models.MomentItemType.Forward)
+            {
+                var m2 = moment.Data as MomentInformation;
+                return IsDescVisible(m2);
+            }
             var vis = moment.Description != null && !string.IsNullOrEmpty(moment.Description.Text);
             return vis ? Visibility.Visible : Visibility.Collapsed;
         }
@@ -31,6 +37,11 @@ namespace HotPotPlayer.UI.Extensions
 
         public static Visibility IsSingleImage(MomentInformation moment)
         {
+            if (moment.MomentType == Richasy.BiliKernel.Models.MomentItemType.Forward)
+            {
+                var m2 = moment.Data as MomentInformation;
+                return IsSingleImage(m2);
+            }
             var isImage = moment.MomentType == Richasy.BiliKernel.Models.MomentItemType.Image;
             if (isImage && moment.Data is List<BiliImage> images)
             {
@@ -51,6 +62,11 @@ namespace HotPotPlayer.UI.Extensions
         }
         public static Visibility IsMultiImage(MomentInformation moment)
         {
+            if (moment.MomentType == Richasy.BiliKernel.Models.MomentItemType.Forward)
+            {
+                var m2 = moment.Data as MomentInformation;
+                return IsMultiImage(m2);
+            }
             var isImage = moment.MomentType == Richasy.BiliKernel.Models.MomentItemType.Image;
             if (isImage && moment.Data is List<BiliImage> images)
             {
@@ -72,6 +88,11 @@ namespace HotPotPlayer.UI.Extensions
 
         public static Uri GetSingleImageSource(MomentInformation moment)
         {
+            if (moment.MomentType == Richasy.BiliKernel.Models.MomentItemType.Forward)
+            {
+                var m2 = moment.Data as MomentInformation;
+                return GetSingleImageSource(m2);
+            }
             var isImage = moment.MomentType == Richasy.BiliKernel.Models.MomentItemType.Image;
             if (isImage && moment.Data is List<BiliImage> images)
             {
@@ -92,6 +113,11 @@ namespace HotPotPlayer.UI.Extensions
 
         public static List<BiliImage> GetMultiImageSource(MomentInformation moment)
         {
+            if (moment.MomentType == Richasy.BiliKernel.Models.MomentItemType.Forward)
+            {
+                var m2 = moment.Data as MomentInformation;
+                return GetMultiImageSource(m2);
+            }
             var isImage = moment.MomentType == Richasy.BiliKernel.Models.MomentItemType.Image;
             if (isImage && moment.Data is List<BiliImage> images)
             {
@@ -102,6 +128,11 @@ namespace HotPotPlayer.UI.Extensions
 
         public static double GetSingleImageWidth(MomentInformation moment)
         {
+            if (moment.MomentType == Richasy.BiliKernel.Models.MomentItemType.Forward)
+            {
+                var m2 = moment.Data as MomentInformation;
+                return GetSingleImageWidth(m2);
+            }
             var isImage = moment.MomentType == Richasy.BiliKernel.Models.MomentItemType.Image;
             if (isImage && moment.Data is List<BiliImage> images)
             {
@@ -141,12 +172,22 @@ namespace HotPotPlayer.UI.Extensions
         //}
         public static Visibility GetVideoStatVisible(MomentInformation moment)
         {
+            if (moment.MomentType == Richasy.BiliKernel.Models.MomentItemType.Forward)
+            {
+                var m2 = moment.Data as MomentInformation;
+                return GetVideoStatVisible(m2);
+            }
             var isVideo = moment.MomentType == Richasy.BiliKernel.Models.MomentItemType.Video;
             return isVideo ? Visibility.Visible : Visibility.Collapsed;
         }
 
         public static string GetVideoDuration(MomentInformation moment)
         {
+            if (moment.MomentType == Richasy.BiliKernel.Models.MomentItemType.Forward)
+            {
+                var m2 = moment.Data as MomentInformation;
+                return GetVideoDuration(m2);
+            }
             if (moment.Data is VideoInformation video)
             {
                 return GetDuration(video);
@@ -156,6 +197,11 @@ namespace HotPotPlayer.UI.Extensions
 
         public static string GetVideoPlayCount(MomentInformation moment)
         {
+            if (moment.MomentType == Richasy.BiliKernel.Models.MomentItemType.Forward)
+            {
+                var m2 = moment.Data as MomentInformation;
+                return GetVideoPlayCount(m2);
+            }
             if (moment.Data is VideoInformation video)
             {
                 return GetPlayCount(video) + "观看";
@@ -165,6 +211,11 @@ namespace HotPotPlayer.UI.Extensions
 
         public static string GetVideoDanmakuCount(MomentInformation moment)
         {
+            if (moment.MomentType == Richasy.BiliKernel.Models.MomentItemType.Forward)
+            {
+                var m2 = moment.Data as MomentInformation;
+                return GetVideoDanmakuCount(m2);
+            }
             if (moment.Data is VideoInformation video)
             {
                 return GetDanmakuCount(video) + "弹幕";
@@ -174,6 +225,11 @@ namespace HotPotPlayer.UI.Extensions
 
         public static string GetTitle(MomentInformation moment)
         {
+            if (moment.MomentType == Richasy.BiliKernel.Models.MomentItemType.Forward)
+            {
+                var m2 = moment.Data as MomentInformation;
+                return GetTitle(m2);
+            }
             if (moment.Data is VideoInformation video)
             {
                 return video.Identifier.Title;
@@ -287,6 +343,22 @@ namespace HotPotPlayer.UI.Extensions
         {
             double v = video.CommunityInformation.CommentCount ?? 0;
             return NumberFormat(v);
+        }
+
+        public static Visibility GetForwardingVisible(MomentInformation moment)
+        {
+            var isForwarding = moment.MomentType == Richasy.BiliKernel.Models.MomentItemType.Forward;
+            return isForwarding ? Visibility.Visible : Visibility.Collapsed;
+        }
+
+        public static RichTextBlock GetMainContent(MomentInformation moment)
+        {
+            if (moment.MomentType == Richasy.BiliKernel.Models.MomentItemType.Forward)
+            {
+                var m2 = moment.Data as MomentInformation;
+                return GetMainContent(m2);
+            }
+            return GenRichTextBlock(moment.Description);
         }
 
         public static RichTextBlock GenRichTextBlock(this EmoteText node)
@@ -415,5 +487,56 @@ namespace HotPotPlayer.UI.Extensions
 
             return par;
         }
+
+        public static SolidColorBrush GetForwardingBackground(MomentInformation moment)
+        {
+            var isforwarding = moment.MomentType == Richasy.BiliKernel.Models.MomentItemType.Forward;
+            return new SolidColorBrush(isforwarding ? Windows.UI.Color.FromArgb(255, 246, 247, 248) : 
+                Windows.UI.Color.FromArgb(255,255,255,255));
+        }
+
+        public static Uri GetForwardingUserAvatar(MomentInformation moment)
+        {
+            var isforwarding = moment.MomentType == Richasy.BiliKernel.Models.MomentItemType.Forward;
+            if (isforwarding)
+            {
+                var m2 = moment.Data as MomentInformation;
+                return m2.User.Avatar.Uri;
+            }
+            return null;
+        }
+
+        public static string GetForwardingUserName(MomentInformation moment)
+        {
+            var isforwarding = moment.MomentType == Richasy.BiliKernel.Models.MomentItemType.Forward;
+            if (isforwarding)
+            {
+                var m2 = moment.Data as MomentInformation;
+                return m2.User.Name;
+            }
+            return null;
+        }
+
+        public static Thickness GetForwardingWrapperPadding(MomentInformation moment)
+        {
+            var isforwarding = moment.MomentType == Richasy.BiliKernel.Models.MomentItemType.Forward;
+            if (isforwarding)
+            {
+                return new Thickness(16, 16, 16, 16);
+            }
+            return new Thickness(0, 0, 0, 0);
+        }
+
+        public static Visibility GetNestedReplyVisible(CommentInformation comment)
+        {
+            var hasNested = comment.CommunityInformation.ChildCount > 0;
+            return hasNested ? Visibility.Visible : Visibility.Collapsed;
+        }
+
+        public static string GetNestedReplyStr(CommentInformation comment)
+        {
+            return $"共{comment.CommunityInformation.ChildCount}条回复 >";
+        } 
+
     }
 }

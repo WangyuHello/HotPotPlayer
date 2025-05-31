@@ -75,12 +75,39 @@
             </Grid.ColumnDefinitions>
 
             <StackPanel Margin="0,0,8,0" Orientation="Horizontal" Spacing="4">
-                <Border CornerRadius="4" Background="#8c44f1" Margin="4,4,0,4" Padding="8,0" Visibility="Collapsed">
-                    <TextBlock VerticalAlignment="Center" Text="Test" FontFamily="{ThemeResource MiSansRegular}" FontSize="13" Foreground="White"/>
+                <Border CornerRadius="4" Background="#8c44f1" Margin="4,4,0,4" Padding="8,0" Visibility="{x:Bind GetVideoBasicInfoVisible(VideoPlayer.VideoBasicInfo)}">
+                    <TextBlock VerticalAlignment="Center" Text="{x:Bind GetVideoBasicInfoText(VideoPlayer.VideoBasicInfo)}" FontFamily="{ThemeResource MiSansRegular}" FontSize="13" Foreground="White"/>
                 </Border>
-                <Button Click="PlayButtonClick" Style="{StaticResource VideoPlayOtherButton}">
-                    <FontIcon FontFamily="{ThemeResource SegoeIcons}" Glyph="{x:Bind GetPlayButtonIcon(VideoPlayer.IsPlaying, VideoPlayer.HasError), Mode=OneWay}" />
-                </Button>
+                <Grid>
+                    <!--PlayButton-->
+                    <Button Click="PlayButtonClick" 
+                            x:Name="PlayButton"
+                            Style="{StaticResource VideoPlayOtherButton}"
+                            ui:VisualExtensions.NormalizedCenterPoint="0.5"
+                            >
+                        <FontIcon FontFamily="{ThemeResource SegoeIcons}" Glyph="{x:Bind GetPlayButtonIcon(VideoPlayer.IsPlaying, VideoPlayer.HasError), Mode=OneWay}" />
+
+                        <animations:Implicit.Animations>
+                            <animations:ScaleAnimation Duration="0:0:0.5" />
+                        </animations:Implicit.Animations>
+                    </Button>
+                    <!--Progress-->
+                    <ProgressRing IsActive="True" 
+                                  Foreground="White"
+                                  Background="Gray"
+                                  ui:VisualExtensions.NormalizedCenterPoint="0.5"
+                                  Visibility="{x:Bind GetLoadingVisible(VideoPlayer.State)}">
+                        <animations:Implicit.ShowAnimations>
+                            <animations:ScaleAnimation Duration="0:0:0.8" From="2,2,2" To="1,1,1" />
+                            <animations:OpacityAnimation Duration="0:0:0.8" From="0" To="1" />
+                        </animations:Implicit.ShowAnimations>
+                        <animations:Implicit.HideAnimations>
+                            <animations:ScaleAnimation Duration="0:0:0.8" From="1,1,1" To="2,2,2" />
+                            <animations:OpacityAnimation Duration="0:0:0.8" From="1" To="0" />
+                        </animations:Implicit.HideAnimations>
+                    </ProgressRing>
+                </Grid>
+
                 <Button Style="{StaticResource VideoPlayOtherButton}" Click="PlayNextButtonClick">
                     <FontIcon FontFamily="{ThemeResource SegoeIcons}" Glyph="&#xF8AD;" />
                 </Button>
@@ -198,20 +225,5 @@
             </animations:Implicit.HideAnimations>
         </vcont:VideoPlayListBar>
 
-        <!--Progress-->
-        <ProgressRing IsActive="True" 
-                      Width="64" 
-                      Height="64" 
-                      ui:VisualExtensions.NormalizedCenterPoint="0.5"
-                      Visibility="{x:Bind GetLoadingVisible(VideoPlayer.State)}">
-            <animations:Implicit.ShowAnimations>
-                <animations:ScaleAnimation Duration="0:0:0.1" From="2,2,2" To="1,1,1" />
-                <animations:OpacityAnimation Duration="0:0:0.1" From="0" To="1" />
-            </animations:Implicit.ShowAnimations>
-            <animations:Implicit.HideAnimations>
-                <animations:ScaleAnimation Duration="0:0:0.4" From="1,1,1" To="2,2,2" />
-                <animations:OpacityAnimation Duration="0:0:0.3" From="1" To="0" />
-            </animations:Implicit.HideAnimations>
-        </ProgressRing>
     </Grid>
 </base:UserControlBase>

@@ -10,6 +10,7 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -82,26 +83,24 @@ namespace HotPotPlayer.Services
             }
         }
 
-        private bool _isPlaying;
+        [ObservableProperty]
+        public partial bool IsPlaying { get; set; }
 
-        public bool IsPlaying
+        partial void OnIsPlayingChanged(bool value)
         {
-            get => _isPlaying;
-            set => SetProperty(ref _isPlaying, value, nowPlaying =>
+            var nowPlaying = value;
+            Task.Run(async () =>
             {
-                Task.Run(async () =>
+                CustomPlayOrPause(nowPlaying);
+                if (nowPlaying)
                 {
-                    CustomPlayOrPause(nowPlaying);
-                    if (nowPlaying)
-                    {
-                        App.SetSmtcStatus(MediaPlaybackStatus.Playing);
-                    }
-                    else
-                    {
-                        App.SetSmtcStatus(MediaPlaybackStatus.Paused);
-                        await App.JellyfinMusicService.ReportProgress(CurrentPlaying, CurrentTime.Ticks, true);
-                    }
-                });
+                    App.SetSmtcStatus(MediaPlaybackStatus.Playing);
+                }
+                else
+                {
+                    App.SetSmtcStatus(MediaPlaybackStatus.Paused);
+                    await App.JellyfinMusicService.ReportProgress(CurrentPlaying, CurrentTime.Ticks, true);
+                }
             });
         }
 
@@ -133,10 +132,7 @@ namespace HotPotPlayer.Services
             {
                 if (value != _mpv.Volume)
                 {
-                    if (_mpv != null)
-                    {
-                        _mpv.Volume = value;
-                    }
+                    _mpv?.Volume = value;
                     OnPropertyChanged(nameof(Volume));
                 }
             }
@@ -313,7 +309,10 @@ namespace HotPotPlayer.Services
         {
             _playerTimer.Stop();
             _mpv.Pause();
-            IsPlaying = false;
+            UIQueue.TryEnqueue(() =>
+            {
+                IsPlaying = false;
+            });
             CustomPauseAsStop();
             App.SetSmtcStatus(MediaPlaybackStatus.Stopped);
             App.JellyfinMusicService.ReportStop(CurrentPlaying, CurrentTime.Ticks);
@@ -345,6 +344,16 @@ namespace HotPotPlayer.Services
         public void SetPropertyLong(string key, long value)
         {
             _mpv?.API.SetPropertyLong(key, value);
+        }
+
+        public string GetPropertyString(string key)
+        {
+            return _mpv?.API.GetPropertyString(key);
+        }
+
+        public long? GetPropertyLong(string key)
+        {
+            return _mpv?.API.GetPropertyLong(key);
         }
 
         private void PlayerTimerElapsed(object sender, ElapsedEventArgs e)
@@ -381,6 +390,7 @@ namespace HotPotPlayer.Services
             UIQueue.TryEnqueue(() =>
             {
                 IsPlaying = true;
+                State = PlayerState.Playing;
             });
         }
 
@@ -389,6 +399,7 @@ namespace HotPotPlayer.Services
             UIQueue.TryEnqueue(() =>
             {
                 IsPlaying = false;
+                State = PlayerState.Loading;
             });
         }
 
@@ -425,7 +436,7 @@ namespace HotPotPlayer.Services
             }
         }
 
-        public Action OnMediaLoaded;
+        public event Action OnMediaLoaded;
 
         protected readonly ManualResetEvent _event = new(false);
         protected virtual void CustomMediaLoaded() { }

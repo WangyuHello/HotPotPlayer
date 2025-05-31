@@ -8,6 +8,7 @@ using HotPotPlayer.Services;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Media;
+using Richasy.BiliKernel.Models.Comment;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -50,19 +51,18 @@ namespace HotPotPlayer.Pages.Helper
         public async static void ShowNestedReply(object sender, RoutedEventArgs e)
         {
             var element = sender as FrameworkElement;
-            var reply = element.DataContext as Reply;
+            var reply = element.DataContext as CommentInformation;
 
             ContentDialog dialog = new()
             {
-                Title = $"回复({reply.TheReplies.Count})",
+                Title = $"回复({reply.CommunityInformation.ChildCount})",
                 CloseButtonText = "关闭",
                 DefaultButton = ContentDialogButton.Close,
                 Content = new NestedReplyDialog(reply),
                 XamlRoot = element.XamlRoot,
                 Style = App.Resources["DefaultContentDialogStyle"] as Style
             };
-
-            var result = await dialog.ShowAsync();
+            _ = await dialog.ShowAsync();
         }
     }
 }

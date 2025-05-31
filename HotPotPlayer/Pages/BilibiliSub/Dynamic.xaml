@@ -14,7 +14,7 @@
     >
 
     <Grid Background="#f0f0f2">
-        <SplitView IsPaneOpen="{x:Bind IsCommentsOpen}" OpenPaneLength="636" DisplayMode="Inline" PanePlacement="Right">
+        <SplitView Grid.Row="0" IsPaneOpen="{x:Bind IsCommentsOpen}" OpenPaneLength="636" DisplayMode="Inline" PanePlacement="Right">
             <!--<SplitView.Pane>
                 <Grid Background="White" Margin="0,0,36,0" >
                     <ListView 
@@ -31,9 +31,9 @@
                     </ListView>
                 </Grid>
             </SplitView.Pane>-->
-            
+
             <ListView Width="600" ItemsSource="{x:Bind DynamicItems, Mode=OneWay}" 
-                  Padding="0,72,0,0"
+                  Padding="0,136,0,0"
                   Style="{StaticResource GeneralListViewStyle}" 
                   ItemContainerStyle="{StaticResource TransparentListContainerWithPadding2RoundStyle}" 
                   ItemTemplate="{StaticResource DynamicTemplate}"
@@ -41,5 +41,16 @@
                   IncrementalLoadingTrigger="Edge"
                   IncrementalLoadingThreshold="2" />
         </SplitView>
+
+        <ListView ItemsSource="{x:Bind Users}" 
+                  Background="{ThemeResource AcrylicInAppFillColorDefaultBrush}"
+                  Margin="36,72,0,0"
+                  Padding="0,2"
+                  Height="78"
+                  VerticalAlignment="Top"
+                  SelectionMode="Single"
+                  Style="{StaticResource HorizontalListViewStyle}" 
+                  ItemTemplate="{StaticResource DynamicUserTemplate}" 
+                  ItemContainerStyle="{StaticResource TransparentListContainerCompactHPaddingStyle}"/>
     </Grid>
 </base:UserControlBase>

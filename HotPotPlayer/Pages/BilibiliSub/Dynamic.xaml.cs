@@ -44,6 +44,9 @@ namespace HotPotPlayer.Pages.BilibiliSub
         [ObservableProperty]
         public partial ReplyItemCollection Replies { get; set; }
 
+        [ObservableProperty]
+        public partial IReadOnlyList<MomentProfile> Users { get; set; }
+
         private DynamicItem currentOpen;
 
         [ObservableProperty]
@@ -59,19 +62,25 @@ namespace HotPotPlayer.Pages.BilibiliSub
             }
             if (DynamicItems == null)
             {
-                DynamicItems = new DynamicItemCollection(BiliBiliService);
+                DynamicItems = new DynamicItemCollection(BiliBiliService)
+                {
+                    OnGetUsers = OnGetUsers
+                };
             }
             else
             {
-                DynamicItems.Offset = null;
-                DynamicItems.BaseLine = null;
-                DynamicItems.Clear();
+                DynamicItems.Reset();
             }
             LoadDynamicCompleted?.Invoke();
             isFirstLoad = false;
         }
 
         public event Action LoadDynamicCompleted;
+
+        private void OnGetUsers(IReadOnlyList<MomentProfile> users)
+        {
+            Users = users;
+        }
 
         public void ToggleComment(DynamicItem dyn)
         {
@@ -122,37 +131,46 @@ namespace HotPotPlayer.Pages.BilibiliSub
         private void DynamicItemClick(object sender, ItemClickEventArgs e)
         {
             var m = e.ClickedItem as MomentInformation;
-            switch (m.MomentType)
-            {
-                case Richasy.BiliKernel.Models.MomentItemType.Video:
-                    var v = m.Data as VideoInformation;
-                    var dto = v.ToBaseItemDto();
-                    VideoPlayer.PlayNext(dto);
-                    break;
-                default:
-                    break;
-            }
-            //if (v.Modules.ModuleDynamic?.Major?.Archive != null)
-            //{
-            //    var bvid = v.Modules.ModuleDynamic.Major.Archive.Bvid;
-            //    PlayVideoInNewWindow(bvid);
-            //}
-            //else if(v.HasOrigin && v.Origin.Modules.ModuleDynamic?.Major?.Archive != null)
-            //{
-            //    var bvid = v.Origin.Modules.ModuleDynamic.Major.Archive.Bvid;
-            //    PlayVideoInNewWindow(bvid);
-            //}
-            //else if(v.Modules.ModuleDynamic?.Major?.Article != null)
-            //{
-            //    var url = v.Modules.ModuleDynamic.Major.Article.JumpUrl;
-            //    await Launcher.LaunchUriAsync(new Uri("https:" + url));
-            //}
-            //else if(v.Modules.ModuleDynamic?.Major?.LiveRcmd != null)
-            //{
-            //    var url = v.Modules.ModuleDynamic.Major.LiveRcmd.GetLink;
-            //    await Launcher.LaunchUriAsync(new Uri(url));
-            //}
 
+            void DynamicItemClickInner(MomentInformation moment)
+            {
+                switch (moment.MomentType)
+                {
+                    case Richasy.BiliKernel.Models.MomentItemType.Video:
+                        var v = moment.Data as VideoInformation;
+                        var dto = v.ToBaseItemDto();
+                        VideoPlayer.PlayNext(dto);
+                        break;
+                    case Richasy.BiliKernel.Models.MomentItemType.Forward:
+                        var m2 = moment.Data as MomentInformation;
+                        DynamicItemClickInner(m2);
+                        break;
+                    default:
+                        break;
+                }
+                //if (v.Modules.ModuleDynamic?.Major?.Archive != null)
+                //{
+                //    var bvid = v.Modules.ModuleDynamic.Major.Archive.Bvid;
+                //    PlayVideoInNewWindow(bvid);
+                //}
+                //else if(v.HasOrigin && v.Origin.Modules.ModuleDynamic?.Major?.Archive != null)
+                //{
+                //    var bvid = v.Origin.Modules.ModuleDynamic.Major.Archive.Bvid;
+                //    PlayVideoInNewWindow(bvid);
+                //}
+                //else if(v.Modules.ModuleDynamic?.Major?.Article != null)
+                //{
+                //    var url = v.Modules.ModuleDynamic.Major.Article.JumpUrl;
+                //    await Launcher.LaunchUriAsync(new Uri("https:" + url));
+                //}
+                //else if(v.Modules.ModuleDynamic?.Major?.LiveRcmd != null)
+                //{
+                //    var url = v.Modules.ModuleDynamic.Major.LiveRcmd.GetLink;
+                //    await Launcher.LaunchUriAsync(new Uri(url));
+                //}
+            }
+
+            DynamicItemClickInner(m);
         }
     }
 }

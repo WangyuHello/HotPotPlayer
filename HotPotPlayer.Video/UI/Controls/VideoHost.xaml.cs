@@ -11,6 +11,7 @@ using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Controls.Primitives;
 using Microsoft.UI.Xaml.Data;
+using Microsoft.UI.Xaml.Hosting;
 using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Navigation;
@@ -22,9 +23,11 @@ using System.Diagnostics;
 using System.Drawing;
 using System.IO;
 using System.Linq;
+using System.Numerics;
 using System.Runtime.InteropServices;
 using System.Runtime.InteropServices.WindowsRuntime;
 using System.Threading.Tasks;
+using System.Xml.Linq;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
 using Windows.UI;
@@ -105,6 +108,25 @@ namespace HotPotPlayer.Video.UI.Controls
             VideoPlayer.SwapChainInited += VideoPlayer_SwapchainInited;
             VideoPlayer.VideoGeometryInit += VideoPlayer_VideoGeometryInit;
             VideoPlayer.DanmakuInit += VideoPlayer_DanmakuInit;
+            VideoPlayer.PropertyChanged += VideoPlayer_PropertyChanged;
+        }
+
+        private void VideoPlayer_PropertyChanged(object sender, PropertyChangedEventArgs e)
+        {
+            if (e.PropertyName == "State")
+            {
+                if(VideoPlayer.State == PlayerState.Loading)
+                {
+                    if (PlayBarVisible == true)
+                    {
+                        OnPlayBarVisibleChanged(true);
+                    }
+                    else
+                    {
+                        PlayBarVisible = true;
+                    }
+                }
+            }
         }
 
         private Grid VideoPlayer_DanmakuInit()
@@ -117,6 +139,7 @@ namespace HotPotPlayer.Video.UI.Controls
             VideoPlayer.SwapChainInited -= VideoPlayer_SwapchainInited;
             VideoPlayer.VideoGeometryInit -= VideoPlayer_VideoGeometryInit;
             VideoPlayer.DanmakuInit -= VideoPlayer_DanmakuInit;
+            VideoPlayer.PropertyChanged -= VideoPlayer_PropertyChanged;
             _isSwapchainInited = false;
         }
 
@@ -129,8 +152,8 @@ namespace HotPotPlayer.Video.UI.Controls
                 _swapChainPanelNative = Host.As<Interop.ISwapChainPanelNative>();
                 _swapChainPanelNative.SetSwapChain(_swapchain);
                 //_isSwapchainInited = true;
-                PlayBarVisible = true;
                 VideoPlayer.OnSwapChainConfigured();
+                OnPlayBarVisibleChanged(true);
             });
         }
 
@@ -162,46 +185,35 @@ namespace HotPotPlayer.Video.UI.Controls
         [ObservableProperty]
         public partial bool IsFullScreen {  get; set; }
 
-        private bool isVideoInfoOn;
-        public bool IsVideoInfoOn
+        [ObservableProperty]
+        public partial bool IsVideoInfoOn { get; set; }
+
+        partial void OnIsVideoInfoOnChanged(bool value)
         {
-            get => isVideoInfoOn;
-            set => Set(ref isVideoInfoOn, value, nv =>
-            {
-                VideoPlayer.Command("script-binding", "stats/display-stats-toggle");
-            });
+            VideoPlayer.Command("script-binding", "stats/display-stats-toggle");
         }
 
-        private bool isPlayListBarVisible;
-        public bool IsPlayListBarVisible
+        [ObservableProperty]
+        public partial bool IsPlayListBarVisible { get; set; }
+
+        partial void OnIsPlayListBarVisibleChanged(bool value)
         {
-            get => isPlayListBarVisible;
-            set
+            AppWindow.SetTitleBarForegroundColor(value);
+        }
+
+        [ObservableProperty]
+        public partial bool PlayBarVisible { get; set; } = true;
+
+        partial void OnPlayBarVisibleChanged(bool value)
+        {
+            ShowCursor(value ? 1 : 0);
+            if (value == true)
             {
-                if (isPlayListBarVisible != value)
+                _inActiveTimer ??= InitInActiveTimer();
+                if (!_inActiveTimer.IsEnabled)
                 {
-                    Set(ref isPlayListBarVisible, value);
-                    AppWindow.SetTitleBarForegroundColor(isPlayListBarVisible);
+                    _inActiveTimer.Start();
                 }
-            }
-        }
-
-        private bool playBarVisible;
-
-        public bool PlayBarVisible
-        {
-            get => playBarVisible;
-            set
-            {
-                Set(ref playBarVisible, value, newV =>
-                {
-                    ShowCursor(newV ? 1 : 0);
-                    if (newV == true)
-                    {
-                        _inActiveTimer ??= InitInActiveTimer();
-                        _inActiveTimer.Start();
-                    }
-                });
             }
         }
 
@@ -432,23 +444,36 @@ namespace HotPotPlayer.Video.UI.Controls
 
         private Visibility GetLoadingVisible(PlayerState state)
         {
+            var visual = ElementCompositionPreview.GetElementVisual(PlayButton);
+            if (state == PlayerState.Loading)
+            {
+                visual.Scale = new Vector3(0.7f, 0.7f, 1);
+            }
+            else
+            {
+                visual.Scale = new Vector3(1f, 1f, 1);
+            }
+
             return (state == PlayerState.Loading) ? Visibility.Visible : Visibility.Collapsed;
+        }
+
+        private Visibility GetPlayButtonVisible(PlayerState state)
+        {
+            return (state == PlayerState.Loading) ? Visibility.Collapsed : Visibility.Visible;
         }
 
         private void Grid_PointerEntered(object sender, PointerRoutedEventArgs e)
         {
-            if (!_isSwapchainInited) { return; }
             PlayBarVisible = true;
         }
 
         List<string> _tempSubtitleList;
         private List<string> GetSubtitleList(List<MediaStream> mediaStreams)
         {
-            _tempSubtitleList = new List<string>
-            {
-                "关闭"
-            };
-            _tempSubtitleList.AddRange(mediaStreams.Where(m => m.IsTextSubtitleStream.Value).Select(m => m.DisplayTitle));
+            _tempSubtitleList =
+            [
+                "关闭", .. mediaStreams.Where(m => m.IsTextSubtitleStream.Value).Select(m => m.DisplayTitle)
+            ];
             return _tempSubtitleList;
         }
 
@@ -469,7 +494,6 @@ namespace HotPotPlayer.Video.UI.Controls
 
         private void Grid_PointerMoved(object sender, PointerRoutedEventArgs e)
         {
-            if (!_isSwapchainInited) { return; }
             PlayBarVisible = true;
         }
 
@@ -497,6 +521,36 @@ namespace HotPotPlayer.Video.UI.Controls
         {
             _inActiveTimer.Stop();
             PlayBarVisible = false;
+        }
+
+        Visibility GetVideoBasicInfoVisible(VideoBasicInfo videoBasicInfo)
+        {
+            if (videoBasicInfo == null) return Visibility.Collapsed;
+            var visible = videoBasicInfo.ColorMatrix != "bt.709" ||
+                          videoBasicInfo.Width > 2000 ||
+                          videoBasicInfo.Height > 2000;
+            return visible ? Visibility.Visible : Visibility.Collapsed;
+        }
+
+        string GetVideoBasicInfoText(VideoBasicInfo videoBasicInfo)
+        {
+            if (videoBasicInfo == null) return string.Empty;
+            var res = videoBasicInfo switch
+            {
+                var _ when videoBasicInfo.Width >= 7000 => "8K",
+                var _ when videoBasicInfo.Width >= 2000 => "4K",
+                _ => string.Empty,
+            };
+            var color = videoBasicInfo switch
+            {
+                var _ when videoBasicInfo.ColorMatrix.StartsWith("dolbyvision") => "杜比视界",
+                var _ when videoBasicInfo.ColorMatrix.StartsWith("bt.2020") => "HDR",
+                _ => string.Empty
+            };
+
+            var seg = (!string.IsNullOrEmpty(color) && !string.IsNullOrEmpty(res)) ? " | " : string.Empty;
+            res += seg + color;
+            return res;
         }
 
         private void NavigateBackClick(object sender, RoutedEventArgs e)

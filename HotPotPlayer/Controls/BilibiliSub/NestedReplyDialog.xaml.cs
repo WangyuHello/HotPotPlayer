@@ -1,7 +1,8 @@
 // Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT License. See LICENSE in the project root for license information.
 
-using HotPotPlayer.Bilibili.Models.Reply;
+using CommunityToolkit.Mvvm.ComponentModel;
+using HotPotPlayer.Models.BiliBili;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Controls.Primitives;
@@ -9,6 +10,7 @@ using Microsoft.UI.Xaml.Data;
 using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Navigation;
+using Richasy.BiliKernel.Models.Comment;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -25,14 +27,25 @@ namespace HotPotPlayer.Controls.BilibiliSub
     /// <summary>
     /// An empty page that can be used on its own or navigated to within a Frame.
     /// </summary>
-    public sealed partial class NestedReplyDialog : Page
+    public sealed partial class NestedReplyDialog : PageBase
     {
-        public NestedReplyDialog(Reply reply)
+        public NestedReplyDialog(CommentInformation reply)
         {
             Reply = reply;
+            NestedReplies = new ReplyItemCollection(BiliBiliService)
+            {
+                IsDetail = true,
+                Oid = Reply.CommentId,
+                RootId = Reply.Id,
+                Type = Richasy.BiliKernel.Models.CommentTargetType.Video,
+                Sort = Richasy.BiliKernel.Models.CommentSortType.Hot
+            };
             this.InitializeComponent();
         }
 
-        readonly Reply Reply;
+        readonly CommentInformation Reply;
+
+        [ObservableProperty]
+        public partial ReplyItemCollection NestedReplies { get; set; }
     }
 }

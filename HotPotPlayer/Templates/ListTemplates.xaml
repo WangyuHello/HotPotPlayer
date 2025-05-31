@@ -312,7 +312,7 @@
         </Grid>
     </DataTemplate>
 
-    <DataTemplate x:Key="VideoReplyTemplateNoPadding" x:DataType="brep:Reply">
+    <DataTemplate x:Key="VideoReplyTemplateNoPadding" x:DataType="bmodelComment:CommentInformation">
         <Grid Padding="0,8,0,8" >
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto" />
@@ -330,10 +330,10 @@
                     <RowDefinition Height="*" />
                     <RowDefinition Height="*" />
                 </Grid.RowDefinitions>
-                <cont2:ImageEx2 Margin="0,0,8,0" Grid.RowSpan="2" Source="{x:Bind Member.Avatar}" Height="40" Width="40" CornerRadius="8" Style="{StaticResource LocalMusicImageStyle}"/>
-                <TextBlock Grid.Column="1" Text="{x:Bind Member.UName}" FontFamily="{StaticResource MiSansRegular}"/>
-                <TextBlock Grid.Column="1" Margin="0,2,0,0" Grid.Row="1" Text="{x:Bind TimeStr}" Foreground="Gray" FontSize="12" FontFamily="{StaticResource MiSansRegular}"/>
-                <TextBlock Grid.Column="2" Grid.RowSpan="2" Text="{x:Bind Like}" VerticalAlignment="Center" Foreground="Gray" FontSize="12" FontFamily="{StaticResource MiSansRegular}"/>
+                <cont2:ImageEx2 Margin="0,0,8,0" Grid.RowSpan="2" Source="{x:Bind User.User.Avatar.Uri}" Height="40" Width="40" CornerRadius="8" Style="{StaticResource LocalMusicImageStyle}"/>
+                <TextBlock Grid.Column="1" Text="{x:Bind User.User.Name}" FontFamily="{StaticResource MiSansRegular}"/>
+                <TextBlock Grid.Column="1" Margin="0,2,0,0" Grid.Row="1" Text="{x:Bind ext:BiliUIExtensions.GetDateTimeStr(PublishTime)}" Foreground="Gray" FontSize="12" FontFamily="{StaticResource MiSansRegular}"/>
+                <!--<TextBlock Grid.Column="2" Grid.RowSpan="2" Text="{x:Bind CommunityInformation.IsLiked}" VerticalAlignment="Center" Foreground="Gray" FontSize="12" FontFamily="{StaticResource MiSansRegular}"/>-->
 
                 <StackPanel Grid.Column="3" Grid.RowSpan="2" Margin="4,0,8,0" VerticalAlignment="Center" Orientation="Horizontal" Spacing="8">
                     <Button Style="{StaticResource FullTransparentButton}" >
@@ -345,9 +345,9 @@
                 </StackPanel>
 
             </Grid>
-            <TextBlock Grid.Row="1" Margin="48,8,0,0" Text="{x:Bind Content.Message}" TextWrapping="Wrap" FontFamily="{StaticResource MiSansRegular}"/>
-            <StackPanel Grid.Row="2" Margin="48,8,8,0" Visibility="{x:Bind HasNestedReply}">
-                <HyperlinkButton Margin="-10,0,0,0" Content="{x:Bind GetNestedReplyStr}" Click="{x:Bind helper:CommentHelper.ShowNestedReply}"/>
+            <ContentControl Grid.Row="1" Margin="48,8,0,0" Content="{x:Bind ext:BiliUIExtensions.GenRichTextBlock(Content)}" FontFamily="{StaticResource MiSansRegular}"/>
+            <StackPanel Grid.Row="2" Margin="48,8,8,0" Visibility="{x:Bind ext:BiliUIExtensions.GetNestedReplyVisible((bmodelComment:CommentInformation))}">
+                <HyperlinkButton Margin="-10,0,0,0" Content="{x:Bind ext:BiliUIExtensions.GetNestedReplyStr((bmodelComment:CommentInformation))}" Click="{x:Bind helper:CommentHelper.ShowNestedReply}"/>
             </StackPanel>
         </Grid>
     </DataTemplate>
@@ -389,9 +389,12 @@
                            Margin="48,8,0,0" 
                            Content="{x:Bind ext:BiliUIExtensions.GenRichTextBlock(Content)}"
                            FontFamily="{StaticResource MiSansRegular}" />
-            <!--<StackPanel Grid.Row="2" Margin="48,8,8,0" Visibility="{x:Bind HasNestedReply}">
-                <HyperlinkButton Margin="-10,0,0,0" Content="{x:Bind GetNestedReplyStr}" Click="{x:Bind helper:CommentHelper.ShowNestedReply}"/>
-            </StackPanel>-->
+            <StackPanel Grid.Row="2" Margin="48,8,8,0" Visibility="{x:Bind ext:BiliUIExtensions.GetNestedReplyVisible((bmodelComment:CommentInformation))}">
+                <HyperlinkButton Margin="-10,0,0,0" 
+                                 Foreground="#146489"
+                                 Content="{x:Bind ext:BiliUIExtensions.GetNestedReplyStr((bmodelComment:CommentInformation))}"
+                                 Click="{x:Bind helper:CommentHelper.ShowNestedReply}"/>
+            </StackPanel>
         </Grid>
     </DataTemplate>
 
@@ -564,116 +567,67 @@
                     <SymbolIcon Symbol="More" />
                 </Button>
             </Grid>
-            
-            <!--Main Content-->
-            <ContentControl Margin="0,8,0,0" Visibility="{x:Bind ext:BiliUIExtensions.IsDescVisible((bmodelMoment:MomentInformation))}" DataContext="{x:Bind }"
+
+            <!--Main Content For Forwarding-->
+            <ContentControl Margin="0,8,0,0" Visibility="{x:Bind ext:BiliUIExtensions.GetForwardingVisible((bmodelMoment:MomentInformation))}" DataContext="{x:Bind }"
                             FontFamily="{ThemeResource MiSansRegular}"
                             Content="{x:Bind ext:BiliUIExtensions.GenRichTextBlock(Description)}"
                             />
-
-            <!--Article-->
-            <!--<StackPanel Margin="0,8,0,0" Visibility="{x:Bind ext:BiliUIExtensions.IsArticleVisible((bmodelMoment:MomentInformation))}"
-                        Padding="16,8" 
-                        Background="#f4f5f7" CornerRadius="4">
-                <TextBlock FontFamily="{ThemeResource MiSansMedium}" Text="{x:Bind Modules.ModuleDynamic.Major.Article.Title}" TextWrapping="Wrap" />
-                <ccont:AdaptiveGridView Margin="0,8,0,0" Visibility="{x:Bind Modules.ModuleDynamic.HasArticleCover}" 
-                                    DesiredWidth="200"
-                                    ItemTemplate="{StaticResource ArticleCoverTemplate}"
-                                    ItemsSource="{x:Bind Modules.ModuleDynamic.Major.Article.Covers}" >
-
-                </ccont:AdaptiveGridView>
-                <TextBlock Margin="0,4" FontFamily="{ThemeResource MiSansRegular}" Text="{x:Bind Modules.ModuleDynamic.Major.Article.Desc}" Foreground="Gray" TextWrapping="Wrap" MaxLines="4" TextTrimming="CharacterEllipsis"/>
-                <TextBlock FontFamily="{ThemeResource MiSansRegular}" Text="{x:Bind Modules.ModuleDynamic.Major.Article.Label}" Foreground="LightGray" FontSize="13" TextWrapping="Wrap" />
-            </StackPanel>-->
-
-            <!--OneImage (Article/Video/Image)-->
-            <Grid>
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="Auto" />
-                    <RowDefinition Height="Auto" />
-                </Grid.RowDefinitions>
-
-                <cont2:ImageEx2 Margin="0,8,0,0" 
-                            Source="{x:Bind ext:BiliUIExtensions.GetSingleImageSource((bmodelMoment:MomentInformation))}" 
-                            Visibility="{x:Bind ext:BiliUIExtensions.IsSingleImage((bmodelMoment:MomentInformation))}" 
-                            CornerRadius="4" 
-                            Width="{x:Bind ext:BiliUIExtensions.GetSingleImageWidth((bmodelMoment:MomentInformation))}"
-                            Style="{StaticResource DynamicImageStyle}"/>
-
-                <Grid VerticalAlignment="Bottom" Padding="12,8"
-                      Visibility="{x:Bind ext:BiliUIExtensions.GetVideoStatVisible((bmodelMoment:MomentInformation))}" >
-                    <Grid.Background>
-                        <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
-                            <GradientStop Offset="0" Color="Transparent"/>
-                            <GradientStop Offset="0.2" Color="#10000000"/>
-                            <GradientStop Offset="0.9" Color="#50000000"/>
-                        </LinearGradientBrush>
-                    </Grid.Background>
-                    <StackPanel Orientation="Horizontal" Spacing="16">
-                        <Border Background="#80000000" CornerRadius="4" Padding="8,4">
-                            <TextBlock Foreground="White" FontSize="13" Text="{x:Bind ext:BiliUIExtensions.GetVideoDuration((bmodelMoment:MomentInformation))}" FontFamily="{ThemeResource MiSansRegular}" />
-                        </Border>
-                        <TextBlock VerticalAlignment="Center" FontSize="13" Foreground="White" Text="{x:Bind ext:BiliUIExtensions.GetVideoPlayCount((bmodelMoment:MomentInformation))}" FontFamily="{ThemeResource MiSansRegular}" />
-                        <TextBlock VerticalAlignment="Center" FontSize="13" Foreground="White" Text="{x:Bind ext:BiliUIExtensions.GetVideoDanmakuCount((bmodelMoment:MomentInformation))}" FontFamily="{ThemeResource MiSansRegular}" />
-                    </StackPanel>
-                </Grid>
-
-                <FontIcon VerticalAlignment="Bottom" 
-                          HorizontalAlignment="Right" 
-                          Margin="0,0,28,16" 
-                          FontSize="48"
-                          Foreground="#80ffffff"
-                          Visibility="{x:Bind ext:BiliUIExtensions.GetVideoStatVisible((bmodelMoment:MomentInformation))}"
-                          FontFamily="{ThemeResource SegoeIcons}" 
-                          Glyph="&#xEB49;" />
-
-                <TextBlock Grid.Row="1" 
-                           Margin="0,4,0,0" 
-                           FontSize="14" 
-                           Visibility="{x:Bind ext:BiliUIExtensions.GetVideoStatVisible((bmodelMoment:MomentInformation))}"
-                           Text="{x:Bind ext:BiliUIExtensions.GetTitle((bmodelMoment:MomentInformation))}" 
-                           FontFamily="{ThemeResource MiSansMedium}" 
-                           TextWrapping="Wrap"/>
-            </Grid>
-
-            <!--MultiImage-->
-            <GridView Margin="0,8,0,0" 
-                      HorizontalAlignment="Left"
-                      Visibility="{x:Bind ext:BiliUIExtensions.IsMultiImage((bmodelMoment:MomentInformation))}" 
-                      ItemTemplate="{StaticResource DynamicMultiDrawTemplate}"
-                      ItemsSource="{x:Bind ext:BiliUIExtensions.GetMultiImageSource((bmodelMoment:MomentInformation))}">
+            
+            <!--Forwarding Wrapper-->
+            <StackPanel Margin="0,8,0,0" 
+                        CornerRadius="8"
+                        Padding="{x:Bind ext:BiliUIExtensions.GetForwardingWrapperPadding((bmodelMoment:MomentInformation))}"
+                        Background="{x:Bind ext:BiliUIExtensions.GetForwardingBackground((bmodelMoment:MomentInformation))}">
                 
-                <GridView.ItemContainerStyle>
-                    <Style TargetType="GridViewItem" BasedOn="{StaticResource DefaultGridViewItemStyle}">
-                        <Setter Property="Margin" Value="4,4,4,4"/>
-                    </Style>
-                </GridView.ItemContainerStyle>
+                <!--Forwarding Header-->
+                <Grid Visibility="{x:Bind ext:BiliUIExtensions.GetForwardingVisible((bmodelMoment:MomentInformation))}"
+                      Margin="0,0,0,8">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
 
-                <GridView.ItemsPanel>
-                    <ItemsPanelTemplate>
-                        <ItemsWrapGrid
-                           MaximumRowsOrColumns="3"
-                           Orientation="Horizontal"/>
-                    </ItemsPanelTemplate>
-                </GridView.ItemsPanel>
+                    <cont2:ImageEx2 Width="24" 
+                                    Height="24" 
+                                    Source="{x:Bind ext:BiliUIExtensions.GetForwardingUserAvatar((bmodelMoment:MomentInformation))}" 
+                                    CornerRadius="12" 
+                                    DecodePixelHeight="24"
+                                    DecodePixelWidth="24"
+                                    Style="{StaticResource LocalMusicImageStyle}" />
 
-            </GridView>
+                    <TextBlock Grid.Column="1" 
+                               VerticalAlignment="Center" 
+                               Margin="8,0,0,0"
+                               FontFamily="{ThemeResource MiSansMedium}" 
+                               Text="{x:Bind ext:BiliUIExtensions.GetForwardingUserName((bmodelMoment:MomentInformation))}"
+                               Foreground="#05aeec"/>
+                </Grid>
+                
+                <!--Main Content-->
+                <ContentControl Visibility="{x:Bind ext:BiliUIExtensions.IsDescVisible((bmodelMoment:MomentInformation))}" DataContext="{x:Bind }"
+                                FontFamily="{ThemeResource MiSansRegular}"
+                                Content="{x:Bind ext:BiliUIExtensions.GetMainContent((bmodelMoment:MomentInformation))}"
+                                />
 
-            <!--Forward-->
-            <!--<StackPanel Margin="36,8,8,0" Padding="16,8" Visibility="{x:Bind HasOrigin}" Background="#f4f5f7" CornerRadius="4">
-                <StackPanel Orientation="Horizontal" Spacing="4">
-                    <cont2:ImageEx2 Grid.RowSpan="2" Width="28" Height="28" Source="{x:Bind Origin.Modules.ModuleAuthor.Face}" CornerRadius="20" Style="{StaticResource LocalMusicImageStyle}"/>
-                    <TextBlock VerticalAlignment="Center" Text="{x:Bind Origin.Modules.ModuleAuthor.Name}" FontFamily="{ThemeResource MiSansRegular}" Foreground="#00a1d6"/>
-                </StackPanel>
-                <TextBlock Margin="0,8,0,0" Visibility="{x:Bind Origin.Modules.ModuleDynamic.HasDesc}" FontFamily="{ThemeResource MiSansRegular}" TextWrapping="Wrap" Text="{x:Bind Origin.Modules.ModuleDynamic.Desc.Text}"/>
-                <Grid Margin="0,8,0,0" Visibility="{x:Bind Origin.Modules.ModuleDynamic.HasArchive}">
+                <!--OneImage (Article/Video/Image)-->
+                <Grid>
                     <Grid.RowDefinitions>
                         <RowDefinition Height="Auto" />
                         <RowDefinition Height="Auto" />
                     </Grid.RowDefinitions>
-                    <cont2:ImageEx2 Source="{x:Bind Origin.Modules.ModuleDynamic.Major.Archive.Cover}" CornerRadius="4" Style="{StaticResource DynamicImageStyle}"/>
 
-                    <Grid VerticalAlignment="Bottom" Padding="12,8">
+                    <cont2:ImageEx2 Margin="0,8,0,0" 
+                                Source="{x:Bind ext:BiliUIExtensions.GetSingleImageSource((bmodelMoment:MomentInformation))}" 
+                                Visibility="{x:Bind ext:BiliUIExtensions.IsSingleImage((bmodelMoment:MomentInformation))}" 
+                                CornerRadius="4" 
+                                Width="{x:Bind ext:BiliUIExtensions.GetSingleImageWidth((bmodelMoment:MomentInformation))}"
+                                Style="{StaticResource DynamicImageStyle}"/>
+
+                    <Grid VerticalAlignment="Bottom" Padding="12,8"
+                          Visibility="{x:Bind ext:BiliUIExtensions.GetVideoStatVisible((bmodelMoment:MomentInformation))}" >
                         <Grid.Background>
                             <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
                                 <GradientStop Offset="0" Color="Transparent"/>
@@ -683,48 +637,54 @@
                         </Grid.Background>
                         <StackPanel Orientation="Horizontal" Spacing="16">
                             <Border Background="#80000000" CornerRadius="4" Padding="8,4">
-                                <TextBlock Foreground="White" FontSize="12" Text="{x:Bind Origin.Modules.ModuleDynamic.Major.Archive.DurationText}" FontFamily="{ThemeResource MiSansRegular}" />
+                                <TextBlock Foreground="White" FontSize="13" Text="{x:Bind ext:BiliUIExtensions.GetVideoDuration((bmodelMoment:MomentInformation))}" FontFamily="{ThemeResource MiSansRegular}" />
                             </Border>
-                            <TextBlock VerticalAlignment="Center" FontSize="12" Foreground="White" Text="{x:Bind Origin.Modules.ModuleDynamic.Major.Archive.Stat.GetPlay}" FontFamily="{ThemeResource MiSansRegular}" />
-                            <TextBlock VerticalAlignment="Center" FontSize="12" Foreground="White" Text="{x:Bind Origin.Modules.ModuleDynamic.Major.Archive.Stat.GetDanmaku}" FontFamily="{ThemeResource MiSansRegular}" />
+                            <TextBlock VerticalAlignment="Center" FontSize="13" Foreground="White" Text="{x:Bind ext:BiliUIExtensions.GetVideoPlayCount((bmodelMoment:MomentInformation))}" FontFamily="{ThemeResource MiSansRegular}" />
+                            <TextBlock VerticalAlignment="Center" FontSize="13" Foreground="White" Text="{x:Bind ext:BiliUIExtensions.GetVideoDanmakuCount((bmodelMoment:MomentInformation))}" FontFamily="{ThemeResource MiSansRegular}" />
                         </StackPanel>
                     </Grid>
-                    <TextBlock Grid.Row="1" Margin="0,4,0,0" FontSize="14" Text="{x:Bind Origin.Modules.ModuleDynamic.Major.Archive.Title}" FontFamily="{ThemeResource MiSansMedium}" TextWrapping="Wrap"/>
+
+                    <FontIcon VerticalAlignment="Bottom" 
+                              HorizontalAlignment="Right" 
+                              Margin="0,0,28,16" 
+                              FontSize="48"
+                              Foreground="#80ffffff"
+                              Visibility="{x:Bind ext:BiliUIExtensions.GetVideoStatVisible((bmodelMoment:MomentInformation))}"
+                              FontFamily="{ThemeResource SegoeIcons}" 
+                              Glyph="&#xEB49;" />
+
+                    <TextBlock Grid.Row="1" 
+                               Margin="0,4,0,0" 
+                               FontSize="14" 
+                               Visibility="{x:Bind ext:BiliUIExtensions.GetVideoStatVisible((bmodelMoment:MomentInformation))}"
+                               Text="{x:Bind ext:BiliUIExtensions.GetTitle((bmodelMoment:MomentInformation))}" 
+                               FontFamily="{ThemeResource MiSansMedium}" 
+                               TextWrapping="Wrap"/>
                 </Grid>
-                <ccont:AdaptiveGridView Margin="0,8,0,0" Visibility="{x:Bind Origin.Modules.ModuleDynamic.IsMultiDraw}" 
-                                    DesiredWidth="160"
-                                    ItemTemplate="{StaticResource DynamicMultiDrawTemplate}"
-                                    ItemsSource="{x:Bind Origin.Modules.ModuleDynamic.Major.Draw.Items}">
 
-                </ccont:AdaptiveGridView>
-            </StackPanel>-->
+                <!--MultiImage-->
+                <GridView 
+                          HorizontalAlignment="Left"
+                          Visibility="{x:Bind ext:BiliUIExtensions.IsMultiImage((bmodelMoment:MomentInformation))}" 
+                          ItemTemplate="{StaticResource DynamicMultiDrawTemplate}"
+                          ItemsSource="{x:Bind ext:BiliUIExtensions.GetMultiImageSource((bmodelMoment:MomentInformation))}">
+                
+                    <GridView.ItemContainerStyle>
+                        <Style TargetType="GridViewItem" BasedOn="{StaticResource DefaultGridViewItemStyle}">
+                            <Setter Property="Margin" Value="4,4,4,4"/>
+                        </Style>
+                    </GridView.ItemContainerStyle>
 
-            <!--Archive-->
-            <!--<Grid Margin="0,8,0,0" Visibility="{x:Bind Modules.ModuleDynamic.HasArchive}">
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="Auto" />
-                    <RowDefinition Height="Auto" />
-                </Grid.RowDefinitions>
-                <cont2:ImageEx2 Source="{x:Bind Modules.ModuleDynamic.Major.Archive.Cover}" CornerRadius="4" Style="{StaticResource DynamicImageStyle}"/>
+                    <GridView.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <ItemsWrapGrid
+                               MaximumRowsOrColumns="3"
+                               Orientation="Horizontal"/>
+                        </ItemsPanelTemplate>
+                    </GridView.ItemsPanel>
 
-                <Grid VerticalAlignment="Bottom" Padding="12,8">
-                    <Grid.Background>
-                        <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
-                            <GradientStop Offset="0" Color="Transparent"/>
-                            <GradientStop Offset="0.2" Color="#10000000"/>
-                            <GradientStop Offset="0.9" Color="#50000000"/>
-                        </LinearGradientBrush>
-                    </Grid.Background>
-                    <StackPanel Orientation="Horizontal" Spacing="16">
-                        <Border Background="#80000000" CornerRadius="4" Padding="8,4">
-                            <TextBlock Foreground="White" FontSize="12" Text="{x:Bind Modules.ModuleDynamic.Major.Archive.DurationText}" FontFamily="{ThemeResource MiSansRegular}" />
-                        </Border>
-                        <TextBlock VerticalAlignment="Center" FontSize="12" Foreground="White" Text="{x:Bind Modules.ModuleDynamic.Major.Archive.Stat.GetPlay}" FontFamily="{ThemeResource MiSansRegular}" />
-                        <TextBlock VerticalAlignment="Center" FontSize="12" Foreground="White" Text="{x:Bind Modules.ModuleDynamic.Major.Archive.Stat.GetDanmaku}" FontFamily="{ThemeResource MiSansRegular}" />
-                    </StackPanel>
-                </Grid>
-                <TextBlock Grid.Row="1" Margin="0,4,0,0" FontSize="14" Text="{x:Bind Modules.ModuleDynamic.Major.Archive.Title}" FontFamily="{ThemeResource MiSansMedium}" TextWrapping="Wrap"/>
-            </Grid>-->
+                </GridView>
+            </StackPanel>
             
             <!--Reserve-->
             <!--<Grid Margin="0,8,0,0" Padding="16,8" Visibility="{x:Bind Modules.ModuleDynamic.HasReserve}" Background="#f4f5f7" CornerRadius="4">
@@ -865,6 +825,18 @@
                     <cont3:UserCard Margin="-16" Mid="{x:Bind User.Id}" />
                 </Flyout>
             </Grid.ContextFlyout>
+        </Grid>
+    </DataTemplate>
+
+    <DataTemplate x:Key="DynamicUserTemplate" x:DataType="bmodelMoment:MomentProfile">
+        <Grid MinWidth="60" >
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
+            <cont2:ImageEx2 Source="{x:Bind User.Avatar.Uri}" Style="{StaticResource DynamicImageStyle}" CornerRadius="24" Width="48" Height="48" DecodePixelWidth="48" DecodePixelHeight="48"/>
+            <Border Visibility="{x:Bind IsUnread}" Height="16" Width="16" HorizontalAlignment="Right" VerticalAlignment="Top" Background="#9f05aeec" CornerRadius="8" />
+            <TextBlock Grid.Row="1" Margin="0,4,0,0" FontSize="13" Text="{x:Bind User.Name}" FontFamily="{ThemeResource MiSansMedium}" HorizontalAlignment="Center" MaxWidth="76" TextTrimming="CharacterEllipsis"/>
         </Grid>
     </DataTemplate>
 

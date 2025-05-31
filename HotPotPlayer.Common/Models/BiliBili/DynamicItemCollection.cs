@@ -21,11 +21,22 @@ namespace HotPotPlayer.Models.BiliBili
         private bool _hasMore = true;
         public bool HasMoreItems => _hasMore;
 
+        public void Reset()
+        {
+            Offset = null; 
+            BaseLine = null;
+            Clear();
+        }
+
         public IAsyncOperation<LoadMoreItemsResult> LoadMoreItemsAsync(uint count)
         {
             return AsyncInfo.Run(async (token) =>
             {
                 var dyn = await _service.GetComprehensiveMomentsAsync(Offset, BaseLine, token);
+                if(Offset == null)
+                {
+                    OnGetUsers?.Invoke(dyn.Users);
+                }
                 Offset = dyn.Offset;
                 _hasMore = dyn.HasMoreMoments ?? true;
                 BaseLine = dyn.UpdateBaseline ?? null;
@@ -36,5 +47,7 @@ namespace HotPotPlayer.Models.BiliBili
                 return new LoadMoreItemsResult() { Count = (uint)dyn.Moments.Count };
             });
         }
+
+        public Action<IReadOnlyList<MomentProfile>> OnGetUsers { get; set; }
     }
 }

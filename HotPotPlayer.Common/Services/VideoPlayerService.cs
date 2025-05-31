@@ -50,6 +50,13 @@ namespace HotPotPlayer.Services
         [ObservableProperty]
         public partial VideoPlayVisualState VisualState {  get; set; }
 
+        private VideoBasicInfo _videoBasicInfo;
+        public VideoBasicInfo VideoBasicInfo
+        {
+            get => _videoBasicInfo;
+            set => SetProperty(ref _videoBasicInfo, value);
+        }
+
         public event EventHandler<MpvVideoGeometryInitEventArgs> VideoGeometryInit;
         public event EventHandler<IntPtr> SwapChainInited;
         public event Func<Grid> DanmakuInit;
@@ -169,7 +176,7 @@ namespace HotPotPlayer.Services
                     foreach (var part in page.Parts)
                     {
                         _currentCid = part.Identifier.Id;
-                        var dash = App.BiliBiliService.GetVideoPlayDetailAsync(page.Information.Identifier, Convert.ToInt64(part.Identifier.Id)).Result;
+                        var dash = App.BiliBiliService.GetVideoPlayDetailAsync(page.Information.Identifier, Convert.ToInt64(part.Identifier.Id)).Result ?? throw new NullReferenceException("无法找到视频地址");
                         var bestFormats = GetBestQuality(dash.Formats);
                         var bestVideoDash = GetBestVideo(dash.Videos, bestFormats);
                         var bestAudioDash = dash.Audios?.FirstOrDefault();
@@ -289,6 +296,11 @@ namespace HotPotPlayer.Services
             var geoArgs = new MpvVideoGeometryInitEventArgs();
             VideoGeometryInit?.Invoke(this, geoArgs);
             UpdatePanelSize(geoArgs.Width, geoArgs.Height);
+            _videoBasicInfo = GetVideoBasicInfo();
+            UIQueue.TryEnqueue(DispatcherQueuePriority.Low,() =>
+            {
+                OnPropertyChanged(nameof(VideoBasicInfo));
+            });
         }
 
         private readonly List<DanmakuInformation> _cachedDanmakus = [];
@@ -363,6 +375,30 @@ namespace HotPotPlayer.Services
         {
             _danmakuController?.Clear();
             _danmakuController?.UpdateTime(0);
+        }
+
+        private VideoBasicInfo GetVideoBasicInfo()
+        {
+            string colormatrix = string.Empty;
+            long? width = 0;
+            long? height = 0;
+            try
+            {
+                colormatrix = GetPropertyString("video-params/colormatrix");
+                width = GetPropertyLong("width");
+                height = GetPropertyLong("height");
+            }
+            catch (Exception)
+            {
+
+            }
+
+            return new VideoBasicInfo
+            {
+                ColorMatrix = colormatrix,
+                Width = width,
+                Height = height
+            };
         }
 
         private void OnSwapChainInited(object sender, long swapchain)
