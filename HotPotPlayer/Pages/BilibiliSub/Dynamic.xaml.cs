@@ -130,10 +130,11 @@ namespace HotPotPlayer.Pages.BilibiliSub
 
         private void DynamicItemClick(object sender, ItemClickEventArgs e)
         {
-            var m = e.ClickedItem as MomentInformation;
+            if (e.ClickedItem is not MomentInformation m) return;
 
             void DynamicItemClickInner(MomentInformation moment)
             {
+                if (moment == null) return;
                 switch (moment.MomentType)
                 {
                     case Richasy.BiliKernel.Models.MomentItemType.Video:

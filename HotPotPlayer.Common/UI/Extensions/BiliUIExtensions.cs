@@ -21,6 +21,10 @@ namespace HotPotPlayer.UI.Extensions
     {
         public static Visibility IsDescVisible(MomentInformation moment)
         {
+            if (moment == null)
+            {
+                return Visibility.Collapsed;
+            }
             if (moment.MomentType == Richasy.BiliKernel.Models.MomentItemType.Forward)
             {
                 var m2 = moment.Data as MomentInformation;
@@ -37,6 +41,10 @@ namespace HotPotPlayer.UI.Extensions
 
         public static Visibility IsSingleImage(MomentInformation moment)
         {
+            if (moment == null)
+            {
+                return Visibility.Collapsed;
+            }
             if (moment.MomentType == Richasy.BiliKernel.Models.MomentItemType.Forward)
             {
                 var m2 = moment.Data as MomentInformation;
@@ -62,6 +70,10 @@ namespace HotPotPlayer.UI.Extensions
         }
         public static Visibility IsMultiImage(MomentInformation moment)
         {
+            if (moment == null)
+            {
+                return Visibility.Collapsed;
+            }
             if (moment.MomentType == Richasy.BiliKernel.Models.MomentItemType.Forward)
             {
                 var m2 = moment.Data as MomentInformation;
@@ -88,6 +100,10 @@ namespace HotPotPlayer.UI.Extensions
 
         public static Uri GetSingleImageSource(MomentInformation moment)
         {
+            if (moment == null)
+            {
+                return null;
+            }
             if (moment.MomentType == Richasy.BiliKernel.Models.MomentItemType.Forward)
             {
                 var m2 = moment.Data as MomentInformation;
@@ -113,6 +129,10 @@ namespace HotPotPlayer.UI.Extensions
 
         public static List<BiliImage> GetMultiImageSource(MomentInformation moment)
         {
+            if (moment == null)
+            {
+                return null;
+            }
             if (moment.MomentType == Richasy.BiliKernel.Models.MomentItemType.Forward)
             {
                 var m2 = moment.Data as MomentInformation;
@@ -128,6 +148,10 @@ namespace HotPotPlayer.UI.Extensions
 
         public static double GetSingleImageWidth(MomentInformation moment)
         {
+            if (moment == null)
+            {
+                return double.NaN;
+            }
             if (moment.MomentType == Richasy.BiliKernel.Models.MomentItemType.Forward)
             {
                 var m2 = moment.Data as MomentInformation;
@@ -172,6 +196,10 @@ namespace HotPotPlayer.UI.Extensions
         //}
         public static Visibility GetVideoStatVisible(MomentInformation moment)
         {
+            if (moment == null)
+            {
+                return Visibility.Collapsed;
+            }
             if (moment.MomentType == Richasy.BiliKernel.Models.MomentItemType.Forward)
             {
                 var m2 = moment.Data as MomentInformation;
@@ -183,6 +211,10 @@ namespace HotPotPlayer.UI.Extensions
 
         public static string GetVideoDuration(MomentInformation moment)
         {
+            if (moment == null)
+            {
+                return string.Empty;
+            }
             if (moment.MomentType == Richasy.BiliKernel.Models.MomentItemType.Forward)
             {
                 var m2 = moment.Data as MomentInformation;
@@ -197,6 +229,10 @@ namespace HotPotPlayer.UI.Extensions
 
         public static string GetVideoPlayCount(MomentInformation moment)
         {
+            if (moment == null)
+            {
+                return string.Empty;
+            }
             if (moment.MomentType == Richasy.BiliKernel.Models.MomentItemType.Forward)
             {
                 var m2 = moment.Data as MomentInformation;
@@ -211,6 +247,10 @@ namespace HotPotPlayer.UI.Extensions
 
         public static string GetVideoDanmakuCount(MomentInformation moment)
         {
+            if (moment == null)
+            {
+                return string.Empty;
+            }
             if (moment.MomentType == Richasy.BiliKernel.Models.MomentItemType.Forward)
             {
                 var m2 = moment.Data as MomentInformation;
@@ -225,6 +265,10 @@ namespace HotPotPlayer.UI.Extensions
 
         public static string GetTitle(MomentInformation moment)
         {
+            if (moment == null)
+            {
+                return string.Empty;
+            }
             if (moment.MomentType == Richasy.BiliKernel.Models.MomentItemType.Forward)
             {
                 var m2 = moment.Data as MomentInformation;
@@ -353,6 +397,10 @@ namespace HotPotPlayer.UI.Extensions
 
         public static RichTextBlock GetMainContent(MomentInformation moment)
         {
+            if (moment == null)
+            {
+                return null;
+            }
             if (moment.MomentType == Richasy.BiliKernel.Models.MomentItemType.Forward)
             {
                 var m2 = moment.Data as MomentInformation;
@@ -501,7 +549,7 @@ namespace HotPotPlayer.UI.Extensions
             if (isforwarding)
             {
                 var m2 = moment.Data as MomentInformation;
-                return m2.User.Avatar.Uri;
+                return m2?.User?.Avatar?.Uri;
             }
             return null;
         }
@@ -512,7 +560,7 @@ namespace HotPotPlayer.UI.Extensions
             if (isforwarding)
             {
                 var m2 = moment.Data as MomentInformation;
-                return m2.User.Name;
+                return m2?.User?.Name;
             }
             return null;
         }
