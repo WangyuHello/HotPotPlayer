@@ -308,20 +308,37 @@ namespace HotPotPlayer.UI.Extensions
             
         //}
 
+        private static bool HasRecReason(this VideoInformation video)
+        {
+            bool has2 = false;
+            var has = video.ExtensionData.TryGetValue("RecommendReason", out var s);
+            if (has)
+            {
+                var s2 = (string)s;
+                has2 = !string.IsNullOrEmpty(s2);
+            }
+            return has2;
+        }
+
         public static Visibility HasRcmdReasonContent(this VideoInformation v)
         {
-            return v.ExtensionData.ContainsKey("RecommendReason") ? Visibility.Visible : Visibility.Collapsed;
+            bool has2 = v.HasRecReason();
+            return has2 ? Visibility.Visible : Visibility.Collapsed;
         }
 
         public static Visibility NoRcmdReasonContent(this VideoInformation v)
         {
-            return v.ExtensionData.ContainsKey("RecommendReason") ? Visibility.Collapsed : Visibility.Visible;
+            bool has2 = v.HasRecReason();
+            return has2 ? Visibility.Collapsed : Visibility.Visible;
         }
 
         public static string GetRcmdReason(this VideoInformation v)
         {
-            v.ExtensionData.TryGetValue("RecommendReason", out var s);
-            if (s != null) return s.ToString();
+            var has = v.ExtensionData.TryGetValue("RecommendReason", out var s);
+            if (has)
+            {
+                return s.ToString();
+            }
             return string.Empty;
         }
 
@@ -335,6 +352,10 @@ namespace HotPotPlayer.UI.Extensions
             if (time is DateTimeOffset d)
             {
                 return GetDateTimeStr(d);
+            }
+            else if(v.ExtensionData.TryGetValue("Subtitle", out var value))
+            {
+                return value.ToString();
             }
             return string.Empty;
         }

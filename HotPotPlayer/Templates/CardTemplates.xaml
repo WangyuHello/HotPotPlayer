@@ -455,9 +455,32 @@
                         </Border>
                         <FontIcon Visibility="{x:Bind ext:BiliUIExtensions.NoRcmdReasonContent((bmodel:VideoInformation))}" FontFamily="{ThemeResource BiliIcons}" Foreground="Gray" FontSize="13" Margin="0,0,6,-2" Glyph="&#xEA1D;" />
                         <TextBlock Text="{x:Bind Publisher.User.Name}" Foreground="Gray" FontFamily="{ThemeResource MiSansRegular}" />
-                        <TextBlock Visibility="{x:Bind ext:BiliUIExtensions.NoRcmdReasonContent((bmodel:VideoInformation))}" Margin="12,0" Text="{x:Bind ext:BiliUIExtensions.GetUpDateTime((bmodel:VideoInformation))}" Foreground="Gray" FontFamily="{ThemeResource MiSansRegular}" />
                     </StackPanel>
-                    <Button Grid.Column="1" Style="{StaticResource TransparentButton}" Margin="0,0,8,0" Foreground="Gray">
+                    <TextBlock Grid.Column="1" Margin="12,0" Text="{x:Bind ext:BiliUIExtensions.GetUpDateTime((bmodel:VideoInformation))}" Foreground="Gray" FontFamily="{ThemeResource MiSansRegular}" />
+                </Grid>
+            </StackPanel>
+            <Grid x:Name="HiddenContent" Visibility="Collapsed">
+                <Button Style="{StaticResource TransparentButton}"
+                            HorizontalAlignment="Center"
+                            Padding="12"
+                            Margin="0,-70,0,0"
+                            CornerRadius="32"
+                            Background="#99FFFFFF"
+                            Tag="{x:Bind }"
+                            Click="{x:Bind helper:BangumiHelper.BiliPlay}"
+                            >
+                    <FontIcon FontFamily="{ThemeResource SegoeIcons}" Glyph="&#xE768;" FontSize="24"/>
+                </Button>
+
+                <StackPanel 
+                        Margin="0,0,8,0"
+                        HorizontalAlignment="Right" 
+                        VerticalAlignment="Bottom" 
+                        Orientation="Horizontal"
+                        Spacing="8"
+                        Background="White"
+                    >
+                    <Button Style="{StaticResource TransparentButton}" Foreground="Gray">
                         <FontIcon HorizontalAlignment="Right" FontFamily="{ThemeResource SegoeIcons}" Glyph="&#xE10C;" />
                         <Button.Flyout>
                             <Flyout>
@@ -486,33 +509,7 @@
                             </Flyout>
                         </Button.Flyout>
                     </Button>
-                </Grid>
-            </StackPanel>
-            <Grid x:Name="HiddenContent" Visibility="Collapsed">
-                <Button Style="{StaticResource TransparentButton}"
-                            HorizontalAlignment="Center"
-                            Padding="12"
-                            Margin="0,-70,0,0"
-                            CornerRadius="32"
-                            Background="#99FFFFFF"
-                            Tag="{x:Bind }"
-                            Click="{x:Bind helper:BangumiHelper.BiliPlay}"
-                            >
-                    <FontIcon FontFamily="{ThemeResource SegoeIcons}" Glyph="&#xE768;" FontSize="24"/>
-                </Button>
-                <!--<StackPanel 
-                        Margin="0,0,8,0"
-                        HorizontalAlignment="Right" 
-                        VerticalAlignment="Bottom" 
-                        Orientation="Horizontal"
-                        Spacing="8">
-                    <Button Style="{StaticResource TransparentButton}" Foreground="Gray" >
-                        <FontIcon FontFamily="{ThemeResource SegoeIcons}" Glyph="&#xE734;" FontSize="18"/>
-                    </Button>
-                    <Button Style="{StaticResource TransparentButton}" Foreground="Gray" >
-                        <FontIcon FontFamily="{ThemeResource SegoeIcons}" Glyph="&#xE712;" FontSize="18"/>
-                    </Button>
-                </StackPanel>-->
+                </StackPanel>
             </Grid>
 
             <ani:Explicit.Animations>
