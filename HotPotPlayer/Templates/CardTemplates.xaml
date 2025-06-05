@@ -480,8 +480,11 @@
                         Spacing="8"
                         Background="White"
                     >
-                    <Button Style="{StaticResource TransparentButton}" Foreground="Gray">
-                        <FontIcon HorizontalAlignment="Right" FontFamily="{ThemeResource SegoeIcons}" Glyph="&#xE10C;" />
+                    <Button VerticalAlignment="Center" Style="{StaticResource TransparentButton}" Foreground="Gray" ToolTipService.ToolTip="添加至稍后再看" Tag="{x:Bind }" Click="{x:Bind helper:BangumiHelper.BiliAddToPlayList}">
+                        <FontIcon FontFamily="{ThemeResource BiliIcons}" Glyph="&#xEA1F;" />
+                    </Button>
+                    <Button Margin="0,0,0,2" VerticalAlignment="Center" Style="{StaticResource TransparentButton}" Foreground="Gray">
+                        <FontIcon FontFamily="{ThemeResource SegoeIcons}" Glyph="&#xE10C;" />
                         <Button.Flyout>
                             <Flyout>
                                 <Grid Width="300">
@@ -496,7 +499,6 @@
                                         <RowDefinition Height="Auto" />
                                         <RowDefinition Height="Auto" />
                                     </Grid.RowDefinitions>
-                                    <Button Margin="0,0,0,16" Grid.ColumnSpan="2" HorizontalAlignment="Stretch">添加至稍后再看</Button>
                                     <TextBlock Grid.Row="1" Grid.ColumnSpan="2" Text="反馈" FontFamily="{ThemeResource MiSansRegular}" />
                                     <TextBlock Grid.Row="1" Grid.ColumnSpan="2" Margin="28,0,0,0" Text="（选择后将优化首页此类内容）" VerticalAlignment="Center" FontFamily="{ThemeResource MiSansRegular}" Foreground="Gray" FontSize="13"/>
                                     <Button Grid.Row="2" Margin="0,16,4,8" HorizontalAlignment="Stretch">恐怖血腥</Button>

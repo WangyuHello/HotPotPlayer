@@ -532,6 +532,19 @@ namespace HotPotPlayer.Video.UI.Controls
             return visible ? Visibility.Visible : Visibility.Collapsed;
         }
 
+        string GetVideoBasicInfoType(VideoBasicInfo videoBasicInfo)
+        {
+            if (videoBasicInfo == null) return "Text";
+            if (videoBasicInfo.ColorMatrix.StartsWith("dolbyvision"))
+            {
+                return "Icon";
+            }
+            else
+            {
+                return "Text";
+            }
+        }
+
         string GetVideoBasicInfoText(VideoBasicInfo videoBasicInfo)
         {
             if (videoBasicInfo == null) return string.Empty;

@@ -25,5 +25,9 @@ namespace HotPotPlayer.Pages.Helper
             var dto = video.ToBaseItemDto();
             VideoPlayer.PlayNext(dto);
         }
+        public static void BiliAddToPlayList(object sender, RoutedEventArgs e)
+        {
+
+        }
     }
 }

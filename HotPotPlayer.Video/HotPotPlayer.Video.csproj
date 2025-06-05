@@ -23,6 +23,7 @@
   <ItemGroup>
       <PackageReference Include="CommunityToolkit.Mvvm" Version="8.4.0" />
       <PackageReference Include="CommunityToolkit.WinUI.Animations" Version="8.2.250402" />
+      <PackageReference Include="CommunityToolkit.WinUI.Controls.Primitives" Version="8.2.250402" />
       <PackageReference Include="CommunityToolkit.WinUI.Extensions" Version="8.2.250402" />
       <PackageReference Include="CommunityToolkit.WinUI.Helpers" Version="8.2.250402" />
       <PackageReference Include="Microsoft.Graphics.Win2D" Version="1.3.2" />

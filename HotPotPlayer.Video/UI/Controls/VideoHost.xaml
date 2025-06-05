@@ -11,6 +11,7 @@
     xmlns:animations="using:CommunityToolkit.WinUI.Animations"
     xmlns:local="using:HotPotPlayer.UI.Controls"
     xmlns:vcont="using:HotPotPlayer.Video.UI.Controls"
+    xmlns:controls="using:CommunityToolkit.WinUI.Controls"
     Loaded="UserControlBase_Loaded"
     Unloaded="UserControlBase_Unloaded"
     x:DefaultBindMode="OneWay"
@@ -76,7 +77,14 @@
 
             <StackPanel Margin="0,0,8,0" Orientation="Horizontal" Spacing="4">
                 <Border CornerRadius="4" Background="#8c44f1" Margin="4,4,0,4" Padding="8,0" Visibility="{x:Bind GetVideoBasicInfoVisible(VideoPlayer.VideoBasicInfo)}">
-                    <TextBlock VerticalAlignment="Center" Text="{x:Bind GetVideoBasicInfoText(VideoPlayer.VideoBasicInfo)}" FontFamily="{ThemeResource MiSansRegular}" FontSize="13" Foreground="White"/>
+                    <controls:SwitchPresenter Value="{x:Bind GetVideoBasicInfoType(VideoPlayer.VideoBasicInfo)}">
+                        <controls:Case Value="Text">
+                            <TextBlock VerticalAlignment="Center" Text="{x:Bind GetVideoBasicInfoText(VideoPlayer.VideoBasicInfo)}" FontFamily="{ThemeResource MiSansRegular}" FontSize="13" Foreground="White"/>
+                        </controls:Case>
+                        <controls:Case Value="Icon">
+                            <FontIcon FontFamily="{ThemeResource BiliIcons}" Foreground="White" FontSize="14" Margin="0,0,0,-3.5" Glyph="&#xEA1E;" />
+                        </controls:Case>
+                    </controls:SwitchPresenter>
                 </Border>
                 <Grid>
                     <!--PlayButton-->
