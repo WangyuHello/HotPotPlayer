@@ -30,6 +30,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Timers;
 using Windows.Devices.Enumeration;
+using Windows.Graphics.Display;
 using Windows.Media;
 using Windows.Storage.Streams;
 using PlayerState = HotPotPlayer.Models.PlayerState;
@@ -63,6 +64,7 @@ namespace HotPotPlayer.Services
         public IntPtr SwapChain { get; set; }
 
         private DanmakuFrostMaster _danmakuController;
+        private AdvancedColorInfo _displayInfo;
 
         private float _currentScaleX;
         private float _currentScaleY;
@@ -110,6 +112,15 @@ namespace HotPotPlayer.Services
             }
         }
 
+        protected override void BeforePlayerStarter()
+        {
+            if(_displayInfo == null && !Config.HasConfig("target-prim"))
+            {
+                var display = DisplayInformationInterop.GetForWindow(App.MainWindowHandle);
+                _displayInfo = display.GetAdvancedColorInfo();
+            }
+        }
+
         protected override void SetupMpvInitProperty(MpvPlayer _mpv)
         {
             //_mpv.API.SetPropertyDouble("display-fps-override", 120d);
@@ -120,9 +131,22 @@ namespace HotPotPlayer.Services
             _mpv.API.SetPropertyString("hwdec", "d3d11va");
             _mpv.API.SetPropertyString("d3d11-composition", "yes");
             //_mpv.API.SetPropertyString("icc-profile-auto", "yes");
-            _mpv.API.SetPropertyString("target-peak", Config.GetConfig("target-peak", "auto", true));
-            _mpv.API.SetPropertyString("target-prim", Config.GetConfig("target-prim", "bt.709", true));
-            _mpv.API.SetPropertyString("target-trc", Config.GetConfig("target-trc", "bt.1886", true));
+
+            string peak = "auto";
+            string prim = "bt.709";
+            string trc = "bt.1886";
+            if (!Config.HasConfig("target-prim"))
+            {
+                if (_displayInfo.CurrentAdvancedColorKind == AdvancedColorKind.HighDynamicRange)
+                {
+                    peak = _displayInfo.MaxLuminanceInNits.ToString();
+                    prim = "bt.2020";
+                    trc = "pq";
+                }
+            }
+            _mpv.API.SetPropertyString("target-peak", Config.GetConfig("target-peak", peak, true));
+            _mpv.API.SetPropertyString("target-prim", Config.GetConfig("target-prim", prim, true));
+            _mpv.API.SetPropertyString("target-trc", Config.GetConfig("target-trc", trc, true));
             //_mpv.API.SetPropertyString("target-colorspace-hint", "yes"); //HDR passthrough
             _mpv.API.SetPropertyString("loop-playlist", "inf");
         }

@@ -178,6 +178,7 @@ namespace HotPotPlayer.Services
         }
 
         protected virtual void OnPlayNextStateChange(int? index) { }
+        protected virtual void BeforePlayerStarter() { }
 
         /// <summary>
         /// 主方法
@@ -206,6 +207,7 @@ namespace HotPotPlayer.Services
                 OnPlayNextStateChange(index);
                 State = PlayerState.Loading;
 
+                BeforePlayerStarter();
                 _playerStarter.RunWorkerAsync(index);
             }
         }

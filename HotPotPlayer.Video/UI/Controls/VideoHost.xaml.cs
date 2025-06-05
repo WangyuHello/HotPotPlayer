@@ -30,6 +30,7 @@ using System.Threading.Tasks;
 using System.Xml.Linq;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
+using Windows.Graphics.Display;
 using Windows.UI;
 using WinRT;
 using PlayerState = HotPotPlayer.Models.PlayerState;

@@ -62,7 +62,7 @@ namespace HotPotPlayer
 
         public bool HasConfig(string key)
         {
-            return Settings.TryGetValue(key, out var value);
+            return Settings.TryGetValue(key, out var _);
         }
 
         public T GetConfig<T>(string key, T defaultValue = default, bool init = false)
