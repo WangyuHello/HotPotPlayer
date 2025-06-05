@@ -120,6 +120,7 @@ namespace HotPotPlayer.Services
             _mpv.API.SetPropertyString("hwdec", "d3d11va");
             _mpv.API.SetPropertyString("d3d11-composition", "yes");
             //_mpv.API.SetPropertyString("icc-profile-auto", "yes");
+            _mpv.API.SetPropertyString("target-peak", Config.GetConfig("target-peak", "auto", true));
             _mpv.API.SetPropertyString("target-prim", Config.GetConfig("target-prim", "bt.709", true));
             _mpv.API.SetPropertyString("target-trc", Config.GetConfig("target-trc", "bt.1886", true));
             //_mpv.API.SetPropertyString("target-colorspace-hint", "yes"); //HDR passthrough
