@@ -104,6 +104,10 @@ namespace HotPotPlayer.Services
                 }
                 else //Paused
                 {
+                    //if (State == PlayerState.Loading)
+                    //{
+                    //    App.SetSmtcStatus(MediaPlaybackStatus.Changing);
+                    //}
                     if (isPauseAsStoped)
                     {
                         App.SetSmtcStatus(MediaPlaybackStatus.Stopped);
