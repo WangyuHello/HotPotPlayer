@@ -61,8 +61,8 @@ namespace HotPotPlayer
                 case MediaPlaybackStatus.Playing:
                     if (init)
                     {
-                        Taskbar.SetProgressState(TaskbarHelper.TaskbarStates.NoProgress);
-                        Taskbar.SetProgressValue(0, 100);
+                        //Taskbar.SetProgressState(TaskbarHelper.TaskbarStates.NoProgress);
+                        //Taskbar.SetProgressValue(0, 100);
                     }
                     else
                     {

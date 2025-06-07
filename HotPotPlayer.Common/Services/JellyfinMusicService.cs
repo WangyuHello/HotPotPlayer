@@ -720,7 +720,7 @@ namespace HotPotPlayer.Services
             {
                 return;
             }
-               await JellyfinApiClient.Sessions.Playing.Progress.PostAsync(new PlaybackProgressInfo
+            await JellyfinApiClient.Sessions.Playing.Progress.PostAsync(new PlaybackProgressInfo
             {
                 CanSeek = true,
                 IsPaused = isPause,
@@ -734,7 +734,7 @@ namespace HotPotPlayer.Services
             });
         }
 
-        public async void ReportStop(BaseItemDto video, long positionTicks)
+        public async Task ReportStop(BaseItemDto video, long positionTicks)
         {
             if (video == null || video.Id == null)
             {

@@ -83,12 +83,18 @@ namespace HotPotPlayer.Services
             }
         }
 
+        private bool isPauseAsStoped;
+
         [ObservableProperty]
         public partial bool IsPlaying { get; set; }
 
         partial void OnIsPlayingChanged(bool value)
         {
             var nowPlaying = value;
+            if (nowPlaying)
+            {
+                isPauseAsStoped = false;
+            }
             Task.Run(async () =>
             {
                 CustomPlayOrPause(nowPlaying);
@@ -96,10 +102,18 @@ namespace HotPotPlayer.Services
                 {
                     App.SetSmtcStatus(MediaPlaybackStatus.Playing);
                 }
-                else
+                else //Paused
                 {
-                    App.SetSmtcStatus(MediaPlaybackStatus.Paused);
-                    await App.JellyfinMusicService.ReportProgress(CurrentPlaying, CurrentTime.Ticks, true);
+                    if (isPauseAsStoped)
+                    {
+                        App.SetSmtcStatus(MediaPlaybackStatus.Stopped);
+                        await App.JellyfinMusicService.ReportStop(CurrentPlaying, CurrentTime.Ticks);
+                    }
+                    else
+                    {
+                        App.SetSmtcStatus(MediaPlaybackStatus.Paused);
+                        await App.JellyfinMusicService.ReportProgress(CurrentPlaying, CurrentTime.Ticks, true);
+                    }
                 }
             });
         }
@@ -311,13 +325,12 @@ namespace HotPotPlayer.Services
         {
             _playerTimer.Stop();
             _mpv.Pause();
+            isPauseAsStoped = true;
             UIQueue.TryEnqueue(() =>
             {
                 IsPlaying = false;
             });
             CustomPauseAsStop();
-            App.SetSmtcStatus(MediaPlaybackStatus.Stopped);
-            App.JellyfinMusicService.ReportStop(CurrentPlaying, CurrentTime.Ticks);
         }
 
         protected virtual void CustomPauseAsStop() { }
