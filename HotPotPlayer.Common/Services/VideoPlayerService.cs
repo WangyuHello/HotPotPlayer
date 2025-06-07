@@ -64,7 +64,7 @@ namespace HotPotPlayer.Services
         public IntPtr SwapChain { get; set; }
 
         private DanmakuFrostMaster _danmakuController;
-        private AdvancedColorInfo _displayInfo;
+        private DisplayInfo _displayInfo;
 
         private float _currentScaleX;
         private float _currentScaleY;
@@ -116,8 +116,23 @@ namespace HotPotPlayer.Services
         {
             if(_displayInfo == null && !Config.HasConfig("target-prim"))
             {
-                var display = DisplayInformationInterop.GetForWindow(App.MainWindowHandle);
-                _displayInfo = display.GetAdvancedColorInfo();
+                if (OperatingSystem.IsWindowsVersionAtLeast(10, 0, 22621, 0))
+                {
+                    var display = DisplayInformationInterop.GetForWindow(App.MainWindowHandle);
+                    var colorInfo = display.GetAdvancedColorInfo();
+                    _displayInfo = new DisplayInfo
+                    {
+                        IsHDR = colorInfo.CurrentAdvancedColorKind == AdvancedColorKind.HighDynamicRange,
+                        MaxLuminanceInNits = colorInfo.MaxLuminanceInNits.ToString()
+                    };
+                }
+                else
+                {
+                    _displayInfo = new DisplayInfo
+                    {
+                        IsHDR = false,
+                    };
+                }
             }
         }
 
@@ -137,9 +152,9 @@ namespace HotPotPlayer.Services
             string trc = "bt.1886";
             if (!Config.HasConfig("target-prim"))
             {
-                if (_displayInfo.CurrentAdvancedColorKind == AdvancedColorKind.HighDynamicRange)
+                if (_displayInfo.IsHDR)
                 {
-                    peak = _displayInfo.MaxLuminanceInNits.ToString();
+                    peak = _displayInfo.MaxLuminanceInNits;
                     prim = "bt.2020";
                     trc = "pq";
                 }
