@@ -734,7 +734,7 @@ namespace HotPotPlayer.Services
             });
         }
 
-        public async Task ReportStop(BaseItemDto video, long positionTicks)
+        public async void ReportStop(BaseItemDto video, long positionTicks)
         {
             if (video == null || video.Id == null)
             {

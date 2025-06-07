@@ -107,7 +107,7 @@ namespace HotPotPlayer.Services
                     if (isPauseAsStoped)
                     {
                         App.SetSmtcStatus(MediaPlaybackStatus.Stopped);
-                        await App.JellyfinMusicService.ReportStop(CurrentPlaying, CurrentTime.Ticks);
+                        App.JellyfinMusicService.ReportStop(CurrentPlaying, CurrentTime.Ticks);
                     }
                     else
                     {
