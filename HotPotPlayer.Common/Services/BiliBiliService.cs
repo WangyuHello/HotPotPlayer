@@ -271,6 +271,26 @@ namespace HotPotPlayer.Services
             return await search.GetSearchRecommendsAsync(token);
         }
 
+        public async Task<IReadOnlyList<SearchSuggestItem>> GetSearchSuggestsAsync(string keyword, CancellationToken token = default)
+        {
+            return await search.GetSearchSuggestsAsync(keyword, token);
+        }
+
+        public async Task<(IReadOnlyList<VideoInformation> Videos, int? NextPage)> GetComprehensiveSearchResultAsync(string keyword, int? pageNum = null, ComprehensiveSearchSortType sort = ComprehensiveSearchSortType.Default, CancellationToken token = default)
+        {
+            return await search.GetComprehensiveSearchResultAsync(keyword, pageNum, sort, token);
+        }
+
+        public async Task<IReadOnlyList<HotSearchItem>> GetTotalHotSearchAsync(int count = 30, CancellationToken token = default)
+        {
+            return await search.GetTotalHotSearchAsync(count, token);
+        }
+
+        public async Task<(IReadOnlyList<VideoInformation> Videos, int TotalCount, bool HasMore)> SearchHistoryVideosAsync(string keyword, int pagenum  = 0, CancellationToken token = default)
+        {
+            return await search.SearchHistoryVideosAsync(keyword, pagenum, token);
+        }
+
         public async Task<UserDetailProfile> GetMyProfileAsync(CancellationToken token = default)
         {
             return await myProfile.GetMyProfileAsync(token);

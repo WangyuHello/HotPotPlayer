@@ -4,6 +4,7 @@
 using CommunityToolkit.Mvvm.ComponentModel;
 using HotPotPlayer.Bilibili.Models.HomeVideo;
 using HotPotPlayer.Bilibili.Models.Search;
+using HotPotPlayer.Extensions;
 using HotPotPlayer.Models.BiliBili;
 using HotPotPlayer.Services;
 using Microsoft.UI.Xaml;
@@ -13,6 +14,7 @@ using Microsoft.UI.Xaml.Data;
 using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Navigation;
+using Richasy.BiliKernel.Models.Media;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -38,35 +40,44 @@ namespace HotPotPlayer.Pages.BilibiliSub
         }
 
         [ObservableProperty]
-        public partial List<SearchResultData> VideoResult { get; set; }
+        public partial SearchVideoCollection VideoSearchResult { get; set; }
 
-        protected override async void OnNavigatedTo(NavigationEventArgs e)
+        protected override void OnNavigatedTo(NavigationEventArgs e)
         {
             base.OnNavigatedTo(e);
             var req = e.Parameter as SearchRequest;
             SearchBox.Text = req.Keyword;
             if (req.DoSearch)
             {
-                await DoSearch(req.Keyword);
+                DoSearch(req.Keyword);
             }
         }
 
-        private async Task DoSearch(string keyword)
+        private void DoSearch(string keyword)
         {
-            var search = await BiliBiliService.API.SearchAsync(keyword);
-            var video = search.Data.Result.FirstOrDefault(r => r.ResultType == "video");
-            VideoResult = video.Data;
+            if (VideoSearchResult == null)
+            {
+                VideoSearchResult = new SearchVideoCollection(BiliBiliService)
+                {
+                    Keyword = keyword
+                };
+            }
+            else
+            {
+                VideoSearchResult.Keyword = keyword;
+                VideoSearchResult.Reset();
+            }
         }
 
-        private async void Search_QuerySubmitted(AutoSuggestBox sender, AutoSuggestBoxQuerySubmittedEventArgs args)
+        private void Search_QuerySubmitted(AutoSuggestBox sender, AutoSuggestBoxQuerySubmittedEventArgs args)
         {
-            await DoSearch(sender.Text);
+            DoSearch(sender.Text);
         }
 
         private void SearchVideoClick(object sender, ItemClickEventArgs e)
         {
-            var v = e.ClickedItem as SearchResultData;
-            PlayVideoInNewWindow(v.Bvid);
+            var v = e.ClickedItem as VideoInformation;
+            VideoPlayer.PlayNext(v.ToBaseItemDto());
         }
     }
 }

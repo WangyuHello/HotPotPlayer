@@ -185,12 +185,14 @@ namespace HotPotPlayer.Pages
 
         private void TagClick(object sender, ItemClickEventArgs e)
         {
-            //var v = e.ClickedItem as Tag;
-            //NavigateTo("BilibiliSub.Search", new SearchRequest
-            //{
-            //    Keyword = v.Name,
-            //    DoSearch = true
-            //});
+            var v = e.ClickedItem as BiliTag;
+            VideoPlayer.VisualState = VideoPlayVisualState.TinyHidden;
+            Task.Run(VideoPlayer.PauseAsStop);
+            NavigateTo("BilibiliSub.Search", new SearchRequest
+            {
+                Keyword = v.Name,
+                DoSearch = true
+            });
         }
 
         private async void LikeClick(object sender, RoutedEventArgs e)

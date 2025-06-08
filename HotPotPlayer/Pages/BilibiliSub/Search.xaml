@@ -29,13 +29,16 @@
             VerticalAlignment="Center" 
             HorizontalAlignment="Center" 
             CornerRadius="8" 
+            FontSize="18"
             FontFamily="{ThemeResource MiSansRegular}"
             />
 
         <GridView Grid.Row="1" Padding="24,0,24,0"
-                  ItemsSource="{x:Bind VideoResult, Mode=OneWay}" 
+                  ItemsSource="{x:Bind VideoSearchResult, Mode=OneWay}" 
                   Style="{StaticResource CardGridViewStyle}"
-                  ItemTemplate="{StaticResource BiliVideoCardViewTemplate4}"
+                  ItemTemplate="{StaticResource BiliVideoCardViewTemplate}"
+                  IncrementalLoadingTrigger="Edge"
+                  IncrementalLoadingThreshold="2"
                   ItemClick="SearchVideoClick">
 
         </GridView>
